@@ -1,0 +1,531 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://luhtech.dev/schemas/agent-prompt.json",
+  "title": "Agent Prompt",
+  "description": "Structured agent handoff and reference documentation for LuhTech ventures. Supports two modes: task-oriented prompts (with steps, success criteria, rollback plans) and reference documents (with patterns, anti-patterns, guidelines). Derived from Ectropy production agent-prompts: prisma-m3-completion.json and test-isolation-patterns.json.",
+  "type": "object",
+  "required": ["$schema", "schemaVersion", "meta"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "enum": [
+        "https://luhtech.dev/schemas/agent-prompt.json",
+        "https://luhtech.dev/schemas/agent-prompt.schema.json"
+      ],
+      "description": "Schema reference URI. Accepts both canonical and legacy forms."
+    },
+    "$id": {
+      "type": "string",
+      "pattern": "^urn:luhtech:[a-z0-9-]+:agent-prompt:[a-z0-9-]+$",
+      "description": "Unique document identifier following URN pattern: urn:luhtech:{venture}:agent-prompt:{slug}"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Document schema version (semver)"
+    },
+    "meta": {
+      "$ref": "#/definitions/meta"
+    },
+    "repoSplitConfirmation": {
+      "$ref": "#/definitions/repoSplitConfirmation",
+      "description": "Optional confirmation that work can proceed relative to repo split status"
+    },
+    "taskOverview": {
+      "type": "object",
+      "description": "Phase-structured task overview for task-oriented agent prompts. Keys are phase identifiers (e.g., 'phase1', 'phase2').",
+      "additionalProperties": {
+        "$ref": "#/definitions/taskPhase"
+      }
+    },
+    "overview": {
+      "$ref": "#/definitions/overview",
+      "description": "Document overview for reference-oriented agent prompts"
+    },
+    "agentPrompt": {
+      "$ref": "#/definitions/agentPrompt",
+      "description": "Executable agent instructions with steps, criteria, and rollback"
+    },
+    "patterns": {
+      "type": "array",
+      "description": "Documented patterns for reference-oriented agent prompts",
+      "items": {
+        "$ref": "#/definitions/pattern"
+      }
+    },
+    "antiPatterns": {
+      "type": "array",
+      "description": "Anti-patterns to avoid",
+      "items": {
+        "$ref": "#/definitions/antiPattern"
+      }
+    },
+    "referenceFiles": {
+      "type": "object",
+      "description": "Categorized file references relevant to this prompt",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "relatedFiles": {
+      "type": "object",
+      "description": "Related file references (alternative key for referenceFiles)",
+      "additionalProperties": true
+    },
+    "environmentRequirements": {
+      "$ref": "#/definitions/environmentRequirements"
+    },
+    "testCategories": {
+      "type": "object",
+      "description": "Test category definitions for testing-related reference docs",
+      "additionalProperties": {
+        "$ref": "#/definitions/testCategory"
+      }
+    },
+    "successMetrics": {
+      "type": "object",
+      "description": "Measurable success criteria for the prompt's domain",
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "meta": {
+      "type": "object",
+      "description": "Document metadata for tracking authorship, purpose, and scheduling",
+      "required": ["createdAt", "createdBy", "purpose"],
+      "additionalProperties": false,
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp (ISO 8601)"
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "Author identifier (e.g., 'claude', 'erik')"
+        },
+        "purpose": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Human-readable purpose statement"
+        },
+        "targetBranch": {
+          "type": "string",
+          "description": "Git branch pattern for execution (supports {SESSION_ID} placeholder)"
+        },
+        "estimatedDuration": {
+          "type": "string",
+          "description": "Estimated time to complete (e.g., '2-3 hours')"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "REFERENCE"],
+          "description": "Task priority or document classification"
+        },
+        "decision": {
+          "type": "string",
+          "description": "Reference to decision-log entry (e.g., 'd-2026-02-06-json-only-documentation')"
+        },
+        "supersedes": {
+          "type": "string",
+          "description": "URI of the agent prompt this document supersedes"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Expiration timestamp after which this prompt should be reviewed"
+        }
+      }
+    },
+    "repoSplitConfirmation": {
+      "type": "object",
+      "description": "Confirmation that work can proceed relative to repository split status",
+      "required": ["canProceed", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "canProceed": {
+          "type": "boolean"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source", "key", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "source": {
+                "type": "string",
+                "description": "File path where evidence was found"
+              },
+              "key": {
+                "type": "string",
+                "description": "JSON path or key within the source"
+              },
+              "value": {
+                "type": "string",
+                "description": "The evidence value"
+              }
+            }
+          }
+        },
+        "conclusion": {
+          "type": "string"
+        }
+      }
+    },
+    "taskPhase": {
+      "type": "object",
+      "description": "A single phase within a task overview",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Phase name"
+        },
+        "milestone": {
+          "type": "string",
+          "description": "Associated milestone identifier"
+        },
+        "feature": {
+          "type": "string",
+          "description": "Associated feature identifier"
+        },
+        "targetDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Target completion date"
+        },
+        "dependsOn": {
+          "type": "string",
+          "description": "Dependency description"
+        },
+        "currentStatus": {
+          "type": "object",
+          "description": "Current completion status of phase components",
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "remainingWork": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of remaining tasks"
+        },
+        "newModels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "description": "New data models to be created in this phase"
+        },
+        "newEnums": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "New enum types to be created"
+        }
+      },
+      "additionalProperties": true
+    },
+    "overview": {
+      "type": "object",
+      "description": "Document overview for reference-oriented prompts",
+      "required": ["title", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string"
+        },
+        "applicability": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "When this reference document applies"
+        }
+      }
+    },
+    "agentPrompt": {
+      "type": "object",
+      "description": "Executable agent instructions",
+      "required": ["title", "instructions", "steps", "successCriteria"],
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Task title for the agent"
+        },
+        "instructions": {
+          "type": "string",
+          "description": "High-level instructions for the agent"
+        },
+        "context": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Context items the agent needs to understand"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/agentStep"
+          },
+          "minItems": 1,
+          "description": "Ordered execution steps"
+        },
+        "successCriteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Measurable criteria for task completion"
+        },
+        "rollbackPlan": {
+          "type": "object",
+          "description": "Rollback procedures keyed by failure scenario",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "agentStep": {
+      "type": "object",
+      "description": "A single execution step within an agent prompt",
+      "required": ["step", "action"],
+      "properties": {
+        "step": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Step number (1-indexed)"
+        },
+        "action": {
+          "type": "string",
+          "description": "What the agent should do"
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Shell commands to execute"
+        },
+        "command": {
+          "type": "string",
+          "description": "Single shell command to execute"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Files to review or edit"
+        },
+        "createFile": {
+          "type": "string",
+          "description": "File path to create"
+        },
+        "editFile": {
+          "type": "string",
+          "description": "File path to edit"
+        },
+        "verify": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Verification checks after the step"
+        },
+        "expectedOutput": {
+          "type": "string",
+          "description": "Expected output from commands"
+        },
+        "onFailure": {
+          "type": "string",
+          "description": "What to do if this step fails"
+        },
+        "testCases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Test cases to implement"
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Pattern to follow for this step"
+        },
+        "addModels": {
+          "type": "object",
+          "description": "Models to add (for Prisma/DB steps)",
+          "additionalProperties": true
+        },
+        "updates": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Updates to make"
+        },
+        "guidelines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Guidelines to follow for this step"
+        },
+        "migrationPath": {
+          "type": "string",
+          "description": "Expected migration file path"
+        }
+      },
+      "additionalProperties": true
+    },
+    "pattern": {
+      "type": "object",
+      "description": "A documented pattern for reference prompts",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Kebab-case pattern identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable pattern name"
+        },
+        "problem": {
+          "type": "string",
+          "description": "Problem this pattern solves"
+        },
+        "solution": {
+          "type": "string",
+          "description": "How the pattern solves the problem"
+        },
+        "codeExample": {
+          "type": "object",
+          "description": "Code examples demonstrating the pattern",
+          "additionalProperties": true
+        },
+        "affectedServices": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "guidelines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence": {
+          "type": "object",
+          "description": "Evidence of pattern usage",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "antiPattern": {
+      "type": "object",
+      "description": "An anti-pattern to avoid",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "problem": {
+          "type": "string"
+        },
+        "symptom": {
+          "type": "string"
+        },
+        "solution": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "environmentRequirements": {
+      "type": "object",
+      "description": "Runtime environment requirements for executing this prompt",
+      "properties": {
+        "node": {
+          "type": "string",
+          "description": "Node.js version requirement"
+        },
+        "pnpm": {
+          "type": "string",
+          "description": "pnpm version requirement"
+        },
+        "python": {
+          "type": "string",
+          "description": "Python version requirement"
+        },
+        "database": {
+          "type": "string",
+          "description": "Database requirement"
+        },
+        "env": {
+          "type": "object",
+          "description": "Required environment variables",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "testCategory": {
+      "type": "object",
+      "description": "Test category definition",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "Glob pattern for test file locations"
+        },
+        "framework": {
+          "type": "string",
+          "description": "Test framework name"
+        },
+        "isolation": {
+          "type": "string",
+          "description": "Isolation level description"
+        },
+        "patterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Pattern IDs applicable to this category"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
