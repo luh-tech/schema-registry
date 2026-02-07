@@ -1,327 +1,529 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/portfolio/workflow-registry-v1.json",
-  "title": "Portfolio Workflow Registry",
-  "description": "Canonical workflow definitions for portfolio-level operations. Schema-first architecture: all consumer repos reference this definition. Self-documenting via meta.schemaFirst field.",
-  "type": "object",
-  "required": ["$schema", "schemaVersion", "meta", "workflows"],
-  "additionalProperties": false,
-  "properties": {
-    "$schema": {
-      "type": "string",
-      "const": "https://luhtech.dev/schemas/portfolio/workflow-registry-v1.json"
-    },
-    "schemaVersion": {
-      "type": "string",
-      "pattern": "^\\d+\\.\\d+\\.\\d+$",
-      "description": "Schema version for compatibility tracking (semver)"
-    },
-    "meta": {
-      "type": "object",
-      "description": "Self-documenting metadata establishing schema-first architecture",
-      "required": ["lastUpdated", "schemaFirst", "sourceOfTruth", "derivedFrom"],
-      "additionalProperties": false,
-      "properties": {
-        "lastUpdated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Last modification timestamp"
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://luhtech.dev/schemas/portfolio/workflow-registry-v1.json",
+    "title": "Portfolio Workflow Registry",
+    "description": "Canonical workflow definitions for portfolio-level operations. Schema-first architecture: all consumer repos reference this definition. Self-documenting via meta.schemaFirst field.",
+    "type": "object",
+    "required": [
+        "$schema",
+        "schemaVersion",
+        "meta",
+        "workflows"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "const": "https://luhtech.dev/schemas/portfolio/workflow-registry-v1.json"
         },
-        "schemaFirst": {
-          "type": "boolean",
-          "const": true,
-          "description": "SELF-DOCUMENTING: This file follows schema-first architecture. All data derives from and validates against this schema. This field MUST be true."
+        "schemaVersion": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "description": "Schema version for compatibility tracking (semver)"
         },
-        "sourceOfTruth": {
-          "type": "string",
-          "description": "Repository containing canonical workflow implementations",
-          "examples": ["luh-tech/business-tools"]
-        },
-        "derivedFrom": {
-          "type": "string",
-          "format": "uri",
-          "description": "URI to the schema that governs this file",
-          "examples": ["https://luhtech.dev/schemas/portfolio/workflow-registry-v1.json"]
-        },
-        "maintainer": {
-          "type": "string",
-          "description": "Team or individual responsible for this registry"
-        },
-        "documentation": {
-          "type": "string",
-          "format": "uri",
-          "description": "URL to documentation for this registry"
-        }
-      }
-    },
-    "workflows": {
-      "type": "object",
-      "description": "Named workflow definitions keyed by workflow ID",
-      "additionalProperties": {
-        "$ref": "#/definitions/workflow"
-      },
-      "minProperties": 1
-    },
-    "transformers": {
-      "type": "object",
-      "description": "Transformer definitions mapping roadmap.json fields to output content",
-      "additionalProperties": {
-        "$ref": "#/definitions/transformer"
-      }
-    },
-    "deckTypes": {
-      "type": "object",
-      "description": "Slide deck composition rules defining which transformers produce which decks",
-      "additionalProperties": {
-        "$ref": "#/definitions/deckType"
-      }
-    },
-    "pipelineStages": {
-      "type": "array",
-      "description": "Ordered pipeline stages for execution visualization",
-      "items": {
-        "$ref": "#/definitions/pipelineStage"
-      }
-    }
-  },
-  "definitions": {
-    "workflow": {
-      "type": "object",
-      "description": "Single workflow definition",
-      "required": ["id", "description", "tool", "command"],
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9-]*$",
-          "description": "Unique workflow identifier (kebab-case)"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable workflow description"
-        },
-        "tool": {
-          "type": "string",
-          "description": "Tool that implements this workflow",
-          "enum": [
-            "roadmap-aggregator-v3",
-            "slide-generator",
-            "validate-portfolio",
-            "gap-analyzer",
-            "brand-validator",
-            "custom"
-          ]
-        },
-        "command": {
-          "type": "string",
-          "description": "CLI invocation pattern. Supports {venture}, {date}, {deckType} placeholders."
-        },
-        "workingDirectory": {
-          "type": "string",
-          "description": "Directory to run command from (relative to business-tools root)"
-        },
-        "outputs": {
-          "type": "array",
-          "items": {"type": "string"},
-          "description": "Expected output files or directories. Supports {date}, {venture} placeholders."
-        },
-        "requires": {
-          "type": "array",
-          "items": {"type": "string"},
-          "description": "Prerequisite workflow IDs that must complete first"
-        },
-        "dependencies": {
-          "type": "object",
-          "description": "Required environment variables or secrets",
-          "additionalProperties": false,
-          "properties": {
-            "envVars": {
-              "type": "array",
-              "items": {"type": "string"},
-              "description": "Required environment variable names"
-            },
-            "secrets": {
-              "type": "array",
-              "items": {"type": "string"},
-              "description": "Required secret names (GitHub Secrets or equivalent)"
-            },
-            "files": {
-              "type": "array",
-              "items": {"type": "string"},
-              "description": "Required input files"
+        "meta": {
+            "type": "object",
+            "description": "Self-documenting metadata establishing schema-first architecture",
+            "required": [
+                "lastUpdated",
+                "schemaFirst",
+                "sourceOfTruth",
+                "derivedFrom"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "lastUpdated": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Last modification timestamp"
+                },
+                "schemaFirst": {
+                    "type": "boolean",
+                    "const": true,
+                    "description": "SELF-DOCUMENTING: This file follows schema-first architecture. All data derives from and validates against this schema. This field MUST be true."
+                },
+                "sourceOfTruth": {
+                    "type": "string",
+                    "description": "Repository containing canonical workflow implementations",
+                    "examples": [
+                        "luh-tech/business-tools"
+                    ]
+                },
+                "derivedFrom": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "URI to the schema that governs this file",
+                    "examples": [
+                        "https://luhtech.dev/schemas/portfolio/workflow-registry-v1.json"
+                    ]
+                },
+                "maintainer": {
+                    "type": "string",
+                    "description": "Team or individual responsible for this registry"
+                },
+                "documentation": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "URL to documentation for this registry"
+                },
+                "roadmapSchemaVersion": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$",
+                    "description": "Version of the roadmap schema used for venture validation (semver)"
+                },
+                "changeLog": {
+                    "type": "array",
+                    "description": "Audit trail of registry changes",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "date",
+                            "version",
+                            "changes"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "date": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "Date of change (ISO 8601)"
+                            },
+                            "version": {
+                                "type": "string",
+                                "pattern": "^\\d+\\.\\d+\\.\\d+$",
+                                "description": "Registry version after change"
+                            },
+                            "changes": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "minItems": 1,
+                                "description": "List of changes made"
+                            }
+                        }
+                    }
+                }
             }
-          }
-        },
-        "scope": {
-          "type": "string",
-          "enum": ["portfolio", "venture", "both"],
-          "default": "portfolio",
-          "description": "Whether workflow operates on full portfolio or single venture"
-        },
-        "estimatedDuration": {
-          "type": "string",
-          "description": "Typical execution time (e.g., '30s', '2m', '5m')"
-        },
-        "retryable": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether workflow can be safely retried on failure"
-        }
-      }
-    },
-    "transformer": {
-      "type": "object",
-      "description": "Transformer mapping roadmap.json fields to output content",
-      "required": ["id", "requiredFields", "outputType"],
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9_]*$",
-          "description": "Unique transformer identifier (snake_case)"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of what this transformer produces"
-        },
-        "requiredFields": {
-          "type": "array",
-          "items": {"type": "string"},
-          "minItems": 1,
-          "description": "JSON paths to required fields in roadmap.json (e.g., 'meta.ventureName', 'pitch.problem')"
-        },
-        "optionalFields": {
-          "type": "array",
-          "items": {"type": "string"},
-          "description": "JSON paths to optional fields that enhance output if present"
-        },
-        "outputType": {
-          "type": "string",
-          "enum": ["slide", "section", "data", "metadata"],
-          "description": "Type of output this transformer produces"
-        },
-        "slideType": {
-          "$ref": "https://luhtech.dev/schemas/enums-v2.json#/definitions/slideType",
-          "description": "For slide outputs, the canonical slide type"
-        },
-        "parsing": {
-          "type": "object",
-          "description": "Field-specific parsing rules for complex data extraction",
-          "additionalProperties": {
-            "$ref": "#/definitions/parsingRule"
-          }
-        },
-        "fallbacks": {
-          "type": "object",
-          "description": "Fallback values when optional fields are missing",
-          "additionalProperties": {"type": "string"}
-        }
-      }
-    },
-    "parsingRule": {
-      "type": "object",
-      "description": "Rule for parsing complex field values",
-      "required": ["type"],
-      "additionalProperties": false,
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": ["regex", "json-path", "literal", "computed"],
-          "description": "Parsing strategy"
-        },
-        "pattern": {
-          "type": "string",
-          "description": "Regex pattern or JSON path expression"
-        },
-        "groups": {
-          "type": "array",
-          "items": {"type": "string"},
-          "description": "Named capture groups for regex parsing"
-        },
-        "transform": {
-          "type": "string",
-          "description": "Post-parse transformation (e.g., 'uppercase', 'currency')"
-        }
-      }
-    },
-    "deckType": {
-      "type": "object",
-      "description": "Slide deck composition definition",
-      "required": ["id", "slides"],
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9-]*$",
-          "description": "Unique deck type identifier (kebab-case)"
-        },
-        "name": {
-          "type": "string",
-          "description": "Human-readable deck type name"
-        },
-        "description": {
-          "type": "string",
-          "description": "Purpose and audience for this deck type"
-        },
-        "slides": {
-          "type": "array",
-          "items": {"type": "string"},
-          "minItems": 1,
-          "description": "Ordered list of transformer IDs defining slide sequence"
-        },
-        "requiredCompleteness": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1,
-          "default": 0.8,
-          "description": "Minimum data completeness (0-1) required to generate this deck"
-        },
-        "audience": {
-          "type": "string",
-          "enum": ["investor", "partner", "internal", "customer", "board", "accelerator"],
-          "description": "Primary intended audience for this deck type"
-        },
-        "slideCount": {
-          "type": "object",
-          "description": "Slide count constraints",
-          "properties": {
-            "min": {"type": "integer", "minimum": 1},
-            "max": {"type": "integer", "minimum": 1},
-            "target": {"type": "integer", "minimum": 1}
-          }
-        }
-      }
-    },
-    "pipelineStage": {
-      "type": "object",
-      "description": "Pipeline stage for execution visualization",
-      "required": ["id", "name", "workflows"],
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^stage-[0-9]+$",
-          "description": "Stage identifier (e.g., 'stage-1', 'stage-2')"
-        },
-        "name": {
-          "type": "string",
-          "description": "Human-readable stage name"
-        },
-        "description": {
-          "type": "string",
-          "description": "What happens in this stage"
         },
         "workflows": {
-          "type": "array",
-          "items": {"type": "string"},
-          "description": "Workflow IDs that execute in this stage"
+            "type": "object",
+            "description": "Named workflow definitions keyed by workflow ID",
+            "additionalProperties": {
+                "$ref": "#/definitions/workflow"
+            },
+            "minProperties": 1
         },
-        "parallel": {
-          "type": "boolean",
-          "default": false,
-          "description": "Whether workflows in this stage can run in parallel"
+        "transformers": {
+            "type": "object",
+            "description": "Transformer definitions mapping roadmap.json fields to output content",
+            "additionalProperties": {
+                "$ref": "#/definitions/transformer"
+            }
+        },
+        "deckTypes": {
+            "type": "object",
+            "description": "Slide deck composition rules defining which transformers produce which decks",
+            "additionalProperties": {
+                "$ref": "#/definitions/deckType"
+            }
+        },
+        "pipelineStages": {
+            "type": "array",
+            "description": "Ordered pipeline stages for execution visualization",
+            "items": {
+                "$ref": "#/definitions/pipelineStage"
+            }
         }
-      }
+    },
+    "definitions": {
+        "workflow": {
+            "type": "object",
+            "description": "Single workflow definition",
+            "required": [
+                "id",
+                "description",
+                "tool",
+                "command"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9-]*$",
+                    "description": "Unique workflow identifier (kebab-case)"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Human-readable workflow description"
+                },
+                "tool": {
+                    "type": "string",
+                    "description": "Tool that implements this workflow",
+                    "enum": [
+                        "roadmap-aggregator-v3",
+                        "slide-generator",
+                        "validate-portfolio",
+                        "gap-analyzer",
+                        "brand-validator",
+                        "schema-validator",
+                        "logo-generator",
+                        "gradient-background-generator",
+                        "background-generator",
+                        "background-text-qa",
+                        "custom"
+                    ]
+                },
+                "command": {
+                    "type": "string",
+                    "description": "CLI invocation pattern. Supports {venture}, {date}, {deckType} placeholders."
+                },
+                "workingDirectory": {
+                    "type": "string",
+                    "description": "Directory to run command from (relative to business-tools root)"
+                },
+                "outputs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Expected output files or directories. Supports {date}, {venture} placeholders."
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Prerequisite workflow IDs that must complete first"
+                },
+                "dependencies": {
+                    "type": "object",
+                    "description": "Required environment variables, secrets, files, or packages",
+                    "additionalProperties": false,
+                    "properties": {
+                        "envVars": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Required environment variable names"
+                        },
+                        "secrets": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Required secret names (GitHub Secrets or equivalent)"
+                        },
+                        "files": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Required input files"
+                        },
+                        "packages": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Required Python/system packages"
+                        }
+                    }
+                },
+                "scope": {
+                    "type": "string",
+                    "enum": [
+                        "portfolio",
+                        "venture",
+                        "both"
+                    ],
+                    "default": "portfolio",
+                    "description": "Whether workflow operates on full portfolio or single venture"
+                },
+                "estimatedDuration": {
+                    "type": "string",
+                    "description": "Typical execution time (e.g., '30s', '2m', '5m')"
+                },
+                "retryable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether workflow can be safely retried on failure"
+                },
+                "notes": {
+                    "type": "string",
+                    "description": "Additional context or caveats about this workflow"
+                },
+                "rateLimit": {
+                    "type": "object",
+                    "description": "Rate limiting configuration for API-bound workflows",
+                    "properties": {
+                        "delayBetweenDecks": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "unit": {
+                            "type": "string",
+                            "enum": [
+                                "seconds",
+                                "minutes"
+                            ]
+                        },
+                        "reason": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "issueCategories": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Categories of issues this QA workflow can detect"
+                },
+                "issueSeverities": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Severity levels for detected issues"
+                },
+                "deprecated": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether this workflow is deprecated"
+                },
+                "deprecatedReason": {
+                    "type": "string",
+                    "description": "Explanation of why this workflow is deprecated"
+                },
+                "replacedBy": {
+                    "type": "string",
+                    "description": "Workflow ID that replaces this deprecated workflow"
+                },
+                "githubWorkflow": {
+                    "type": "string",
+                    "description": "Path to the GitHub Actions workflow file that runs this workflow"
+                }
+            }
+        },
+        "transformer": {
+            "type": "object",
+            "description": "Transformer mapping roadmap.json fields to output content",
+            "required": [
+                "id",
+                "requiredFields",
+                "outputType"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_]*$",
+                    "description": "Unique transformer identifier (snake_case)"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Human-readable description of what this transformer produces"
+                },
+                "requiredFields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1,
+                    "description": "JSON paths to required fields in roadmap.json"
+                },
+                "optionalFields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "JSON paths to optional fields that enhance output if present"
+                },
+                "outputType": {
+                    "type": "string",
+                    "enum": [
+                        "slide",
+                        "section",
+                        "data",
+                        "metadata"
+                    ],
+                    "description": "Type of output this transformer produces"
+                },
+                "slideType": {
+                    "$ref": "https://luhtech.dev/schemas/enums-v2.json#/definitions/slideType",
+                    "description": "For slide outputs, the canonical slide type"
+                },
+                "backgroundStyle": {
+                    "type": "string",
+                    "enum": [
+                        "cover",
+                        "content",
+                        "closing"
+                    ],
+                    "description": "Background style applied to this slide type"
+                },
+                "parsing": {
+                    "type": "object",
+                    "description": "Field-specific parsing rules for complex data extraction",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/parsingRule"
+                    }
+                },
+                "fallbacks": {
+                    "type": "object",
+                    "description": "Fallback values when optional fields are missing",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "parsingRule": {
+            "type": "object",
+            "description": "Rule for parsing complex field values",
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "regex",
+                        "json-path",
+                        "literal",
+                        "computed"
+                    ],
+                    "description": "Parsing strategy"
+                },
+                "pattern": {
+                    "type": "string",
+                    "description": "Regex pattern or JSON path expression"
+                },
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Named capture groups for regex parsing"
+                },
+                "transform": {
+                    "type": "string",
+                    "description": "Post-parse transformation (e.g., 'uppercase', 'currency')"
+                }
+            }
+        },
+        "deckType": {
+            "type": "object",
+            "description": "Slide deck composition definition",
+            "required": [
+                "id",
+                "slides"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9-]*$",
+                    "description": "Unique deck type identifier (kebab-case)"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Human-readable deck type name"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Purpose and audience for this deck type"
+                },
+                "slides": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1,
+                    "description": "Ordered list of transformer IDs defining slide sequence"
+                },
+                "requiredCompleteness": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "default": 0.8,
+                    "description": "Minimum data completeness (0-1) required to generate this deck"
+                },
+                "audience": {
+                    "type": "string",
+                    "enum": [
+                        "investor",
+                        "partner",
+                        "internal",
+                        "customer",
+                        "board",
+                        "accelerator"
+                    ],
+                    "description": "Primary intended audience for this deck type"
+                },
+                "slideCount": {
+                    "type": "object",
+                    "description": "Slide count constraints",
+                    "properties": {
+                        "min": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "max": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "target": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    }
+                }
+            }
+        },
+        "pipelineStage": {
+            "type": "object",
+            "description": "Pipeline stage for execution visualization",
+            "required": [
+                "id",
+                "name",
+                "workflows"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^stage-[0-9]+$",
+                    "description": "Stage identifier (e.g., 'stage-1', 'stage-2')"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Human-readable stage name"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "What happens in this stage"
+                },
+                "workflows": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Workflow IDs that execute in this stage"
+                },
+                "parallel": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether workflows in this stage can run in parallel"
+                },
+                "notes": {
+                    "type": "string",
+                    "description": "Additional context about this pipeline stage"
+                }
+            }
+        }
     }
-  }
 }
