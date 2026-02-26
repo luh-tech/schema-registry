@@ -1,0 +1,478 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:luhtech:schema:roadmap-business:v2.1",
+  "title": "Roadmap Business Schema v2.1",
+  "description": "Schema for venture business data including financials, team, competitive positioning, and service tiers. v2.1.0: mission/vision/currentStage/overallProgress moved to roadmap.json v3.1.0 (2026-02-26) \u2014 these are team-visible identity fields, not financial data. Base schema extensible for all luh-tech holdings ventures.",
+  "type": "object",
+  "$defs": {
+    "monetaryAmount": {
+      "type": "string",
+      "pattern": "^\\$[0-9,]+[KMB]?(-\\$[0-9,]+[KMB]?)?$",
+      "description": "Monetary amount (e.g., '$500K', '$1M-$5M')"
+    },
+    "percentage": {
+      "type": "string",
+      "pattern": "^[0-9]+%$",
+      "description": "Percentage value (e.g., '60%')"
+    },
+    "quarter": {
+      "type": "string",
+      "pattern": "^[Qq][1-4]_?20[2-3][0-9]$",
+      "description": "Quarter reference (e.g., 'Q2_2026')"
+    },
+    "keyHire": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Position title"
+        },
+        "quarter": {
+          "$ref": "#/$defs/quarter",
+          "description": "Target hiring quarter"
+        },
+        "critical": {
+          "type": "boolean",
+          "description": "Whether this hire is critical path"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Required skills"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional context"
+        }
+      },
+      "required": [
+        "role",
+        "quarter"
+      ],
+      "additionalProperties": false
+    },
+    "serviceTier": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Tier display name"
+        },
+        "target": {
+          "type": "string",
+          "description": "Target customer segment"
+        },
+        "pricing": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "string",
+              "description": "Base price"
+            },
+            "includes": {
+              "type": "string",
+              "description": "What's included"
+            },
+            "billing": {
+              "type": "string",
+              "enum": [
+                "free",
+                "monthly",
+                "annual",
+                "usage-based",
+                "custom"
+              ],
+              "description": "Billing model"
+            }
+          },
+          "required": [
+            "base"
+          ]
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Features included in tier"
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Usage limits for this tier"
+        }
+      },
+      "required": [
+        "name",
+        "target",
+        "pricing"
+      ]
+    },
+    "graphMetadata": {
+      "type": "object",
+      "properties": {
+        "nodeType": {
+          "type": "string",
+          "const": "BusinessRoadmap"
+        },
+        "inEdges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "required": [
+              "type",
+              "target"
+            ]
+          }
+        },
+        "outEdges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "required": [
+              "type",
+              "target"
+            ]
+          }
+        }
+      },
+      "required": [
+        "nodeType"
+      ]
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri",
+      "description": "JSON Schema reference"
+    },
+    "$id": {
+      "type": "string",
+      "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:file:roadmap-business$",
+      "description": "URN identifier for this document"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of schema"
+    },
+    "ventureId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Venture identifier"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last update"
+    },
+    "meta": {
+      "type": "object",
+      "description": "Document metadata for version tracking and migration",
+      "properties": {
+        "sourceOfTruth": {
+          "type": "string",
+          "description": "Canonical path for this document"
+        },
+        "migratedFrom": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Previous file locations"
+        },
+        "migrationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dataQualityFixes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Data quality fixes applied during migration"
+        },
+        "syncStatus": {
+          "type": "object",
+          "properties": {
+            "v1Path": {
+              "type": "string"
+            },
+            "lastSync": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "syncDirection": {
+              "type": "string",
+              "enum": [
+                "v1-is-source-of-truth",
+                "v3-is-source-of-truth",
+                "bidirectional"
+              ]
+            }
+          }
+        },
+        "schemaChangelog": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "changes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "version",
+              "date",
+              "changes"
+            ]
+          }
+        }
+      }
+    },
+    "organizationName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Legal/brand name of organization"
+    },
+    "financials": {
+      "type": "object",
+      "description": "Financial projections and status",
+      "properties": {
+        "preSeed": {
+          "$ref": "#/$defs/monetaryAmount"
+        },
+        "preSeedTiming": {
+          "$ref": "#/$defs/quarter"
+        },
+        "preSeedUse": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/percentage"
+          },
+          "description": "Allocation of pre-seed funds"
+        },
+        "seed": {
+          "$ref": "#/$defs/monetaryAmount"
+        },
+        "seedTiming": {
+          "$ref": "#/$defs/quarter"
+        },
+        "seedUse": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/percentage"
+          }
+        },
+        "year1Revenue": {
+          "type": "string",
+          "description": "Projected year 1 ARR"
+        },
+        "burnRate": {
+          "type": "string",
+          "description": "Monthly burn rate"
+        },
+        "runway": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Runway in months"
+        },
+        "pilotValueProjection": {
+          "type": "object",
+          "properties": {
+            "perProject": {
+              "$ref": "#/$defs/monetaryAmount"
+            },
+            "roi": {
+              "type": "string",
+              "pattern": "^[0-9,]+%$"
+            },
+            "paybackPeriod": {
+              "type": "string"
+            }
+          },
+          "description": "Value proposition metrics for pilot customers"
+        }
+      }
+    },
+    "team": {
+      "type": "object",
+      "description": "Team composition and hiring plan",
+      "properties": {
+        "current": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Current team size"
+        },
+        "q2_2026_target": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "q4_2026_target": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "q2_2027_target": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "keyHires": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/keyHire"
+          },
+          "description": "Planned key hires"
+        },
+        "departments": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "current": {
+                "type": "integer"
+              },
+              "target": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "current"
+      ]
+    },
+    "competitive": {
+      "type": "object",
+      "description": "Competitive landscape and positioning",
+      "properties": {
+        "directCompetitors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Direct competitors in market"
+        },
+        "indirectCompetitors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Indirect/adjacent competitors"
+        },
+        "moats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Competitive advantages/moats"
+        },
+        "differentiators": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "feature": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "competitorStatus": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "feature",
+              "description"
+            ]
+          }
+        }
+      }
+    },
+    "serviceTiers": {
+      "type": "object",
+      "description": "Product/service tier definitions",
+      "additionalProperties": {
+        "$ref": "#/$defs/serviceTier"
+      }
+    },
+    "graphMetadata": {
+      "$ref": "#/$defs/graphMetadata",
+      "description": "Graph relationship metadata for AI navigation"
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Venture-specific extensions beyond base schema",
+      "additionalProperties": true
+    },
+    "schemaChangelog": {
+      "type": "array",
+      "description": "Schema version history for this file",
+      "items": {
+        "type": "object",
+        "required": [
+          "version",
+          "date",
+          "changes"
+        ],
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "$schema",
+    "$id",
+    "schemaVersion",
+    "ventureId",
+    "lastUpdated",
+    "organizationName"
+  ],
+  "additionalProperties": false
+}
