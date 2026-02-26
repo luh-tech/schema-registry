@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "urn:luhtech:schema:transform-template:v1.0",
   "title": "LuhTech Transform Template Schema v1.0",
-  "description": "Governs the format of transform template files (*.transform.v*.json) used by the luhtech-transform engine. Transform templates define field mappings, derivation rules, and provenance configuration for producing output artifacts from canonical source files.",
+  "description": "Governs the format of luhtech-transform template JSON files. Transform templates define field mappings, derivation rules, and provenance configuration for producing output files from canonical source files.",
   "type": "object",
   "required": ["$id", "version", "description", "inputs", "output", "mappings", "provenance"],
   "properties": {
@@ -22,42 +22,65 @@
     },
     "inputs": {
       "type": "object",
-      "description": "Input source definitions",
+      "description": "Input schema requirements",
       "properties": {
         "t1": {
-          "$ref": "#/definitions/inputDef"
+          "type": "object",
+          "required": ["schema", "required"],
+          "properties": {
+            "schema": {"type": "string", "description": "Schema URN for T1 input"},
+            "required": {"type": "boolean"},
+            "description": {"type": "string"}
+          }
         },
         "t2": {
-          "$ref": "#/definitions/inputDef"
+          "type": "object",
+          "required": ["schema", "required"],
+          "properties": {
+            "schema": {"type": "string", "description": "Schema URN for T2 input"},
+            "required": {"type": "boolean"},
+            "description": {"type": "string"}
+          }
         }
-      },
-      "required": ["t1"]
+      }
     },
     "output": {
       "type": "object",
-      "required": ["schema", "description"],
+      "required": ["schema"],
       "properties": {
-        "schema": {
-          "type": "string",
-          "description": "URN of the output schema"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of the output file"
-        }
+        "schema": {"type": "string", "description": "Schema URN for output"},
+        "description": {"type": "string"}
       }
     },
     "mappings": {
       "type": "array",
-      "description": "Field mapping rules — direct pass-through and derived field rules",
+      "description": "Field mapping rules — direct pass-through, aliased, or derived",
       "items": {
-        "$ref": "#/definitions/mapping"
+        "type": "object",
+        "oneOf": [
+          {
+            "required": ["from", "to"],
+            "properties": {
+              "from": {"type": "string", "description": "Source field path (e.g., 't1.venture.mission')"},
+              "to": {"type": "string", "description": "Output field path (e.g., 'identity.mission')"},
+              "transform": {"type": "string", "description": "Optional named transform function"},
+              "args": {"type": "object", "additionalProperties": true, "description": "Arguments for the transform function"}
+            }
+          },
+          {
+            "required": ["derive", "rule"],
+            "properties": {
+              "derive": {"type": "string", "description": "Output field path for derived value"},
+              "rule": {"type": "string", "description": "Derivation expression"}
+            }
+          }
+        ]
       }
     },
     "provenance": {
       "type": "object",
       "required": ["generatedAtField", "sourceHashField", "transformIdField", "transformVersionField", "generatedFromField"],
-      "description": "Field paths for provenance metadata injection",
+      "description": "Field paths for provenance metadata injection into output",
       "properties": {
         "generatedAtField": {"type": "string"},
         "sourceHashField": {"type": "string"},
@@ -65,67 +88,6 @@
         "transformVersionField": {"type": "string"},
         "generatedFromField": {"type": "string"}
       }
-    }
-  },
-  "definitions": {
-    "inputDef": {
-      "type": "object",
-      "required": ["schema", "required", "description"],
-      "properties": {
-        "schema": {
-          "type": "string",
-          "description": "URN of the input schema"
-        },
-        "required": {
-          "type": "boolean",
-          "description": "Whether this input is required"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of this input"
-        }
-      }
-    },
-    "mapping": {
-      "type": "object",
-      "description": "Single field mapping rule",
-      "oneOf": [
-        {
-          "required": ["from", "to"],
-          "properties": {
-            "from": {
-              "type": "string",
-              "pattern": "^(t1|t2)\\.",
-              "description": "Source field path (t1.* or t2.*)"
-            },
-            "to": {
-              "type": "string",
-              "description": "Destination field path in output"
-            },
-            "transform": {
-              "type": "string",
-              "description": "Named transform function to apply"
-            },
-            "args": {
-              "type": "object",
-              "description": "Arguments for the transform function"
-            }
-          }
-        },
-        {
-          "required": ["derive", "rule"],
-          "properties": {
-            "derive": {
-              "type": "string",
-              "description": "Destination field path for derived value"
-            },
-            "rule": {
-              "type": "string",
-              "description": "Derivation rule expression"
-            }
-          }
-        }
-      ]
     }
   }
 }
