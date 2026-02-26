@@ -162,6 +162,11 @@
     "_note": {
       "type": "string",
       "description": "Reference to full roadmap location (for summary files)"
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Venture-specific fields beyond the canonical schema. Use allOf extension pattern. See SCHEMA_EXTENSIONS.md. Extension fields MUST live under extensions.* \u2014 canonical field names are reserved. Extension schemas live in the venture repo, not in luh-tech-roadmap-template.",
+      "additionalProperties": true
     }
   },
   "definitions": {

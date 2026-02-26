@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:luhtech:{{VENTURE_ID}}:schema:roadmap-local:v1.0",
+  "title": "{{VENTURE_NAME}} Local Roadmap Extension Schema v1.0",
+  "description": "Venture-local extension schema for {{VENTURE_NAME}}. Extends the canonical roadmap.json schema with domain-specific fields. Extension fields MUST live under extensions.* — canonical field names are reserved. This schema lives in the venture repo, NOT in luh-tech-roadmap-template. See SCHEMA_EXTENSIONS.md for governance rules and the promotion pathway for fields that become cross-venture canonical.",
+  "allOf": [
+    {
+      "$ref": "urn:luhtech:schema:roadmap:v3.1",
+      "description": "Inherits all canonical roadmap.json schema rules"
+    }
+  ],
+  "properties": {
+    "extensions": {
+      "type": "object",
+      "description": "Venture-specific extension fields for {{VENTURE_NAME}}. Add domain-specific properties here. Do NOT define fields outside of extensions.* — canonical namespace is reserved.",
+      "properties": {
+        "_ventureId": {
+          "type": "string",
+          "const": "{{VENTURE_ID}}",
+          "description": "Venture identifier — must match meta.ventureId"
+        },
+        "_extensionSchemaVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "description": "SemVer of this extension schema"
+        }
+      },
+      "required": ["_ventureId", "_extensionSchemaVersion"],
+      "additionalProperties": true,
+      "examples": [
+        {
+          "_ventureId": "{{VENTURE_ID}}",
+          "_extensionSchemaVersion": "1.0.0",
+          "YOUR_DOMAIN_FIELD": "Add your domain-specific data here under extensions.*"
+        }
+      ]
+    }
+  }
+}
