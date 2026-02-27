@@ -1,478 +1,329 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "urn:luhtech:schema:roadmap-business:v2.1",
-  "title": "Roadmap Business Schema v2.1",
-  "description": "Schema for venture business data including financials, team, competitive positioning, and service tiers. v2.1.0: mission/vision/currentStage/overallProgress moved to roadmap.json v3.1.0 (2026-02-26) \u2014 these are team-visible identity fields, not financial data. Base schema extensible for all luh-tech holdings ventures.",
+  "title": "LuhTech Venture Roadmap Business v2.1",
+  "description": "Business-layer data for LuhTech portfolio ventures. v2.1 removes mission, vision, currentStage, and overallProgress — those fields migrated to roadmap.json venture.* (Transform Fabric Architecture v2.0.0, 2026-02-26). ComputedValue financials from v2.2 are preserved. This schema governs all portfolio ventures at schemaVersion 2.2.0 and 2.3.0.",
+  "version": "2.1.0",
   "type": "object",
-  "$defs": {
-    "monetaryAmount": {
-      "type": "string",
-      "pattern": "^\\$[0-9,]+[KMB]?(-\\$[0-9,]+[KMB]?)?$",
-      "description": "Monetary amount (e.g., '$500K', '$1M-$5M')"
-    },
-    "percentage": {
-      "type": "string",
-      "pattern": "^[0-9]+%$",
-      "description": "Percentage value (e.g., '60%')"
-    },
-    "quarter": {
-      "type": "string",
-      "pattern": "^[Qq][1-4]_?20[2-3][0-9]$",
-      "description": "Quarter reference (e.g., 'Q2_2026')"
-    },
-    "keyHire": {
-      "type": "object",
-      "properties": {
-        "role": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Position title"
-        },
-        "quarter": {
-          "$ref": "#/$defs/quarter",
-          "description": "Target hiring quarter"
-        },
-        "critical": {
-          "type": "boolean",
-          "description": "Whether this hire is critical path"
-        },
-        "skills": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Required skills"
-        },
-        "notes": {
-          "type": "string",
-          "description": "Additional context"
-        }
-      },
-      "required": [
-        "role",
-        "quarter"
-      ],
-      "additionalProperties": false
-    },
-    "serviceTier": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Tier display name"
-        },
-        "target": {
-          "type": "string",
-          "description": "Target customer segment"
-        },
-        "pricing": {
-          "type": "object",
-          "properties": {
-            "base": {
-              "type": "string",
-              "description": "Base price"
-            },
-            "includes": {
-              "type": "string",
-              "description": "What's included"
-            },
-            "billing": {
-              "type": "string",
-              "enum": [
-                "free",
-                "monthly",
-                "annual",
-                "usage-based",
-                "custom"
-              ],
-              "description": "Billing model"
-            }
-          },
-          "required": [
-            "base"
-          ]
-        },
-        "features": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Features included in tier"
-        },
-        "limits": {
-          "type": "object",
-          "additionalProperties": true,
-          "description": "Usage limits for this tier"
-        }
-      },
-      "required": [
-        "name",
-        "target",
-        "pricing"
-      ]
-    },
-    "graphMetadata": {
-      "type": "object",
-      "properties": {
-        "nodeType": {
-          "type": "string",
-          "const": "BusinessRoadmap"
-        },
-        "inEdges": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string"
-              },
-              "target": {
-                "type": "string",
-                "format": "uri"
-              }
-            },
-            "required": [
-              "type",
-              "target"
-            ]
-          }
-        },
-        "outEdges": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string"
-              },
-              "target": {
-                "type": "string",
-                "format": "uri"
-              }
-            },
-            "required": [
-              "type",
-              "target"
-            ]
-          }
-        }
-      },
-      "required": [
-        "nodeType"
-      ]
-    }
-  },
-  "properties": {
-    "$schema": {
-      "type": "string",
-      "format": "uri",
-      "description": "JSON Schema reference"
-    },
-    "$id": {
-      "type": "string",
-      "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:file:roadmap-business$",
-      "description": "URN identifier for this document"
-    },
-    "schemaVersion": {
-      "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
-      "description": "Semantic version of schema"
-    },
-    "ventureId": {
-      "type": "string",
-      "minLength": 1,
-      "description": "Venture identifier"
-    },
-    "lastUpdated": {
-      "type": "string",
-      "format": "date-time",
-      "description": "ISO 8601 timestamp of last update"
-    },
-    "meta": {
-      "type": "object",
-      "description": "Document metadata for version tracking and migration",
-      "properties": {
-        "sourceOfTruth": {
-          "type": "string",
-          "description": "Canonical path for this document"
-        },
-        "migratedFrom": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Previous file locations"
-        },
-        "migrationDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "dataQualityFixes": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Data quality fixes applied during migration"
-        },
-        "syncStatus": {
-          "type": "object",
-          "properties": {
-            "v1Path": {
-              "type": "string"
-            },
-            "lastSync": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "syncDirection": {
-              "type": "string",
-              "enum": [
-                "v1-is-source-of-truth",
-                "v3-is-source-of-truth",
-                "bidirectional"
-              ]
-            }
-          }
-        },
-        "schemaChangelog": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "version": {
-                "type": "string"
-              },
-              "date": {
-                "type": "string",
-                "format": "date"
-              },
-              "changes": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            },
-            "required": [
-              "version",
-              "date",
-              "changes"
-            ]
-          }
-        }
-      }
-    },
-    "organizationName": {
-      "type": "string",
-      "minLength": 1,
-      "description": "Legal/brand name of organization"
-    },
-    "financials": {
-      "type": "object",
-      "description": "Financial projections and status",
-      "properties": {
-        "preSeed": {
-          "$ref": "#/$defs/monetaryAmount"
-        },
-        "preSeedTiming": {
-          "$ref": "#/$defs/quarter"
-        },
-        "preSeedUse": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/$defs/percentage"
-          },
-          "description": "Allocation of pre-seed funds"
-        },
-        "seed": {
-          "$ref": "#/$defs/monetaryAmount"
-        },
-        "seedTiming": {
-          "$ref": "#/$defs/quarter"
-        },
-        "seedUse": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/$defs/percentage"
-          }
-        },
-        "year1Revenue": {
-          "type": "string",
-          "description": "Projected year 1 ARR"
-        },
-        "burnRate": {
-          "type": "string",
-          "description": "Monthly burn rate"
-        },
-        "runway": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Runway in months"
-        },
-        "pilotValueProjection": {
-          "type": "object",
-          "properties": {
-            "perProject": {
-              "$ref": "#/$defs/monetaryAmount"
-            },
-            "roi": {
-              "type": "string",
-              "pattern": "^[0-9,]+%$"
-            },
-            "paybackPeriod": {
-              "type": "string"
-            }
-          },
-          "description": "Value proposition metrics for pilot customers"
-        }
-      }
-    },
-    "team": {
-      "type": "object",
-      "description": "Team composition and hiring plan",
-      "properties": {
-        "current": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Current team size"
-        },
-        "q2_2026_target": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "q4_2026_target": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "q2_2027_target": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "keyHires": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/keyHire"
-          },
-          "description": "Planned key hires"
-        },
-        "departments": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "properties": {
-              "current": {
-                "type": "integer"
-              },
-              "target": {
-                "type": "integer"
-              }
-            }
-          }
-        }
-      },
-      "required": [
-        "current"
-      ]
-    },
-    "competitive": {
-      "type": "object",
-      "description": "Competitive landscape and positioning",
-      "properties": {
-        "directCompetitors": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Direct competitors in market"
-        },
-        "indirectCompetitors": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Indirect/adjacent competitors"
-        },
-        "moats": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Competitive advantages/moats"
-        },
-        "differentiators": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "feature": {
-                "type": "string"
-              },
-              "description": {
-                "type": "string"
-              },
-              "competitorStatus": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "feature",
-              "description"
-            ]
-          }
-        }
-      }
-    },
-    "serviceTiers": {
-      "type": "object",
-      "description": "Product/service tier definitions",
-      "additionalProperties": {
-        "$ref": "#/$defs/serviceTier"
-      }
-    },
-    "graphMetadata": {
-      "$ref": "#/$defs/graphMetadata",
-      "description": "Graph relationship metadata for AI navigation"
-    },
-    "extensions": {
-      "type": "object",
-      "description": "Venture-specific extensions beyond base schema",
-      "additionalProperties": true
-    },
-    "schemaChangelog": {
-      "type": "array",
-      "description": "Schema version history for this file",
-      "items": {
-        "type": "object",
-        "required": [
-          "version",
-          "date",
-          "changes"
-        ],
-        "properties": {
-          "version": {
-            "type": "string"
-          },
-          "date": {
-            "type": "string",
-            "format": "date"
-          },
-          "changes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    }
-  },
   "required": [
     "$schema",
     "$id",
     "schemaVersion",
     "ventureId",
+    "organizationName",
     "lastUpdated",
-    "organizationName"
+    "financials",
+    "team"
   ],
-  "additionalProperties": false
+  "definitions": {
+    "source": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "date": { "type": "string" },
+        "accessDate": { "type": "string", "format": "date" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "verified", "reported", "industry-report", "government-data",
+            "comparable", "news", "pilot-data", "internal-calc",
+            "internal-estimate", "assumed", "external-research", "internal-ref"
+          ]
+        },
+        "byline": { "type": "string" },
+        "comment": { "type": "string" }
+      },
+      "if": { "properties": { "type": { "enum": ["assumed", "internal-calc"] } } },
+      "then": { "required": ["comment"] },
+      "additionalProperties": false
+    },
+    "variable": {
+      "type": "object",
+      "required": ["id", "label", "value", "unit", "source"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "label": { "type": "string" },
+        "value": { "oneOf": [{ "type": "number" }, { "type": "integer" }] },
+        "unit": { "type": "string" },
+        "source": { "$ref": "#/definitions/source" },
+        "asOf": { "type": "string" },
+        "confidence": {
+          "type": "string",
+          "enum": ["verified", "high", "medium", "low", "assumed", "internal"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "computedValue": {
+      "type": "object",
+      "required": ["id", "label", "variables", "formula", "result", "resultUnit"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "label": { "type": "string" },
+        "description": { "type": "string" },
+        "variables": {
+          "type": "array",
+          "minItems": 0,
+          "items": { "$ref": "#/definitions/variable" }
+        },
+        "formula": { "type": "string" },
+        "formulaComment": { "type": "string" },
+        "result": { "oneOf": [{ "type": "number" }, { "type": "integer" }] },
+        "resultUnit": { "type": "string" },
+        "displayValue": { "type": "string" },
+        "confidence": {
+          "type": "string",
+          "enum": ["verified", "high", "medium", "low", "assumed", "internal"]
+        },
+        "byline": { "type": "string" },
+        "lastComputed": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Schema identifier URN — must be urn:luhtech:schema:roadmap-business:v2.1"
+    },
+    "$id": {
+      "type": "string",
+      "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:file:roadmap-business$"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^2\\.[0-9]+\\.[0-9]+$",
+      "description": "SemVer of the data file. 2.2.0 = ComputedValue for burnRate/TAM/SAM/SOM. 2.3.0 = full ComputedValue coverage."
+    },
+    "ventureId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "organizationName": { "type": "string" },
+    "lastUpdated": { "type": "string", "format": "date-time" },
+    "founded": { "type": "string" },
+    "industry": { "type": "array", "items": { "type": "string" } },
+    "location": { "type": "string" },
+    "license": { "type": "string" },
+    "financials": {
+      "type": "object",
+      "description": "Financial data. All quantitative fields are ComputedValues at schemaVersion 2.3.0+. burnRate/TAM/SAM/SOM were ComputedValues from 2.2.0. preSeed/seed/runway/mrr/arr became ComputedValues at 2.3.0.",
+      "properties": {
+        "preSeed": { "$ref": "#/definitions/computedValue" },
+        "preSeedTiming": { "type": "string" },
+        "preSeedUse": {
+          "type": "object",
+          "description": "Allocation of pre-seed proceeds by category. Values are ComputedValues at 2.3.0+.",
+          "additionalProperties": true
+        },
+        "seed": { "$ref": "#/definitions/computedValue" },
+        "runway": { "$ref": "#/definitions/computedValue" },
+        "burnRate": { "$ref": "#/definitions/computedValue" },
+        "mrr": { "$ref": "#/definitions/computedValue" },
+        "arr": { "$ref": "#/definitions/computedValue" },
+        "totalRaised": { "type": "string" },
+        "roundStatus": {
+          "type": "string",
+          "enum": ["planning", "preparing", "raising", "soft-circling", "closing", "closed"]
+        },
+        "note": { "type": "string" },
+        "pilotValueProjection": {
+          "type": "object",
+          "properties": {
+            "perProject": {},
+            "roi": {},
+            "paybackPeriod": {}
+          }
+        }
+      }
+    },
+    "market": {
+      "type": "object",
+      "description": "Market sizing — TAM → SAM → SOM derivation chain. All figures are ComputedValues.",
+      "properties": {
+        "tam": { "$ref": "#/definitions/computedValue" },
+        "sam": { "$ref": "#/definitions/computedValue" },
+        "som": { "$ref": "#/definitions/computedValue" },
+        "cagr": { "$ref": "#/definitions/computedValue" },
+        "trends": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "team": {
+      "type": "object",
+      "required": ["current"],
+      "properties": {
+        "current": { "type": "integer", "minimum": 0 },
+        "members": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "role"],
+            "properties": {
+              "name": { "type": "string" },
+              "role": { "type": "string" },
+              "bio": { "type": "string" },
+              "linkedin": { "type": "string", "format": "uri" },
+              "expertise": { "type": "array", "items": { "type": "string" } }
+            },
+            "additionalProperties": false
+          }
+        },
+        "advisors": { "type": "array", "items": { "type": "object" } },
+        "contractors": { "type": "array", "items": { "type": "object" } },
+        "keyHires": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["role", "quarter"],
+            "properties": {
+              "role": { "type": "string" },
+              "quarter": { "type": "string", "pattern": "^q[1-4]_20[0-9]{2}$" },
+              "critical": { "type": "boolean" }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "competitive": {
+      "type": "object",
+      "properties": {
+        "directCompetitors": { "type": "array", "items": { "type": "string" } },
+        "indirectCompetitors": { "type": "array", "items": { "type": "string" } },
+        "moats": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "traction": {
+      "type": "object",
+      "properties": {
+        "customerCount": { "type": "integer", "minimum": 0 },
+        "customers": { "type": "array", "items": { "type": "string" } },
+        "testimonials": { "type": "array", "items": { "type": "object" } },
+        "pilotDetails": {},
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "value": { "type": "string" },
+              "trend": { "type": "string", "enum": ["up", "down", "flat"] }
+            }
+          }
+        }
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "description": "Human-curated investor deck copy.",
+      "properties": {
+        "tagline": { "type": "string" },
+        "problem": { "type": "object", "additionalProperties": true },
+        "solution": { "type": "object", "additionalProperties": true },
+        "market": { "type": "object", "additionalProperties": true },
+        "businessModel": { "type": "object", "additionalProperties": true },
+        "differentiator": { "type": "object", "additionalProperties": true },
+        "traction": { "type": "object", "additionalProperties": true },
+        "ask": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "properties": {
+        "colors": {
+          "type": "object",
+          "properties": {
+            "primary": { "type": "string" },
+            "secondary": { "type": "string" },
+            "accent": { "type": "string" }
+          }
+        },
+        "fonts": {
+          "type": "object",
+          "properties": {
+            "heading": { "type": "string" },
+            "body": { "type": "string" }
+          }
+        }
+      }
+    },
+    "repositorySplit": {
+      "type": "object",
+      "properties": {
+        "planned": { "type": "boolean" },
+        "splitDate": { "type": "string" },
+        "publicRepo": { "type": "string" },
+        "publicLicense": { "type": "string" },
+        "businessRepo": { "type": "string" },
+        "businessLicense": { "type": "string" }
+      }
+    },
+    "graphMetadata": {
+      "type": "object",
+      "properties": {
+        "nodeType": { "type": "string", "const": "file" },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "target": { "type": "string" },
+              "relationship": { "type": "string" },
+              "direction": { "type": "string", "enum": ["outgoing", "incoming"] }
+            }
+          }
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "schemaChangelog": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["version", "date", "changes"],
+            "properties": {
+              "version": { "type": "string" },
+              "date": { "type": "string" },
+              "changes": { "type": "array", "items": { "type": "string" } }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "x-migrationGuide": {
+    "removedFromV2.0": [
+      "mission — moved to roadmap.json venture.mission (Transform Fabric Architecture v2.0.0, 2026-02-26)",
+      "vision — moved to roadmap.json venture.vision",
+      "currentStage — moved to roadmap.json venture.currentStage",
+      "overallProgress — moved to roadmap.json venture.overallProgress"
+    ],
+    "preservedFromV2.2": [
+      "financials.burnRate (ComputedValue)",
+      "market.tam/sam/som/cagr (ComputedValue)",
+      "All team, competitive, traction, presentation sections"
+    ],
+    "addedAtV2.3": [
+      "financials.preSeed, financials.seed, financials.runway, financials.mrr, financials.arr (ComputedValue)",
+      "financials.preSeedUse allocations (ComputedValue per category)"
+    ]
+  },
+  "x-changelog": [
+    {
+      "version": "2.1.0",
+      "date": "2026-02-26",
+      "changes": [
+        "BREAKING: Removed mission, vision, currentStage, overallProgress from schema",
+        "These fields migrated to roadmap.json venture.* per Transform Fabric Architecture v2.0.0",
+        "ComputedValue financials from v2.2.0 preserved (burnRate, TAM, SAM, SOM)",
+        "ComputedValue full coverage from v2.3.0 preserved (preSeed, seed, runway, mrr, arr)"
+      ]
+    }
+  ]
 }

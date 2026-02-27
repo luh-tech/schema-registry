@@ -1,0 +1,315 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:luhtech:schema:computed-value:v1.0",
+  "title": "LuhTech ComputedValue — Reusable Financial Type",
+  "description": "Standalone, importable JSON Schema definition for the ComputedValue pattern. Every quantitative financial claim in the LuhTech portfolio is expressed as a ComputedValue: variables (sourced inputs) + formula (derivation) + result (cached output) + provenance metadata. An auditor can reproduce any number from schema data alone. Reference this schema via $ref from roadmap-business.schema.v3.0+.",
+  "version": "1.0.0",
+  "type": "object",
+  "definitions": {
+    "ConfidenceLevel": {
+      "type": "string",
+      "description": "Calibrated confidence in a value or computation. Must be set honestly — 'assumed' fields are never hidden.",
+      "enum": ["verified", "high", "medium", "low", "assumed", "internal"],
+      "x-enumDescriptions": {
+        "verified": "Externally confirmed with documentation. Third-party audit, signed contracts, bank statements, or government data. Reproduce-able by an auditor from source documents.",
+        "high": "Strong external sourcing. Industry report, comparable deal data, or well-reasoned derivation from verified inputs. Unlikely to be materially wrong.",
+        "medium": "Reasonable estimate with partial backing. Internal calculation based on high-confidence inputs, or benchmarked assumption with good comparables. Could be off by 20-40%.",
+        "low": "Rough estimate. Limited external validation. Use with caution; flag to investors. Replace with better data at first opportunity.",
+        "assumed": "Explicit assumption with no external validation. Founder judgment or analogy to comparables. MUST include formulaComment explaining basis and plan to replace.",
+        "internal": "Internal decision or founder judgment, not derived from external data. Appropriate for planning values (e.g., target raise amount, option pool size, go-to-market timing)."
+      }
+    },
+    "SourceType": {
+      "type": "string",
+      "description": "Classification of data source. 'assumed' and 'internal-calc' REQUIRE a comment field. 'internal-estimate' SHOULD include a comment.",
+      "enum": [
+        "verified",
+        "reported",
+        "industry-report",
+        "government-data",
+        "comparable",
+        "news",
+        "pilot-data",
+        "internal-calc",
+        "internal-estimate",
+        "assumed",
+        "external-research",
+        "internal-ref"
+      ],
+      "x-enumDescriptions": {
+        "verified": "Audited or legally verified. Signed contracts, bank statements, government filings with legal standing.",
+        "reported": "Self-reported by a company or organization. Press releases, annual reports, investor decks. Not independently audited.",
+        "industry-report": "Third-party market research from a named research firm (MarketsandMarkets, Gartner, Forrester, IDC, etc.). Cite URL and report date.",
+        "government-data": "Government statistical agencies (BLS, Census Bureau, BEA, Statistics Canada). High credibility for macro data.",
+        "comparable": "Comparable company, deal, or transaction data. Must cite the comparable with public justification for why it applies.",
+        "news": "News article, press coverage, or blog post. Lower credibility — use only for directional data or citations with named sources.",
+        "pilot-data": "Data from active or completed pilot deployments within LuhTech portfolio. Highest quality for venture-specific operational claims.",
+        "internal-calc": "Internal calculation derived from other sourced inputs. Formula must be in formulaComment. REQUIRES comment explaining derivation chain.",
+        "internal-estimate": "Internal estimate from founder or team judgment. Not derived from external data. SHOULD include comment explaining basis.",
+        "assumed": "Explicit assumption with no external or internal backing. Used as a placeholder pending better data. REQUIRES comment with replacement plan.",
+        "external-research": "External research not from a formal named research firm. Academic papers, analyst blogs, conference presentations. Cite URL and author.",
+        "internal-ref": "Value sourced from another field in the same or sibling roadmap-business.json. The 'name' field must contain the JSON path reference (e.g., 'financials.burnRate.result')."
+      }
+    },
+    "Source": {
+      "type": "object",
+      "description": "Provenance record for a variable or computation. Appears as slide bylines, investor deck footnotes, and dataroom justification. Every number must be traceable to its source.",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full citation name. For industry reports: 'FirmName — Report Title Year'. For internal: 'Internal — brief description'. For internal-ref: 'financials.burnRate.result (see burnRate ComputedValue)'.",
+          "examples": [
+            "MarketsandMarkets — Construction Software Market 2024",
+            "Internal — market rate senior engineer benchmarked against Levels.fyi, San Diego CA, 2025",
+            "BLS Occupational Employment Statistics — Software Developers, May 2024",
+            "financials.burnRate.result (see burnRate ComputedValue)"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Source URL. Required for industry-report, government-data, external-research, and comparable sources. Omit for internal sources."
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of the source data — 'YYYY-MM-DD', 'YYYY-Qn', or 'YYYY'. Use the date of the data, not the access date.",
+          "examples": ["2024-Q3", "2024-09-15", "2024", "2025-Q1"]
+        },
+        "accessDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Date the URL was accessed. Required when url is present. Enables staleness detection."
+        },
+        "type": {
+          "$ref": "#/definitions/SourceType"
+        },
+        "byline": {
+          "type": "string",
+          "description": "Short attribution string for slides and reports. Keep under 60 characters. Examples: 'Source: MarketsandMarkets, 2024', 'Source: Internal Analysis, 2026'."
+        },
+        "comment": {
+          "type": "string",
+          "description": "Required when type is 'assumed', 'internal-calc', or 'internal-estimate'. Explains derivation basis, why this assumption was chosen, and the plan to replace it with better data. Also used for any additional context that aids reproducibility."
+        }
+      },
+      "if": {
+        "properties": {
+          "type": {"enum": ["assumed", "internal-calc"]}
+        }
+      },
+      "then": {
+        "required": ["comment"]
+      },
+      "additionalProperties": false
+    },
+    "Variable": {
+      "type": "object",
+      "description": "Named, typed, sourced input to a ComputedValue. Variables are the base data layer — the ONLY things that change when reality changes. A founder updates a variable; the formula re-derives the result. No other part of the system changes. Variable ids are used as operands in formula expressions.",
+      "required": ["id", "label", "value", "unit", "source"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Stable snake_case identifier. Used verbatim in formula expressions. Never change this without updating the formula."
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-readable label for this variable. Appears in dataroom and audit context."
+        },
+        "value": {
+          "description": "The numeric value of this variable. Always a number (integer or float). Non-numeric values belong in metadata fields, not variables.",
+          "oneOf": [
+            {"type": "number"},
+            {"type": "integer"}
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of measurement using LuhTech unit vocabulary. Use canonical forms: 'USD', 'USD_per_month', 'USD_billions', 'USD_millions', 'percent', 'months', 'years', 'headcount', 'count', 'ratio'.",
+          "examples": ["USD", "USD_per_month", "USD_billions", "USD_millions", "percent", "months", "years", "headcount", "ratio", "count"]
+        },
+        "source": {
+          "$ref": "#/definitions/Source"
+        },
+        "asOf": {
+          "type": "string",
+          "description": "Date this value was last verified or collected. 'YYYY-MM-DD' or 'YYYY-Qn'. Used for staleness detection — values older than 90 days should be reviewed.",
+          "examples": ["2026-02-25", "2024-Q3"]
+        },
+        "confidence": {
+          "$ref": "#/definitions/ConfidenceLevel",
+          "description": "Confidence in this specific variable's accuracy. The ComputedValue's overall confidence should not exceed the lowest-confidence variable."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ScenarioVariant": {
+      "type": "object",
+      "description": "A scenario variant of a ComputedValue. Contains the alternative variable values and the resulting recomputed result. The parent ComputedValue's variables array holds base-case values; ScenarioVariant overrides specific variable values for the scenario.",
+      "required": ["variables", "result", "resultUnit"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Human-readable scenario name, e.g. 'Optimistic: 3x faster pilot conversion'."
+        },
+        "description": {
+          "type": "string",
+          "description": "Narrative explaining what conditions make this scenario occur."
+        },
+        "variables": {
+          "type": "array",
+          "description": "ONLY the variables that differ from the base case. The formula is the same. The transform re-evaluates the formula with these override values merged into the base variables.",
+          "items": {"$ref": "#/definitions/Variable"}
+        },
+        "formula": {
+          "type": "string",
+          "description": "Override formula for this scenario only. Omit if same as parent formula."
+        },
+        "result": {
+          "description": "Pre-computed result for this scenario using the override variables.",
+          "oneOf": [{"type": "number"}, {"type": "integer"}]
+        },
+        "resultUnit": {
+          "type": "string",
+          "description": "Unit of the scenario result. Must match parent resultUnit unless formula also differs."
+        },
+        "displayValue": {
+          "type": "string",
+          "description": "Formatted display string for this scenario."
+        },
+        "confidence": {
+          "$ref": "#/definitions/ConfidenceLevel"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Scenarios": {
+      "type": "object",
+      "description": "Optional scenario modeling container for a ComputedValue. Stores optimistic/base/pessimistic variants without duplicating the schema. The parent ComputedValue holds the base case in its variables[] and result fields. Scenarios contain only the override variables and recomputed results. DESIGN RULE: scenario variants use the same formula as the parent. If the formula changes, that is a different ComputedValue, not a scenario.",
+      "properties": {
+        "optimistic": {
+          "$ref": "#/definitions/ScenarioVariant",
+          "description": "Best-case scenario: favorable assumptions on key variables (e.g., higher conversion rate, faster hiring, lower churn)."
+        },
+        "base": {
+          "$ref": "#/definitions/ScenarioVariant",
+          "description": "Base case: same as parent ComputedValue variables[]. Included here optionally for explicit labeling in investor outputs."
+        },
+        "pessimistic": {
+          "$ref": "#/definitions/ScenarioVariant",
+          "description": "Worst-case scenario: adverse assumptions on key variables (e.g., lower conversion, slower hiring, higher churn). Use for investor risk disclosure."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ComputedValue": {
+      "type": "object",
+      "description": "A quantitative claim with full provenance. The core pattern of LuhTech financial architecture. RULE: no bare scalar financial values in roadmap-business.json — every number is a ComputedValue. Variables are inputs, formula is the derivation, result is the cached output. Change a variable — rerun the formula — result updates. The stored result is a performance cache. The formula + variables are the truth. An auditor must be able to reproduce the result from variables alone.",
+      "required": ["id", "label", "variables", "formula", "result", "resultUnit"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Stable snake_case identifier for this computed value. Used in graph references and transform field mappings. Never rename without a schema migration."
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-readable label. Appears in investor dashboards and reports."
+        },
+        "description": {
+          "type": "string",
+          "description": "Extended description. Explains what this value represents, how it should be interpreted, and what it is NOT (disambiguation)."
+        },
+        "variables": {
+          "type": "array",
+          "description": "All numeric inputs. These are the only levers. To update a projection, change a variable value and recompute. Minimum 1 variable required — even a single input value must be expressed as a variable to carry its source and confidence.",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/Variable"}
+        },
+        "formula": {
+          "type": "string",
+          "description": "Mathematical expression using variable ids as operands. Supported operators: + - * / ^ (power) and parentheses. Must be evaluatable by a JSONata-compatible expression engine. Examples: 'infra_monthly_usd + founder_monthly_usd', 'sam_usd_billions * capture_rate', '((market_size_2030 / market_size_2024) ^ (1 / forecast_years) - 1) * 100'.",
+          "examples": [
+            "infra_monthly_usd + founder_monthly_usd",
+            "tam_usd_billions * na_market_share_pct * analytics_segment_pct",
+            "((market_size_2030 / market_size_2024) ^ (1 / forecast_years) - 1) * 100",
+            "ltv_usd / cac_usd",
+            "total_raised_usd / monthly_burn_usd"
+          ]
+        },
+        "formulaComment": {
+          "type": "string",
+          "description": "Plain-English explanation of the formula logic and its assumptions. Required when formula is non-trivial. Show the numeric substitution: 'Monthly burn = $172 (infra) + $6,320 (founder) = $6,492'. Include any constraints, floor/ceiling values, or conditions that affect interpretation."
+        },
+        "result": {
+          "description": "Pre-computed output. MUST be recomputed whenever any variable changes. This is a performance cache — if variables and result are inconsistent, variables win. The transform engine re-derives results from variables at runtime.",
+          "oneOf": [
+            {"type": "number"},
+            {"type": "integer"}
+          ]
+        },
+        "resultUnit": {
+          "type": "string",
+          "description": "Unit of the result using LuhTech unit vocabulary. Must match the dimensional analysis of the formula."
+        },
+        "displayValue": {
+          "type": "string",
+          "description": "Formatted string for slides, reports, and investor dashboards. DECOUPLED from result — a result of 750000 may display as '$500K–$1M' (range) or '$750K' (midpoint) depending on context. The transform layer controls which display value to use in which output."
+        },
+        "confidence": {
+          "$ref": "#/definitions/ConfidenceLevel",
+          "description": "Overall confidence in this computed value. Should not exceed the minimum confidence of its input variables. Be honest: an investor reading 'assumed' knows to probe this number."
+        },
+        "byline": {
+          "type": "string",
+          "description": "Attribution string aggregated from variable sources. Appears as footnote on investor slides. Format: 'Source: [Source1]; [Source2], [Year]'. Keep under 100 characters."
+        },
+        "lastComputed": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 UTC timestamp of last formula evaluation. Used for staleness detection. Values not recomputed in 90 days should be flagged for review."
+        },
+        "scenarios": {
+          "$ref": "#/definitions/Scenarios",
+          "description": "Optional scenario modeling. Optimistic/base/pessimistic variants. Each variant overrides specific variables and provides the recomputed result. The parent ComputedValue always holds the base case."
+        },
+        "stalenessPolicy": {
+          "type": "object",
+          "description": "Optional staleness policy for this specific ComputedValue. Overrides global policy.",
+          "properties": {
+            "reviewAfterDays": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Flag this value for review if lastComputed is older than this many days."
+            },
+            "autoExpireAfterDays": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Treat result as invalid if lastComputed exceeds this threshold. Forces recomputation from variables."
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ComputedValue",
+  "x-changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-02-27",
+      "changes": [
+        "Initial standalone ComputedValue schema extracted from roadmap-business.schema.v2.2",
+        "Added ConfidenceLevel enum with 6 levels: verified, high, medium, low, assumed, internal",
+        "Added SourceType enum with 12 types covering all LuhTech source classifications",
+        "Added ScenarioVariant and Scenarios types for optimistic/base/pessimistic modeling",
+        "Added stalenessPolicy for per-value review thresholds",
+        "Added accessDate to Source for URL staleness detection",
+        "Formalized unit vocabulary in Variable and ComputedValue",
+        "Added internal-ref SourceType for cross-document field references"
+      ]
+    }
+  ]
+}
