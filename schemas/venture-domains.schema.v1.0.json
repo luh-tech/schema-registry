@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:luhtech:schema:venture-domains:v1.0",
+  "title": "LuhTech Venture Domain Profile",
+  "description": "Canonical domain profile for a LuhTech portfolio venture. Human-authored T1 canonical source. Extracted from url-catalog.json and maintained per-venture. Source of truth for all web presence data downstream.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["$schema", "schemaVersion", "ventureId", "lastUpdated", "meta", "domains", "cloudflare", "registrar", "urls", "marketing"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Schema URI reference",
+      "const": "https://schemas.luh.tech/venture-domains.schema.v1.0.json"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version this file was authored against",
+      "const": "1.0.0"
+    },
+    "ventureId": {
+      "type": "string",
+      "description": "Canonical venture identifier — must match roadmap.json meta.ventureId",
+      "enum": ["ectropy", "jobsitecontrol", "qullqa", "hilja", "viiva", "ohjaus", "siltana", "raizal", "replique", "luhtech"]
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last manual update to this file"
+    },
+    "meta": {
+      "type": "object",
+      "description": "File metadata and provenance",
+      "required": ["sourceOfTruth", "extractedFrom", "extractedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceOfTruth": {
+          "type": "string",
+          "description": "Canonical path of this file in its repo",
+          "pattern": "^\\.roadmap/domains\\.json$"
+        },
+        "extractedFrom": {
+          "type": "string",
+          "description": "Source file this data was extracted from",
+          "const": "luh-tech/business-tools/config/url-catalog.json"
+        },
+        "extractedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the extraction script generated this file"
+        },
+        "urlCatalogVersion": {
+          "type": "string",
+          "description": "Version of url-catalog.json at extraction time",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "schemaChangelog": {
+          "type": "array",
+          "description": "Version history for this venture's domains.json",
+          "items": {
+            "type": "object",
+            "required": ["version", "date", "changes"],
+            "properties": {
+              "version": { "type": "string" },
+              "date": { "type": "string", "format": "date" },
+              "changes": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "domains": {
+      "type": "object",
+      "description": "Complete domain inventory for this venture",
+      "required": ["primary", "aliases", "totalOwned"],
+      "additionalProperties": false,
+      "properties": {
+        "primary": {
+          "type": "string",
+          "description": "Primary production domain — canonical brand anchor",
+          "format": "hostname"
+        },
+        "aliases": {
+          "type": "array",
+          "description": "Alternative domains that redirect to or serve this venture",
+          "items": { "type": "string", "format": "hostname" },
+          "minItems": 0
+        },
+        "typoProtection": {
+          "type": "array",
+          "description": "Defensive domains registered to prevent typosquatting",
+          "items": { "type": "string", "format": "hostname" },
+          "minItems": 0
+        },
+        "subBrands": {
+          "type": "object",
+          "description": "Named sub-brands under this venture umbrella. Each key is the sub-brand ID.",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["name", "purpose", "domains"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "description": "Sub-brand display name" },
+              "purpose": { "type": "string", "description": "Strategic purpose of this sub-brand" },
+              "primaryDomain": {
+                "type": "string",
+                "format": "hostname",
+                "description": "Primary domain for this sub-brand, if designated"
+              },
+              "domains": {
+                "type": "array",
+                "items": { "type": "string", "format": "hostname" },
+                "minItems": 1
+              }
+            }
+          }
+        },
+        "openCommunity": {
+          "type": "object",
+          "description": "Open community namespace domains (e.g. open* namespace for jobsitecontrol)",
+          "required": ["purpose", "domains"],
+          "additionalProperties": false,
+          "properties": {
+            "purpose": { "type": "string" },
+            "domains": {
+              "type": "array",
+              "items": { "type": "string", "format": "hostname" },
+              "minItems": 1
+            }
+          }
+        },
+        "portfolioInfrastructure": {
+          "type": "array",
+          "description": "Generic .site or holding domains assigned from portfolio pool",
+          "items": { "type": "string", "format": "hostname" },
+          "minItems": 0
+        },
+        "totalOwned": {
+          "type": "integer",
+          "description": "Total count of all domains owned/assigned to this venture across all categories",
+          "minimum": 1
+        }
+      }
+    },
+    "cloudflare": {
+      "type": "object",
+      "description": "Cloudflare account and zone migration state",
+      "required": ["accountPre", "accountPost", "migrationStatus"],
+      "additionalProperties": false,
+      "properties": {
+        "accountPre": {
+          "type": "string",
+          "description": "Cloudflare account holding domains pre-split",
+          "enum": ["luhtechnology", "luh-tech"]
+        },
+        "accountPost": {
+          "type": "string",
+          "description": "Cloudflare account that will hold domains post-split",
+          "enum": ["luhtechnology", "luh-tech"]
+        },
+        "migrationStatus": {
+          "type": "string",
+          "description": "Current migration state of primary domain zone",
+          "enum": ["none", "pending", "partial", "ready", "complete", "blocked"]
+        },
+        "migrationPhase": {
+          "type": "string",
+          "description": "Migration sequence phase from domain-account-strategy.json (e.g. PHASE-1, PHASE-5)",
+          "pattern": "^PHASE-[0-9]+$"
+        },
+        "migrationBlocker": {
+          "type": ["string", "null"],
+          "description": "Description of what is blocking migration, if status is blocked"
+        },
+        "primaryZoneId": {
+          "type": ["string", "null"],
+          "description": "Cloudflare zone ID for the primary domain, null if not yet known"
+        }
+      }
+    },
+    "registrar": {
+      "type": "object",
+      "description": "Domain registrar state",
+      "required": ["current"],
+      "additionalProperties": false,
+      "properties": {
+        "current": {
+          "type": "string",
+          "description": "Current registrar for primary domain",
+          "enum": ["Cloudflare", "GoDaddy", "Mixed", "Unknown"]
+        },
+        "migrationTarget": {
+          "type": ["string", "null"],
+          "description": "Target registrar for domains that need to move"
+        },
+        "godaddyDomainsPending": {
+          "type": "array",
+          "description": "Domains still at GoDaddy that need to transfer",
+          "items": { "type": "string", "format": "hostname" },
+          "minItems": 0
+        },
+        "transferLockExpired": {
+          "type": ["boolean", "null"],
+          "description": "Whether the 60-day ICANN transfer lock has expired for GoDaddy domains, null if not applicable"
+        }
+      }
+    },
+    "urls": {
+      "type": "object",
+      "description": "Canonical URL references for deployed environments and services",
+      "required": ["production"],
+      "additionalProperties": false,
+      "properties": {
+        "production": {
+          "type": "string",
+          "format": "uri",
+          "description": "Primary production URL"
+        },
+        "staging": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "Staging environment URL"
+        },
+        "api": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "API endpoint URL"
+        },
+        "docs": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "Documentation URL"
+        },
+        "dashboard": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "Admin dashboard URL"
+        },
+        "custom": {
+          "type": "object",
+          "description": "Additional named URL endpoints specific to this venture",
+          "additionalProperties": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "subdomains": {
+      "type": "array",
+      "description": "Named subdomains under the primary domain. Required for luhtech (holdings) venture; optional for others.",
+      "items": {
+        "type": "object",
+        "required": ["subdomain", "purpose", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "subdomain": {
+            "type": "string",
+            "description": "Subdomain label (e.g. 'n8n' for n8n.luh.tech)"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Full URL including scheme"
+          },
+          "purpose": {
+            "type": "string",
+            "description": "Service or content purpose"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "planned", "decommissioned"],
+            "description": "Operational status"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["A", "CNAME", "MX"],
+            "description": "DNS record type"
+          }
+        }
+      },
+      "minItems": 0
+    },
+    "marketing": {
+      "type": "object",
+      "description": "Marketing distribution layer — entry points, verticals, and positioning anchors",
+      "required": ["primaryUrl"],
+      "additionalProperties": false,
+      "properties": {
+        "primaryUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "The single canonical URL used in all marketing materials"
+        },
+        "verticalEntryPoints": {
+          "type": "array",
+          "description": "Dedicated domain/URL entry points for specific market verticals (e.g. adu.site for ADU market)",
+          "items": {
+            "type": "object",
+            "required": ["url", "vertical", "purpose"],
+            "additionalProperties": false,
+            "properties": {
+              "url": { "type": "string", "format": "uri" },
+              "vertical": {
+                "type": "string",
+                "description": "Market vertical identifier (e.g. 'adu', 'residential', 'agriculture')"
+              },
+              "purpose": {
+                "type": "string",
+                "description": "Description of this entry point's marketing role"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["active", "planned", "parked"]
+              }
+            }
+          },
+          "minItems": 0
+        },
+        "openCommunityUrl": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "Primary URL for open community namespace, if applicable"
+        },
+        "positioning": {
+          "type": "string",
+          "description": "One-line venture positioning statement from url-catalog.json"
+        }
+      }
+    },
+    "notion": {
+      "type": "object",
+      "description": "Notion workspace references for this venture",
+      "additionalProperties": false,
+      "properties": {
+        "dashboard": {
+          "type": "string",
+          "format": "uri",
+          "description": "Main Notion dashboard URL"
+        },
+        "commandCenter": {
+          "type": "string",
+          "format": "uri",
+          "description": "Command center Notion URL (Holdings only)"
+        }
+      }
+    }
+  },
+  "schemaChangelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-02-28",
+      "changes": [
+        "Initial schema — per-venture domain profile for LuhTech portfolio",
+        "Captures primary/aliases/sub-brands/typo-protection/open-community/migration state/marketing entry points",
+        "T1 canonical source extracted from url-catalog.json",
+        "Part of LUHTECH-DEVPROMPT-DOMAIN-001 domain catalog integration"
+      ]
+    }
+  ]
+}
