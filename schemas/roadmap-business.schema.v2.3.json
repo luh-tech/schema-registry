@@ -1,0 +1,466 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:luhtech:schema:roadmap-business:v2.3",
+  "title": "LuhTech Venture Roadmap Business v2.3",
+  "description": "Canonical business-layer data: financials, market, team, competitive. Paired with roadmap.json (product/technical). All financial fields are ComputedValue objects — no raw strings or numbers except historic reporting (totalRaised, roundStatus). venture-summary.json is computed from both via transform pipeline. Enterprise Excellence. Schema-First. No Shortcuts.",
+  "type": "object",
+  "required": ["$schema", "schemaVersion", "ventureId", "lastUpdated", "currentStage", "financials", "team"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "enum": ["urn:luhtech:schema:roadmap-business:v2.3"]
+    },
+    "$id": {
+      "type": "string",
+      "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:file:roadmap-business$"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "const": "2.3.0"
+    },
+    "ventureId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Must match roadmap.json meta.ventureId"
+    },
+    "organizationName": { "type": "string" },
+    "lastUpdated": { "type": "string", "format": "date-time" },
+    "currentStage": {
+      "type": "string",
+      "enum": ["ideation", "validation", "mvp", "pilot", "growth", "scale"],
+      "description": "Lifecycle phase. Distinct from roadmap.json meta.status (operational state)."
+    },
+    "overallProgress": { "type": "string" },
+    "founded": { "type": "string", "description": "ISO date of venture founding" },
+    "industry": { "type": "array", "items": { "type": "string" } },
+    "location": { "type": "string" },
+    "license": { "type": "string" },
+    "financials": { "$ref": "#/definitions/financials" },
+    "market": { "$ref": "#/definitions/market" },
+    "team": { "$ref": "#/definitions/team" },
+    "competitive": { "$ref": "#/definitions/competitive" },
+    "traction": { "$ref": "#/definitions/traction" },
+    "presentation": { "$ref": "#/definitions/presentation" },
+    "assets": { "$ref": "#/definitions/assets" },
+    "repositorySplit": { "$ref": "#/definitions/repositorySplit" },
+    "graphMetadata": { "$ref": "#/definitions/graphMetadata" }
+  },
+  "additionalProperties": false,
+  "definitions": {
+
+    "ComputedValue": {
+      "type": "object",
+      "description": "A value derived from explicit inputs via a declared formula. Every financial field uses this structure. No raw strings or bare numbers for computed/planned quantities.",
+      "required": ["id", "label", "variables", "formula", "result", "resultUnit", "displayValue", "confidence", "byline", "lastComputed"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Snake_case identifier unique within its parent object (e.g. 'pre_seed_target', 'runway_months')"
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-readable name shown in UIs and slides"
+        },
+        "description": { "type": "string" },
+        "variables": {
+          "type": "array",
+          "description": "All inputs to the formula. Each variable must have a source. Zero-length only for reporting fields (mrr/arr at $0).",
+          "items": { "$ref": "#/definitions/ComputedVariable" }
+        },
+        "formula": {
+          "type": "string",
+          "description": "Expression referencing variable ids. Use 'reported' for verified historic facts with no computation (e.g. mrr = $0 pre-revenue)."
+        },
+        "formulaComment": { "type": "string" },
+        "result": {
+          "type": "number",
+          "description": "Numeric result of the formula. Always a number — never a string."
+        },
+        "resultUnit": {
+          "type": "string",
+          "description": "Unit of result. Examples: USD, USD_per_month, USD_per_year, months, percent, USD_billions"
+        },
+        "displayValue": {
+          "type": "string",
+          "description": "Formatted string for display. Examples: '$500K–$1M', '$6,492/mo', '18 months', '$0'"
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "assumed", "verified", "internal"],
+          "description": "high=primary source. medium=derived/secondary. low=projection. assumed=internal estimate pending validation. verified=confirmed fact (e.g. pre-revenue $0). internal=founder judgment."
+        },
+        "byline": {
+          "type": "string",
+          "description": "Citation string for display. Format: 'Source: <name>, <year>' or 'Source: Internal Analysis'"
+        },
+        "lastComputed": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO timestamp of last computation. Update when any variable changes."
+        }
+      }
+    },
+
+    "ComputedVariable": {
+      "type": "object",
+      "required": ["id", "label", "value", "unit", "source"],
+      "properties": {
+        "id": { "type": "string", "description": "Snake_case. Referenced in formula string." },
+        "label": { "type": "string" },
+        "value": { "type": "number" },
+        "unit": { "type": "string" },
+        "source": { "$ref": "#/definitions/ComputedSource" },
+        "asOf": { "type": "string", "description": "Date or quarter the value was measured (e.g. '2026-02-18' or '2024-Q3')" },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "assumed", "verified", "internal"]
+        }
+      }
+    },
+
+    "ComputedSource": {
+      "type": "object",
+      "required": ["name", "type", "byline"],
+      "properties": {
+        "name": { "type": "string", "description": "Full citation name" },
+        "url": { "type": "string", "format": "uri" },
+        "date": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["industry-report", "internal-calc", "pilot-data", "assumed", "reporting", "internal-estimate", "contractor-agreement"],
+          "description": "reporting = verified historic fact. pilot-data = measured from live system. assumed = pending validation."
+        },
+        "byline": { "type": "string" },
+        "comment": { "type": "string" }
+      }
+    },
+
+    "financials": {
+      "type": "object",
+      "description": "All financial data. Single source of truth for funding, revenue, burn. All planned/computed quantities are ComputedValue. Historic reporting fields (totalRaised, roundStatus, note) remain plain types.",
+      "required": ["preSeed", "preSeedTiming", "preSeedUse", "burnRate", "runway", "mrr", "arr"],
+      "properties": {
+
+        "preSeed": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Pre-seed funding target. Formula: 'pre_seed_target_usd' (identity — the target IS the value). result is the midpoint in USD. displayValue is the range string shown to investors."
+        },
+        "preSeedTiming": {
+          "type": ["string", "null"],
+          "description": "Quarter code for planned close. E.g. 'Q2_2026'. Plain string — this is a planning label not a computation."
+        },
+        "preSeedUse": {
+          "type": "object",
+          "description": "Allocation of pre-seed by category. Each key is a category (engineering, operations, etc.). Each value is a ComputedValue where result = preSeed.result * allocation_pct / 100.",
+          "additionalProperties": { "$ref": "#/definitions/AllocationComputedValue" }
+        },
+
+        "seed": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Seed round target. Same pattern as preSeed."
+        },
+        "seedTiming": { "type": ["string", "null"] },
+        "seedUse": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/AllocationComputedValue" }
+        },
+
+        "burnRate": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Monthly cash outflow. Formula sums cost variables. resultUnit: USD_per_month."
+        },
+        "runway": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Months of runway. Formula: available_funds_usd / burn_rate_monthly_usd. Variables reference burnRate.result for burn input."
+        },
+        "mrr": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Monthly recurring revenue. Pre-revenue: result=0, formula='reported', confidence='verified', source.type='reporting'."
+        },
+        "arr": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Annual recurring revenue. Pre-revenue: result=0, formula='reported', confidence='verified', source.type='reporting'."
+        },
+
+        "totalRaised": {
+          "type": "string",
+          "description": "Historic reporting — total capital raised to date. Plain string (e.g. '$0', '$500K'). Not a computation."
+        },
+        "roundStatus": {
+          "type": "string",
+          "enum": ["planning", "active", "closed", "paused"],
+          "description": "Current fundraising status. Plain enum — not a computation."
+        },
+        "note": {
+          "type": ["string", "null"],
+          "description": "Free-text financial context. Plain string."
+        },
+        "pilotValueProjection": {
+          "type": "object",
+          "description": "Pilot ROI projections. Null until pilot data exists.",
+          "properties": {
+            "perProject": { "type": ["string", "null"] },
+            "roi": { "type": ["string", "null"] },
+            "paybackPeriod": { "type": ["string", "null"] }
+          }
+        },
+        "projections": {
+          "type": "object",
+          "description": "Annual financial projections by year. Plain objects — forward-looking estimates, not computed from current data.",
+          "patternProperties": {
+            "^20[0-9]{2}$": {
+              "type": "object",
+              "properties": {
+                "mrr": { "type": "string" },
+                "arr": { "type": "string" },
+                "customers": { "type": ["string", "integer"] }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "AllocationComputedValue": {
+      "type": "object",
+      "description": "A ComputedValue representing allocation of a funding round. Extends ComputedValue with a required description field. Formula pattern: pre_seed_target_usd * allocation_pct / 100. Variables must reference the preSeed.result amount and the allocation percentage.",
+      "required": ["id", "label", "description", "variables", "formula", "result", "resultUnit", "displayValue", "confidence", "byline", "lastComputed"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "description": {
+          "type": "string",
+          "description": "What this allocation funds. Required for display in use-of-funds slides."
+        },
+        "variables": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/definitions/ComputedVariable" },
+          "description": "Must include: (1) a variable referencing the funding round total (pre_seed_target_usd), (2) the allocation percentage (allocation_pct)."
+        },
+        "formula": { "type": "string" },
+        "formulaComment": { "type": "string" },
+        "result": { "type": "number" },
+        "resultUnit": { "type": "string" },
+        "displayValue": { "type": "string" },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low", "assumed", "verified", "internal"]
+        },
+        "byline": { "type": "string" },
+        "lastComputed": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "market": {
+      "type": "object",
+      "description": "Market sizing. All segments are ComputedValue. Introduced in v2.0, unchanged in v2.3.",
+      "required": ["tam", "sam", "som"],
+      "properties": {
+        "tam": { "$ref": "#/definitions/ComputedValue" },
+        "sam": { "$ref": "#/definitions/ComputedValue" },
+        "som": { "$ref": "#/definitions/ComputedValue" },
+        "cagr": { "$ref": "#/definitions/ComputedValue" },
+        "trends": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "team": {
+      "type": "object",
+      "description": "All team data. Single source of truth for members, hires, headcount targets.",
+      "properties": {
+        "current": { "type": "integer", "minimum": 0 },
+        "members": { "type": "array", "items": { "$ref": "#/definitions/teamMember" } },
+        "advisors": { "type": "array", "items": { "$ref": "#/definitions/teamMember" } },
+        "contractors": { "type": "array", "items": { "$ref": "#/definitions/teamMember" } },
+        "keyHires": { "type": "array", "items": { "$ref": "#/definitions/keyHire" } },
+        "q2_2026_target": { "type": ["integer", "null"] },
+        "q4_2026_target": { "type": ["integer", "null"] }
+      }
+    },
+
+    "teamMember": {
+      "type": "object",
+      "required": ["name", "role"],
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "bio": { "type": "string" },
+        "linkedin": { "type": "string", "format": "uri" },
+        "email": { "type": "string", "format": "email" },
+        "expertise": { "type": "array", "items": { "type": "string" } },
+        "ventures": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "keyHire": {
+      "type": "object",
+      "required": ["role", "quarter"],
+      "properties": {
+        "role": { "type": "string" },
+        "quarter": { "type": "string", "pattern": "^q[1-4]_20[0-9]{2}$" },
+        "critical": { "type": "boolean", "default": false },
+        "note": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+
+    "competitive": {
+      "type": "object",
+      "properties": {
+        "directCompetitors": { "type": "array", "items": { "type": "string" } },
+        "moats": { "type": "array", "items": { "type": "string" } },
+        "integrationStrategy": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+
+    "traction": {
+      "type": "object",
+      "properties": {
+        "customerCount": { "type": "integer", "minimum": 0 },
+        "customers": { "type": "array", "items": { "type": "object" } },
+        "testimonials": { "type": "array", "items": { "type": "object" } },
+        "pilotDetails": {
+          "type": ["object", "null"],
+          "properties": {
+            "status": { "type": "string" },
+            "customer": { "type": "string" },
+            "value": { "type": "string" },
+            "timeline": { "type": "string" },
+            "notes": { "type": "string" }
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": { "type": "string" },
+              "value": { "type": "string" },
+              "trend": { "type": "string", "enum": ["up", "down", "flat", "neutral"] }
+            }
+          }
+        }
+      }
+    },
+
+    "presentation": {
+      "type": "object",
+      "description": "Narrative content for slide generation. Plain strings — authored content, not computations.",
+      "properties": {
+        "tagline": { "type": "string" },
+        "problem": {
+          "type": "object",
+          "properties": {
+            "headline": { "type": "string" },
+            "bullets": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "solution": {
+          "type": "object",
+          "properties": {
+            "headline": { "type": "string" },
+            "bullets": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "market": { "type": "object", "properties": { "headline": { "type": "string" } } },
+        "businessModel": { "type": "object", "properties": { "headline": { "type": "string" } } },
+        "differentiator": {
+          "type": "object",
+          "properties": {
+            "headline": { "type": "string" },
+            "bullets": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "traction": { "type": "object", "properties": { "headline": { "type": "string" } } },
+        "ask": { "type": "object", "properties": { "headline": { "type": "string" } } }
+      }
+    },
+
+    "assets": {
+      "type": "object",
+      "properties": {
+        "colors": {
+          "type": "object",
+          "properties": {
+            "primary": { "type": "string" },
+            "secondary": { "type": "string" },
+            "accent": { "type": "string" }
+          }
+        },
+        "fonts": {
+          "type": "object",
+          "properties": {
+            "heading": { "type": "string" },
+            "body": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "repositorySplit": {
+      "type": "object",
+      "properties": {
+        "planned": { "type": "boolean" },
+        "splitDate": { "type": "string" },
+        "publicRepo": { "type": "string" },
+        "publicLicense": { "type": "string" },
+        "businessRepo": { "type": "string" },
+        "businessLicense": { "type": "string" }
+      }
+    },
+
+    "graphMetadata": {
+      "type": "object",
+      "properties": {
+        "nodeType": { "type": "string", "const": "file" },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "target": { "type": "string" },
+              "relationship": { "type": "string" },
+              "direction": { "type": "string", "enum": ["outgoing", "incoming"] }
+            }
+          }
+        }
+      }
+    },
+
+    "_migration": {
+      "type": "object",
+      "description": "Not a data field. Documents schema evolution for tooling and auditors.",
+      "properties": {
+        "from": { "type": "string" },
+        "migratedAt": { "type": "string" },
+        "changes": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+
+  },
+
+  "_migration": {
+    "from": "v2.2.0",
+    "migratedAt": "2026-02-25T00:00:00Z",
+    "changes": [
+      "financials.preSeed: string|null → ComputedValue (identity formula, midpoint result, range displayValue)",
+      "financials.seed: string|null → ComputedValue (same pattern as preSeed)",
+      "financials.runway: integer|null → ComputedValue (formula: available_funds_usd / burn_rate_monthly_usd)",
+      "financials.mrr: string|null → ComputedValue (formula: 'reported', result: 0, confidence: 'verified' for pre-revenue)",
+      "financials.arr: string|null → ComputedValue (same pattern as mrr)",
+      "financials.preSeedUse.*: {percentage, description} → AllocationComputedValue (formula: pre_seed_target_usd * allocation_pct / 100)",
+      "financials.seedUse.*: same promotion as preSeedUse",
+      "Added ComputedValue, ComputedVariable, ComputedSource, AllocationComputedValue definitions",
+      "Added confidence enum: 'verified' and 'internal' for pre-revenue and founder-judgment cases",
+      "Added ComputedSource.type enum value 'reporting' for historic facts",
+      "market.* ComputedValue pattern unchanged from v2.2",
+      "traction, presentation, assets, repositorySplit formalized as top-level definitions",
+      "founded, industry, location, license promoted to top-level properties (were implicit in v2.2)",
+      "Historic-only fields kept as plain types: totalRaised (string), roundStatus (enum), note (string)"
+    ]
+  }
+}
