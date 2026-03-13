@@ -1,0 +1,187 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:luhtech:schema:venture-edge:v1.0",
+  "title": "LuhTech Venture Edge",
+  "description": "Defines the draw relationship between a venture and a service node. Every time a venture consumes a resource from the shared pool — agent invocation, CoE time, infrastructure, tooling — an edge record is created or updated. The ledger inside each edge is the P&L allocation audit trail. equityImplication=true edges trigger equity instrument creation for SME contributors.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "edgeId",
+    "serviceRef",
+    "ventureId",
+    "drawType",
+    "allocationBasis",
+    "ledger",
+    "equityImplication",
+    "meta"
+  ],
+  "properties": {
+
+    "edgeId": {
+      "type": "string",
+      "pattern": "^urn:luhtech:edge:[a-z0-9-]+$",
+      "description": "Canonical URN. Unique per service-venture pair. Format: urn:luhtech:edge:<venture>-<service-slug>. Example: urn:luhtech:edge:ectropy-decision-router",
+      "examples": [
+        "urn:luhtech:edge:ectropy-decision-router",
+        "urn:luhtech:edge:jobsitecontrol-coe-engineering-erik",
+        "urn:luhtech:edge:replique-platform-infra-droplet"
+      ]
+    },
+
+    "serviceRef": {
+      "type": "string",
+      "pattern": "^urn:luhtech:service:",
+      "description": "URN reference to the service-node record this edge draws from."
+    },
+
+    "ventureId": {
+      "type": "string",
+      "enum": [
+        "ectropy",
+        "jobsitecontrol",
+        "hilja",
+        "qullqa",
+        "raizal",
+        "replique",
+        "viiva",
+        "luhtech-business",
+        "ohjaus",
+        "siltana"
+      ],
+      "description": "The venture consuming this service. luhtech-business = the holding company itself consuming services for portfolio operations."
+    },
+
+    "drawType": {
+      "type": "string",
+      "enum": ["invocation", "time-allocation", "infra-share", "tooling-access"],
+      "description": "How the venture draws from this service. invocation = discrete agent call (per-call pricing). time-allocation = CoE founder or SME time (hourly or fractional FTE). infra-share = proportional share of infrastructure cost. tooling-access = access to shared software tooling (flat or usage-based)."
+    },
+
+    "allocationBasis": {
+      "type": "string",
+      "enum": ["usf-weighted", "time-boxed", "flat-rate", "proportional-usage"],
+      "description": "How the cost/equity allocation is calculated for this edge. usf-weighted = allocation proportional to service USF score and draw volume. time-boxed = fixed time unit allocation (e.g. 0.2 FTE per quarter). flat-rate = fixed charge per period regardless of usage. proportional-usage = actual usage measured and billed."
+    },
+
+    "allocationRate": {
+      "type": "object",
+      "description": "The rate applied for allocation calculation. Fields depend on allocationBasis.",
+      "properties": {
+        "unitType":    { "type": "string", "enum": ["per-invocation", "per-hour", "per-month", "per-quarter", "percentage-of-cost"], "description": "Unit for this rate." },
+        "unitValue":   { "type": "number", "description": "Dollar amount or fraction per unit. For percentage-of-cost: 0.0–1.0." },
+        "currency":    { "type": "string", "const": "USD" },
+        "fteFraction": { "type": "number", "minimum": 0, "maximum": 1, "description": "For time-allocation drawType: fraction of full-time equivalent. 0.2 = 20% of one person's capacity." }
+      }
+    },
+
+    "ledger": {
+      "type": "array",
+      "description": "Ordered draw records for this edge. The audit trail. Every consumption event appends a record. Never edited — append-only. This is the source of truth for P&L sharding and equity instrument valuation.",
+      "items": {
+        "type": "object",
+        "required": ["recordId", "date", "units", "usfAtDraw"],
+        "properties": {
+          "recordId": {
+            "type": "string",
+            "description": "Unique record identifier within this ledger. Format: ISO date + sequence. Example: 2026-03-12-001."
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date of draw event."
+          },
+          "units": {
+            "type": "number",
+            "description": "Quantity drawn. Interpretation depends on drawType: invocations, hours, months, or fraction of resource."
+          },
+          "usfAtDraw": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "USF score of the service node at the time of this draw. Snapshot — allows historical allocation recalculation even as scores change."
+          },
+          "allocatedValue": {
+            "type": "number",
+            "description": "Dollar value allocated to this venture for this draw record. Derived: units × allocationRate.unitValue × usfAtDraw."
+          },
+          "period": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-Q[1-4]$",
+            "description": "Quarter this draw belongs to for rollup. Example: 2026-Q1."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional context for this draw. Example: 'Canadian pilot prep — decision routing validation'."
+          }
+        }
+      },
+      "default": []
+    },
+
+    "periodSummary": {
+      "type": "array",
+      "description": "Rolled-up quarterly summaries derived from ledger. Computed by the transform pipeline — do not edit manually.",
+      "items": {
+        "type": "object",
+        "required": ["period", "totalUnits", "totalAllocatedValue", "avgUSF"],
+        "properties": {
+          "period":               { "type": "string", "pattern": "^[0-9]{4}-Q[1-4]$" },
+          "totalUnits":           { "type": "number" },
+          "totalAllocatedValue":  { "type": "number" },
+          "avgUSF":               { "type": "number" },
+          "equityValueAccrued":   { "type": "number", "description": "For equityImplication=true edges: equity value accrued in USD equivalent this period." }
+        }
+      },
+      "default": []
+    },
+
+    "equityImplication": {
+      "type": "boolean",
+      "description": "If true, draws on this edge accrue toward an equity instrument for the contributor (SME or CoE founder). Applicable only when serviceType=coe-time. When true, an equity-instrument record must exist referencing this edgeId.",
+      "default": false
+    },
+
+    "equityInstrumentRef": {
+      "type": "string",
+      "pattern": "^urn:luhtech:equity:",
+      "description": "Required when equityImplication=true. URN of the equity-instrument record that governs vesting for contributions on this edge."
+    },
+
+    "chargeCode": {
+      "type": "string",
+      "description": "P&L routing code for accounting. Format: <ventureId>-<costCenter>-<year>. Example: ectropy-platform-2026. Used by the holding company for financial reporting.",
+      "examples": ["ectropy-platform-2026", "jobsitecontrol-engineering-2026", "luhtech-business-portfolio-2026"]
+    },
+
+    "status": {
+      "type": "string",
+      "enum": ["active", "paused", "closed"],
+      "description": "active = currently drawing from service. paused = temporarily suspended. closed = permanently ended, ledger frozen.",
+      "default": "active"
+    },
+
+    "meta": {
+      "type": "object",
+      "required": ["createdAt", "createdBy", "schemaVersion"],
+      "properties": {
+        "createdAt":     { "type": "string", "format": "date-time" },
+        "createdBy":     { "type": "string" },
+        "updatedAt":     { "type": "string", "format": "date-time" },
+        "updatedBy":     { "type": "string" },
+        "schemaVersion": { "type": "string", "const": "1.0.0" }
+      }
+    }
+  },
+
+  "if": { "properties": { "equityImplication": { "const": true } } },
+  "then": { "required": ["equityInstrumentRef"] },
+
+  "x-luhtech": {
+    "schemaFamily":     "service-graph",
+    "registry":         "luh-tech-roadmap-template/schemas/",
+    "instanceLocation": "luh-tech/business-tools/data/service-graph/edges/",
+    "appendOnly":       "ledger",
+    "transformConsumer": "service-graph-rollup.transform.v1.json",
+    "decisionRef":      "d-2026-03-12-service-graph-equity-model"
+  }
+}

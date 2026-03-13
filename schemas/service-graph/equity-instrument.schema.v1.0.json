@@ -1,0 +1,304 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:luhtech:schema:equity-instrument:v1.0",
+  "title": "LuhTech Equity Instrument",
+  "description": "Governs equity allocation from SME or CoE founder contribution to a venture. The instrument is triggered when a venture-edge record has equityImplication=true. Contribution value is computed from the USF-weighted ledger of draw records. Vesting schedule converts accrued value into actual cap table entries. This is the mechanism by which domain experts become founders — not employees — in the ventures they build.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "instrumentId",
+    "sme",
+    "contributionType",
+    "ventureId",
+    "edgeRefs",
+    "valuation",
+    "vesting",
+    "status",
+    "meta"
+  ],
+  "properties": {
+
+    "instrumentId": {
+      "type": "string",
+      "pattern": "^urn:luhtech:equity:[a-z0-9-]+$",
+      "description": "Canonical URN. Unique per SME-venture pair. Format: urn:luhtech:equity:<venture>-<person-slug>. Example: urn:luhtech:equity:ectropy-jane-smith",
+      "examples": [
+        "urn:luhtech:equity:ectropy-jane-smith",
+        "urn:luhtech:equity:replique-dr-carlos-vega"
+      ]
+    },
+
+    "sme": {
+      "type": "object",
+      "required": ["smeId", "name", "coeDomain"],
+      "description": "The SME or CoE founder receiving equity. Domain experts are recruited by the accelerator to lead ventures — this instrument is the bridge from contribution to ownership.",
+      "properties": {
+        "smeId": {
+          "type": "string",
+          "pattern": "^urn:luhtech:person:[a-z0-9-]+$",
+          "description": "URN for this person across the portfolio. Stable — does not change if they contribute to multiple ventures.",
+          "examples": ["urn:luhtech:person:erik-luhtala", "urn:luhtech:person:jane-smith"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Full legal name."
+        },
+        "coeDomain": {
+          "type": "string",
+          "description": "The domain expertise this SME brings. Determines service category assignment. Examples: 'construction-technology', 'bioinformatics', 'regenerative-agriculture', 'fabrication-engineering', 'adu-architecture'.",
+          "examples": [
+            "construction-technology",
+            "bioinformatics",
+            "regenerative-agriculture",
+            "fabrication-engineering",
+            "adu-architecture",
+            "platform-engineering"
+          ]
+        },
+        "role": {
+          "type": "string",
+          "description": "Intended or actual role in the venture. Examples: 'Co-Founder & CTO', 'Domain Lead', 'Advisory'.",
+          "examples": ["Co-Founder & CTO", "Co-Founder & CEO", "Domain Lead", "Advisory"]
+        },
+        "serviceNodeRef": {
+          "type": "string",
+          "pattern": "^urn:luhtech:service:",
+          "description": "URN of the coe-time service node that represents this person's time allocation in the service graph."
+        }
+      }
+    },
+
+    "contributionType": {
+      "type": "string",
+      "enum": ["domain-expertise", "technical", "advisory", "operational"],
+      "description": "Primary contribution category. domain-expertise = industry knowledge, customer relationships, regulatory navigation. technical = engineering, architecture, code. advisory = strategic guidance, network, mentorship. operational = execution, process, team management."
+    },
+
+    "ventureId": {
+      "type": "string",
+      "description": "The venture this instrument is issued against. Equity is venture-specific — an SME contributing to two ventures gets two instruments."
+    },
+
+    "edgeRefs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^urn:luhtech:edge:"
+      },
+      "minItems": 1,
+      "description": "One or more venture-edge URNs representing this SME's contribution draws to this venture. These are the receipts. The USF-weighted ledger totals across all referenced edges are the basis for valuation. Multiple edges allowed if SME contributes via multiple service nodes to the same venture."
+    },
+
+    "valuation": {
+      "type": "object",
+      "required": ["contributionValue", "equityPercentage"],
+      "description": "Equity valuation block. Derived from ledger totals on referenced edges, weighted by USF scores at time of draw. Stored as ComputedValue fields so formula and provenance are auditable.",
+      "properties": {
+
+        "contributionValue": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Total dollar-equivalent value of contribution. Formula: sum(edge.ledger[*].allocatedValue) across all edgeRefs. This is the USF-weighted economic measure of what the SME has contributed."
+        },
+
+        "equityPercentage": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Percentage of venture equity granted. Derived from contributionValue relative to total venture valuation at grant date. Negotiated at instrument creation — not auto-computed."
+        },
+
+        "ventureValuationAtGrant": {
+          "type": "number",
+          "description": "Agreed venture valuation (USD) at time of instrument creation. Used as the denominator for equityPercentage calculation.",
+          "minimum": 0
+        },
+
+        "grantDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Date equity grant was agreed and instrument activated."
+        },
+
+        "instrumentType": {
+          "type": "string",
+          "enum": ["equity-grant", "safe-equivalent", "option-pool", "advisory-grant"],
+          "description": "Legal form of the equity. equity-grant = direct equity. safe-equivalent = modeled as SAFE economics for pre-formation ventures. option-pool = options with strike price. advisory-grant = smaller advisory equity tranche.",
+          "default": "equity-grant"
+        }
+      }
+    },
+
+    "vesting": {
+      "type": "object",
+      "required": ["cliffMonths", "durationMonths", "vestingType"],
+      "description": "Vesting schedule governing when accrued equity becomes owned equity. Milestone-based acceleration available for construction/pilot events.",
+      "properties": {
+
+        "cliffMonths": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 24,
+          "description": "Months before any equity vests. 0 = immediate vesting begins. 12 = standard 1-year cliff.",
+          "default": 12
+        },
+
+        "durationMonths": {
+          "type": "integer",
+          "minimum": 12,
+          "maximum": 60,
+          "description": "Total vesting period in months from grant date. 48 = standard 4-year. Remaining equity vests monthly after cliff.",
+          "default": 48
+        },
+
+        "vestingType": {
+          "type": "string",
+          "enum": ["time-based", "milestone-based", "hybrid"],
+          "description": "time-based = monthly vesting on schedule. milestone-based = vests on defined project milestones. hybrid = time-based with acceleration triggers.",
+          "default": "hybrid"
+        },
+
+        "monthlyVestPercent": {
+          "type": "number",
+          "description": "Percentage of total grant that vests each month after cliff. Derived: (1 - cliff_tranche) / (durationMonths - cliffMonths). Populated by transform.",
+          "readOnly": true
+        },
+
+        "accelerationTriggers": {
+          "type": "array",
+          "description": "Events that accelerate vesting. Critical for construction pilot ventures — hitting a production milestone should vest the SME who made it possible.",
+          "items": {
+            "type": "object",
+            "required": ["triggerId", "description", "accelerationPercent"],
+            "properties": {
+              "triggerId": {
+                "type": "string",
+                "description": "Unique identifier for this trigger. Example: canadian-pilot-go-live."
+              },
+              "description": {
+                "type": "string",
+                "description": "Human-readable trigger event. Example: 'Canadian pilot live at Maple Ridge Industrial Facility'."
+              },
+              "accelerationPercent": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Additional percentage of total grant that vests immediately on this trigger."
+              },
+              "milestoneRef": {
+                "type": "string",
+                "description": "Optional reference to a roadmap milestone URN that triggers this event when it moves to complete status."
+              },
+              "triggered": {
+                "type": "boolean",
+                "description": "Whether this trigger has fired.",
+                "default": false
+              },
+              "triggeredDate": {
+                "type": "string",
+                "format": "date",
+                "description": "Date trigger fired, if triggered=true."
+              }
+            }
+          },
+          "default": []
+        },
+
+        "vestedToDate": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Percentage of total grant vested as of lastComputed date. Computed by transform from grant date, cliff, duration, and any fired triggers. Do not edit manually."
+        },
+
+        "doubleTriggerProtection": {
+          "type": "boolean",
+          "description": "If true, full acceleration requires both: (1) change of control at holding company level AND (2) SME role termination without cause. Protects SME founders from acquisition without benefit.",
+          "default": true
+        }
+      }
+    },
+
+    "capTable": {
+      "type": "object",
+      "description": "Cap table entry for this instrument. Populated once equity grant is formally executed. Pre-execution, this block reflects projected values.",
+      "properties": {
+        "shareClass": {
+          "type": "string",
+          "enum": ["common", "preferred-a", "preferred-b", "option", "safe"],
+          "description": "Class of shares or instrument. CoE founders typically receive common shares in parity with the founding team."
+        },
+        "sharesGranted": {
+          "type": "integer",
+          "description": "Number of shares granted. Absolute number.",
+          "minimum": 0
+        },
+        "sharesVested": {
+          "type": "integer",
+          "description": "Number of shares currently vested. Computed from vestedToDate × sharesGranted.",
+          "minimum": 0
+        },
+        "ownershipPercent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Percentage of venture equity on a fully-diluted basis."
+        },
+        "antiDilutionProtection": {
+          "type": "boolean",
+          "description": "Whether this instrument carries anti-dilution protection for future funding rounds.",
+          "default": false
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date",
+          "description": "Date cap table entry was last updated."
+        }
+      }
+    },
+
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "negotiating", "active", "vested", "lapsed", "cancelled"],
+      "description": "Lifecycle status. proposed = being structured. negotiating = terms under discussion. active = signed and vesting. vested = fully vested. lapsed = SME departed before full vest. cancelled = instrument voided."
+    },
+
+    "meta": {
+      "type": "object",
+      "required": ["createdAt", "createdBy", "schemaVersion"],
+      "properties": {
+        "createdAt":     { "type": "string", "format": "date-time" },
+        "createdBy":     { "type": "string" },
+        "updatedAt":     { "type": "string", "format": "date-time" },
+        "updatedBy":     { "type": "string" },
+        "schemaVersion": { "type": "string", "const": "1.0.0" },
+        "legalDocRef":   { "type": "string", "description": "Reference to executed legal agreement once instrument is active. Could be a DocuSeal document ID." },
+        "counselReviewed": { "type": "boolean", "default": false }
+      }
+    }
+  },
+
+  "definitions": {
+    "ComputedValue": {
+      "type": "object",
+      "required": ["id", "label", "result"],
+      "properties": {
+        "id":           { "type": "string" },
+        "label":        { "type": "string" },
+        "description":  { "type": "string" },
+        "formula":      { "type": "string" },
+        "result":       { "type": "number" },
+        "resultUnit":   { "type": "string" },
+        "confidence":   { "type": "string", "enum": ["verified", "calibrated", "assumed", "placeholder"] },
+        "byline":       { "type": "string" },
+        "lastComputed": { "type": "string", "format": "date-time" },
+        "asOf":         { "type": "string", "format": "date" }
+      }
+    }
+  },
+
+  "x-luhtech": {
+    "schemaFamily":     "service-graph",
+    "registry":         "luh-tech-roadmap-template/schemas/",
+    "instanceLocation": "luh-tech/business-tools/data/service-graph/instruments/",
+    "sensitivity":      "T2 — equity terms are private, treated as business-confidential",
+    "transformConsumer": "service-graph-rollup.transform.v1.json",
+    "legalNote":        "Schema defines structure only. Instrument terms require legal review before execution. LuhTech does not provide legal advice.",
+    "decisionRef":      "d-2026-03-12-service-graph-equity-model"
+  }
+}

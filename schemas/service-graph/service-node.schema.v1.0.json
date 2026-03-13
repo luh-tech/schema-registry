@@ -1,0 +1,277 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:luhtech:schema:service-node:v1.0",
+  "title": "LuhTech Service Node",
+  "description": "Defines any resource controlled by the LuhTech Holdings shared pool — AI agents, CoE founder time, platform infrastructure, or shared tooling. Every node in the service graph conforms to this schema. USF score is the allocation basis for venture sharding and SME equity instruments.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "serviceId",
+    "serviceType",
+    "tier",
+    "identity",
+    "usf",
+    "graph",
+    "availability",
+    "meta"
+  ],
+  "properties": {
+
+    "serviceId": {
+      "type": "string",
+      "pattern": "^urn:luhtech:service:[a-z0-9-]+$",
+      "description": "Canonical URN. Globally unique across the portfolio. Format: urn:luhtech:service:<slug>. Example: urn:luhtech:service:decision-router",
+      "examples": [
+        "urn:luhtech:service:decision-router",
+        "urn:luhtech:service:coe-engineering-erik",
+        "urn:luhtech:service:platform-infra-droplet"
+      ]
+    },
+
+    "serviceType": {
+      "type": "string",
+      "enum": ["agent", "coe-time", "platform-infra", "tooling"],
+      "description": "Discriminator field. agent = MCP function/AI capability. coe-time = human CoE founder or SME time allocation unit. platform-infra = shared infrastructure cost (droplet, DB, CDN). tooling = shared software tooling (n8n, CRM, transform pipeline)."
+    },
+
+    "tier": {
+      "type": "string",
+      "enum": ["pre-competitive", "venture-specific", "holding"],
+      "description": "Ownership tier. pre-competitive = shared across all ventures, owned by LuhTech Holdings. venture-specific = built by and primarily for one venture but available to others. holding = serves LuhTech Holdings P&L and reporting directly."
+    },
+
+    "identity": {
+      "type": "object",
+      "required": ["name", "description", "category"],
+      "description": "Human-readable identity. Sourced from architecture.json serviceId pattern.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 3,
+          "description": "Display name. Short, noun-based. Example: 'Decision Router', 'Erik Luhtala — Engineering CoE'."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "description": "What this service does and why it exists. One to three sentences."
+        },
+        "category": {
+          "type": "string",
+          "description": "Functional grouping for dashboard display and filtering. For agents: decision | ground-truth | field-intelligence | learning | retention | platform-ops | holding. For coe-time: engineering | domain-expert | strategic | operational. For infra/tooling: free-form.",
+          "examples": [
+            "decision",
+            "ground-truth",
+            "field-intelligence",
+            "learning",
+            "retention",
+            "platform-ops",
+            "holding",
+            "engineering",
+            "domain-expert"
+          ]
+        },
+        "route": {
+          "type": "string",
+          "description": "For agent serviceType only. The MCP route or API endpoint this agent exposes. Example: /mcp/decision/route",
+          "examples": ["/mcp/decision/route", "/mcp/rvgt/write"]
+        },
+        "technology": {
+          "type": "string",
+          "description": "For agent or platform-infra: technology stack. Example: 'Python + FastAPI', 'DigitalOcean 4vCPU/8GB'."
+        }
+      }
+    },
+
+    "usf": {
+      "type": "object",
+      "required": ["quality", "value", "costTier", "costMultiplier", "score"],
+      "description": "Unit Sharding Factor — the allocation basis. Formula locked: score = (quality × 0.4 + value × 0.6) × costMultiplier. Sourced from agent-manifest.ts pattern. ComputedValue fields carry their own provenance.",
+      "properties": {
+
+        "quality": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Quality score 0–1. For agents: output reliability, accuracy, completion rate. For coe-time: domain expertise depth, output quality track record. For infra: uptime, SLA adherence."
+        },
+
+        "value": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Business value score 0–1. How much revenue, risk reduction, or strategic optionality does this service unlock? Venture-context-specific — same agent may have different value scores for different ventures."
+        },
+
+        "costTier": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "Cost classification. low = minimal marginal cost per invocation/unit. medium = moderate cost — Claude API mid-tier, shared infra allocation. high = significant cost — Opus API calls, senior SME time, dedicated infra."
+        },
+
+        "costMultiplier": {
+          "type": "number",
+          "enum": [1.0, 0.88, 0.72],
+          "description": "Locked multipliers per cost tier. low = 1.0 (no discount). medium = 0.88. high = 0.72. Higher cost = higher bar for value justification. Formula: costMultiplier applied last."
+        },
+
+        "score": {
+          "$ref": "#/definitions/ComputedValue",
+          "description": "Derived USF score. Formula: (quality × 0.4 + value × 0.6) × costMultiplier. Stored as ComputedValue with formula and provenance. Range 0–1. Higher = more value delivered per cost unit."
+        },
+
+        "calibratedBy": {
+          "type": "string",
+          "description": "Who last set the quality and value inputs. Format: person URN or 'system' for derived scores.",
+          "examples": ["urn:luhtech:person:erik-luhtala", "system"]
+        },
+
+        "calibratedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of last manual calibration of quality/value inputs."
+        }
+      }
+    },
+
+    "performance": {
+      "type": "object",
+      "description": "Live performance tracking. Feeds back into USF score over time — the learning loop. Sourced from viiva/architecture.json USF tracker pattern. Optional at schema creation; required once service is active.",
+      "properties": {
+        "qualityMetrics": {
+          "type": "object",
+          "description": "Service-type-specific quality measurements.",
+          "properties": {
+            "firstPassYield":    { "type": "number", "minimum": 0, "maximum": 1 },
+            "completionRate":    { "type": "number", "minimum": 0, "maximum": 1 },
+            "accuracyScore":     { "type": "number", "minimum": 0, "maximum": 1 },
+            "reviewsRequired":   { "type": "number", "minimum": 0, "maximum": 1, "description": "Fraction of outputs requiring human review/correction." }
+          }
+        },
+        "costMetrics": {
+          "type": "object",
+          "description": "Actual vs projected cost tracking.",
+          "properties": {
+            "avgCostPerUnit":    { "type": "number", "description": "Average cost in USD per invocation or hour." },
+            "costVariance":      { "type": "number", "description": "Actual vs projected cost ratio. 1.0 = on budget." },
+            "budgetPeriod":      { "type": "string", "description": "Period for cost tracking. Example: 2026-Q1." }
+          }
+        },
+        "speedMetrics": {
+          "type": "object",
+          "description": "Delivery speed and reliability.",
+          "properties": {
+            "avgLatencyMs":      { "type": "number", "description": "For agents: average response time in milliseconds." },
+            "onTimeRate":        { "type": "number", "minimum": 0, "maximum": 1, "description": "For coe-time: fraction of deliverables on-time." },
+            "throughputPerDay":  { "type": "number", "description": "Average units processed per day." }
+          }
+        },
+        "lastMeasured": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When performance metrics were last updated."
+        }
+      }
+    },
+
+    "graph": {
+      "type": "object",
+      "required": ["inEdges", "outEdges"],
+      "description": "Graph connectivity. Sourced from current-truth.json graphMetadata pattern. Edges are venture-edge URNs.",
+      "properties": {
+        "inEdges": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^urn:luhtech:edge:" },
+          "description": "Venture-edge URNs representing ventures that draw from this service. Populated by the venture-edge records, not set manually here.",
+          "default": []
+        },
+        "outEdges": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^urn:luhtech:(service|edge):" },
+          "description": "Services or edges this node depends on. Example: a SEPPA agent depends on the RAG service and RVGT reader.",
+          "default": []
+        },
+        "associativeValue": {
+          "type": "object",
+          "description": "Graph-derived associative value — value this node creates for other nodes it is connected to, beyond its direct USF score. The graph makes cross-venture knowledge transfer visible and priceable.",
+          "properties": {
+            "knowledgeTransferRate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Fraction of this service's value that propagates to connected ventures via the graph. A domain expert contributing to Ectropy who also benefits JobsiteControl has a transfer rate > 0."
+            },
+            "connectedVentures": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Venture IDs that receive associative value from this node. Set by graph analysis, not manually."
+            }
+          }
+        }
+      }
+    },
+
+    "availability": {
+      "type": "string",
+      "enum": ["active", "planned", "deprecated"],
+      "description": "active = available for venture draw now. planned = schema defined, not yet operational. deprecated = no longer available for new edges."
+    },
+
+    "ventureScope": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicit list of venture IDs this service is available to. Empty array means available to all ventures (default for pre-competitive tier). Used to restrict venture-specific services.",
+      "default": [],
+      "examples": [
+        [],
+        ["ectropy", "jobsitecontrol"],
+        ["replique"]
+      ]
+    },
+
+    "meta": {
+      "type": "object",
+      "required": ["createdAt", "createdBy", "schemaVersion"],
+      "description": "Provenance block. All service-node records carry authorship and schema version.",
+      "properties": {
+        "createdAt":      { "type": "string", "format": "date-time" },
+        "createdBy":      { "type": "string", "description": "URN of person or system that created this record." },
+        "updatedAt":      { "type": "string", "format": "date-time" },
+        "updatedBy":      { "type": "string" },
+        "schemaVersion":  { "type": "string", "const": "1.0.0" },
+        "sourceRef":      { "type": "string", "description": "For agents: reference to agent-manifest.ts entry. For infra: reference to infrastructure-catalog.json entry." }
+      }
+    }
+  },
+
+  "definitions": {
+    "ComputedValue": {
+      "type": "object",
+      "required": ["id", "label", "result"],
+      "description": "Scored field with formula, confidence, and provenance. Canonical pattern from ComputedValue.schema.v1.0.json.",
+      "properties": {
+        "id":           { "type": "string" },
+        "label":        { "type": "string" },
+        "description":  { "type": "string" },
+        "formula":      { "type": "string", "description": "Human-readable formula string. Example: '(quality × 0.4 + value × 0.6) × costMultiplier'" },
+        "result":       { "type": "number" },
+        "resultUnit":   { "type": "string" },
+        "confidence":   { "type": "string", "enum": ["verified", "calibrated", "assumed", "placeholder"] },
+        "byline":       { "type": "string" },
+        "lastComputed": { "type": "string", "format": "date-time" },
+        "asOf":         { "type": "string", "format": "date" }
+      }
+    }
+  },
+
+  "x-luhtech": {
+    "schemaFamily":    "service-graph",
+    "registry":        "luh-tech-roadmap-template/schemas/",
+    "instanceLocation": "luh-tech/business-tools/data/service-graph/nodes/",
+    "transformConsumer": "service-graph-rollup.transform.v1.json",
+    "precedents": [
+      "architecture.json (serviceId, identity, graph pattern)",
+      "agent-manifest.ts (USF formula, costTier, costMultiplier)",
+      "current-truth.json (URN pattern, graphMetadata, inEdges/outEdges)",
+      "viiva/architecture.json (performance tracking — quality/cost/speed)",
+      "ComputedValue.schema.v1.0.json (scored fields with provenance)",
+      "luhtech-transform-fabric-strategy.md (T1/T2 field ownership discipline)"
+    ],
+    "decisionRef": "d-2026-03-12-service-graph-equity-model"
+  }
+}
