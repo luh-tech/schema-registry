@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://luhtech.dev/schemas/roadmap-v2.json",
   "title": "LuhTech Venture Roadmap v2",
-  "description": "JSON-first roadmap schema for LuhTech portfolio ventures. Supports full venture metadata, quarterly planning, financials, team planning, and advanced features tracking. v2.2.0 migrates inline enums to centralized $ref definitions.",
+  "description": "JSON-first roadmap schema for LuhTech portfolio ventures. Supports full venture metadata, quarterly planning, financials, team planning, and competitive positioning. v2.3.0 removes 21 orphaned fields identified in Phase 5 deck audit.",
   "type": "object",
   "required": ["$schema", "schemaVersion", "meta", "venture", "pitch"],
   "properties": {
@@ -41,9 +41,6 @@
     "team": {
       "$ref": "#/definitions/team"
     },
-    "erikAllocation": {
-      "$ref": "#/definitions/erikAllocation"
-    },
     "keyMilestones": {
       "type": "array",
       "description": "Critical path milestones across all quarters",
@@ -51,15 +48,8 @@
         "$ref": "#/definitions/keyMilestone"
       }
     },
-    "advancedFeatures": {
-      "$ref": "#/definitions/advancedFeatures"
-    },
     "competitive": {
       "$ref": "#/definitions/competitive"
-    },
-    "_note": {
-      "type": "string",
-      "description": "Reference to full roadmap location (for summary files)"
     }
   },
   "definitions": {
@@ -94,10 +84,6 @@
         "sourceDoc": {
           "type": "string",
           "description": "Reference to source document or Google Doc"
-        },
-        "formerName": {
-          "type": "string",
-          "description": "Previous name of venture (for renamed ventures)"
         }
       }
     },
@@ -149,19 +135,6 @@
           "type": "string",
           "format": "hostname",
           "description": "Primary domain"
-        },
-        "repository": {
-          "type": "string",
-          "format": "uri",
-          "description": "GitHub repository URL"
-        },
-        "patent": {
-          "type": "string",
-          "description": "Patent number (if applicable)"
-        },
-        "patentTitle": {
-          "type": "string",
-          "description": "Patent title (if applicable)"
         }
       }
     },
@@ -202,10 +175,6 @@
         "ask": {
           "type": "string",
           "description": "Funding ask"
-        },
-        "technology": {
-          "type": "string",
-          "description": "Technical architecture and technology stack summary"
         }
       }
     },
@@ -420,29 +389,6 @@
           "type": ["string", "null"],
           "description": "Seed timing"
         },
-        "seedUse": {
-          "type": "object",
-          "description": "Seed allocation breakdown",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "seriesA": {
-          "type": ["string", "null"],
-          "description": "Series A target"
-        },
-        "seriesATiming": {
-          "type": ["string", "null"],
-          "description": "Series A timing"
-        },
-        "year1Revenue": {
-          "type": ["string", "null"],
-          "description": "Year 1 revenue projection"
-        },
-        "year2Revenue": {
-          "type": ["string", "null"],
-          "description": "Year 2 revenue projection"
-        },
         "burnRate": {
           "type": ["string", "null"],
           "description": "Monthly burn rate"
@@ -525,42 +471,6 @@
         }
       }
     },
-    "erikAllocation": {
-      "type": "object",
-      "description": "Erik's time allocation plan",
-      "properties": {
-        "currentHoursPerWeek": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 80,
-          "description": "Current weekly hours"
-        },
-        "targetHoursPerWeek": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 80,
-          "description": "Target steady-state hours"
-        },
-        "transitionQuarter": {
-          "oneOf": [
-            {"$ref": "https://luhtech.dev/schemas/enums.json#/definitions/quarter"},
-            {"type": "null"}
-          ],
-          "description": "Quarter when transition completes"
-        },
-        "quarterlyBreakdown": {
-          "type": "object",
-          "description": "Hours by quarter",
-          "patternProperties": {
-            "^q[1-4]_20[0-9]{2}$": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 80
-            }
-          }
-        }
-      }
-    },
     "keyMilestone": {
       "type": "object",
       "description": "Critical path milestone (cross-quarter)",
@@ -596,54 +506,6 @@
             "type": "string"
           }
         }
-      }
-    },
-    "advancedFeatures": {
-      "type": "object",
-      "description": "Advanced feature roadmaps",
-      "properties": {
-        "ar": {
-          "type": "object",
-          "description": "AR feature roadmap",
-          "properties": {
-            "status": {
-              "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/featureStatus"
-            },
-            "phase": {
-              "type": "integer"
-            },
-            "timeline": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
-            },
-            "premiumRevenue": {
-              "type": "string"
-            }
-          }
-        },
-        "robotics": {
-          "type": "object",
-          "description": "Robotics feature roadmap",
-          "properties": {
-            "status": {
-              "type": "string"
-            },
-            "phase": {
-              "type": "integer"
-            },
-            "timeline": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "additionalProperties": {
-        "type": "object"
       }
     },
     "competitive": {
