@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://luhtech.dev/schemas/roadmap-v2.json",
   "title": "LuhTech Venture Roadmap v2",
-  "description": "JSON-first roadmap schema for LuhTech portfolio ventures. Supports full venture metadata, quarterly planning, financials, team planning, and competitive positioning. v2.3.0 removes 21 orphaned fields identified in Phase 5 deck audit.",
+  "description": "JSON-first roadmap schema for LuhTech portfolio ventures. Supports full venture metadata, quarterly planning, financials, team planning, presentation deck data, and competitive positioning. v2.4.0 adds 39+ missing fields from transformer/component audit.",
   "type": "object",
   "required": ["$schema", "schemaVersion", "meta", "venture", "pitch"],
   "properties": {
@@ -50,6 +50,119 @@
     },
     "competitive": {
       "$ref": "#/definitions/competitive"
+    },
+    "features": {
+      "type": "array",
+      "description": "Product features with category, status, and release targeting",
+      "items": {
+        "$ref": "#/definitions/feature"
+      }
+    },
+    "flagshipFeatures": {
+      "type": "array",
+      "description": "High-value features with ROI metrics for investor-facing slides",
+      "items": {
+        "$ref": "#/definitions/flagshipFeature"
+      }
+    },
+    "metricsReporting": {
+      "type": "object",
+      "description": "Operational metrics: test coverage, production readiness, CI/CD health",
+      "properties": {
+        "lastUpdated": { "type": "string", "format": "date-time" },
+        "productionReadiness": {
+          "type": "object",
+          "properties": {
+            "score": { "type": "integer" },
+            "status": { "type": "string" }
+          }
+        },
+        "testCoverage": {
+          "type": "object",
+          "properties": {
+            "e2eTestStatus": {
+              "type": "object",
+              "properties": {
+                "totalTests": { "type": "integer" }
+              }
+            }
+          }
+        },
+        "mcpToolStatus": {
+          "type": "object",
+          "properties": {
+            "operational": { "type": "integer" },
+            "specified": { "type": "integer" }
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "traction": {
+      "type": "object",
+      "description": "Top-level traction data (distinct from pitch.traction string)",
+      "properties": {
+        "verified": {
+          "type": "array",
+          "description": "Verified traction proof points",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": { "type": "string" },
+              "metric": { "type": "string" },
+              "evidence": { "type": "string" }
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "presentation": {
+      "$ref": "#/definitions/presentation"
+    },
+    "mcpToolCategories": {
+      "type": "array",
+      "description": "MCP tool categories for traction slide (venture-specific)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "tools": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "description": "Brand assets and design tokens",
+      "properties": {
+        "colors": {
+          "type": "object",
+          "properties": {
+            "primary": { "type": "string", "description": "Primary brand color (hex)" },
+            "secondary": { "type": "string" },
+            "accent": { "type": "string" }
+          }
+        },
+        "fonts": {
+          "type": "object",
+          "properties": {
+            "heading": { "type": "string" },
+            "body": { "type": "string" }
+          }
+        }
+      }
+    },
+    "market": {
+      "type": "object",
+      "description": "Market data with TAM/SAM/SOM (T2)",
+      "properties": {
+        "tam": { "type": "object", "additionalProperties": true },
+        "sam": { "type": "object", "additionalProperties": true },
+        "som": { "type": "object", "additionalProperties": true },
+        "industrySize": { "type": ["object", "string", "null"], "description": "Industry size metric" },
+        "trends": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
     }
   },
   "definitions": {
@@ -140,41 +253,131 @@
     },
     "pitch": {
       "type": "object",
-      "description": "Investor pitch content",
-      "required": ["oneLiner", "problem", "solution", "market", "differentiator"],
+      "description": "Investor pitch content — fields may be strings (summary) or objects (structured)",
+      "required": ["oneLiner"],
       "properties": {
         "oneLiner": {
           "type": "string",
           "maxLength": 200,
           "description": "Elevator pitch (60-150 chars ideal)"
         },
-        "problem": {
+        "missionLine": {
           "type": "string",
-          "description": "Pain point you solve"
+          "description": "Brand signature line (rendered on cover slide footer)"
+        },
+        "mantra": {
+          "type": "string",
+          "description": "Venture mantra (used as solution subtitle, ask closing)"
+        },
+        "problem": {
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "properties": {
+                "headline": { "type": "string" },
+                "subheadline": { "type": "string" },
+                "bullets": { "type": "array", "items": { "type": "string" } },
+                "problemColumns": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "header": { "type": "string" },
+                      "bullets": { "type": "array", "items": { "type": "string" } }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "description": "Pain point — string summary or structured object with headline/bullets/columns"
         },
         "solution": {
-          "type": "string",
-          "description": "Your approach"
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "properties": {
+                "bullets": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          ],
+          "description": "Your approach — string summary or object with bullets"
         },
         "market": {
-          "type": "string",
-          "description": "TAM + growth rate"
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "properties": {
+                "headline": { "type": "string" },
+                "tam": { "type": "object", "additionalProperties": true },
+                "sam": { "type": "object", "additionalProperties": true },
+                "som": { "type": "object", "additionalProperties": true },
+                "growthRate": { "type": "string" }
+              }
+            }
+          ],
+          "description": "TAM + growth rate — string summary or structured market data"
         },
         "differentiator": {
           "type": "string",
           "description": "Why you win"
         },
         "businessModel": {
-          "type": "string",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "properties": {
+                "revenueModel": { "type": "string" }
+              }
+            }
+          ],
           "description": "How you make money"
         },
         "traction": {
-          "type": "string",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "properties": {
+                "headline": { "type": "string" },
+                "metrics": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+                "heroes": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+                "categoriesText": { "type": "string" }
+              }
+            }
+          ],
           "description": "Current traction metrics"
         },
         "ask": {
-          "type": "string",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "properties": {
+                "amount": { "type": "string" },
+                "useOfFunds": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+                "milestones": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+              }
+            }
+          ],
           "description": "Funding ask"
+        },
+        "coverStat": {
+          "type": "object",
+          "description": "Hero stat for cover slide",
+          "properties": {
+            "value": { "type": "string" },
+            "label": { "type": "string" },
+            "source": { "type": "string" }
+          }
+        },
+        "solutionScreenshotDriveId": {
+          "type": "string",
+          "description": "Google Drive ID for solution slide screenshot"
         }
       }
     },
@@ -251,6 +454,39 @@
           "minimum": 0,
           "maximum": 80,
           "description": "Erik's weekly hours allocated this quarter"
+        },
+        "status": {
+          "type": "string",
+          "description": "Quarter status: complete, active, or planned"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version label for this quarter (e.g., 'v6.0')"
+        },
+        "versionLabel": {
+          "type": "string",
+          "description": "Human-readable version description"
+        },
+        "keyMilestone": {
+          "type": "string",
+          "description": "Primary milestone label for this quarter"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Icon or emoji for quarter display"
+        },
+        "investorMetric": {
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "properties": {
+                "value": { "type": "string" },
+                "label": { "type": "string" }
+              }
+            }
+          ],
+          "description": "Investor-facing metric for this quarter (from T2)"
         }
       }
     },
@@ -405,14 +641,131 @@
             "^20[0-9]{2}$": {
               "type": "object",
               "properties": {
-                "mrr": {
-                  "type": "string"
-                },
-                "arr": {
-                  "type": "string"
-                },
-                "customers": {
-                  "type": ["string", "integer"]
+                "mrr": { "type": "string" },
+                "arr": { "type": "string" },
+                "customers": { "type": ["string", "integer"] }
+              }
+            }
+          }
+        },
+        "pricing": {
+          "type": "object",
+          "description": "Pricing model (T2)",
+          "properties": {
+            "tiers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "tier": { "type": "string" },
+                  "name": { "type": "string" },
+                  "price": { "type": ["string", "number", "null"] },
+                  "displayPrice": { "type": "string" },
+                  "acv": { "type": ["string", "number", "null"] },
+                  "description": { "type": "string" },
+                  "tools": { "type": "array", "items": { "type": "string" } },
+                  "toolCategories": { "type": "array", "items": { "type": "string" } },
+                  "features": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "operatingModel": {
+          "type": "object",
+          "description": "Burn rate and runway as ComputedValue objects (T2)",
+          "properties": {
+            "burnRate": { "type": "object", "additionalProperties": true },
+            "runway": { "type": "object", "additionalProperties": true }
+          },
+          "additionalProperties": true
+        },
+        "revenueModel": {
+          "type": "object",
+          "description": "Revenue metrics and projections (T2)",
+          "properties": {
+            "mrr": { "type": "object", "additionalProperties": true },
+            "arr": { "type": "object", "additionalProperties": true },
+            "projections": { "type": "object", "additionalProperties": true }
+          },
+          "additionalProperties": true
+        },
+        "unitEconomics": {
+          "type": "object",
+          "description": "Unit economics: CAC, LTV, margins (T2)",
+          "properties": {
+            "cac": { "type": "object", "additionalProperties": true },
+            "ltv": { "type": "object", "additionalProperties": true },
+            "ltvCacRatio": { "type": "object", "additionalProperties": true },
+            "paybackPeriodMonths": { "type": "object", "additionalProperties": true },
+            "grossMarginPercent": { "type": "object", "additionalProperties": true }
+          },
+          "additionalProperties": true
+        },
+        "burnForecast": {
+          "type": "array",
+          "description": "Monthly burn forecast for financials chart (T2)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "month": { "type": "integer" },
+              "label": { "type": "string" },
+              "burn": { "type": "number" },
+              "headcount": { "type": "integer" }
+            }
+          }
+        },
+        "revenueForecast": {
+          "type": "array",
+          "description": "Monthly revenue forecast for financials chart (T2)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "month": { "type": "integer" },
+              "contracts": { "type": "integer" },
+              "mrr": { "type": "number" }
+            }
+          }
+        },
+        "hiringPlan": {
+          "type": "array",
+          "description": "Hiring plan for financials chart (T2)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "role": { "type": "string" },
+              "startMonth": { "type": "integer" },
+              "monthlyCost": { "type": "number" }
+            }
+          }
+        },
+        "revenueStreams": {
+          "type": ["array", "object"],
+          "description": "Revenue stream definitions for financials chart (T2)",
+          "additionalProperties": true
+        },
+        "revenueProjections": {
+          "type": "object",
+          "description": "Revenue projections by year (T2)",
+          "additionalProperties": true
+        },
+        "raiseModel": {
+          "type": "object",
+          "description": "Raise structure with tranches (T2)",
+          "properties": {
+            "instrument": { "type": "string" },
+            "displayMaxRaise": { "type": "string" },
+            "note": { "type": "string" },
+            "tranches": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "tranche": { "type": "integer" },
+                  "cap": { "type": "string" },
+                  "trigger": { "type": "string" },
+                  "raise": { "type": "string" }
                 }
               }
             }
@@ -447,6 +800,38 @@
           "description": "Planned key hires",
           "items": {
             "$ref": "#/definitions/keyHire"
+          }
+        },
+        "members": {
+          "type": "array",
+          "description": "Current team members (T2)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "role": { "type": "string" },
+              "bio": { "type": "string" },
+              "linkedin": { "type": "string" },
+              "expertise": { "type": "array", "items": { "type": "string" } },
+              "photo": {
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "object", "properties": { "gdriveId": { "type": "string" } } }
+                ]
+              }
+            }
+          }
+        },
+        "advisors": {
+          "type": "array",
+          "description": "Advisors (may be empty)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "focus": { "type": "string" },
+              "status": { "type": "string" }
+            }
           }
         }
       }
@@ -507,6 +892,175 @@
           }
         }
       }
+    },
+    "feature": {
+      "type": "object",
+      "description": "Product feature",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "type": "string", "description": "planned, in_progress, complete, active" },
+        "targetQuarter": { "type": "string" },
+        "targetReleaseId": { "type": "string" },
+        "priority": { "type": "integer" },
+        "visibility": { "type": "string" }
+      }
+    },
+    "flagshipFeature": {
+      "type": "object",
+      "description": "High-value feature with ROI metrics",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "status": { "type": "string" },
+        "targetRelease": { "type": "string" },
+        "pilot": { "type": "string" },
+        "value": {
+          "type": "object",
+          "properties": {
+            "perIncident": { "type": "string" },
+            "perProject": { "type": "string" },
+            "roi": { "type": "string" }
+          }
+        }
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "description": "Deck presentation content (T2). All slide content sourced from here.",
+      "properties": {
+        "coverSlide": {
+          "type": "object",
+          "properties": {
+            "tagline": { "type": "string" },
+            "oneLiner": { "type": "string" }
+          }
+        },
+        "tagline": { "type": "string" },
+        "problem": {
+          "type": "object",
+          "properties": {
+            "headline": { "type": "string" },
+            "bullets": { "type": "array", "items": { "type": "string" } },
+            "stats": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+          }
+        },
+        "bridge": {
+          "type": "object",
+          "properties": {
+            "eyebrow": { "type": "string" },
+            "headline": { "type": "string" },
+            "subheadline": { "type": "string" },
+            "pivotLabel": { "type": "string" },
+            "insight": {
+              "type": "object",
+              "properties": {
+                "label": { "type": "string" },
+                "text": { "type": "string" }
+              }
+            },
+            "stats": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": { "type": "string" },
+                  "label": { "type": "string" }
+                }
+              }
+            },
+            "chart": { "type": "object", "additionalProperties": true }
+          }
+        },
+        "solution": {
+          "type": "object",
+          "properties": {
+            "headline": { "type": "string" },
+            "bullets": { "type": "array", "items": { "type": "string" } },
+            "quadrants": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" },
+                  "heading": { "type": "string" },
+                  "description": { "type": "string" },
+                  "items": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "moat": {
+          "type": "object",
+          "properties": {
+            "eyebrow": { "type": "string" },
+            "headline": { "type": "string" },
+            "panels": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" },
+                  "label": { "type": "string" },
+                  "industry": { "type": "string" },
+                  "body": { "type": "string" },
+                  "outcome": { "type": "string" },
+                  "attribution": { "type": "string" },
+                  "quotes": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+                  "note": { "type": "string" },
+                  "licenseQuote": { "type": "string" },
+                  "licenseSource": { "type": "string" },
+                  "revenueLines": { "type": "array", "items": { "type": "string" } },
+                  "principle": { "type": "string" },
+                  "networkArgument": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "market": {
+          "type": "object",
+          "properties": {
+            "eyebrow": { "type": "string" },
+            "headline": { "type": "string" },
+            "note": { "type": "string" }
+          }
+        },
+        "businessModel": {
+          "type": "object",
+          "properties": {
+            "headline": { "type": "string" }
+          }
+        },
+        "differentiator": {
+          "type": "object",
+          "properties": {
+            "headline": { "type": "string" },
+            "bullets": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "traction": {
+          "type": "object",
+          "properties": {
+            "eyebrow": { "type": "string" },
+            "headline": { "type": "string" }
+          }
+        },
+        "ask": {
+          "type": "object",
+          "properties": {
+            "eyebrow": { "type": "string" },
+            "headline": { "type": "string" },
+            "milestones": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+            "bullets": { "type": "array", "items": { "type": "string" } },
+            "closingMantra": { "type": "string" }
+          }
+        }
+      },
+      "additionalProperties": true
     },
     "competitive": {
       "type": "object",
