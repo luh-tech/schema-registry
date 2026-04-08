@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://luhtech.dev/schemas/roadmap-business.schema.json",
-  "title": "Roadmap Business Schema",
-  "description": "Schema for venture business data including financials, team, competitive positioning, and service tiers. Base schema extensible for all luh-tech holdings ventures.",
+  "title": "Roadmap Business Schema v2.2",
+  "description": "Schema for venture business data including financials, team, competitive positioning, service tiers, and presentation slides. Base schema extensible for all luh-tech holdings ventures.",
   "type": "object",
   "$defs": {
     "monetaryAmount": {"type": "string", "pattern": "^\\$[0-9,]+[KMB]?(-\\$[0-9,]+[KMB]?)?$", "description": "Monetary amount (e.g., '$500K', '$1M-$5M')"},
@@ -155,9 +155,107 @@
       }
     },
     "serviceTiers": {"type": "object", "description": "Product/service tier definitions", "additionalProperties": {"$ref": "#/$defs/serviceTier"}},
+    "presentation": {
+      "type": "object",
+      "description": "Slide presentation data for investor decks and pitch materials",
+      "additionalProperties": true,
+      "properties": {
+        "bridge": {
+          "type": "object",
+          "description": "Narrative bridge slide — problem to platform. Venture-specific.",
+          "properties": {
+            "eyebrow": { "type": "string" },
+            "headline": { "type": "string" },
+            "subheadline": { "type": "string" },
+            "pivotLabel": { "type": "string" },
+            "insight": {
+              "type": "object",
+              "properties": {
+                "label": { "type": "string" },
+                "text": { "type": "string" }
+              }
+            },
+            "stats": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["value", "label"],
+                "properties": {
+                  "value": { "type": "string" },
+                  "label": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "moat": {
+          "type": "object",
+          "description": "Data sovereignty and structural moat slide. Required for all ventures.",
+          "required": ["eyebrow", "headline", "panels"],
+          "properties": {
+            "eyebrow": { "type": "string" },
+            "headline": { "type": "string" },
+            "panels": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "object",
+                "required": ["id", "label"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "enum": ["precedent", "evidence", "architecture"]
+                  },
+                  "label": { "type": "string" },
+                  "industry": { "type": "string" },
+                  "body": { "type": "string" },
+                  "outcome": { "type": "string" },
+                  "attribution": { "type": "string" },
+                  "quotes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["id", "text", "source"],
+                      "properties": {
+                        "id": { "type": "string" },
+                        "text": { "type": "string" },
+                        "source": { "type": "string" }
+                      }
+                    }
+                  },
+                  "note": { "type": "string" },
+                  "licenseQuote": { "type": "string" },
+                  "licenseSource": { "type": "string" },
+                  "revenueLines": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "principle": { "type": "string" },
+                  "networkArgument": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "ask": {
+          "type": "object",
+          "description": "Investment ask slide data.",
+          "additionalProperties": true,
+          "properties": {
+            "bullets": {
+              "type": "array",
+              "description": "Capital strategy bullet points.",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "assets": {"type": "object", "description": "Brand assets and visual configuration", "additionalProperties": true},
     "graphMetadata": {"$ref": "#/$defs/graphMetadata", "description": "Graph relationship metadata for AI navigation"},
     "extensions": {"type": "object", "description": "Venture-specific extensions beyond base schema", "additionalProperties": true}
   },
   "required": ["$schema", "$id", "schemaVersion", "ventureId", "lastUpdated", "organizationName", "mission", "vision", "currentStage"],
-  "additionalProperties": false
+  "additionalProperties": true
 }
