@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-04-16
+
+### Added
+- `roadmap.schema.v3.2.json` — new T1 roadmap schema v3.2.0
+  - Required `scope` field on feature objects (enum: `product`, `infrastructure`, `enterprise-tool`, `standard`)
+  - Security-first default for ambiguous cases: `infrastructure`
+  - Existing `category` field (topic/domain axis) remains unchanged
+  - Source: ECTROPY-OPENCORE-STRATEGY-2026-04-16 Decision 1 — Phase A schema introduction
+- `schema-refs.json` → v1.7.0, roadmap entry now points at v3.2
+
+### Notes
+- CHANGELOG was stale (no entries since v2.0.0). This entry documents today's change only; schema versions v2.2–v3.1 landed without CHANGELOG entries and are not backfilled here.
+- Venture CI currently validates against v2 schemas via `ajv`. v3.2 constraint becomes enforceable once venture workflows are upgraded (separate future task).
+
 ## [2.0.0] - 2026-01-27
 
 ### Added

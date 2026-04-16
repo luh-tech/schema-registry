@@ -29,7 +29,9 @@ This schema system provides standardized infrastructure documentation for the Lu
 
 | Schema | Version | Size | Purpose |
 |--------|---------|------|---------|
-| `roadmap.schema.v2.2.json` | v2.2.0 | ~25KB | **LATEST** - Venture roadmap with resources block, vendor-agnostic features |
+| `roadmap.schema.v3.2.json` | v3.2.0 | ~40KB | **LATEST** - Adds required `scope` field on features (product/infrastructure/enterprise-tool/standard) |
+| `roadmap.schema.v3.1.json` | v3.1.0 | ~40KB | Adds mission/vision/currentStage/overallProgress to venture block |
+| `roadmap.schema.v2.2.json` | v2.2.0 | ~25KB | Venture roadmap with resources block, vendor-agnostic features |
 | `roadmap.schema.v2.1.json` | v2.1.0 | ~19KB | Features array, releases tracking |
 | `roadmap.schema.v2.json` | v2.0.0 | ~19KB | Venture roadmap, quarters, financials, milestones |
 | `venture-summary.schema.json` | v1.0.0 | ~11KB | Investor pitch summary |

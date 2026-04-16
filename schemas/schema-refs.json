@@ -1,12 +1,20 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "urn:luhtech:schema:schema-refs:v1.6",
-  "title": "LuhTech Schema Registry v1.6.0",
-  "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.6.0: updated for Transform Fabric Architecture v2.0.0.",
+  "$id": "urn:luhtech:schema:schema-refs:v1.7",
+  "title": "LuhTech Schema Registry v1.7.0",
+  "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.7.0: roadmap schema bumped to v3.2 (adds required `scope` field on features).",
   "meta": {
-    "version": "1.6.0",
-    "lastUpdated": "2026-02-26T00:00:00Z",
+    "version": "1.7.0",
+    "lastUpdated": "2026-04-16T00:00:00Z",
     "changelog": [
+      {
+        "version": "1.7.0",
+        "date": "2026-04-16",
+        "changes": [
+          "roadmap schema: v3.1 → v3.2 (adds required `scope` field on feature objects — product/infrastructure/enterprise-tool/standard enum)",
+          "Source: ECTROPY-OPENCORE-STRATEGY-2026-04-16 Decision 1 — Phase A schema introduction for scope classification"
+        ]
+      },
       {
         "version": "1.6.0",
         "date": "2026-02-26",
@@ -22,10 +30,10 @@
   },
   "schemas": {
     "roadmap": {
-      "id": "urn:luhtech:schema:roadmap:v3.1",
-      "file": "roadmap.schema.v3.1.json",
-      "version": "3.1.0",
-      "description": "Technical canonical source — team-visible roadmap data"
+      "id": "urn:luhtech:schema:roadmap:v3.2",
+      "file": "roadmap.schema.v3.2.json",
+      "version": "3.2.0",
+      "description": "Technical canonical source — team-visible roadmap data. v3.2 adds required `scope` on features."
     },
     "roadmap-business": {
       "id": "urn:luhtech:schema:roadmap-business:v2.1",
