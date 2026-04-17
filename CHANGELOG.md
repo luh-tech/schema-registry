@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-04-17
+
+### Added
+- `roadmap.schema.v3.3.json` — new T1 roadmap schema v3.3.0
+  - Optional `provides: array[string]` on feature objects — capabilities the feature provides; each value references a capability id from `data/capabilities.json` in the business-tools monorepo
+  - Optional `lifecyclePhases: array[integer 0-7]` on feature objects — RIBA Plan of Work 2020 stages the feature applies to; references phases from `data/lifecycle-phases.json`
+  - Both fields default to empty array; neither is required
+  - Source: requires/provides matching infrastructure in business-tools (commit 5bd5c4c3) — capabilities.json, challenges.json, lifecycle-phases.json
+- `schema-refs.json` → v1.8.0, roadmap entry now points at v3.3
+
+### Notes
+- `xaasServices`, `xaasServicePrimary`, and `personaRelevance` continue to ride on `additionalProperties: true` and are intentionally NOT formalized in this revision. A future schema version may regularize them alongside. The asymmetry is deliberate: `provides`/`lifecyclePhases` got formal treatment because they power a new graph projection with well-defined coverage semantics; their cousins remain de-facto conventions until that same scrutiny reaches them.
+
 ## [Unreleased] - 2026-04-16
 
 ### Added

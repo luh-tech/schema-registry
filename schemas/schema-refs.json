@@ -1,12 +1,21 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "urn:luhtech:schema:schema-refs:v1.7",
-  "title": "LuhTech Schema Registry v1.7.0",
-  "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.7.0: roadmap schema bumped to v3.2 (adds required `scope` field on features).",
+  "$id": "urn:luhtech:schema:schema-refs:v1.8",
+  "title": "LuhTech Schema Registry v1.8.0",
+  "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.8.0: roadmap schema bumped to v3.3 (adds optional `provides` + `lifecyclePhases` on feature objects).",
   "meta": {
-    "version": "1.7.0",
-    "lastUpdated": "2026-04-16T00:00:00Z",
+    "version": "1.8.0",
+    "lastUpdated": "2026-04-17T00:00:00Z",
     "changelog": [
+      {
+        "version": "1.8.0",
+        "date": "2026-04-17",
+        "changes": [
+          "roadmap schema: v3.2 → v3.3 (adds optional `provides: array[string]` and `lifecyclePhases: array[integer 0-7]` on feature objects)",
+          "Source: requires/provides matching infrastructure in business-tools (5bd5c4c3) — capabilities.json, challenges.json, lifecycle-phases.json",
+          "Note: xaasServices, xaasServicePrimary, personaRelevance continue to ride on additionalProperties:true and are intentionally NOT formalized in this revision; a future schema version may regularize."
+        ]
+      },
       {
         "version": "1.7.0",
         "date": "2026-04-16",
@@ -30,10 +39,10 @@
   },
   "schemas": {
     "roadmap": {
-      "id": "urn:luhtech:schema:roadmap:v3.2",
-      "file": "roadmap.schema.v3.2.json",
-      "version": "3.2.0",
-      "description": "Technical canonical source — team-visible roadmap data. v3.2 adds required `scope` on features."
+      "id": "urn:luhtech:schema:roadmap:v3.3",
+      "file": "roadmap.schema.v3.3.json",
+      "version": "3.3.0",
+      "description": "Technical canonical source — team-visible roadmap data. v3.3 adds optional `provides` + `lifecyclePhases` on features (requires/provides matching infrastructure)."
     },
     "roadmap-business": {
       "id": "urn:luhtech:schema:roadmap-business:v2.1",

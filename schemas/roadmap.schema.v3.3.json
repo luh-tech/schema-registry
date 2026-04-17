@@ -1,0 +1,1263 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:luhtech:schema:roadmap:v3.3",
+  "title": "LuhTech Venture Roadmap v3.3",
+  "description": "JSON-first roadmap schema for LuhTech portfolio ventures. v3.3 adds optional `provides: array[string]` and `lifecyclePhases: array[integer 0-7]` to feature objects, supporting the requires/provides matching infrastructure in business-tools (capabilities.json, challenges.json, lifecycle-phases.json). Neither field is required. v3.2 added required `scope` field. v3.1 added mission/vision/currentStage/overallProgress to the venture object. All other fields are a strict superset of v3.2.",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "meta",
+    "venture"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Schema identifier",
+      "enum": [
+        "urn:luhtech:schema:roadmap:v3.3",
+        "urn:luhtech:schema:roadmap:v3.2",
+        "urn:luhtech:schema:roadmap:v3.1",
+        "urn:luhtech:schema:roadmap:v3.0",
+        "https://luhtech.dev/schemas/roadmap-v2.json",
+        "https://luhtech.dev/schemas/roadmap-v2.3.json",
+        "https://luhtech.dev/schemas/roadmap-v2.4.json",
+        "luhtechnology-roadmap-v2"
+      ]
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^[23]\\.[0-9]+\\.[0-9]+$",
+      "description": "SemVer of the schema in use. v3.0.x = business fields removed. v3.1.x = mission/vision/currentStage/overallProgress added to venture.*. v3.2.x = required `scope` field added to feature objects. v3.3.x = optional `provides` + `lifecyclePhases` added to feature objects."
+    },
+    "meta": {
+      "$ref": "#/definitions/meta"
+    },
+    "venture": {
+      "$ref": "#/definitions/ventureDetails"
+    },
+    "pitch": {
+      "$ref": "#/definitions/pitch"
+    },
+    "features": {
+      "type": "array",
+      "description": "Inline feature catalog with optional references to standalone FEATURE.json specifications.",
+      "items": {
+        "$ref": "#/definitions/feature"
+      }
+    },
+    "quarters": {
+      "type": "object",
+      "description": "Quarterly roadmap data keyed by quarter ID (e.g., 'q4_2025')",
+      "patternProperties": {
+        "^q[1-4]_20[0-9]{2}$": {
+          "$ref": "#/definitions/quarter"
+        }
+      },
+      "additionalProperties": false
+    },
+    "financials": {
+      "$ref": "#/definitions/financials"
+    },
+    "team": {
+      "$ref": "#/definitions/team"
+    },
+    "erikAllocation": {
+      "$ref": "#/definitions/erikAllocation"
+    },
+    "keyMilestones": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/keyMilestone"
+      }
+    },
+    "advancedFeatures": {
+      "$ref": "#/definitions/advancedFeatures"
+    },
+    "competitive": {
+      "$ref": "#/definitions/competitive"
+    },
+    "flagshipFeatures": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "featureSpecifications": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "metricsReporting": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "completedMilestones": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "crossVentureDependencies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/crossVentureDependency"
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "portfolioContext": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "portfolioDependencies": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "productTiers": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "pilotProject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "pilotPartner": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "marketContext": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "ventureRelationships": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "futureVentures": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "materialSystems": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "infrastructure": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "_note": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "meta": {
+      "type": "object",
+      "required": [
+        "ventureId",
+        "ventureName",
+        "status"
+      ],
+      "properties": {
+        "ventureId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "ventureName": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "author": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "paused",
+            "archived",
+            "draft",
+            "planning"
+          ]
+        },
+        "sourceDoc": {
+          "type": "string"
+        },
+        "formerName": {
+          "type": "string"
+        },
+        "strategicDocuments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "syncStatus": {
+          "type": "object",
+          "properties": {
+            "v1Path": {
+              "type": "string"
+            },
+            "lastSync": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "syncDirection": {
+              "type": "string"
+            }
+          }
+        },
+        "schemaChangelog": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "version",
+              "date",
+              "changes"
+            ],
+            "properties": {
+              "version": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              },
+              "changes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ventureDetails": {
+      "type": "object",
+      "description": "Venture classification, status, and business identity. v3.1 adds mission, vision, currentStage, and overallProgress — migrated from roadmap-business.json.",
+      "required": [
+        "type",
+        "architecture"
+      ],
+      "properties": {
+        "type": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          ]
+        },
+        "architecture": {
+          "type": "string"
+        },
+        "forkParent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "codeReuse": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "platformProgress": {
+          "type": "string"
+        },
+        "currentPhase": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "patent": {
+          "type": "string"
+        },
+        "patentTitle": {
+          "type": "string"
+        },
+        "mission": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Venture mission statement. NEW in v3.1 — migrated from roadmap-business.json. Canonical source of truth for all transforms."
+        },
+        "vision": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Venture vision statement. NEW in v3.1 — migrated from roadmap-business.json. Canonical source of truth for all transforms."
+        },
+        "currentStage": {
+          "type": "string",
+          "enum": [
+            "concept",
+            "ideation",
+            "r&d",
+            "validation",
+            "mvp",
+            "pilot",
+            "pre-seed",
+            "seed",
+            "series-a",
+            "series-b",
+            "series-c",
+            "growth",
+            "scale",
+            "active",
+            "public"
+          ],
+          "description": "Current venture stage. NEW in v3.1 — migrated from roadmap-business.json. Update when stage changes. Informs investor reports and portfolio dashboards."
+        },
+        "overallProgress": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Overall roadmap progress as a percentage (0–100). NEW in v3.1 — migrated from roadmap-business.json. Updated by founder judgment each sprint."
+        }
+      }
+    },
+    "pitch": {
+      "type": "object",
+      "required": [
+        "oneLiner",
+        "problem",
+        "solution",
+        "market",
+        "differentiator"
+      ],
+      "properties": {
+        "oneLiner": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "problem": {
+          "type": "string"
+        },
+        "solution": {
+          "type": "string"
+        },
+        "market": {
+          "type": "string"
+        },
+        "differentiator": {
+          "type": "string"
+        },
+        "businessModel": {
+          "type": "string"
+        },
+        "traction": {
+          "type": "string"
+        },
+        "ask": {
+          "type": "string"
+        },
+        "technology": {
+          "type": "string"
+        }
+      }
+    },
+    "feature": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "scope"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "product",
+            "infrastructure",
+            "enterprise-tool",
+            "standard"
+          ],
+          "description": "Scope classification for feature exposure and graph inclusion. product=customer-facing capability; infrastructure=enterprise plumbing; enterprise-tool=internal user-facing tool; standard=public protocol or schema contract. Default when uncertain: infrastructure (security-first: under-include rather than over-expose)."
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "in-progress",
+            "prototype",
+            "concept",
+            "beta",
+            "complete",
+            "deprecated",
+            "active"
+          ]
+        },
+        "priority": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "visibility": {
+          "type": "string",
+          "enum": [
+            "public",
+            "private",
+            "internal"
+          ]
+        },
+        "targetReleaseId": {
+          "type": "string"
+        },
+        "targetQuarter": {
+          "type": "string",
+          "pattern": "^q[1-4]_20[0-9]{2}$"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "inheritedFrom": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dependsOn": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "progress": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "scopeNote": {
+          "type": "string"
+        },
+        "subdomainPattern": {
+          "type": "string"
+        },
+        "featureRef": {
+          "type": "string",
+          "pattern": "^\\.roadmap/features/[a-z0-9-]+(/[a-z0-9-]+)?/FEATURE\\.json$"
+        },
+        "featureUrn": {
+          "type": "string",
+          "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:feature:[a-z0-9-]+$"
+        },
+        "specVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "dependsOnFeatures": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:feature:[a-z0-9-]+$"
+          }
+        },
+        "completionMilestoneId": {
+          "type": "string"
+        },
+        "milestoneUrn": {
+          "type": "string",
+          "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:milestone:[a-z0-9-]+$"
+        },
+        "deliverableIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provides": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Capabilities this feature provides. Each value must reference a capability id from data/capabilities.json in the business-tools monorepo. Used by xaas_graph to compute coverage matches against challenges (which declare 'requires') and personas (which declare 'needs'). Optional — features without provides[] produce zero coverage contributions."
+        },
+        "lifecyclePhases": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7
+          },
+          "default": [],
+          "description": "RIBA Plan of Work 2020 stages this feature applies to. Each integer 0-7 references a phase from data/lifecycle-phases.json in the business-tools monorepo. Stages: 0 Strategic Definition, 1 Preparation and Briefing, 2 Concept Design, 3 Spatial Coordination, 4 Technical Design, 5 Manufacturing and Construction, 6 Handover, 7 Use. Optional — features without lifecyclePhases[] are treated as phase-agnostic."
+        }
+      }
+    },
+    "quarter": {
+      "type": "object",
+      "required": [
+        "focus"
+      ],
+      "properties": {
+        "focus": {
+          "type": "string"
+        },
+        "theme": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "active",
+            "complete"
+          ]
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "milestones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/quarterMilestone"
+          }
+        },
+        "deliverables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/deliverable"
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/risk"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dependency"
+          }
+        },
+        "erikHours": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        }
+      }
+    },
+    "quarterMilestone": {
+      "type": "object",
+      "required": [
+        "event"
+      ],
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "event": {
+          "type": "string"
+        },
+        "gate": {
+          "type": "boolean",
+          "default": false
+        },
+        "critical": {
+          "type": "boolean",
+          "default": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "technical",
+            "business",
+            "funding",
+            "team",
+            "launch",
+            "ar-milestone"
+          ]
+        }
+      }
+    },
+    "deliverable": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string",
+          "default": "team"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "in-progress",
+            "complete",
+            "blocked",
+            "deferred",
+            "not-started"
+          ]
+        },
+        "priority": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "progress": {
+          "type": "string"
+        },
+        "hours": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "featureId": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "required": [
+        "risk"
+      ],
+      "properties": {
+        "risk": {
+          "type": "string"
+        },
+        "probability": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "medium-high",
+            "high",
+            "critical",
+            "confirmed",
+            "resolved"
+          ]
+        },
+        "impact": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "medium-high",
+            "high",
+            "critical",
+            "confirmed",
+            "resolved"
+          ]
+        },
+        "mitigation": {
+          "type": "string"
+        }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "upstream",
+            "downstream",
+            "cross-venture",
+            "internal",
+            "external"
+          ]
+        },
+        "ventureId": {
+          "type": "string"
+        },
+        "milestone": {
+          "type": "string"
+        },
+        "blocking": {
+          "type": "boolean",
+          "default": false
+        },
+        "targetDate": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "crossVentureDependency": {
+      "type": "object",
+      "required": [
+        "from",
+        "to",
+        "type"
+      ],
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "fork",
+            "edge-platform",
+            "template",
+            "data-source",
+            "api-consumer",
+            "data-integration",
+            "platform-extension"
+          ]
+        },
+        "milestone": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "critical": {
+          "type": "boolean"
+        },
+        "codeReuse": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "financials": {
+      "type": "object",
+      "description": "Lightweight financial planning fields preserved for roadmap.json backward compatibility. Canonical financial data lives in roadmap-business.json.",
+      "properties": {
+        "preSeed": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "preSeedTiming": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "preSeedUse": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "seed": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "seedTiming": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "seedUse": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "seriesA": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "seriesATiming": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "year1Revenue": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "year2Revenue": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "burnRate": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "runway": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "projections": {
+          "type": "object",
+          "patternProperties": {
+            "^20[0-9]{2}$": {
+              "type": "object",
+              "properties": {
+                "mrr": {
+                  "type": "string"
+                },
+                "arr": {
+                  "type": "string"
+                },
+                "customers": {
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "pilotValueProjection": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "team": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "role"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "bio": {
+                "type": "string"
+              },
+              "linkedin": {
+                "type": "string"
+              },
+              "expertise": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "q2_2026_target": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "q4_2026_target": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "q1_2027_target": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "keyHires": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/keyHire"
+          }
+        }
+      }
+    },
+    "keyHire": {
+      "type": "object",
+      "required": [
+        "role",
+        "quarter"
+      ],
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "quarter": {
+          "type": "string",
+          "pattern": "^q[1-4]_20[0-9]{2}$"
+        },
+        "critical": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "erikAllocation": {
+      "type": "object",
+      "properties": {
+        "currentHoursPerWeek": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "targetHoursPerWeek": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        },
+        "transitionQuarter": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "quarterlyBreakdown": {
+          "type": "object",
+          "patternProperties": {
+            "^q[1-4]_20[0-9]{2}$": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 80
+            }
+          }
+        }
+      }
+    },
+    "keyMilestone": {
+      "type": "object",
+      "required": [
+        "id",
+        "date",
+        "event"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "urn": {
+          "type": "string",
+          "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:milestone:[a-z0-9-]+$"
+        },
+        "date": {
+          "type": "string"
+        },
+        "event": {
+          "type": "string"
+        },
+        "classification": {
+          "type": "string",
+          "enum": [
+            "LEAD",
+            "DERIVED",
+            "EXTERNAL",
+            "FLEXIBLE"
+          ]
+        },
+        "quarter": {
+          "type": "string",
+          "pattern": "^q[1-4]_20[0-9]{2}$"
+        },
+        "gate": {
+          "type": "boolean",
+          "default": false
+        },
+        "critical": {
+          "type": "boolean",
+          "default": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "authorityLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 7
+        },
+        "bufferDays": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "graphMetadata": {
+          "type": "object",
+          "properties": {
+            "predecessors": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "milestoneUrn"
+                    ],
+                    "properties": {
+                      "milestoneUrn": {
+                        "type": "string"
+                      },
+                      "relationshipType": {
+                        "type": "string",
+                        "enum": [
+                          "FS",
+                          "FF",
+                          "SS",
+                          "SF"
+                        ]
+                      },
+                      "lagDays": {
+                        "type": "integer"
+                      },
+                      "blocking": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "successors": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "milestoneUrn": {
+                        "type": "string"
+                      },
+                      "relationshipType": {
+                        "type": "string"
+                      },
+                      "lagDays": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "commit": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "advancedFeatures": {
+      "type": "object",
+      "properties": {
+        "ar": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "planned",
+                "poc",
+                "mvp",
+                "commercial"
+              ]
+            },
+            "phase": {
+              "type": "integer"
+            },
+            "timeline": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "premiumRevenue": {
+              "type": "string"
+            }
+          }
+        },
+        "robotics": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string"
+            },
+            "phase": {
+              "type": "integer"
+            },
+            "timeline": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "competitive": {
+      "type": "object",
+      "properties": {
+        "directCompetitors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "moats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "integrationStrategy": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  },
+  "x-changelog": [
+    {
+      "version": "3.1.0",
+      "date": "2026-02-26",
+      "changes": [
+        "MIGRATION: Added venture.mission (migrated from roadmap-business.json)",
+        "MIGRATION: Added venture.vision (migrated from roadmap-business.json)",
+        "MIGRATION: Added venture.currentStage (migrated from roadmap-business.json)",
+        "MIGRATION: Added venture.overallProgress (migrated from roadmap-business.json)",
+        "Source: Transform Fabric Architecture v2.0.0 — business identity fields are team-visible, not financial",
+        "Strictly backward compatible with v3.0 — no fields removed"
+      ]
+    },
+    {
+      "version": "3.0.0",
+      "date": "2026-02-14",
+      "changes": [
+        "Removed financials, team, competitive sections as required fields — live exclusively in roadmap-business.json",
+        "Preserved lightweight financials and team stubs for backward compatibility",
+        "Source: GAP 1 resolution — schema-v3-upstream-sync"
+      ]
+    },
+    {
+      "version": "2.4.0",
+      "date": "2026-02-12",
+      "changes": [
+        "Added featureRef, featureUrn, specVersion, dependsOnFeatures to feature entries",
+        "Added milestoneUrn, completionMilestoneId, deliverableIds to feature entries",
+        "Added featureId back-reference to deliverable entries"
+      ]
+    },
+    {
+      "version": "2.3.0",
+      "date": "2026-01-28",
+      "changes": [
+        "Added URN identifiers to keyMilestones",
+        "Added graphMetadata for portfolio dependency tracking",
+        "Added milestone classification (LEAD/DERIVED/EXTERNAL/FLEXIBLE)",
+        "Added authorityLevel for change control",
+        "Added bufferDays for schedule float"
+      ]
+    }
+  ]
+}
