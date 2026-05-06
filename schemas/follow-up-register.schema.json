@@ -1,0 +1,281 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/follow-up-register.schema.json",
+  "title": "Follow-Up Register",
+  "description": "Schema for tracking follow-up items, decisions, open work, and deferred actions within a venture's .roadmap/follow-up-register.json. Adopted portfolio-wide to standardize how ventures track in-flight work that doesn't yet warrant a milestone or decision-log entry.",
+  "type": "object",
+  "required": [
+    "$schema",
+    "$id",
+    "schemaVersion",
+    "version",
+    "ventureId",
+    "lastUpdated",
+    "meta",
+    "followUps",
+    "indexes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "$id": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version of this register (SemVer). Allows independent versioning per venture."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "ventureId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Venture identifier (lowercase kebab-case; matches the venture's repo naming convention)."
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "meta": {
+      "type": "object",
+      "required": [
+        "sourceOfTruth",
+        "totalCount"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "sourceOfTruth": {
+          "type": "string"
+        },
+        "totalCount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "followUps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FollowUpRecord"
+      }
+    },
+    "indexes": {
+      "type": "object",
+      "required": [
+        "byPriority",
+        "byStatus",
+        "byBlockedBy"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "byPriority": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "P0": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "P1": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "P2": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "P3": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "byStatus": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "open": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "in-progress": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "blocked": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "closed": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "byBlockedBy": {
+          "type": "object",
+          "description": "Maps each FU-id to the list of FU-ids that have this FU in their blockedBy[] field. Derived from followUps[].blockedBy. Answers: 'What unblocks when this FU closes?'",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "FollowUpRecord": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "priority",
+        "status",
+        "opened",
+        "openedDuring",
+        "scope",
+        "blockedBy",
+        "blocks"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^FU-[A-Z][A-Z0-9-]*[A-Z0-9]-[0-9]+$",
+              "description": "Canonical convention: FU-<TOPIC-SLUG>-<N> where TOPIC-SLUG is uppercase, hyphen-separated, and N is a positive integer. All new FUs MUST match this pattern."
+            },
+            {
+              "type": "string",
+              "enum": [
+                "FU-59"
+              ],
+              "description": "Legacy bare-number IDs grandfathered for migration. NO new entries may use this form. When the listed legacy IDs close, remove them from this enum."
+            }
+          ],
+          "description": "Follow-up identifier. Either canonical (FU-TOPIC-SLUG-N) or grandfathered legacy (one-time enum)."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 200
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "P0",
+            "P1",
+            "P2",
+            "P3"
+          ],
+          "description": "P0=blocks all downstream work, P1=blocks named items, P2=important but unblocked, P3=housekeeping"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "open",
+            "in-progress",
+            "blocked",
+            "closed"
+          ]
+        },
+        "opened": {
+          "type": "string",
+          "format": "date",
+          "description": "Date the FU was registered (YYYY-MM-DD)"
+        },
+        "openedDuring": {
+          "type": "string",
+          "description": "Session or phase identifier during which this FU was surfaced (e.g., 'S-F3-CLOSE Phase 4', 'S-PORTFOLIO-CANON Phase B')"
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 10,
+          "description": "What must be done. Multi-sentence allowed."
+        },
+        "blockedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "FU-ids or D-ids that must close before this FU can start. Empty array if unblocked."
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "FU-ids or named deliverables this FU must close before they can proceed."
+        },
+        "estimate": {
+          "type": "string",
+          "description": "Rough execution estimate (e.g., '30 min', '1 session')"
+        },
+        "coordination": {
+          "type": "string",
+          "description": "Cross-repo or cross-agent coordination notes"
+        },
+        "trackingRepo": {
+          "type": "string",
+          "description": "Repo where execution work will land (e.g., 'luh-tech/Ectropy-Business')"
+        },
+        "consumerRepo": {
+          "type": "string",
+          "description": "Repo that consumes or depends on the output of this FU"
+        },
+        "resolution": {
+          "type": "object",
+          "description": "Populated when status=closed",
+          "required": [
+            "closedDate",
+            "closedDuring",
+            "summary"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "closedDate": {
+              "type": "string",
+              "format": "date"
+            },
+            "closedDuring": {
+              "type": "string"
+            },
+            "summary": {
+              "type": "string"
+            },
+            "commitSha": {
+              "type": "string"
+            },
+            "prUrl": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
