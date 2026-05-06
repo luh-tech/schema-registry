@@ -13,8 +13,11 @@
   "additionalProperties": false,
   "properties": {
     "$schema": {
-      "const": "https://luhtech.dev/schemas/portfolio/user-metrics.schema.json",
-      "description": "Schema reference (required for schema-first compliance)"
+      "description": "Schema reference (required for schema-first compliance)",
+      "enum": [
+        "https://luhtech.dev/schemas/portfolio/user-metrics.schema.json",
+        "https://schemas.luh.tech/portfolio/user-metrics.schema.json"
+      ]
     },
     "schemaVersion": {
       "type": "string",

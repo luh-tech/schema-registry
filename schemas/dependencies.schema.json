@@ -15,7 +15,8 @@
       "type": "string",
       "enum": [
         "https://luhtech.dev/schemas/dependencies.json",
-        "https://luhtech.dev/schemas/dependencies-v1.json"
+        "https://luhtech.dev/schemas/dependencies-v1.json",
+        "https://schemas.luh.tech/dependencies.schema.json"
       ]
     },
     "version": {

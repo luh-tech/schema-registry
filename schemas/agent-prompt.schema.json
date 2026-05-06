@@ -14,7 +14,8 @@
       "type": "string",
       "enum": [
         "https://luhtech.dev/schemas/agent-prompt.json",
-        "https://luhtech.dev/schemas/agent-prompt.schema.json"
+        "https://luhtech.dev/schemas/agent-prompt.schema.json",
+        "https://schemas.luh.tech/agent-prompt.schema.json"
       ],
       "description": "Schema reference URI. Accepts both canonical and legacy forms."
     },

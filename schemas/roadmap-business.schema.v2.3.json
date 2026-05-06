@@ -17,7 +17,8 @@
     "$schema": {
       "type": "string",
       "enum": [
-        "urn:luhtech:schema:roadmap-business:v2.3"
+        "urn:luhtech:schema:roadmap-business:v2.3",
+        "https://schemas.luh.tech/roadmap-business.schema.v2.3.json"
       ]
     },
     "$id": {

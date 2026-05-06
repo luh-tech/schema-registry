@@ -16,7 +16,8 @@
       "description": "Schema identifier",
       "enum": [
         "https://luhtech.dev/schemas/portfolio/brand.json",
-        "luhtechnology-brand-v1"
+        "luhtechnology-brand-v1",
+        "https://schemas.luh.tech/portfolio/brand.schema.json"
       ]
     },
     "schemaVersion": {
