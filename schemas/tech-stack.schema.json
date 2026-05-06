@@ -1,10 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/tech-stack-v1.json",
+  "$id": "https://schemas.luh.tech/tech-stack.schema.json",
   "title": "Tech Stack",
   "description": "Technology stack documentation for LuhTech ventures. Provides comprehensive visibility into languages, frameworks, databases, infrastructure, and architectural patterns. Enables portfolio-wide technology governance and fork tracking.",
   "type": "object",
-  "required": ["$schema", "version", "ventureId", "lastUpdated", "stack"],
+  "required": [
+    "$schema",
+    "version",
+    "ventureId",
+    "lastUpdated",
+    "stack"
+  ],
   "additionalProperties": false,
   "properties": {
     "$schema": {
@@ -17,7 +23,7 @@
       "description": "Document version (semver)"
     },
     "ventureId": {
-      "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/ventureId"
+      "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/ventureId"
     },
     "lastUpdated": {
       "type": "string",
@@ -32,49 +38,67 @@
         "languages": {
           "type": "array",
           "description": "Programming languages",
-          "items": {"$ref": "#/definitions/language"}
+          "items": {
+            "$ref": "#/definitions/language"
+          }
         },
         "frameworks": {
           "type": "array",
           "description": "Application frameworks",
-          "items": {"$ref": "#/definitions/framework"}
+          "items": {
+            "$ref": "#/definitions/framework"
+          }
         },
         "libraries": {
           "type": "array",
           "description": "Key libraries and packages",
-          "items": {"$ref": "#/definitions/library"}
+          "items": {
+            "$ref": "#/definitions/library"
+          }
         },
         "databases": {
           "type": "array",
           "description": "Database systems",
-          "items": {"$ref": "#/definitions/database"}
+          "items": {
+            "$ref": "#/definitions/database"
+          }
         },
         "infrastructure": {
           "type": "array",
           "description": "Infrastructure components",
-          "items": {"$ref": "#/definitions/infraComponent"}
+          "items": {
+            "$ref": "#/definitions/infraComponent"
+          }
         },
         "devTools": {
           "type": "array",
           "description": "Development and build tools",
-          "items": {"$ref": "#/definitions/devTool"}
+          "items": {
+            "$ref": "#/definitions/devTool"
+          }
         },
         "thirdPartyServices": {
           "type": "array",
           "description": "External service integrations",
-          "items": {"$ref": "#/definitions/thirdPartyService"}
+          "items": {
+            "$ref": "#/definitions/thirdPartyService"
+          }
         },
         "testing": {
           "type": "array",
           "description": "Testing tools and frameworks",
-          "items": {"$ref": "#/definitions/testingTool"}
+          "items": {
+            "$ref": "#/definitions/testingTool"
+          }
         }
       }
     },
     "architecturePatterns": {
       "type": "array",
       "description": "Architectural patterns in use",
-      "items": {"$ref": "#/definitions/architecturePattern"}
+      "items": {
+        "$ref": "#/definitions/architecturePattern"
+      }
     },
     "codeReuse": {
       "type": "object",
@@ -94,12 +118,16 @@
     "techDebt": {
       "type": "array",
       "description": "Known technical debt items",
-      "items": {"$ref": "#/definitions/techDebtItem"}
+      "items": {
+        "$ref": "#/definitions/techDebtItem"
+      }
     },
     "migrationPlan": {
       "type": "array",
       "description": "Planned technology migrations",
-      "items": {"$ref": "#/definitions/migrationItem"}
+      "items": {
+        "$ref": "#/definitions/migrationItem"
+      }
     },
     "metrics": {
       "type": "object",
@@ -109,148 +137,523 @@
     "notes": {
       "type": "array",
       "description": "Tech stack notes and annotations",
-      "items": {"$ref": "https://luhtech.dev/schemas/definitions.json#/definitions/note"}
+      "items": {
+        "$ref": "https://schemas.luh.tech/_definitions/definitions.schema.json#/definitions/note"
+      }
     }
   },
   "definitions": {
     "language": {
       "type": "object",
       "description": "Programming language specification",
-      "required": ["name", "version"],
+      "required": [
+        "name",
+        "version"
+      ],
       "additionalProperties": false,
       "properties": {
         "name": {
           "type": "string",
-          "enum": ["TypeScript", "JavaScript", "Python", "Rust", "Go", "Java", "C#", "C++", "Swift", "Kotlin", "Ruby", "PHP", "SQL", "GraphQL", "HTML", "CSS", "SCSS", "Shell", "Dockerfile"]
+          "enum": [
+            "TypeScript",
+            "JavaScript",
+            "Python",
+            "Rust",
+            "Go",
+            "Java",
+            "C#",
+            "C++",
+            "Swift",
+            "Kotlin",
+            "Ruby",
+            "PHP",
+            "SQL",
+            "GraphQL",
+            "HTML",
+            "CSS",
+            "SCSS",
+            "Shell",
+            "Dockerfile"
+          ]
         },
-        "version": {"type": "string", "description": "Version or version range"},
+        "version": {
+          "type": "string",
+          "description": "Version or version range"
+        },
         "purpose": {
           "type": "array",
-          "items": {"type": "string", "enum": ["backend", "frontend", "api", "scripting", "data", "infrastructure", "testing", "mobile", "embedded"]}
+          "items": {
+            "type": "string",
+            "enum": [
+              "backend",
+              "frontend",
+              "api",
+              "scripting",
+              "data",
+              "infrastructure",
+              "testing",
+              "mobile",
+              "embedded"
+            ]
+          }
         },
-        "primary": {"type": "boolean", "default": false, "description": "Primary language for the venture"},
-        "percentageOfCodebase": {"type": "number", "minimum": 0, "maximum": 100, "description": "Approximate percentage of codebase"},
-        "runtimeVersion": {"type": "string", "description": "Runtime version (e.g., Node.js version for TypeScript)"}
+        "primary": {
+          "type": "boolean",
+          "default": false,
+          "description": "Primary language for the venture"
+        },
+        "percentageOfCodebase": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Approximate percentage of codebase"
+        },
+        "runtimeVersion": {
+          "type": "string",
+          "description": "Runtime version (e.g., Node.js version for TypeScript)"
+        }
       }
     },
     "framework": {
       "type": "object",
       "description": "Application framework",
-      "required": ["name", "version", "category"],
+      "required": [
+        "name",
+        "version",
+        "category"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": {"type": "string"},
-        "version": {"type": "string"},
-        "category": {"type": "string", "enum": ["web-frontend", "web-backend", "api", "mobile", "desktop", "testing", "data", "ml-ai", "cli", "orm", "validation", "state-management", "ui-components"]},
-        "language": {"type": "string", "description": "Primary language"},
-        "documentation": {"type": "string", "format": "uri"},
-        "license": {"type": "string"},
-        "updatePolicy": {"type": "string", "enum": ["latest", "lts", "pinned", "range"], "default": "lts"},
-        "alternatives": {"type": "array", "items": {"type": "string"}, "description": "Considered alternatives"},
-        "selectionRationale": {"type": "string", "description": "Why this framework was chosen"}
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "web-frontend",
+            "web-backend",
+            "api",
+            "mobile",
+            "desktop",
+            "testing",
+            "data",
+            "ml-ai",
+            "cli",
+            "orm",
+            "validation",
+            "state-management",
+            "ui-components"
+          ]
+        },
+        "language": {
+          "type": "string",
+          "description": "Primary language"
+        },
+        "documentation": {
+          "type": "string",
+          "format": "uri"
+        },
+        "license": {
+          "type": "string"
+        },
+        "updatePolicy": {
+          "type": "string",
+          "enum": [
+            "latest",
+            "lts",
+            "pinned",
+            "range"
+          ],
+          "default": "lts"
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Considered alternatives"
+        },
+        "selectionRationale": {
+          "type": "string",
+          "description": "Why this framework was chosen"
+        }
       }
     },
     "library": {
       "type": "object",
       "description": "Key library or package",
-      "required": ["name", "version"],
+      "required": [
+        "name",
+        "version"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": {"type": "string"},
-        "version": {"type": "string"},
-        "purpose": {"type": "string"},
-        "packageManager": {"type": "string", "enum": ["npm", "yarn", "pnpm", "pip", "poetry", "cargo", "go-mod", "maven", "gradle", "nuget"]},
-        "license": {"type": "string"},
-        "critical": {"type": "boolean", "default": false, "description": "Critical dependency"},
-        "securityReviewed": {"type": "boolean", "default": false}
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "packageManager": {
+          "type": "string",
+          "enum": [
+            "npm",
+            "yarn",
+            "pnpm",
+            "pip",
+            "poetry",
+            "cargo",
+            "go-mod",
+            "maven",
+            "gradle",
+            "nuget"
+          ]
+        },
+        "license": {
+          "type": "string"
+        },
+        "critical": {
+          "type": "boolean",
+          "default": false,
+          "description": "Critical dependency"
+        },
+        "securityReviewed": {
+          "type": "boolean",
+          "default": false
+        }
       }
     },
     "database": {
       "type": "object",
       "description": "Database system",
-      "required": ["name", "type", "version"],
+      "required": [
+        "name",
+        "type",
+        "version"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": {"type": "string"},
-        "type": {"type": "string", "enum": ["relational", "document", "key-value", "graph", "time-series", "search", "vector"]},
-        "engine": {"type": "string", "enum": ["postgresql", "mysql", "sqlite", "mongodb", "redis", "neo4j", "elasticsearch", "timescaledb", "cockroachdb", "supabase", "planetscale", "neon", "pinecone", "qdrant"]},
-        "version": {"type": "string"},
-        "hosted": {"type": "boolean", "description": "Managed service vs self-hosted"},
-        "provider": {"type": "string", "description": "Hosting provider"},
-        "purpose": {"type": "string", "description": "Primary use case"},
-        "orm": {"type": "string", "description": "ORM/query builder used"},
-        "extensions": {"type": "array", "items": {"type": "string"}, "description": "Database extensions"}
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "relational",
+            "document",
+            "key-value",
+            "graph",
+            "time-series",
+            "search",
+            "vector"
+          ]
+        },
+        "engine": {
+          "type": "string",
+          "enum": [
+            "postgresql",
+            "mysql",
+            "sqlite",
+            "mongodb",
+            "redis",
+            "neo4j",
+            "elasticsearch",
+            "timescaledb",
+            "cockroachdb",
+            "supabase",
+            "planetscale",
+            "neon",
+            "pinecone",
+            "qdrant"
+          ]
+        },
+        "version": {
+          "type": "string"
+        },
+        "hosted": {
+          "type": "boolean",
+          "description": "Managed service vs self-hosted"
+        },
+        "provider": {
+          "type": "string",
+          "description": "Hosting provider"
+        },
+        "purpose": {
+          "type": "string",
+          "description": "Primary use case"
+        },
+        "orm": {
+          "type": "string",
+          "description": "ORM/query builder used"
+        },
+        "extensions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Database extensions"
+        }
       }
     },
     "infraComponent": {
       "type": "object",
       "description": "Infrastructure component",
-      "required": ["name", "category"],
+      "required": [
+        "name",
+        "category"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": {"type": "string"},
-        "category": {"type": "string", "enum": ["compute", "storage", "networking", "dns", "cdn", "container-registry", "secrets", "monitoring", "logging", "ci-cd", "iac", "kubernetes"]},
-        "provider": {"type": "string"},
-        "service": {"type": "string", "description": "Specific service name"},
-        "purpose": {"type": "string"},
-        "region": {"type": "string"},
-        "costTier": {"type": "string", "enum": ["free", "starter", "professional", "enterprise"], "description": "Pricing tier"},
-        "monthlyCost": {"type": "number", "description": "Estimated monthly cost USD"}
+        "name": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "compute",
+            "storage",
+            "networking",
+            "dns",
+            "cdn",
+            "container-registry",
+            "secrets",
+            "monitoring",
+            "logging",
+            "ci-cd",
+            "iac",
+            "kubernetes"
+          ]
+        },
+        "provider": {
+          "type": "string"
+        },
+        "service": {
+          "type": "string",
+          "description": "Specific service name"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "costTier": {
+          "type": "string",
+          "enum": [
+            "free",
+            "starter",
+            "professional",
+            "enterprise"
+          ],
+          "description": "Pricing tier"
+        },
+        "monthlyCost": {
+          "type": "number",
+          "description": "Estimated monthly cost USD"
+        }
       }
     },
     "devTool": {
       "type": "object",
       "description": "Development tool",
-      "required": ["name", "category"],
+      "required": [
+        "name",
+        "category"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": {"type": "string"},
-        "version": {"type": "string"},
-        "category": {"type": "string", "enum": ["package-manager", "build-tool", "bundler", "linter", "formatter", "type-checker", "debugger", "profiler", "ide", "version-control", "documentation", "api-client", "monorepo"]},
-        "required": {"type": "boolean", "default": true, "description": "Required for development"},
-        "configFile": {"type": "string", "description": "Configuration file path"}
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "package-manager",
+            "build-tool",
+            "bundler",
+            "linter",
+            "formatter",
+            "type-checker",
+            "debugger",
+            "profiler",
+            "ide",
+            "version-control",
+            "documentation",
+            "api-client",
+            "monorepo"
+          ]
+        },
+        "required": {
+          "type": "boolean",
+          "default": true,
+          "description": "Required for development"
+        },
+        "configFile": {
+          "type": "string",
+          "description": "Configuration file path"
+        }
       }
     },
     "thirdPartyService": {
       "type": "object",
       "description": "External service integration",
-      "required": ["name", "category"],
+      "required": [
+        "name",
+        "category"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": {"type": "string"},
-        "category": {"type": "string", "enum": ["auth", "payment", "email", "sms", "push-notifications", "analytics", "error-tracking", "feature-flags", "ai-ml", "maps", "search", "video", "storage", "bim"]},
-        "provider": {"type": "string"},
-        "apiVersion": {"type": "string"},
-        "pricing": {"type": "string", "enum": ["free", "freemium", "paid", "usage-based", "enterprise"]},
-        "sdkUsed": {"type": "string", "description": "SDK or client library"},
-        "dataResidency": {"type": "string", "description": "Data storage location"}
+        "name": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "auth",
+            "payment",
+            "email",
+            "sms",
+            "push-notifications",
+            "analytics",
+            "error-tracking",
+            "feature-flags",
+            "ai-ml",
+            "maps",
+            "search",
+            "video",
+            "storage",
+            "bim"
+          ]
+        },
+        "provider": {
+          "type": "string"
+        },
+        "apiVersion": {
+          "type": "string"
+        },
+        "pricing": {
+          "type": "string",
+          "enum": [
+            "free",
+            "freemium",
+            "paid",
+            "usage-based",
+            "enterprise"
+          ]
+        },
+        "sdkUsed": {
+          "type": "string",
+          "description": "SDK or client library"
+        },
+        "dataResidency": {
+          "type": "string",
+          "description": "Data storage location"
+        }
       }
     },
     "testingTool": {
       "type": "object",
       "description": "Testing tool or framework",
-      "required": ["name", "type"],
+      "required": [
+        "name",
+        "type"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": {"type": "string"},
-        "version": {"type": "string"},
-        "type": {"type": "string", "enum": ["unit", "integration", "e2e", "visual", "performance", "security", "accessibility", "contract", "mutation"]},
-        "runner": {"type": "string", "description": "Test runner used"},
-        "coverage": {"type": "boolean", "description": "Coverage reporting enabled"},
-        "ciIntegrated": {"type": "boolean", "description": "Integrated with CI pipeline"}
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "unit",
+            "integration",
+            "e2e",
+            "visual",
+            "performance",
+            "security",
+            "accessibility",
+            "contract",
+            "mutation"
+          ]
+        },
+        "runner": {
+          "type": "string",
+          "description": "Test runner used"
+        },
+        "coverage": {
+          "type": "boolean",
+          "description": "Coverage reporting enabled"
+        },
+        "ciIntegrated": {
+          "type": "boolean",
+          "description": "Integrated with CI pipeline"
+        }
       }
     },
     "architecturePattern": {
       "type": "object",
       "description": "Architectural pattern",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": {"type": "string", "enum": ["monolith", "microservices", "serverless", "event-driven", "cqrs", "hexagonal", "clean-architecture", "domain-driven", "modular-monolith", "jamstack", "spa", "ssr", "ssg", "hybrid-rendering", "api-first", "graphql-federation", "mcp-server"]},
-        "description": {"type": "string"},
-        "implementation": {"type": "string", "description": "How the pattern is implemented"},
-        "rationale": {"type": "string", "description": "Why this pattern was chosen"},
-        "scope": {"type": "string", "enum": ["full-system", "backend", "frontend", "api", "data-layer"]}
+        "name": {
+          "type": "string",
+          "enum": [
+            "monolith",
+            "microservices",
+            "serverless",
+            "event-driven",
+            "cqrs",
+            "hexagonal",
+            "clean-architecture",
+            "domain-driven",
+            "modular-monolith",
+            "jamstack",
+            "spa",
+            "ssr",
+            "ssg",
+            "hybrid-rendering",
+            "api-first",
+            "graphql-federation",
+            "mcp-server"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "implementation": {
+          "type": "string",
+          "description": "How the pattern is implemented"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this pattern was chosen"
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "full-system",
+            "backend",
+            "frontend",
+            "api",
+            "data-layer"
+          ]
+        }
       }
     },
     "codeReuseConfig": {
@@ -258,13 +661,53 @@
       "description": "Code reuse and fork configuration",
       "additionalProperties": false,
       "properties": {
-        "forkParent": {"type": ["string", "null"], "description": "Parent venture ID if forked"},
-        "forkDate": {"type": "string", "format": "date", "description": "Date of fork"},
-        "sharedPercentage": {"type": "number", "minimum": 0, "maximum": 100, "description": "Percentage of code shared with parent"},
-        "customizationAreas": {"type": "array", "items": {"type": "string"}, "description": "Areas customized from parent"},
-        "syncStrategy": {"type": "string", "enum": ["manual", "automated", "selective", "none"], "description": "How updates from parent are synced"},
-        "sharedPackages": {"type": "array", "items": {"type": "string"}, "description": "Shared internal packages"},
-        "divergenceDate": {"type": "string", "format": "date", "description": "Date of significant divergence"}
+        "forkParent": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Parent venture ID if forked"
+        },
+        "forkDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Date of fork"
+        },
+        "sharedPercentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Percentage of code shared with parent"
+        },
+        "customizationAreas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Areas customized from parent"
+        },
+        "syncStrategy": {
+          "type": "string",
+          "enum": [
+            "manual",
+            "automated",
+            "selective",
+            "none"
+          ],
+          "description": "How updates from parent are synced"
+        },
+        "sharedPackages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Shared internal packages"
+        },
+        "divergenceDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Date of significant divergence"
+        }
       }
     },
     "monorepoConfig": {
@@ -272,19 +715,48 @@
       "description": "Monorepo configuration",
       "additionalProperties": false,
       "properties": {
-        "tool": {"type": "string", "enum": ["nx", "turborepo", "lerna", "rush", "pnpm-workspaces", "yarn-workspaces", "none"]},
+        "tool": {
+          "type": "string",
+          "enum": [
+            "nx",
+            "turborepo",
+            "lerna",
+            "rush",
+            "pnpm-workspaces",
+            "yarn-workspaces",
+            "none"
+          ]
+        },
         "packages": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "name": {"type": "string"},
-              "path": {"type": "string"},
-              "type": {"type": "string", "enum": ["app", "library", "tool", "config"]}
+              "name": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "app",
+                  "library",
+                  "tool",
+                  "config"
+                ]
+              }
             }
           }
         },
-        "sharedConfigs": {"type": "array", "items": {"type": "string"}, "description": "Shared configuration packages"}
+        "sharedConfigs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Shared configuration packages"
+        }
       }
     },
     "codingStandards": {
@@ -292,17 +764,48 @@
       "description": "Coding standards and conventions",
       "additionalProperties": false,
       "properties": {
-        "styleguide": {"type": "string", "description": "Style guide reference"},
-        "linter": {"type": "string"},
-        "formatter": {"type": "string"},
-        "commitConvention": {"type": "string", "enum": ["conventional-commits", "angular", "gitmoji", "custom", "none"]},
-        "branchingStrategy": {"type": "string", "enum": ["gitflow", "github-flow", "trunk-based", "custom"]},
+        "styleguide": {
+          "type": "string",
+          "description": "Style guide reference"
+        },
+        "linter": {
+          "type": "string"
+        },
+        "formatter": {
+          "type": "string"
+        },
+        "commitConvention": {
+          "type": "string",
+          "enum": [
+            "conventional-commits",
+            "angular",
+            "gitmoji",
+            "custom",
+            "none"
+          ]
+        },
+        "branchingStrategy": {
+          "type": "string",
+          "enum": [
+            "gitflow",
+            "github-flow",
+            "trunk-based",
+            "custom"
+          ]
+        },
         "prRequirements": {
           "type": "object",
           "properties": {
-            "reviewers": {"type": "integer", "minimum": 0},
-            "ciPassing": {"type": "boolean"},
-            "coverageThreshold": {"type": "number"}
+            "reviewers": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ciPassing": {
+              "type": "boolean"
+            },
+            "coverageThreshold": {
+              "type": "number"
+            }
           }
         }
       }
@@ -310,36 +813,120 @@
     "techDebtItem": {
       "type": "object",
       "description": "Technical debt item",
-      "required": ["id", "title", "impact"],
+      "required": [
+        "id",
+        "title",
+        "impact"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": {"type": "string", "pattern": "^td-[a-z0-9-]+$"},
-        "title": {"type": "string"},
-        "description": {"type": "string"},
-        "impact": {"$ref": "https://luhtech.dev/schemas/enums.json#/definitions/impactLevel"},
-        "effort": {"type": "string", "enum": ["trivial", "small", "medium", "large", "epic"]},
-        "category": {"type": "string", "enum": ["dependency-update", "refactoring", "testing", "documentation", "security", "performance", "architecture"]},
-        "createdDate": {"type": "string", "format": "date"},
-        "targetDate": {"type": "string", "format": "date"},
-        "relatedIssue": {"type": "string", "format": "uri"}
+        "id": {
+          "type": "string",
+          "pattern": "^td-[a-z0-9-]+$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "impact": {
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/impactLevel"
+        },
+        "effort": {
+          "type": "string",
+          "enum": [
+            "trivial",
+            "small",
+            "medium",
+            "large",
+            "epic"
+          ]
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "dependency-update",
+            "refactoring",
+            "testing",
+            "documentation",
+            "security",
+            "performance",
+            "architecture"
+          ]
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "targetDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "relatedIssue": {
+          "type": "string",
+          "format": "uri"
+        }
       }
     },
     "migrationItem": {
       "type": "object",
       "description": "Planned technology migration",
-      "required": ["id", "from", "to", "status"],
+      "required": [
+        "id",
+        "from",
+        "to",
+        "status"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": {"type": "string", "pattern": "^mig-[a-z0-9-]+$"},
-        "title": {"type": "string"},
-        "from": {"type": "string", "description": "Current technology"},
-        "to": {"type": "string", "description": "Target technology"},
-        "status": {"type": "string", "enum": ["planned", "in-progress", "completed", "cancelled"]},
-        "rationale": {"type": "string"},
-        "targetDate": {"type": "string", "format": "date"},
-        "effort": {"type": "string", "enum": ["small", "medium", "large", "epic"]},
-        "riskLevel": {"$ref": "https://luhtech.dev/schemas/enums.json#/definitions/riskLevel"},
-        "relatedDecision": {"type": "string", "description": "Decision log reference"}
+        "id": {
+          "type": "string",
+          "pattern": "^mig-[a-z0-9-]+$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string",
+          "description": "Current technology"
+        },
+        "to": {
+          "type": "string",
+          "description": "Target technology"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "in-progress",
+            "completed",
+            "cancelled"
+          ]
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "targetDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "effort": {
+          "type": "string",
+          "enum": [
+            "small",
+            "medium",
+            "large",
+            "epic"
+          ]
+        },
+        "riskLevel": {
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/riskLevel"
+        },
+        "relatedDecision": {
+          "type": "string",
+          "description": "Decision log reference"
+        }
       }
     },
     "techMetrics": {
@@ -347,21 +934,52 @@
       "description": "Technology health metrics",
       "additionalProperties": false,
       "properties": {
-        "dependencyCount": {"type": "integer", "minimum": 0},
-        "outdatedDependencies": {"type": "integer", "minimum": 0},
+        "dependencyCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "outdatedDependencies": {
+          "type": "integer",
+          "minimum": 0
+        },
         "securityVulnerabilities": {
           "type": "object",
           "properties": {
-            "critical": {"type": "integer", "minimum": 0},
-            "high": {"type": "integer", "minimum": 0},
-            "medium": {"type": "integer", "minimum": 0},
-            "low": {"type": "integer", "minimum": 0}
+            "critical": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "high": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "medium": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "low": {
+              "type": "integer",
+              "minimum": 0
+            }
           }
         },
-        "testCoverage": {"type": "number", "minimum": 0, "maximum": 100},
-        "buildTime": {"type": "string", "description": "Average build time"},
-        "deployFrequency": {"type": "string", "description": "Deployment frequency"},
-        "lastAuditDate": {"type": "string", "format": "date"}
+        "testCoverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "buildTime": {
+          "type": "string",
+          "description": "Average build time"
+        },
+        "deployFrequency": {
+          "type": "string",
+          "description": "Deployment frequency"
+        },
+        "lastAuditDate": {
+          "type": "string",
+          "format": "date"
+        }
       }
     }
   }

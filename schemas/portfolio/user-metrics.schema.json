@@ -1,10 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/portfolio/user-metrics.schema.json",
+  "$id": "https://schemas.luh.tech/portfolio/user-metrics.schema.json",
   "title": "LuhTech User Metrics Schema",
   "description": "Schema-first definition for user funnel, engagement, and email metrics. Used by dashboard-generator to sync User Funnel dashboard from Twenty CRM and Resend APIs.",
   "type": "object",
-  "required": ["$schema", "schemaVersion", "meta", "timestamp"],
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "meta",
+    "timestamp"
+  ],
   "additionalProperties": false,
   "properties": {
     "$schema": {
@@ -15,11 +20,17 @@
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$",
       "description": "Schema version for compatibility tracking",
-      "examples": ["1.0.0"]
+      "examples": [
+        "1.0.0"
+      ]
     },
     "meta": {
       "type": "object",
-      "required": ["lastUpdated", "schemaFirst", "sourceOfTruth"],
+      "required": [
+        "lastUpdated",
+        "schemaFirst",
+        "sourceOfTruth"
+      ],
       "properties": {
         "lastUpdated": {
           "type": "string",
@@ -48,7 +59,12 @@
     },
     "period": {
       "type": "string",
-      "enum": ["daily", "weekly", "monthly", "all-time"],
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "all-time"
+      ],
       "default": "monthly",
       "description": "Time period for aggregated metrics"
     },
@@ -235,7 +251,9 @@
       "description": "Per-venture breakdown (for portfolio view)",
       "items": {
         "type": "object",
-        "required": ["ventureId"],
+        "required": [
+          "ventureId"
+        ],
         "properties": {
           "ventureId": {
             "type": "string",

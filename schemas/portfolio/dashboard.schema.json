@@ -1,10 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/portfolio/dashboard.schema.json",
+  "$id": "https://schemas.luh.tech/portfolio/dashboard.schema.json",
   "title": "LuhTech Dashboard Configuration Schema",
   "description": "Schema-first configuration for portfolio dashboards including Mermaid diagrams, metrics, and sync settings. All dashboard implementations must validate against this schema.",
   "type": "object",
-  "required": ["$schema", "schemaVersion", "meta", "dashboards"],
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "meta",
+    "dashboards"
+  ],
   "additionalProperties": false,
   "properties": {
     "$schema": {
@@ -15,11 +20,17 @@
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$",
       "description": "Schema version for compatibility tracking",
-      "examples": ["1.0.0"]
+      "examples": [
+        "1.0.0"
+      ]
     },
     "meta": {
       "type": "object",
-      "required": ["lastUpdated", "schemaFirst", "sourceOfTruth"],
+      "required": [
+        "lastUpdated",
+        "schemaFirst",
+        "sourceOfTruth"
+      ],
       "properties": {
         "lastUpdated": {
           "type": "string",
@@ -66,7 +77,12 @@
   "definitions": {
     "dashboard": {
       "type": "object",
-      "required": ["id", "title", "type", "components"],
+      "required": [
+        "id",
+        "title",
+        "type",
+        "components"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -79,7 +95,13 @@
         },
         "type": {
           "type": "string",
-          "enum": ["portfolio", "venture", "infrastructure", "pipeline", "analytics"],
+          "enum": [
+            "portfolio",
+            "venture",
+            "infrastructure",
+            "pipeline",
+            "analytics"
+          ],
           "description": "Dashboard type classification"
         },
         "description": {
@@ -107,14 +129,23 @@
         },
         "dataSource": {
           "type": "string",
-          "enum": ["github", "notion", "prometheus", "aggregator", "manual"],
+          "enum": [
+            "github",
+            "notion",
+            "prometheus",
+            "aggregator",
+            "manual"
+          ],
           "description": "Primary data source for this dashboard"
         }
       }
     },
     "dashboardComponent": {
       "type": "object",
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -154,9 +185,15 @@
           "items": {
             "type": "object",
             "properties": {
-              "field": { "type": "string" },
-              "label": { "type": "string" },
-              "format": { "type": "string" }
+              "field": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "format": {
+                "type": "string"
+              }
             }
           },
           "description": "Column definitions for table components"
@@ -164,16 +201,26 @@
         "style": {
           "type": "object",
           "properties": {
-            "width": { "type": "string" },
-            "height": { "type": "string" },
-            "color": { "type": "string" }
+            "width": {
+              "type": "string"
+            },
+            "height": {
+              "type": "string"
+            },
+            "color": {
+              "type": "string"
+            }
           }
         }
       }
     },
     "mermaidDiagram": {
       "type": "object",
-      "required": ["id", "type", "title"],
+      "required": [
+        "id",
+        "type",
+        "title"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -182,7 +229,14 @@
         },
         "type": {
           "type": "string",
-          "enum": ["flowchart", "gantt", "sequenceDiagram", "stateDiagram", "stateDiagram-v2", "graph"],
+          "enum": [
+            "flowchart",
+            "gantt",
+            "sequenceDiagram",
+            "stateDiagram",
+            "stateDiagram-v2",
+            "graph"
+          ],
           "description": "Mermaid diagram type"
         },
         "title": {
@@ -209,12 +263,22 @@
           "properties": {
             "theme": {
               "type": "string",
-              "enum": ["default", "dark", "forest", "neutral"],
+              "enum": [
+                "default",
+                "dark",
+                "forest",
+                "neutral"
+              ],
               "default": "default"
             },
             "direction": {
               "type": "string",
-              "enum": ["TB", "BT", "LR", "RL"],
+              "enum": [
+                "TB",
+                "BT",
+                "LR",
+                "RL"
+              ],
               "default": "LR"
             }
           }
@@ -240,21 +304,35 @@
         "schedule": {
           "type": "string",
           "description": "Cron expression for sync schedule",
-          "examples": ["0 6 * * *", "*/30 * * * *"]
+          "examples": [
+            "0 6 * * *",
+            "*/30 * * * *"
+          ]
         },
         "sources": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "type": { 
+              "type": {
                 "type": "string",
-                "enum": ["github", "notion", "prometheus", "google-slides"]
+                "enum": [
+                  "github",
+                  "notion",
+                  "prometheus",
+                  "google-slides"
+                ]
               },
-              "endpoint": { "type": "string" },
-              "authType": { 
+              "endpoint": {
+                "type": "string"
+              },
+              "authType": {
                 "type": "string",
-                "enum": ["token", "oauth", "api-key"]
+                "enum": [
+                  "token",
+                  "oauth",
+                  "api-key"
+                ]
               }
             }
           }
@@ -264,8 +342,13 @@
           "items": {
             "type": "object",
             "properties": {
-              "event": { "type": "string" },
-              "url": { "type": "string", "format": "uri" }
+              "event": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              }
             }
           }
         }

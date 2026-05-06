@@ -1,39 +1,121 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/decision-log-v2.json",
+  "$id": "https://schemas.luh.tech/decision-log.schema.v2.json",
   "title": "Decision Log v2",
   "description": "Enhanced structured decision log for venture governance. Tracks key decisions with context, alternatives, rationale, voting, evidence, and implementation status. Includes pre-computed indexes for efficient querying and audit trails. Derived from Ectropy production decision-log.json (261KB, 20+ decisions).",
   "type": "object",
-  "required": ["$schema", "version", "ventureId", "decisions"],
+  "required": [
+    "$schema",
+    "version",
+    "ventureId",
+    "decisions"
+  ],
   "additionalProperties": false,
   "properties": {
-    "$schema": {"type": "string", "const": "https://luhtech.dev/schemas/decision-log-v2.json"},
-    "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Document version (semver)"},
-    "ventureId": {"$ref": "https://luhtech.dev/schemas/enums.json#/definitions/ventureId"},
-    "lastUpdated": {"type": "string", "format": "date-time", "description": "Last modification timestamp"},
-    "decisions": {"type": "array", "description": "Decision entries", "items": {"$ref": "#/definitions/decision"}},
+    "$schema": {
+      "type": "string",
+      "const": "https://luhtech.dev/schemas/decision-log-v2.json"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Document version (semver)"
+    },
+    "ventureId": {
+      "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/ventureId"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last modification timestamp"
+    },
+    "decisions": {
+      "type": "array",
+      "description": "Decision entries",
+      "items": {
+        "$ref": "#/definitions/decision"
+      }
+    },
     "indexes": {
       "type": "object",
       "description": "Pre-computed indexes for efficient querying",
       "additionalProperties": false,
       "properties": {
-        "byStatus": {"type": "object", "description": "Decision IDs grouped by status", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
-        "byCategory": {"type": "object", "description": "Decision IDs grouped by category", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
-        "byImpact": {"type": "object", "description": "Decision IDs grouped by impact level", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
-        "byQuarter": {"type": "object", "description": "Decision IDs grouped by quarter", "additionalProperties": {"type": "array", "items": {"type": "string"}}}
+        "byStatus": {
+          "type": "object",
+          "description": "Decision IDs grouped by status",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "byCategory": {
+          "type": "object",
+          "description": "Decision IDs grouped by category",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "byImpact": {
+          "type": "object",
+          "description": "Decision IDs grouped by impact level",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "byQuarter": {
+          "type": "object",
+          "description": "Decision IDs grouped by quarter",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
       }
     },
-    "governance": {"type": "object", "description": "Governance configuration", "$ref": "#/definitions/governanceConfig"},
+    "governance": {
+      "type": "object",
+      "description": "Governance configuration",
+      "$ref": "#/definitions/governanceConfig"
+    },
     "stats": {
       "type": "object",
       "description": "Decision statistics",
       "properties": {
-        "total": {"type": "integer", "minimum": 0},
-        "proposed": {"type": "integer", "minimum": 0},
-        "approved": {"type": "integer", "minimum": 0},
-        "implemented": {"type": "integer", "minimum": 0},
-        "superseded": {"type": "integer", "minimum": 0},
-        "rejected": {"type": "integer", "minimum": 0}
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "proposed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "approved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "implemented": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "superseded": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rejected": {
+          "type": "integer",
+          "minimum": 0
+        }
       }
     }
   },
@@ -41,90 +123,379 @@
     "decision": {
       "type": "object",
       "description": "Single decision record",
-      "required": ["decisionId", "timestamp", "title", "context", "decision", "rationale", "status", "category", "impact"],
+      "required": [
+        "decisionId",
+        "timestamp",
+        "title",
+        "context",
+        "decision",
+        "rationale",
+        "status",
+        "category",
+        "impact"
+      ],
       "additionalProperties": false,
       "properties": {
-        "decisionId": {"type": "string", "pattern": "^d-\\d{4}-\\d{2}-\\d{2}-[a-z0-9-]+$", "description": "Unique decision identifier (pattern: d-YYYY-MM-DD-slug)"},
-        "timestamp": {"type": "string", "format": "date-time", "description": "Decision creation timestamp"},
-        "title": {"type": "string", "maxLength": 200, "description": "Decision title"},
-        "context": {"type": "string", "description": "Problem statement and background"},
-        "constraints": {"type": "array", "items": {"type": "string"}, "description": "Constraints that influenced the decision"},
-        "alternatives": {"type": "array", "description": "Alternatives considered", "items": {"$ref": "#/definitions/alternative"}},
-        "decision": {"type": "string", "description": "The decision made"},
-        "rationale": {"type": "string", "description": "Reasoning behind the decision"},
+        "decisionId": {
+          "type": "string",
+          "pattern": "^d-\\d{4}-\\d{2}-\\d{2}-[a-z0-9-]+$",
+          "description": "Unique decision identifier (pattern: d-YYYY-MM-DD-slug)"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Decision creation timestamp"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Decision title"
+        },
+        "context": {
+          "type": "string",
+          "description": "Problem statement and background"
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Constraints that influenced the decision"
+        },
+        "alternatives": {
+          "type": "array",
+          "description": "Alternatives considered",
+          "items": {
+            "$ref": "#/definitions/alternative"
+          }
+        },
+        "decision": {
+          "type": "string",
+          "description": "The decision made"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Reasoning behind the decision"
+        },
         "consequences": {
           "type": "object",
           "description": "Expected consequences",
           "properties": {
-            "positive": {"type": "array", "items": {"type": "string"}},
-            "negative": {"type": "array", "items": {"type": "string"}},
-            "risks": {"type": "array", "items": {"type": "string"}}
+            "positive": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "negative": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "risks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         },
-        "status": {"type": "string", "enum": ["proposed", "approved", "implemented", "superseded", "rejected", "deferred"], "description": "Decision status"},
-        "category": {"type": "string", "enum": ["architecture", "infrastructure", "api-design", "security", "governance", "business", "product", "team", "funding", "legal", "vendor", "process", "tooling"], "description": "Decision category"},
-        "impact": {"$ref": "https://luhtech.dev/schemas/enums.json#/definitions/impactLevel"},
-        "approvedBy": {"type": "array", "items": {"type": "string"}, "description": "Approvers"},
-        "approvalDate": {"type": "string", "format": "date-time", "description": "Approval timestamp"},
-        "implementedDate": {"type": "string", "format": "date-time", "description": "Implementation completion date"},
-        "implementedBy": {"type": "array", "items": {"type": "string"}, "description": "Implementers"},
-        "votes": {"type": "array", "description": "Voting record for governance", "items": {"$ref": "#/definitions/vote"}},
-        "impactedDeliverables": {"type": "array", "items": {"type": "string"}, "description": "Affected deliverable IDs"},
-        "impactedServices": {"type": "array", "items": {"type": "string"}, "description": "Affected service IDs"},
-        "impactedInfrastructure": {"type": "array", "items": {"type": "string"}, "description": "Affected infrastructure components"},
-        "evidence": {"type": "array", "items": {"type": "string"}, "description": "Evidence file paths or URLs"},
-        "relatedDecisions": {"type": "array", "items": {"type": "string"}, "description": "Related decision IDs"},
-        "supersedes": {"type": "array", "items": {"type": "string"}, "description": "Decision IDs this supersedes"},
-        "supersededBy": {"type": ["string", "null"], "description": "Decision ID that superseded this"},
-        "tags": {"type": "array", "items": {"type": "string"}, "description": "Classification tags"},
-        "reviewDate": {"type": ["string", "null"], "format": "date", "description": "Scheduled review date"},
-        "lastReviewed": {"type": "string", "format": "date", "description": "Last review date"},
-        "notes": {"type": "array", "description": "Timestamped annotations", "items": {"$ref": "#/definitions/decisionNote"}},
-        "metrics": {"type": "object", "description": "Decision outcome metrics", "additionalProperties": true},
-        "externalLinks": {"type": "array", "items": {"$ref": "https://luhtech.dev/schemas/definitions.json#/definitions/link"}, "description": "External documentation links"}
+        "status": {
+          "type": "string",
+          "enum": [
+            "proposed",
+            "approved",
+            "implemented",
+            "superseded",
+            "rejected",
+            "deferred"
+          ],
+          "description": "Decision status"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "architecture",
+            "infrastructure",
+            "api-design",
+            "security",
+            "governance",
+            "business",
+            "product",
+            "team",
+            "funding",
+            "legal",
+            "vendor",
+            "process",
+            "tooling"
+          ],
+          "description": "Decision category"
+        },
+        "impact": {
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/impactLevel"
+        },
+        "approvedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Approvers"
+        },
+        "approvalDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Approval timestamp"
+        },
+        "implementedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Implementation completion date"
+        },
+        "implementedBy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Implementers"
+        },
+        "votes": {
+          "type": "array",
+          "description": "Voting record for governance",
+          "items": {
+            "$ref": "#/definitions/vote"
+          }
+        },
+        "impactedDeliverables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Affected deliverable IDs"
+        },
+        "impactedServices": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Affected service IDs"
+        },
+        "impactedInfrastructure": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Affected infrastructure components"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Evidence file paths or URLs"
+        },
+        "relatedDecisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related decision IDs"
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Decision IDs this supersedes"
+        },
+        "supersededBy": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Decision ID that superseded this"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Classification tags"
+        },
+        "reviewDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date",
+          "description": "Scheduled review date"
+        },
+        "lastReviewed": {
+          "type": "string",
+          "format": "date",
+          "description": "Last review date"
+        },
+        "notes": {
+          "type": "array",
+          "description": "Timestamped annotations",
+          "items": {
+            "$ref": "#/definitions/decisionNote"
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "description": "Decision outcome metrics",
+          "additionalProperties": true
+        },
+        "externalLinks": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.luh.tech/_definitions/definitions.schema.json#/definitions/link"
+          },
+          "description": "External documentation links"
+        }
       }
     },
     "alternative": {
       "type": "object",
       "description": "Alternative option considered",
-      "required": ["option"],
+      "required": [
+        "option"
+      ],
       "additionalProperties": false,
       "properties": {
-        "option": {"type": "string", "description": "Alternative name/description"},
-        "pros": {"type": "array", "items": {"type": "string"}, "description": "Advantages"},
-        "cons": {"type": "array", "items": {"type": "string"}, "description": "Disadvantages"},
-        "estimatedEffort": {"type": "string", "description": "Effort estimate"},
-        "estimatedCost": {"type": "string", "description": "Cost estimate"},
-        "riskLevel": {"$ref": "https://luhtech.dev/schemas/enums.json#/definitions/riskLevel"},
-        "feasibility": {"type": "string", "enum": ["high", "medium", "low"], "description": "Technical feasibility"},
-        "score": {"type": "number", "minimum": 0, "maximum": 10, "description": "Weighted evaluation score"},
-        "rejectionReason": {"type": "string", "description": "Why this option wasn't chosen"}
+        "option": {
+          "type": "string",
+          "description": "Alternative name/description"
+        },
+        "pros": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Advantages"
+        },
+        "cons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Disadvantages"
+        },
+        "estimatedEffort": {
+          "type": "string",
+          "description": "Effort estimate"
+        },
+        "estimatedCost": {
+          "type": "string",
+          "description": "Cost estimate"
+        },
+        "riskLevel": {
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/riskLevel"
+        },
+        "feasibility": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "description": "Technical feasibility"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Weighted evaluation score"
+        },
+        "rejectionReason": {
+          "type": "string",
+          "description": "Why this option wasn't chosen"
+        }
       }
     },
     "vote": {
       "type": "object",
       "description": "Individual vote on a decision",
-      "required": ["voter", "vote", "timestamp"],
+      "required": [
+        "voter",
+        "vote",
+        "timestamp"
+      ],
       "additionalProperties": false,
       "properties": {
-        "voter": {"type": "string", "description": "Voter identifier"},
-        "vote": {"type": "string", "enum": ["approve", "reject", "abstain", "request-changes"], "description": "Vote cast"},
-        "timestamp": {"type": "string", "format": "date-time", "description": "Vote timestamp"},
-        "comment": {"type": "string", "description": "Optional comment"},
-        "conditions": {"type": "array", "items": {"type": "string"}, "description": "Conditions for approval"}
+        "voter": {
+          "type": "string",
+          "description": "Voter identifier"
+        },
+        "vote": {
+          "type": "string",
+          "enum": [
+            "approve",
+            "reject",
+            "abstain",
+            "request-changes"
+          ],
+          "description": "Vote cast"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Vote timestamp"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Optional comment"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Conditions for approval"
+        }
       }
     },
     "decisionNote": {
       "type": "object",
       "description": "Timestamped annotation on a decision",
-      "required": ["timestamp", "author", "note"],
+      "required": [
+        "timestamp",
+        "author",
+        "note"
+      ],
       "additionalProperties": false,
       "properties": {
-        "timestamp": {"type": "string", "format": "date-time"},
-        "author": {"type": "string"},
-        "note": {"type": "string"},
-        "type": {"type": "string", "enum": ["comment", "update", "review", "concern", "resolution"], "default": "comment"},
-        "visibility": {"type": "string", "enum": ["public", "internal", "private"], "default": "public"}
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "author": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "comment",
+            "update",
+            "review",
+            "concern",
+            "resolution"
+          ],
+          "default": "comment"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": [
+            "public",
+            "internal",
+            "private"
+          ],
+          "default": "public"
+        }
       }
     },
     "governanceConfig": {
@@ -132,12 +503,46 @@
       "description": "Decision governance rules",
       "additionalProperties": false,
       "properties": {
-        "requiredApprovers": {"type": "integer", "minimum": 1, "default": 1, "description": "Minimum approvers required"},
-        "approverRoles": {"type": "array", "items": {"type": "string"}, "description": "Roles that can approve"},
-        "autoApproveCategories": {"type": "array", "items": {"type": "string"}, "description": "Categories with auto-approval"},
-        "reviewIntervalDays": {"type": "integer", "minimum": 30, "default": 180, "description": "Default review interval"},
-        "escalationPath": {"type": "array", "items": {"type": "string"}, "description": "Escalation chain for blocked decisions"},
-        "notificationChannels": {"type": "array", "items": {"type": "string"}, "description": "Notification channels for decisions"}
+        "requiredApprovers": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Minimum approvers required"
+        },
+        "approverRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Roles that can approve"
+        },
+        "autoApproveCategories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Categories with auto-approval"
+        },
+        "reviewIntervalDays": {
+          "type": "integer",
+          "minimum": 30,
+          "default": 180,
+          "description": "Default review interval"
+        },
+        "escalationPath": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Escalation chain for blocked decisions"
+        },
+        "notificationChannels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Notification channels for decisions"
+        }
       }
     }
   }

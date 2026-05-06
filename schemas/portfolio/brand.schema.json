@@ -1,15 +1,23 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/portfolio/brand.json",
+  "$id": "https://schemas.luh.tech/portfolio/brand.schema.json",
   "title": "LuhTech Portfolio Brand Configuration",
   "description": "Schema-first brand configuration for LuhTech portfolio ventures. Defines colors, typography, logos, and background assets for consistent branding across slide generation and marketing materials. References centralized enums from luhtech-enums.schema.v2.json.",
   "type": "object",
-  "required": ["$schema", "schemaVersion", "meta", "brands"],
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "meta",
+    "brands"
+  ],
   "properties": {
     "$schema": {
       "type": "string",
       "description": "Schema identifier",
-      "enum": ["https://luhtech.dev/schemas/portfolio/brand.json", "luhtechnology-brand-v1"]
+      "enum": [
+        "https://luhtech.dev/schemas/portfolio/brand.json",
+        "luhtechnology-brand-v1"
+      ]
     },
     "schemaVersion": {
       "$ref": "../_enums/luhtech-enums.schema.v2.json#/definitions/semver"
@@ -44,7 +52,9 @@
     "meta": {
       "type": "object",
       "description": "Document metadata",
-      "required": ["lastUpdated"],
+      "required": [
+        "lastUpdated"
+      ],
       "properties": {
         "lastUpdated": {
           "type": "string",
@@ -88,22 +98,44 @@
     "backgroundType": {
       "type": "string",
       "description": "Type of slide background",
-      "enum": ["solid_color", "image", "gradient"]
+      "enum": [
+        "solid_color",
+        "image",
+        "gradient"
+      ]
     },
     "backgroundStyle": {
       "type": "string",
       "description": "Standard background styles for different slide contexts",
-      "enum": ["cover", "content", "closing"]
+      "enum": [
+        "cover",
+        "content",
+        "closing"
+      ]
     },
     "slideType": {
       "type": "string",
       "description": "Slide type for background style mapping",
       "enum": [
-        "cover", "title",
-        "problem", "solution", "market", "business_model", "traction",
-        "team", "technology", "timeline", "validation", "partnership",
-        "competition", "financials", "go_to_market",
-        "ask", "closing", "contact", "thank_you"
+        "cover",
+        "title",
+        "problem",
+        "solution",
+        "market",
+        "business_model",
+        "traction",
+        "team",
+        "technology",
+        "timeline",
+        "validation",
+        "partnership",
+        "competition",
+        "financials",
+        "go_to_market",
+        "ask",
+        "closing",
+        "contact",
+        "thank_you"
       ]
     },
     "driveFileId": {
@@ -114,7 +146,13 @@
     "mimeType": {
       "type": "string",
       "description": "MIME type of the asset",
-      "enum": ["image/png", "image/jpeg", "image/svg+xml", "image/gif", "image/webp"]
+      "enum": [
+        "image/png",
+        "image/jpeg",
+        "image/svg+xml",
+        "image/gif",
+        "image/webp"
+      ]
     },
     "brandEnums": {
       "type": "object",
@@ -129,22 +167,30 @@
         },
         "fontFamilies": {
           "type": "array",
-          "items": { "$ref": "#/definitions/fontFamily" },
+          "items": {
+            "$ref": "#/definitions/fontFamily"
+          },
           "description": "All supported font families"
         },
         "backgroundTypes": {
           "type": "array",
-          "items": { "$ref": "#/definitions/backgroundType" },
+          "items": {
+            "$ref": "#/definitions/backgroundType"
+          },
           "description": "All supported background types"
         },
         "backgroundStyles": {
           "type": "array",
-          "items": { "$ref": "#/definitions/backgroundStyle" },
+          "items": {
+            "$ref": "#/definitions/backgroundStyle"
+          },
           "description": "All supported background styles"
         },
         "slideTypes": {
           "type": "array",
-          "items": { "$ref": "#/definitions/slideType" },
+          "items": {
+            "$ref": "#/definitions/slideType"
+          },
           "description": "All supported slide types"
         }
       }
@@ -184,7 +230,9 @@
     "assetReference": {
       "type": "object",
       "description": "Reference to a Google Drive asset",
-      "required": ["driveId"],
+      "required": [
+        "driveId"
+      ],
       "properties": {
         "driveId": {
           "$ref": "#/definitions/driveFileId",
@@ -200,8 +248,14 @@
         "dimensions": {
           "type": "object",
           "properties": {
-            "width": { "type": "integer", "minimum": 1 },
-            "height": { "type": "integer", "minimum": 1 }
+            "width": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 1
+            }
           }
         },
         "uploadedAt": {
@@ -214,7 +268,10 @@
     "colors": {
       "type": "object",
       "description": "Brand color palette",
-      "required": ["primary", "accent"],
+      "required": [
+        "primary",
+        "accent"
+      ],
       "properties": {
         "primary": {
           "$ref": "#/definitions/hexColor",
@@ -335,7 +392,10 @@
     "brandConfig": {
       "type": "object",
       "description": "Complete brand configuration for a venture",
-      "required": ["name", "colors"],
+      "required": [
+        "name",
+        "colors"
+      ],
       "properties": {
         "name": {
           "type": "string",

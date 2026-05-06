@@ -1,15 +1,22 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "urn:luhtech:schema:computed-value:v1.0",
-  "title": "LuhTech ComputedValue — Reusable Financial Type",
+  "$id": "https://schemas.luh.tech/ComputedValue.schema.v1.0.json",
+  "title": "LuhTech ComputedValue \u2014 Reusable Financial Type",
   "description": "Standalone, importable JSON Schema definition for the ComputedValue pattern. Every quantitative financial claim in the LuhTech portfolio is expressed as a ComputedValue: variables (sourced inputs) + formula (derivation) + result (cached output) + provenance metadata. An auditor can reproduce any number from schema data alone. Reference this schema via $ref from roadmap-business.schema.v3.0+.",
   "version": "1.0.0",
   "type": "object",
   "definitions": {
     "ConfidenceLevel": {
       "type": "string",
-      "description": "Calibrated confidence in a value or computation. Must be set honestly — 'assumed' fields are never hidden.",
-      "enum": ["verified", "high", "medium", "low", "assumed", "internal"],
+      "description": "Calibrated confidence in a value or computation. Must be set honestly \u2014 'assumed' fields are never hidden.",
+      "enum": [
+        "verified",
+        "high",
+        "medium",
+        "low",
+        "assumed",
+        "internal"
+      ],
       "x-enumDescriptions": {
         "verified": "Externally confirmed with documentation. Third-party audit, signed contracts, bank statements, or government data. Reproduce-able by an auditor from source documents.",
         "high": "Strong external sourcing. Industry report, comparable deal data, or well-reasoned derivation from verified inputs. Unlikely to be materially wrong.",
@@ -42,7 +49,7 @@
         "industry-report": "Third-party market research from a named research firm (MarketsandMarkets, Gartner, Forrester, IDC, etc.). Cite URL and report date.",
         "government-data": "Government statistical agencies (BLS, Census Bureau, BEA, Statistics Canada). High credibility for macro data.",
         "comparable": "Comparable company, deal, or transaction data. Must cite the comparable with public justification for why it applies.",
-        "news": "News article, press coverage, or blog post. Lower credibility — use only for directional data or citations with named sources.",
+        "news": "News article, press coverage, or blog post. Lower credibility \u2014 use only for directional data or citations with named sources.",
         "pilot-data": "Data from active or completed pilot deployments within LuhTech portfolio. Highest quality for venture-specific operational claims.",
         "internal-calc": "Internal calculation derived from other sourced inputs. Formula must be in formulaComment. REQUIRES comment explaining derivation chain.",
         "internal-estimate": "Internal estimate from founder or team judgment. Not derived from external data. SHOULD include comment explaining basis.",
@@ -54,15 +61,18 @@
     "Source": {
       "type": "object",
       "description": "Provenance record for a variable or computation. Appears as slide bylines, investor deck footnotes, and dataroom justification. Every number must be traceable to its source.",
-      "required": ["name", "type"],
+      "required": [
+        "name",
+        "type"
+      ],
       "properties": {
         "name": {
           "type": "string",
-          "description": "Full citation name. For industry reports: 'FirmName — Report Title Year'. For internal: 'Internal — brief description'. For internal-ref: 'financials.burnRate.result (see burnRate ComputedValue)'.",
+          "description": "Full citation name. For industry reports: 'FirmName \u2014 Report Title Year'. For internal: 'Internal \u2014 brief description'. For internal-ref: 'financials.burnRate.result (see burnRate ComputedValue)'.",
           "examples": [
-            "MarketsandMarkets — Construction Software Market 2024",
-            "Internal — market rate senior engineer benchmarked against Levels.fyi, San Diego CA, 2025",
-            "BLS Occupational Employment Statistics — Software Developers, May 2024",
+            "MarketsandMarkets \u2014 Construction Software Market 2024",
+            "Internal \u2014 market rate senior engineer benchmarked against Levels.fyi, San Diego CA, 2025",
+            "BLS Occupational Employment Statistics \u2014 Software Developers, May 2024",
             "financials.burnRate.result (see burnRate ComputedValue)"
           ]
         },
@@ -73,8 +83,13 @@
         },
         "date": {
           "type": "string",
-          "description": "Date of the source data — 'YYYY-MM-DD', 'YYYY-Qn', or 'YYYY'. Use the date of the data, not the access date.",
-          "examples": ["2024-Q3", "2024-09-15", "2024", "2025-Q1"]
+          "description": "Date of the source data \u2014 'YYYY-MM-DD', 'YYYY-Qn', or 'YYYY'. Use the date of the data, not the access date.",
+          "examples": [
+            "2024-Q3",
+            "2024-09-15",
+            "2024",
+            "2025-Q1"
+          ]
         },
         "accessDate": {
           "type": "string",
@@ -95,18 +110,31 @@
       },
       "if": {
         "properties": {
-          "type": {"enum": ["assumed", "internal-calc"]}
+          "type": {
+            "enum": [
+              "assumed",
+              "internal-calc"
+            ]
+          }
         }
       },
       "then": {
-        "required": ["comment"]
+        "required": [
+          "comment"
+        ]
       },
       "additionalProperties": false
     },
     "Variable": {
       "type": "object",
-      "description": "Named, typed, sourced input to a ComputedValue. Variables are the base data layer — the ONLY things that change when reality changes. A founder updates a variable; the formula re-derives the result. No other part of the system changes. Variable ids are used as operands in formula expressions.",
-      "required": ["id", "label", "value", "unit", "source"],
+      "description": "Named, typed, sourced input to a ComputedValue. Variables are the base data layer \u2014 the ONLY things that change when reality changes. A founder updates a variable; the formula re-derives the result. No other part of the system changes. Variable ids are used as operands in formula expressions.",
+      "required": [
+        "id",
+        "label",
+        "value",
+        "unit",
+        "source"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -120,22 +148,40 @@
         "value": {
           "description": "The numeric value of this variable. Always a number (integer or float). Non-numeric values belong in metadata fields, not variables.",
           "oneOf": [
-            {"type": "number"},
-            {"type": "integer"}
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            }
           ]
         },
         "unit": {
           "type": "string",
           "description": "Unit of measurement using LuhTech unit vocabulary. Use canonical forms: 'USD', 'USD_per_month', 'USD_billions', 'USD_millions', 'percent', 'months', 'years', 'headcount', 'count', 'ratio'.",
-          "examples": ["USD", "USD_per_month", "USD_billions", "USD_millions", "percent", "months", "years", "headcount", "ratio", "count"]
+          "examples": [
+            "USD",
+            "USD_per_month",
+            "USD_billions",
+            "USD_millions",
+            "percent",
+            "months",
+            "years",
+            "headcount",
+            "ratio",
+            "count"
+          ]
         },
         "source": {
           "$ref": "#/definitions/Source"
         },
         "asOf": {
           "type": "string",
-          "description": "Date this value was last verified or collected. 'YYYY-MM-DD' or 'YYYY-Qn'. Used for staleness detection — values older than 90 days should be reviewed.",
-          "examples": ["2026-02-25", "2024-Q3"]
+          "description": "Date this value was last verified or collected. 'YYYY-MM-DD' or 'YYYY-Qn'. Used for staleness detection \u2014 values older than 90 days should be reviewed.",
+          "examples": [
+            "2026-02-25",
+            "2024-Q3"
+          ]
         },
         "confidence": {
           "$ref": "#/definitions/ConfidenceLevel",
@@ -147,7 +193,11 @@
     "ScenarioVariant": {
       "type": "object",
       "description": "A scenario variant of a ComputedValue. Contains the alternative variable values and the resulting recomputed result. The parent ComputedValue's variables array holds base-case values; ScenarioVariant overrides specific variable values for the scenario.",
-      "required": ["variables", "result", "resultUnit"],
+      "required": [
+        "variables",
+        "result",
+        "resultUnit"
+      ],
       "properties": {
         "label": {
           "type": "string",
@@ -160,7 +210,9 @@
         "variables": {
           "type": "array",
           "description": "ONLY the variables that differ from the base case. The formula is the same. The transform re-evaluates the formula with these override values merged into the base variables.",
-          "items": {"$ref": "#/definitions/Variable"}
+          "items": {
+            "$ref": "#/definitions/Variable"
+          }
         },
         "formula": {
           "type": "string",
@@ -168,7 +220,14 @@
         },
         "result": {
           "description": "Pre-computed result for this scenario using the override variables.",
-          "oneOf": [{"type": "number"}, {"type": "integer"}]
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            }
+          ]
         },
         "resultUnit": {
           "type": "string",
@@ -205,8 +264,15 @@
     },
     "ComputedValue": {
       "type": "object",
-      "description": "A quantitative claim with full provenance. The core pattern of LuhTech financial architecture. RULE: no bare scalar financial values in roadmap-business.json — every number is a ComputedValue. Variables are inputs, formula is the derivation, result is the cached output. Change a variable — rerun the formula — result updates. The stored result is a performance cache. The formula + variables are the truth. An auditor must be able to reproduce the result from variables alone.",
-      "required": ["id", "label", "variables", "formula", "result", "resultUnit"],
+      "description": "A quantitative claim with full provenance. The core pattern of LuhTech financial architecture. RULE: no bare scalar financial values in roadmap-business.json \u2014 every number is a ComputedValue. Variables are inputs, formula is the derivation, result is the cached output. Change a variable \u2014 rerun the formula \u2014 result updates. The stored result is a performance cache. The formula + variables are the truth. An auditor must be able to reproduce the result from variables alone.",
+      "required": [
+        "id",
+        "label",
+        "variables",
+        "formula",
+        "result",
+        "resultUnit"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -223,9 +289,11 @@
         },
         "variables": {
           "type": "array",
-          "description": "All numeric inputs. These are the only levers. To update a projection, change a variable value and recompute. Minimum 1 variable required — even a single input value must be expressed as a variable to carry its source and confidence.",
+          "description": "All numeric inputs. These are the only levers. To update a projection, change a variable value and recompute. Minimum 1 variable required \u2014 even a single input value must be expressed as a variable to carry its source and confidence.",
           "minItems": 1,
-          "items": {"$ref": "#/definitions/Variable"}
+          "items": {
+            "$ref": "#/definitions/Variable"
+          }
         },
         "formula": {
           "type": "string",
@@ -243,10 +311,14 @@
           "description": "Plain-English explanation of the formula logic and its assumptions. Required when formula is non-trivial. Show the numeric substitution: 'Monthly burn = $172 (infra) + $6,320 (founder) = $6,492'. Include any constraints, floor/ceiling values, or conditions that affect interpretation."
         },
         "result": {
-          "description": "Pre-computed output. MUST be recomputed whenever any variable changes. This is a performance cache — if variables and result are inconsistent, variables win. The transform engine re-derives results from variables at runtime.",
+          "description": "Pre-computed output. MUST be recomputed whenever any variable changes. This is a performance cache \u2014 if variables and result are inconsistent, variables win. The transform engine re-derives results from variables at runtime.",
           "oneOf": [
-            {"type": "number"},
-            {"type": "integer"}
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            }
           ]
         },
         "resultUnit": {
@@ -255,7 +327,7 @@
         },
         "displayValue": {
           "type": "string",
-          "description": "Formatted string for slides, reports, and investor dashboards. DECOUPLED from result — a result of 750000 may display as '$500K–$1M' (range) or '$750K' (midpoint) depending on context. The transform layer controls which display value to use in which output."
+          "description": "Formatted string for slides, reports, and investor dashboards. DECOUPLED from result \u2014 a result of 750000 may display as '$500K\u2013$1M' (range) or '$750K' (midpoint) depending on context. The transform layer controls which display value to use in which output."
         },
         "confidence": {
           "$ref": "#/definitions/ConfidenceLevel",

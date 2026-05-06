@@ -1,54 +1,175 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/boundaries-v1.json",
+  "$id": "https://schemas.luh.tech/boundaries.schema.json",
   "title": "Venture Boundaries",
   "description": "Fork tracking and code boundary definitions for ventures that inherit from platform or parent ventures.",
   "type": "object",
-  "required": ["$schema", "version", "venture", "forkedFrom"],
+  "required": [
+    "$schema",
+    "version",
+    "venture",
+    "forkedFrom"
+  ],
   "properties": {
-    "$schema": {"type": "string", "const": "https://luhtech.dev/schemas/boundaries-v1.json"},
-    "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
-    "venture": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
-    "lastUpdated": {"type": "string", "format": "date-time"},
-    "forkedFrom": {"$ref": "#/definitions/forkSource"},
-    "inherited": {"type": "array", "items": {"type": "string"}, "description": "Glob patterns for inherited paths"},
-    "removed": {"type": "array", "items": {"type": "string"}, "description": "Glob patterns for removed paths"},
-    "added": {"type": "array", "items": {"type": "string"}, "description": "Glob patterns for added paths"},
-    "modified": {"type": "array", "items": {"$ref": "#/definitions/modifiedPath"}},
-    "upstreamSync": {"$ref": "#/definitions/upstreamSyncConfig"},
-    "codeReuse": {"type": "integer", "minimum": 0, "maximum": 100}
+    "$schema": {
+      "type": "string",
+      "const": "https://luhtech.dev/schemas/boundaries-v1.json"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "venture": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "forkedFrom": {
+      "$ref": "#/definitions/forkSource"
+    },
+    "inherited": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Glob patterns for inherited paths"
+    },
+    "removed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Glob patterns for removed paths"
+    },
+    "added": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Glob patterns for added paths"
+    },
+    "modified": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/modifiedPath"
+      }
+    },
+    "upstreamSync": {
+      "$ref": "#/definitions/upstreamSyncConfig"
+    },
+    "codeReuse": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    }
   },
   "definitions": {
     "forkSource": {
       "type": "object",
-      "required": ["repo", "commitHash", "date"],
+      "required": [
+        "repo",
+        "commitHash",
+        "date"
+      ],
       "properties": {
-        "repo": {"type": "string"},
-        "branch": {"type": "string", "default": "main"},
-        "commitHash": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
-        "date": {"type": "string", "format": "date-time"},
-        "tag": {"type": ["string", "null"]}
+        "repo": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string",
+          "default": "main"
+        },
+        "commitHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tag": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       }
     },
     "modifiedPath": {
       "type": "object",
-      "required": ["path", "reason"],
+      "required": [
+        "path",
+        "reason"
+      ],
       "properties": {
-        "path": {"type": "string"},
-        "reason": {"type": "string"},
-        "originalPath": {"type": ["string", "null"]},
-        "syncStrategy": {"type": "string", "enum": ["manual", "auto", "ignore"], "default": "manual"}
+        "path": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "originalPath": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "syncStrategy": {
+          "type": "string",
+          "enum": [
+            "manual",
+            "auto",
+            "ignore"
+          ],
+          "default": "manual"
+        }
       }
     },
     "upstreamSyncConfig": {
       "type": "object",
       "properties": {
-        "enabled": {"type": "boolean", "default": false},
-        "branches": {"type": "array", "items": {"type": "string"}},
-        "excludePaths": {"type": "array", "items": {"type": "string"}},
-        "frequency": {"type": "string", "enum": ["manual", "daily", "weekly", "on-release"]},
-        "lastSync": {"type": ["string", "null"], "format": "date-time"},
-        "lastSyncCommit": {"type": ["string", "null"], "pattern": "^[a-f0-9]{40}$"}
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "excludePaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "frequency": {
+          "type": "string",
+          "enum": [
+            "manual",
+            "daily",
+            "weekly",
+            "on-release"
+          ]
+        },
+        "lastSync": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "lastSyncCommit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-f0-9]{40}$"
+        }
       }
     }
   }

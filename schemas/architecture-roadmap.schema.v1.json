@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/architecture-roadmap-v1.json",
+  "$id": "https://schemas.luh.tech/architecture-roadmap.schema.v1.json",
   "title": "LuhTech Architecture Roadmap v1",
   "description": "Technical architecture roadmap schema for LuhTech portfolio ventures. Defines services, infrastructure, deployment phases, and cross-links to business roadmap. v1.1.0 migrates shared patterns to centralized $ref definitions.",
   "type": "object",
@@ -14,10 +14,12 @@
     "$schema": {
       "type": "string",
       "description": "Schema identifier - MUST reference this canonical schema",
-      "enum": ["https://luhtech.dev/schemas/architecture-roadmap-v1.json"]
+      "enum": [
+        "https://luhtech.dev/schemas/architecture-roadmap-v1.json"
+      ]
     },
     "schemaVersion": {
-      "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/semver",
+      "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/semver",
       "description": "SemVer version of this architecture document"
     },
     "meta": {
@@ -53,10 +55,15 @@
     "meta": {
       "type": "object",
       "description": "Document metadata - MUST align with business roadmap meta",
-      "required": ["ventureId", "ventureName", "lastUpdated", "status"],
+      "required": [
+        "ventureId",
+        "ventureName",
+        "lastUpdated",
+        "status"
+      ],
       "properties": {
         "ventureId": {
-          "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/ventureIdPattern",
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/ventureIdPattern",
           "description": "Venture identifier - MUST match business roadmap meta.ventureId"
         },
         "ventureName": {
@@ -75,7 +82,13 @@
         },
         "status": {
           "type": "string",
-          "enum": ["planning", "approved", "in-progress", "complete", "deprecated"],
+          "enum": [
+            "planning",
+            "approved",
+            "in-progress",
+            "complete",
+            "deprecated"
+          ],
           "description": "Architecture document status"
         },
         "purpose": {
@@ -96,14 +109,17 @@
     "businessRoadmapRef": {
       "type": "object",
       "description": "REQUIRED cross-reference to business roadmap - establishes the link",
-      "required": ["path", "ventureId"],
+      "required": [
+        "path",
+        "ventureId"
+      ],
       "properties": {
         "path": {
           "type": "string",
           "description": "Relative path to business roadmap.json"
         },
         "ventureId": {
-          "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/ventureIdPattern",
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/ventureIdPattern",
           "description": "Venture ID - MUST match meta.ventureId and business roadmap meta.ventureId"
         },
         "fullRoadmapPath": {
@@ -115,7 +131,10 @@
           "description": "Explicit mapping between architecture phases and business milestones",
           "items": {
             "type": "object",
-            "required": ["architecturePhase", "businessMilestoneId"],
+            "required": [
+              "architecturePhase",
+              "businessMilestoneId"
+            ],
             "properties": {
               "architecturePhase": {
                 "type": "string",
@@ -137,7 +156,12 @@
     "service": {
       "type": "object",
       "description": "Service specification",
-      "required": ["serviceId", "name", "description", "technology"],
+      "required": [
+        "serviceId",
+        "name",
+        "description",
+        "technology"
+      ],
       "properties": {
         "serviceId": {
           "type": "string",
@@ -167,26 +191,43 @@
           "description": "Corresponding business roadmap deliverable ID"
         },
         "priority": {
-          "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/impactLevel",
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/impactLevel",
           "description": "Implementation priority"
         },
         "dependencies": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Service dependencies"
         },
-        "database": {"$ref": "#/definitions/databaseSpec"},
+        "database": {
+          "$ref": "#/definitions/databaseSpec"
+        },
         "apiEndpoints": {
           "type": "array",
-          "items": {"$ref": "#/definitions/apiEndpoint"}
+          "items": {
+            "$ref": "#/definitions/apiEndpoint"
+          }
         },
         "integrations": {
           "type": "array",
-          "items": {"$ref": "#/definitions/integration"}
+          "items": {
+            "$ref": "#/definitions/integration"
+          }
         },
-        "estimatedHours": {"type": "integer", "minimum": 0},
-        "startDate": {"type": "string", "format": "date"},
-        "targetDate": {"type": "string", "format": "date"}
+        "estimatedHours": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "targetDate": {
+          "type": "string",
+          "format": "date"
+        }
       }
     },
     "databaseSpec": {
@@ -194,47 +235,109 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["postgresql", "mysql", "mongodb", "redis", "timescaledb", "sqlite"]
+          "enum": [
+            "postgresql",
+            "mysql",
+            "mongodb",
+            "redis",
+            "timescaledb",
+            "sqlite"
+          ]
         },
         "tables": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["name", "purpose"],
+            "required": [
+              "name",
+              "purpose"
+            ],
             "properties": {
-              "name": {"type": "string"},
-              "purpose": {"type": "string"},
-              "estimatedRows": {"type": "string"},
-              "keyColumns": {"type": "array", "items": {"type": "string"}}
+              "name": {
+                "type": "string"
+              },
+              "purpose": {
+                "type": "string"
+              },
+              "estimatedRows": {
+                "type": "string"
+              },
+              "keyColumns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
-        "migrations": {"type": "array", "items": {"type": "string"}}
+        "migrations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       }
     },
     "apiEndpoint": {
       "type": "object",
-      "required": ["method", "path", "description"],
+      "required": [
+        "method",
+        "path",
+        "description"
+      ],
       "properties": {
         "method": {
           "type": "string",
-          "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "GraphQL", "WebSocket"]
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "GraphQL",
+            "WebSocket"
+          ]
         },
-        "path": {"type": "string"},
-        "description": {"type": "string"},
-        "authentication": {"type": "boolean", "default": true}
+        "path": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "authentication": {
+          "type": "boolean",
+          "default": true
+        }
       }
     },
     "integration": {
       "type": "object",
-      "required": ["service", "purpose"],
+      "required": [
+        "service",
+        "purpose"
+      ],
       "properties": {
-        "service": {"type": "string"},
-        "purpose": {"type": "string"},
-        "apiKey": {"type": "boolean"},
+        "service": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "apiKey": {
+          "type": "boolean"
+        },
         "protocol": {
           "type": "string",
-          "enum": ["REST", "GraphQL", "gRPC", "WebSocket", "MQTT", "Serial", "Modbus"]
+          "enum": [
+            "REST",
+            "GraphQL",
+            "gRPC",
+            "WebSocket",
+            "MQTT",
+            "Serial",
+            "Modbus"
+          ]
         }
       }
     },
@@ -248,12 +351,29 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["port", "service", "status"],
+                "required": [
+                  "port",
+                  "service",
+                  "status"
+                ],
                 "properties": {
-                  "port": {"type": "integer"},
-                  "service": {"type": "string"},
-                  "status": {"type": "string", "enum": ["reserved", "active", "deprecated"]},
-                  "notes": {"type": "string"}
+                  "port": {
+                    "type": "integer"
+                  },
+                  "service": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "reserved",
+                      "active",
+                      "deprecated"
+                    ]
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -262,17 +382,32 @@
         "docker": {
           "type": "object",
           "properties": {
-            "composeFile": {"type": "string"},
+            "composeFile": {
+              "type": "string"
+            },
             "services": {
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["name"],
+                "required": [
+                  "name"
+                ],
                 "properties": {
-                  "name": {"type": "string"},
-                  "image": {"type": "string"},
-                  "port": {"type": "integer"},
-                  "environment": {"type": "array", "items": {"type": "string"}}
+                  "name": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "port": {
+                    "type": "integer"
+                  },
+                  "environment": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -281,16 +416,27 @@
         "nginx": {
           "type": "object",
           "properties": {
-            "configPath": {"type": "string"},
+            "configPath": {
+              "type": "string"
+            },
             "routes": {
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["path", "upstream"],
+                "required": [
+                  "path",
+                  "upstream"
+                ],
                 "properties": {
-                  "path": {"type": "string"},
-                  "upstream": {"type": "string"},
-                  "port": {"type": "integer"}
+                  "path": {
+                    "type": "string"
+                  },
+                  "upstream": {
+                    "type": "string"
+                  },
+                  "port": {
+                    "type": "integer"
+                  }
                 }
               }
             }
@@ -301,10 +447,25 @@
           "properties": {
             "provider": {
               "type": "string",
-              "enum": ["digitalocean", "aws", "gcp", "azure", "vercel", "railway", "self-hosted"]
+              "enum": [
+                "digitalocean",
+                "aws",
+                "gcp",
+                "azure",
+                "vercel",
+                "railway",
+                "self-hosted"
+              ]
             },
-            "region": {"type": "string"},
-            "services": {"type": "array", "items": {"type": "string"}}
+            "region": {
+              "type": "string"
+            },
+            "services": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       }
@@ -314,27 +475,60 @@
       "properties": {
         "strategy": {
           "type": "string",
-          "enum": ["rolling", "blue-green", "canary", "manual"]
+          "enum": [
+            "rolling",
+            "blue-green",
+            "canary",
+            "manual"
+          ]
         },
         "phases": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["phaseId", "name"],
+            "required": [
+              "phaseId",
+              "name"
+            ],
             "properties": {
-              "phaseId": {"type": "string"},
-              "phaseNumber": {"type": "number"},
-              "name": {"type": "string"},
-              "description": {"type": "string"},
-              "services": {"type": "array", "items": {"type": "string"}},
-              "businessMilestoneRef": {"type": "string"},
-              "estimatedDuration": {"type": "string"},
-              "targetDate": {"type": "string", "format": "date"},
+              "phaseId": {
+                "type": "string"
+              },
+              "phaseNumber": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "services": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "businessMilestoneRef": {
+                "type": "string"
+              },
+              "estimatedDuration": {
+                "type": "string"
+              },
+              "targetDate": {
+                "type": "string",
+                "format": "date"
+              },
               "status": {
-                "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/deliverableStatus",
+                "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/deliverableStatus",
                 "description": "Phase completion status"
               },
-              "deliverables": {"type": "array", "items": {"type": "string"}}
+              "deliverables": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
@@ -342,12 +536,19 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["description", "mitigation"],
+            "required": [
+              "description",
+              "mitigation"
+            ],
             "properties": {
-              "description": {"type": "string"},
-              "mitigation": {"type": "string"},
+              "description": {
+                "type": "string"
+              },
+              "mitigation": {
+                "type": "string"
+              },
               "severity": {
-                "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/impactLevel",
+                "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/impactLevel",
                 "description": "Risk severity level"
               }
             }
@@ -363,35 +564,79 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["componentId", "name", "type"],
+            "required": [
+              "componentId",
+              "name",
+              "type"
+            ],
             "properties": {
-              "componentId": {"type": "string"},
-              "name": {"type": "string"},
+              "componentId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
               "type": {
                 "type": "string",
-                "enum": ["microcontroller", "sensor", "actuator", "display", "power", "communication", "enclosure", "mechanical"]
+                "enum": [
+                  "microcontroller",
+                  "sensor",
+                  "actuator",
+                  "display",
+                  "power",
+                  "communication",
+                  "enclosure",
+                  "mechanical"
+                ]
               },
-              "specifications": {"type": "object", "additionalProperties": true},
-              "supplier": {"type": "string"},
-              "unitCost": {"type": "string"}
+              "specifications": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "supplier": {
+                "type": "string"
+              },
+              "unitCost": {
+                "type": "string"
+              }
             }
           }
         },
-        "protocols": {"type": "array", "items": {"type": "string"}},
+        "protocols": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "firmware": {
           "type": "object",
           "properties": {
-            "platform": {"type": "string"},
-            "repository": {"type": "string"},
-            "version": {"type": "string"}
+            "platform": {
+              "type": "string"
+            },
+            "repository": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
           }
         },
         "manufacturing": {
           "type": "object",
           "properties": {
-            "bom": {"type": "string"},
-            "assemblyInstructions": {"type": "string"},
-            "certifications": {"type": "array", "items": {"type": "string"}}
+            "bom": {
+              "type": "string"
+            },
+            "assemblyInstructions": {
+              "type": "string"
+            },
+            "certifications": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       }
@@ -399,22 +644,46 @@
     "validation": {
       "type": "object",
       "properties": {
-        "portConflicts": {"type": "boolean"},
-        "dependenciesResolved": {"type": "boolean"},
-        "schemaValid": {"type": "boolean"},
-        "businessRoadmapLinked": {"type": "boolean"},
-        "lastValidated": {"type": "string", "format": "date-time"},
-        "notes": {"type": "string"}
+        "portConflicts": {
+          "type": "boolean"
+        },
+        "dependenciesResolved": {
+          "type": "boolean"
+        },
+        "schemaValid": {
+          "type": "boolean"
+        },
+        "businessRoadmapLinked": {
+          "type": "boolean"
+        },
+        "lastValidated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "notes": {
+          "type": "string"
+        }
       }
     },
     "relatedDocuments": {
       "type": "object",
       "properties": {
-        "businessRoadmap": {"type": "string"},
-        "technicalDocs": {"type": "array", "items": {"type": "string"}},
-        "adrDirectory": {"type": "string"}
+        "businessRoadmap": {
+          "type": "string"
+        },
+        "technicalDocs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "adrDirectory": {
+          "type": "string"
+        }
       },
-      "additionalProperties": {"type": "string"}
+      "additionalProperties": {
+        "type": "string"
+      }
     }
   }
 }

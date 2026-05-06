@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/enums.json",
+  "$id": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json",
   "title": "LuhTech Shared Enumerations",
   "description": "Centralized enumeration definitions for all LuhTech portfolio schemas. Single source of truth for consistent validation across all ventures.",
   "definitions": {

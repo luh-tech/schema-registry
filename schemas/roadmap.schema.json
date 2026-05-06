@@ -1,10 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/roadmap-v1.json",
+  "$id": "https://schemas.luh.tech/roadmap.schema.json",
   "title": "Venture Roadmap",
   "description": "JSON-first roadmap schema for LuhTech portfolio ventures. Enables automated aggregation, conflict detection, and slide generation.",
   "type": "object",
-  "required": ["$schema", "version", "venture", "pitch", "quarters"],
+  "required": [
+    "$schema",
+    "version",
+    "venture",
+    "pitch",
+    "quarters"
+  ],
   "properties": {
     "$schema": {
       "type": "string",
@@ -55,7 +61,13 @@
   "definitions": {
     "ventureMetadata": {
       "type": "object",
-      "required": ["id", "name", "type", "architecture", "status"],
+      "required": [
+        "id",
+        "name",
+        "type",
+        "architecture",
+        "status"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -69,21 +81,45 @@
         },
         "type": {
           "type": "string",
-          "enum": ["Platform", "Hardware", "SaaS", "API", "Marketplace"],
+          "enum": [
+            "Platform",
+            "Hardware",
+            "SaaS",
+            "API",
+            "Marketplace"
+          ],
           "description": "Venture category"
         },
         "architecture": {
           "type": "string",
-          "enum": ["Cloud-First", "Edge-First", "Hybrid", "API-Only", "Platform"],
+          "enum": [
+            "Cloud-First",
+            "Edge-First",
+            "Hybrid",
+            "API-Only",
+            "Platform"
+          ],
           "description": "Primary architecture pattern"
         },
         "status": {
           "type": "string",
-          "enum": ["active", "paused", "archived", "pre-formation", "pre-seed", "r&d", "poc", "concept"],
+          "enum": [
+            "active",
+            "paused",
+            "archived",
+            "pre-formation",
+            "pre-seed",
+            "r&d",
+            "poc",
+            "concept"
+          ],
           "description": "Current venture status"
         },
         "forkParent": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Parent venture ID if this is a fork"
         },
         "codeReuse": {
@@ -106,124 +142,382 @@
     },
     "pitchContent": {
       "type": "object",
-      "required": ["oneLiner", "problem", "solution", "market", "differentiator", "businessModel"],
+      "required": [
+        "oneLiner",
+        "problem",
+        "solution",
+        "market",
+        "differentiator",
+        "businessModel"
+      ],
       "properties": {
-        "oneLiner": {"type": "string", "maxLength": 100},
-        "problem": {"type": "string"},
-        "solution": {"type": "string"},
-        "market": {"type": "string"},
-        "differentiator": {"type": "string"},
-        "businessModel": {"type": "string"},
-        "traction": {"type": "string"},
-        "ask": {"type": "string"}
+        "oneLiner": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "problem": {
+          "type": "string"
+        },
+        "solution": {
+          "type": "string"
+        },
+        "market": {
+          "type": "string"
+        },
+        "differentiator": {
+          "type": "string"
+        },
+        "businessModel": {
+          "type": "string"
+        },
+        "traction": {
+          "type": "string"
+        },
+        "ask": {
+          "type": "string"
+        }
       }
     },
     "quarter": {
       "type": "object",
-      "required": ["focus"],
+      "required": [
+        "focus"
+      ],
       "properties": {
-        "focus": {"type": "string"},
-        "phases": {"type": "array", "items": {"type": "string"}},
-        "milestones": {"type": "array", "items": {"$ref": "#/definitions/quarterMilestone"}},
-        "deliverables": {"type": "array", "items": {"$ref": "#/definitions/deliverable"}},
-        "metrics": {"type": "object", "additionalProperties": true},
-        "resources": {"type": "object", "additionalProperties": true},
-        "risks": {"type": "array", "items": {"$ref": "#/definitions/risk"}},
-        "dependencies": {"type": "array", "items": {"$ref": "#/definitions/dependency"}},
-        "erikHours": {"type": "integer", "minimum": 0, "maximum": 80}
+        "focus": {
+          "type": "string"
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "milestones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/quarterMilestone"
+          }
+        },
+        "deliverables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/deliverable"
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/risk"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/dependency"
+          }
+        },
+        "erikHours": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80
+        }
       }
     },
     "quarterMilestone": {
       "type": "object",
-      "required": ["event"],
+      "required": [
+        "event"
+      ],
       "properties": {
-        "date": {"type": "string", "format": "date"},
-        "event": {"type": "string"},
-        "gate": {"type": "boolean", "default": false},
-        "critical": {"type": "boolean", "default": false},
-        "type": {"type": "string", "enum": ["technical", "business", "funding", "team", "launch"]},
-        "dependsOn": {"type": "array", "items": {"type": "string"}}
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "event": {
+          "type": "string"
+        },
+        "gate": {
+          "type": "boolean",
+          "default": false
+        },
+        "critical": {
+          "type": "boolean",
+          "default": false
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "technical",
+            "business",
+            "funding",
+            "team",
+            "launch"
+          ]
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       }
     },
     "deliverable": {
       "type": "object",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "properties": {
-        "name": {"type": "string"},
-        "owner": {"type": "string", "default": "team"},
-        "status": {"type": "string", "enum": ["planned", "in-progress", "complete", "blocked", "deferred"]},
-        "priority": {"type": "integer", "minimum": 1, "maximum": 5},
-        "effortHours": {"type": "integer", "minimum": 0}
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string",
+          "default": "team"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "in-progress",
+            "complete",
+            "blocked",
+            "deferred"
+          ]
+        },
+        "priority": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "effortHours": {
+          "type": "integer",
+          "minimum": 0
+        }
       }
     },
     "risk": {
       "type": "object",
-      "required": ["risk"],
+      "required": [
+        "risk"
+      ],
       "properties": {
-        "risk": {"type": "string"},
-        "probability": {"type": "string", "enum": ["low", "medium", "medium-high", "high", "critical"]},
-        "impact": {"type": "string", "enum": ["low", "medium", "medium-high", "high", "critical"]},
-        "mitigation": {"type": "string"}
+        "risk": {
+          "type": "string"
+        },
+        "probability": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "medium-high",
+            "high",
+            "critical"
+          ]
+        },
+        "impact": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "medium-high",
+            "high",
+            "critical"
+          ]
+        },
+        "mitigation": {
+          "type": "string"
+        }
       }
     },
     "dependency": {
       "type": "object",
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "properties": {
-        "type": {"type": "string", "enum": ["upstream", "downstream", "cross-venture", "internal"]},
-        "ventureId": {"type": "string"},
-        "milestone": {"type": "string"},
-        "blocking": {"type": "boolean", "default": false},
-        "targetDate": {"type": "string", "format": "date"}
+        "type": {
+          "type": "string",
+          "enum": [
+            "upstream",
+            "downstream",
+            "cross-venture",
+            "internal"
+          ]
+        },
+        "ventureId": {
+          "type": "string"
+        },
+        "milestone": {
+          "type": "string"
+        },
+        "blocking": {
+          "type": "boolean",
+          "default": false
+        },
+        "targetDate": {
+          "type": "string",
+          "format": "date"
+        }
       }
     },
     "financials": {
       "type": "object",
       "properties": {
-        "preSeed": {"type": ["string", "null"]},
-        "seed": {"type": ["string", "null"]},
-        "year1Revenue": {"type": ["string", "null"]},
-        "year2Revenue": {"type": ["string", "null"]},
-        "burnRate": {"type": ["string", "null"]},
-        "runway": {"type": ["integer", "null"], "minimum": 0}
+        "preSeed": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "seed": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "year1Revenue": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "year2Revenue": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "burnRate": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "runway": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
       }
     },
     "team": {
       "type": "object",
       "properties": {
-        "current": {"type": "integer", "minimum": 0, "default": 1},
-        "q2_2026_target": {"type": ["integer", "null"], "minimum": 0},
-        "q4_2026_target": {"type": ["integer", "null"], "minimum": 0},
-        "keyHires": {"type": "array", "items": {"$ref": "#/definitions/keyHire"}}
+        "current": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 1
+        },
+        "q2_2026_target": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "q4_2026_target": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "keyHires": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/keyHire"
+          }
+        }
       }
     },
     "keyHire": {
       "type": "object",
-      "required": ["role", "quarter"],
+      "required": [
+        "role",
+        "quarter"
+      ],
       "properties": {
-        "role": {"type": "string"},
-        "quarter": {"type": "string", "pattern": "^q[1-4]_20[0-9]{2}$"},
-        "critical": {"type": "boolean", "default": false}
+        "role": {
+          "type": "string"
+        },
+        "quarter": {
+          "type": "string",
+          "pattern": "^q[1-4]_20[0-9]{2}$"
+        },
+        "critical": {
+          "type": "boolean",
+          "default": false
+        }
       }
     },
     "erikAllocation": {
       "type": "object",
       "properties": {
-        "currentHoursPerWeek": {"type": "integer", "minimum": 0, "maximum": 80, "default": 0},
-        "targetHoursPerWeek": {"type": "integer", "minimum": 0, "maximum": 80, "default": 0},
-        "transitionQuarter": {"type": ["string", "null"], "pattern": "^q[1-4]_20[0-9]{2}$"}
+        "currentHoursPerWeek": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80,
+          "default": 0
+        },
+        "targetHoursPerWeek": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 80,
+          "default": 0
+        },
+        "transitionQuarter": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^q[1-4]_20[0-9]{2}$"
+        }
       }
     },
     "milestone": {
       "type": "object",
-      "required": ["id", "date", "event"],
+      "required": [
+        "id",
+        "date",
+        "event"
+      ],
       "properties": {
-        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
-        "date": {"type": "string", "format": "date"},
-        "event": {"type": "string"},
-        "gate": {"type": "boolean", "default": false},
-        "dependsOn": {"type": "array", "items": {"type": "string"}},
-        "ventureId": {"type": "string"}
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "event": {
+          "type": "string"
+        },
+        "gate": {
+          "type": "boolean",
+          "default": false
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ventureId": {
+          "type": "string"
+        }
       }
     }
   }

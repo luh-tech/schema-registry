@@ -1,37 +1,65 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/venture-summary.json",
+  "$id": "https://schemas.luh.tech/venture-summary.schema.json",
   "title": "Venture Summary",
   "description": "Investor-ready venture summary for pitch decks and accelerator reporting. Integrates with slide-generator. v1.1.0 migrates inline enums to centralized $ref definitions.",
   "type": "object",
-  "required": ["$schema", "version", "venture", "pitch", "metrics"],
+  "required": [
+    "$schema",
+    "version",
+    "venture",
+    "pitch",
+    "metrics"
+  ],
   "properties": {
     "$schema": {
       "type": "string",
-      "enum": ["https://luhtech.dev/schemas/venture-summary.json", "https://luhtech.dev/schemas/venture-summary-v1.json"]
+      "enum": [
+        "https://luhtech.dev/schemas/venture-summary.json",
+        "https://luhtech.dev/schemas/venture-summary-v1.json"
+      ]
     },
     "version": {
-      "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/semver"
+      "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/semver"
     },
     "lastUpdated": {
       "type": "string",
       "format": "date-time"
     },
-    "venture": {"$ref": "#/definitions/ventureIdentity"},
-    "pitch": {"$ref": "#/definitions/pitchDeck"},
-    "metrics": {"$ref": "#/definitions/currentMetrics"},
-    "team": {"$ref": "#/definitions/teamInfo"},
-    "funding": {"$ref": "#/definitions/fundingInfo"},
-    "milestones": {"$ref": "#/definitions/milestonesSummary"},
-    "assets": {"$ref": "#/definitions/brandAssets"}
+    "venture": {
+      "$ref": "#/definitions/ventureIdentity"
+    },
+    "pitch": {
+      "$ref": "#/definitions/pitchDeck"
+    },
+    "metrics": {
+      "$ref": "#/definitions/currentMetrics"
+    },
+    "team": {
+      "$ref": "#/definitions/teamInfo"
+    },
+    "funding": {
+      "$ref": "#/definitions/fundingInfo"
+    },
+    "milestones": {
+      "$ref": "#/definitions/milestonesSummary"
+    },
+    "assets": {
+      "$ref": "#/definitions/brandAssets"
+    }
   },
   "definitions": {
     "ventureIdentity": {
       "type": "object",
-      "required": ["id", "name", "tagline", "stage"],
+      "required": [
+        "id",
+        "name",
+        "tagline",
+        "stage"
+      ],
       "properties": {
         "id": {
-          "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/ventureIdPattern"
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/ventureIdPattern"
         },
         "name": {
           "type": "string",
@@ -42,7 +70,7 @@
           "maxLength": 100
         },
         "stage": {
-          "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/ventureStage"
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/ventureStage"
         },
         "founded": {
           "type": "string",
@@ -54,7 +82,9 @@
         },
         "industry": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "location": {
           "type": "string"
@@ -63,21 +93,45 @@
     },
     "pitchDeck": {
       "type": "object",
-      "required": ["problem", "solution", "market", "businessModel", "differentiator"],
+      "required": [
+        "problem",
+        "solution",
+        "market",
+        "businessModel",
+        "differentiator"
+      ],
       "properties": {
-        "problem": {"$ref": "#/definitions/slideContent"},
-        "solution": {"$ref": "#/definitions/slideContent"},
-        "market": {"$ref": "#/definitions/marketSlide"},
-        "businessModel": {"$ref": "#/definitions/businessModelSlide"},
-        "differentiator": {"$ref": "#/definitions/slideContent"},
-        "traction": {"$ref": "#/definitions/tractionSlide"},
-        "ask": {"$ref": "#/definitions/askSlide"},
-        "timeline": {"$ref": "#/definitions/timelineSlide"}
+        "problem": {
+          "$ref": "#/definitions/slideContent"
+        },
+        "solution": {
+          "$ref": "#/definitions/slideContent"
+        },
+        "market": {
+          "$ref": "#/definitions/marketSlide"
+        },
+        "businessModel": {
+          "$ref": "#/definitions/businessModelSlide"
+        },
+        "differentiator": {
+          "$ref": "#/definitions/slideContent"
+        },
+        "traction": {
+          "$ref": "#/definitions/tractionSlide"
+        },
+        "ask": {
+          "$ref": "#/definitions/askSlide"
+        },
+        "timeline": {
+          "$ref": "#/definitions/timelineSlide"
+        }
       }
     },
     "slideContent": {
       "type": "object",
-      "required": ["headline"],
+      "required": [
+        "headline"
+      ],
       "properties": {
         "headline": {
           "type": "string",
@@ -89,7 +143,9 @@
         },
         "bullets": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "maxItems": 5
         },
         "narrative": {
@@ -100,53 +156,87 @@
     },
     "marketSlide": {
       "type": "object",
-      "required": ["tam", "sam", "som"],
+      "required": [
+        "tam",
+        "sam",
+        "som"
+      ],
       "properties": {
-        "headline": {"type": "string"},
+        "headline": {
+          "type": "string"
+        },
         "tam": {
           "type": "object",
           "properties": {
-            "value": {"type": "string"},
-            "description": {"type": "string"}
+            "value": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
           }
         },
         "sam": {
           "type": "object",
           "properties": {
-            "value": {"type": "string"},
-            "description": {"type": "string"}
+            "value": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
           }
         },
         "som": {
           "type": "object",
           "properties": {
-            "value": {"type": "string"},
-            "description": {"type": "string"}
+            "value": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
           }
         },
-        "growthRate": {"type": "string"},
+        "growthRate": {
+          "type": "string"
+        },
         "trends": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
     "businessModelSlide": {
       "type": "object",
-      "required": ["revenueModel"],
+      "required": [
+        "revenueModel"
+      ],
       "properties": {
-        "headline": {"type": "string"},
-        "revenueModel": {"type": "string"},
+        "headline": {
+          "type": "string"
+        },
+        "revenueModel": {
+          "type": "string"
+        },
         "pricing": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "tier": {"type": "string"},
-              "price": {"type": "string"},
+              "tier": {
+                "type": "string"
+              },
+              "price": {
+                "type": "string"
+              },
               "features": {
                 "type": "array",
-                "items": {"type": "string"}
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -154,10 +244,18 @@
         "unitEconomics": {
           "type": "object",
           "properties": {
-            "cac": {"type": "string"},
-            "ltv": {"type": "string"},
-            "paybackPeriod": {"type": "string"},
-            "grossMargin": {"type": "string"}
+            "cac": {
+              "type": "string"
+            },
+            "ltv": {
+              "type": "string"
+            },
+            "paybackPeriod": {
+              "type": "string"
+            },
+            "grossMargin": {
+              "type": "string"
+            }
           }
         }
       }
@@ -165,32 +263,46 @@
     "tractionSlide": {
       "type": "object",
       "properties": {
-        "headline": {"type": "string"},
+        "headline": {
+          "type": "string"
+        },
         "metrics": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "label": {"type": "string"},
-              "value": {"type": "string"},
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
               "trend": {
-                "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/trend"
+                "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/trend"
               }
             }
           }
         },
         "customers": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "testimonials": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "quote": {"type": "string"},
-              "author": {"type": "string"},
-              "company": {"type": "string"}
+              "quote": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "company": {
+                "type": "string"
+              }
             }
           }
         }
@@ -198,31 +310,47 @@
     },
     "askSlide": {
       "type": "object",
-      "required": ["amount"],
+      "required": [
+        "amount"
+      ],
       "properties": {
-        "headline": {"type": "string"},
-        "amount": {"type": "string"},
+        "headline": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
         "useOfFunds": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "category": {"type": "string"},
-              "percentage": {"type": "integer"},
-              "description": {"type": "string"}
+              "category": {
+                "type": "string"
+              },
+              "percentage": {
+                "type": "integer"
+              },
+              "description": {
+                "type": "string"
+              }
             }
           }
         },
         "milestones": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
     "timelineSlide": {
       "type": "object",
       "properties": {
-        "headline": {"type": "string"},
+        "headline": {
+          "type": "string"
+        },
         "milestones": {
           "type": "array",
           "items": {
@@ -232,9 +360,11 @@
                 "type": "string",
                 "format": "date"
               },
-              "label": {"type": "string"},
+              "label": {
+                "type": "string"
+              },
               "status": {
-                "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/milestoneStatus"
+                "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/milestoneStatus"
               }
             }
           }
@@ -244,13 +374,27 @@
     "currentMetrics": {
       "type": "object",
       "properties": {
-        "mrr": {"type": "string"},
-        "arr": {"type": "string"},
-        "customers": {"type": "integer"},
-        "users": {"type": "integer"},
-        "growth": {"type": "string"},
-        "nps": {"type": "integer"},
-        "churn": {"type": "string"},
+        "mrr": {
+          "type": "string"
+        },
+        "arr": {
+          "type": "string"
+        },
+        "customers": {
+          "type": "integer"
+        },
+        "users": {
+          "type": "integer"
+        },
+        "growth": {
+          "type": "string"
+        },
+        "nps": {
+          "type": "integer"
+        },
+        "churn": {
+          "type": "string"
+        },
         "custom": {
           "type": "object",
           "additionalProperties": true
@@ -260,28 +404,45 @@
     "teamInfo": {
       "type": "object",
       "properties": {
-        "size": {"type": "integer"},
+        "size": {
+          "type": "integer"
+        },
         "founders": {
           "type": "array",
-          "items": {"$ref": "#/definitions/teamMember"}
+          "items": {
+            "$ref": "#/definitions/teamMember"
+          }
         },
         "advisors": {
           "type": "array",
-          "items": {"$ref": "#/definitions/teamMember"}
+          "items": {
+            "$ref": "#/definitions/teamMember"
+          }
         },
         "keyHires": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
     "teamMember": {
       "type": "object",
-      "required": ["name", "role"],
+      "required": [
+        "name",
+        "role"
+      ],
       "properties": {
-        "name": {"type": "string"},
-        "role": {"type": "string"},
-        "bio": {"type": "string"},
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "bio": {
+          "type": "string"
+        },
         "linkedin": {
           "type": "string",
           "format": "uri"
@@ -295,23 +456,35 @@
     "fundingInfo": {
       "type": "object",
       "properties": {
-        "totalRaised": {"type": "string"},
+        "totalRaised": {
+          "type": "string"
+        },
         "currentRound": {
           "type": "object",
           "properties": {
-            "type": {"type": "string"},
-            "target": {"type": "string"},
-            "raised": {"type": "string"},
+            "type": {
+              "type": "string"
+            },
+            "target": {
+              "type": "string"
+            },
+            "raised": {
+              "type": "string"
+            },
             "status": {
-              "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/fundingStatus"
+              "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/fundingStatus"
             }
           }
         },
         "investors": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
-        "runway": {"type": "integer"}
+        "runway": {
+          "type": "integer"
+        }
       }
     },
     "milestonesSummary": {
@@ -326,7 +499,9 @@
                 "type": "string",
                 "format": "date"
               },
-              "milestone": {"type": "string"}
+              "milestone": {
+                "type": "string"
+              }
             }
           }
         },
@@ -339,7 +514,9 @@
                 "type": "string",
                 "format": "date"
               },
-              "milestone": {"type": "string"}
+              "milestone": {
+                "type": "string"
+              }
             }
           }
         }
@@ -351,36 +528,50 @@
         "logo": {
           "type": "object",
           "properties": {
-            "primary": {"type": "string"},
-            "light": {"type": "string"},
-            "dark": {"type": "string"},
-            "icon": {"type": "string"}
+            "primary": {
+              "type": "string"
+            },
+            "light": {
+              "type": "string"
+            },
+            "dark": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            }
           }
         },
         "colors": {
           "type": "object",
           "properties": {
             "primary": {
-              "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/hexColor"
+              "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/hexColor"
             },
             "secondary": {
-              "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/hexColor"
+              "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/hexColor"
             },
             "accent": {
-              "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/hexColor"
+              "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/hexColor"
             }
           }
         },
         "fonts": {
           "type": "object",
           "properties": {
-            "heading": {"type": "string"},
-            "body": {"type": "string"}
+            "heading": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
           }
         },
         "backgrounds": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       }
     }

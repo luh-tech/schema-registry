@@ -1,18 +1,29 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/pm/authority-level.schema.json",
+  "$id": "https://schemas.luh.tech/pm/authority-level.schema.json",
   "title": "Authority Level Schema",
   "description": "Defines the 7-tier authority cascade for construction project decisions. Each level has specific budget limits, variance tolerances, and schedule authority.",
   "type": "object",
-  "required": ["$id", "$schema", "schemaVersion", "levels"],
+  "required": [
+    "$id",
+    "$schema",
+    "schemaVersion",
+    "levels"
+  ],
   "definitions": {
     "_metadata": {
       "type": "object",
       "description": "Schema metadata - not for validation",
       "properties": {
-        "version": { "const": "3.0.0" },
-        "lastUpdated": { "const": "2026-01-06" },
-        "maintainer": { "const": "LuhTech Enterprise Infrastructure" },
+        "version": {
+          "const": "3.0.0"
+        },
+        "lastUpdated": {
+          "const": "2026-01-06"
+        },
+        "maintainer": {
+          "const": "LuhTech Enterprise Infrastructure"
+        },
         "relatedSchemas": {
           "const": [
             "decision.schema.json",
@@ -32,23 +43,39 @@
       "properties": {
         "inEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         },
         "outEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         }
       }
     },
     "authorityLevelName": {
       "type": "string",
-      "enum": ["FIELD", "FOREMAN", "SUPERINTENDENT", "PM", "ARCHITECT", "OWNER", "REGULATORY"]
+      "enum": [
+        "FIELD",
+        "FOREMAN",
+        "SUPERINTENDENT",
+        "PM",
+        "ARCHITECT",
+        "OWNER",
+        "REGULATORY"
+      ]
     },
     "levelDefinition": {
       "type": "object",
-      "required": ["level", "name", "title"],
+      "required": [
+        "level",
+        "name",
+        "title"
+      ],
       "properties": {
         "$id": {
           "$ref": "#/definitions/urn",
@@ -74,8 +101,19 @@
         },
         "budgetLimit": {
           "oneOf": [
-            { "type": "number", "minimum": 0 },
-            { "type": "string", "enum": ["design", "project", "code", "unlimited"] }
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "string",
+              "enum": [
+                "design",
+                "project",
+                "code",
+                "unlimited"
+              ]
+            }
           ],
           "description": "Maximum budget authority in USD or special keyword"
         },
@@ -138,17 +176,28 @@
     "meta": {
       "type": "object",
       "properties": {
-        "ventureId": { "type": "string" },
-        "sourceOfTruth": { "type": "string" },
-        "lastUpdated": { "type": "string", "format": "date-time" },
-        "description": { "type": "string" }
+        "ventureId": {
+          "type": "string"
+        },
+        "sourceOfTruth": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        }
       }
     },
     "levels": {
       "type": "array",
       "minItems": 7,
       "maxItems": 7,
-      "items": { "$ref": "#/definitions/levelDefinition" },
+      "items": {
+        "$ref": "#/definitions/levelDefinition"
+      },
       "description": "The 7-tier authority cascade (levels 0-6)"
     },
     "defaultCurrency": {

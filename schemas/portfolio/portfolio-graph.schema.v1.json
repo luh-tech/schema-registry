@@ -1,10 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/portfolio-graph.v1.json",
+  "$id": "https://schemas.luh.tech/portfolio/portfolio-graph.schema.v1.json",
   "title": "LuhTech Portfolio Graph v1",
   "description": "Portfolio-wide graph structure for cross-venture relationships, dependency tracking, and entity linking. Aggregated from venture-level graph data.",
   "type": "object",
-  "required": ["$schema", "meta", "nodes"],
+  "required": [
+    "$schema",
+    "meta",
+    "nodes"
+  ],
   "additionalProperties": false,
   "properties": {
     "$schema": {
@@ -13,7 +17,10 @@
     },
     "meta": {
       "type": "object",
-      "required": ["version", "lastUpdated"],
+      "required": [
+        "version",
+        "lastUpdated"
+      ],
       "additionalProperties": false,
       "properties": {
         "version": {
@@ -40,18 +47,18 @@
           "type": "array",
           "description": "Ventures included in this graph",
           "items": {
-            "$ref": "https://luhtech.dev/schemas/enums-v2.json#/definitions/ventureId"
+            "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.v2.json#/definitions/ventureId"
           }
         },
         "nodeTypes": {
           "type": "array",
           "description": "Node types present in the graph",
           "items": {
-            "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/nodeType"
+            "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/nodeType"
           }
         },
         "syncStatus": {
-          "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/syncStatus"
+          "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/syncStatus"
         }
       }
     },
@@ -59,14 +66,14 @@
       "type": "array",
       "description": "All nodes in the portfolio graph",
       "items": {
-        "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/graphNode"
+        "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/graphNode"
       }
     },
     "edges": {
       "type": "array",
       "description": "Explicit edge definitions for the portfolio",
       "items": {
-        "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/edge"
+        "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/edge"
       }
     },
     "indexes": {
@@ -80,7 +87,7 @@
           "additionalProperties": {
             "type": "array",
             "items": {
-              "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/urn"
+              "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/urn"
             }
           }
         },
@@ -90,7 +97,7 @@
           "additionalProperties": {
             "type": "array",
             "items": {
-              "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/urn"
+              "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/urn"
             }
           }
         },
@@ -102,8 +109,12 @@
             "items": {
               "type": "object",
               "properties": {
-                "from": {"$ref": "https://luhtech.dev/schemas/graph.json#/definitions/urn"},
-                "to": {"$ref": "https://luhtech.dev/schemas/graph.json#/definitions/urn"}
+                "from": {
+                  "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/urn"
+                },
+                "to": {
+                  "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/urn"
+                }
               }
             }
           }
@@ -114,7 +125,7 @@
           "additionalProperties": {
             "type": "array",
             "items": {
-              "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/urn"
+              "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/urn"
             }
           }
         }
@@ -125,22 +136,26 @@
       "description": "Highlighted cross-venture edges for portfolio analysis",
       "items": {
         "type": "object",
-        "required": ["from", "to", "type"],
+        "required": [
+          "from",
+          "to",
+          "type"
+        ],
         "properties": {
           "from": {
-            "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/urn"
+            "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/urn"
           },
           "to": {
-            "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/urn"
+            "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/urn"
           },
           "type": {
-            "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/edgeType"
+            "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/edgeType"
           },
           "sourceVenture": {
-            "$ref": "https://luhtech.dev/schemas/enums-v2.json#/definitions/ventureId"
+            "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.v2.json#/definitions/ventureId"
           },
           "targetVenture": {
-            "$ref": "https://luhtech.dev/schemas/enums-v2.json#/definitions/ventureId"
+            "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.v2.json#/definitions/ventureId"
           },
           "description": {
             "type": "string"

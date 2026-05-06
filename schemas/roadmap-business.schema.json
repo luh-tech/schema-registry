@@ -1,142 +1,407 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/roadmap-business.schema.json",
+  "$id": "https://schemas.luh.tech/roadmap-business.schema.json",
   "title": "Roadmap Business Schema v2.2",
   "description": "Schema for venture business data including financials, team, competitive positioning, service tiers, and presentation slides. Base schema extensible for all luh-tech holdings ventures.",
   "type": "object",
   "$defs": {
-    "monetaryAmount": {"type": "string", "pattern": "^\\$[0-9,]+[KMB]?(-\\$[0-9,]+[KMB]?)?$", "description": "Monetary amount (e.g., '$500K', '$1M-$5M')"},
-    "percentage": {"type": "string", "pattern": "^[0-9]+%$", "description": "Percentage value (e.g., '60%')"},
-    "quarter": {"type": "string", "pattern": "^[Qq][1-4]_?20[2-3][0-9]$", "description": "Quarter reference (e.g., 'Q2_2026')"},
+    "monetaryAmount": {
+      "type": "string",
+      "pattern": "^\\$[0-9,]+[KMB]?(-\\$[0-9,]+[KMB]?)?$",
+      "description": "Monetary amount (e.g., '$500K', '$1M-$5M')"
+    },
+    "percentage": {
+      "type": "string",
+      "pattern": "^[0-9]+%$",
+      "description": "Percentage value (e.g., '60%')"
+    },
+    "quarter": {
+      "type": "string",
+      "pattern": "^[Qq][1-4]_?20[2-3][0-9]$",
+      "description": "Quarter reference (e.g., 'Q2_2026')"
+    },
     "computedValue": {
       "type": "object",
       "description": "A computed financial value with formula, provenance, and display metadata",
       "properties": {
-        "id": {"type": "string"},
-        "label": {"type": "string"},
-        "description": {"type": "string"},
-        "variables": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
-        "formula": {"type": "string"},
-        "formulaComment": {"type": "string"},
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "formula": {
+          "type": "string"
+        },
+        "formulaComment": {
+          "type": "string"
+        },
         "result": {},
-        "resultUnit": {"type": "string"},
-        "displayValue": {"type": "string"},
-        "confidence": {"type": "string"},
-        "byline": {"type": "string"},
-        "lastComputed": {"type": "string"}
+        "resultUnit": {
+          "type": "string"
+        },
+        "displayValue": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "string"
+        },
+        "byline": {
+          "type": "string"
+        },
+        "lastComputed": {
+          "type": "string"
+        }
       },
-      "required": ["id", "label"]
+      "required": [
+        "id",
+        "label"
+      ]
     },
     "financialField": {
       "description": "A financial field: either a simple monetary string or a ComputedValue object",
       "oneOf": [
-        {"$ref": "#/$defs/monetaryAmount"},
-        {"$ref": "#/$defs/computedValue"},
-        {"type": "null"}
+        {
+          "$ref": "#/$defs/monetaryAmount"
+        },
+        {
+          "$ref": "#/$defs/computedValue"
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "keyHire": {
       "type": "object",
       "properties": {
-        "role": {"type": "string", "minLength": 1, "description": "Position title"},
-        "quarter": {"type": "string", "description": "Target hiring quarter"},
-        "critical": {"type": "boolean", "description": "Whether this hire is critical path"},
-        "skills": {"type": "array", "items": {"type": "string"}, "description": "Required skills"},
-        "notes": {"type": "string", "description": "Additional context"},
-        "note": {"type": "string", "description": "Additional context (alias)"}
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Position title"
+        },
+        "quarter": {
+          "type": "string",
+          "description": "Target hiring quarter"
+        },
+        "critical": {
+          "type": "boolean",
+          "description": "Whether this hire is critical path"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Required skills"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional context"
+        },
+        "note": {
+          "type": "string",
+          "description": "Additional context (alias)"
+        }
       },
-      "required": ["role"],
+      "required": [
+        "role"
+      ],
       "additionalProperties": false
     },
     "serviceTier": {
       "type": "object",
       "properties": {
-        "name": {"type": "string", "description": "Tier display name"},
-        "target": {"type": "string", "description": "Target customer segment"},
+        "name": {
+          "type": "string",
+          "description": "Tier display name"
+        },
+        "target": {
+          "type": "string",
+          "description": "Target customer segment"
+        },
         "pricing": {
           "type": "object",
           "properties": {
-            "base": {"type": "string", "description": "Base price"},
-            "includes": {"type": "string", "description": "What's included"},
-            "billing": {"type": "string", "enum": ["free", "monthly", "annual", "usage-based", "custom"], "description": "Billing model"}
+            "base": {
+              "type": "string",
+              "description": "Base price"
+            },
+            "includes": {
+              "type": "string",
+              "description": "What's included"
+            },
+            "billing": {
+              "type": "string",
+              "enum": [
+                "free",
+                "monthly",
+                "annual",
+                "usage-based",
+                "custom"
+              ],
+              "description": "Billing model"
+            }
           },
-          "required": ["base"]
+          "required": [
+            "base"
+          ]
         },
-        "features": {"type": "array", "items": {"type": "string"}, "description": "Features included in tier"},
-        "limits": {"type": "object", "additionalProperties": true, "description": "Usage limits for this tier"}
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Features included in tier"
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Usage limits for this tier"
+        }
       },
-      "required": ["name", "target", "pricing"]
+      "required": [
+        "name",
+        "target",
+        "pricing"
+      ]
     },
     "graphMetadata": {
       "type": "object",
       "properties": {
-        "nodeType": {"type": "string", "description": "Graph node type identifier"},
-        "inEdges": {"type": "array", "items": {"type": "object", "properties": {"type": {"type": "string"}, "target": {"type": "string"}}, "required": ["type", "target"]}},
-        "outEdges": {"type": "array", "items": {"type": "object", "properties": {"type": {"type": "string"}, "target": {"type": "string"}}, "required": ["type", "target"]}}
+        "nodeType": {
+          "type": "string",
+          "description": "Graph node type identifier"
+        },
+        "inEdges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "target"
+            ]
+          }
+        },
+        "outEdges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "target"
+            ]
+          }
+        }
       },
-      "required": ["nodeType"]
+      "required": [
+        "nodeType"
+      ]
     }
   },
   "properties": {
-    "$schema": {"type": "string", "description": "JSON Schema reference"},
-    "$id": {"type": "string", "description": "URN identifier for this document"},
-    "schemaVersion": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$", "description": "Semantic version of schema"},
-    "ventureId": {"type": "string", "minLength": 1, "description": "Venture identifier"},
-    "lastUpdated": {"type": "string", "description": "ISO 8601 timestamp of last update"},
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "$id": {
+      "type": "string",
+      "description": "URN identifier for this document"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of schema"
+    },
+    "ventureId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Venture identifier"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "description": "ISO 8601 timestamp of last update"
+    },
     "meta": {
       "type": "object",
       "description": "Document metadata for version tracking and migration",
       "additionalProperties": true,
       "properties": {
-        "sourceOfTruth": {"type": "string"},
-        "migratedFrom": {"type": "array", "items": {"type": "string"}},
-        "migrationDate": {"type": "string"},
-        "dataQualityFixes": {"type": "array", "items": {"type": "string"}},
-        "syncStatus": {"type": "object", "additionalProperties": true},
+        "sourceOfTruth": {
+          "type": "string"
+        },
+        "migratedFrom": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "migrationDate": {
+          "type": "string"
+        },
+        "dataQualityFixes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "syncStatus": {
+          "type": "object",
+          "additionalProperties": true
+        },
         "schemaChangelog": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "version": {"type": "string"},
-              "date": {"type": "string"},
-              "changes": {"type": "array", "items": {"type": "string"}}
+              "version": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              },
+              "changes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
             },
-            "required": ["version", "date", "changes"]
+            "required": [
+              "version",
+              "date",
+              "changes"
+            ]
           }
         }
       }
     },
-    "organizationName": {"type": "string", "minLength": 1, "description": "Legal/brand name of organization"},
-    "mission": {"type": "string", "description": "Mission statement"},
-    "vision": {"type": "string", "description": "Vision statement"},
-    "currentStage": {"type": "string", "enum": ["ideation", "pre-seed", "seed", "series-a", "series-b", "series-c", "growth", "public"], "description": "Current funding/growth stage"},
-    "overallProgress": {"type": "integer", "minimum": 0, "maximum": 100, "description": "Overall roadmap progress percentage"},
-    "founded": {"type": "string", "description": "Founding date (ISO 8601 date)"},
-    "industry": {"type": "array", "items": {"type": "string"}, "description": "Industry verticals"},
-    "location": {"type": "string", "description": "Primary location"},
-    "license": {"type": "string", "description": "Software license type"},
+    "organizationName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Legal/brand name of organization"
+    },
+    "mission": {
+      "type": "string",
+      "description": "Mission statement"
+    },
+    "vision": {
+      "type": "string",
+      "description": "Vision statement"
+    },
+    "currentStage": {
+      "type": "string",
+      "enum": [
+        "ideation",
+        "pre-seed",
+        "seed",
+        "series-a",
+        "series-b",
+        "series-c",
+        "growth",
+        "public"
+      ],
+      "description": "Current funding/growth stage"
+    },
+    "overallProgress": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Overall roadmap progress percentage"
+    },
+    "founded": {
+      "type": "string",
+      "description": "Founding date (ISO 8601 date)"
+    },
+    "industry": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Industry verticals"
+    },
+    "location": {
+      "type": "string",
+      "description": "Primary location"
+    },
+    "license": {
+      "type": "string",
+      "description": "Software license type"
+    },
     "financials": {
       "type": "object",
       "description": "Financial projections and status. Fields may be simple strings or ComputedValue objects.",
       "additionalProperties": true,
       "properties": {
-        "preSeed": {"$ref": "#/$defs/financialField"},
+        "preSeed": {
+          "$ref": "#/$defs/financialField"
+        },
         "preSeedTiming": {},
-        "preSeedUse": {"type": "object", "additionalProperties": true, "description": "Allocation of pre-seed funds"},
-        "seed": {"$ref": "#/$defs/financialField"},
+        "preSeedUse": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Allocation of pre-seed funds"
+        },
+        "seed": {
+          "$ref": "#/$defs/financialField"
+        },
         "seedTiming": {},
-        "seedUse": {"type": "object", "additionalProperties": true},
-        "year1Revenue": {"type": "string", "description": "Projected year 1 ARR"},
-        "burnRate": {"$ref": "#/$defs/financialField"},
-        "runway": {"$ref": "#/$defs/financialField"},
+        "seedUse": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "year1Revenue": {
+          "type": "string",
+          "description": "Projected year 1 ARR"
+        },
+        "burnRate": {
+          "$ref": "#/$defs/financialField"
+        },
+        "runway": {
+          "$ref": "#/$defs/financialField"
+        },
         "pilotValueProjection": {
-          "type": ["object", "null"],
+          "type": [
+            "object",
+            "null"
+          ],
           "additionalProperties": true,
           "description": "Value proposition metrics for pilot customers"
         },
-        "raiseModel": {"type": "object", "additionalProperties": true, "description": "Raise structure with tranches"},
-        "revenueProjections": {"description": "Revenue projections — array or object"}
+        "raiseModel": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Raise structure with tranches"
+        },
+        "revenueProjections": {
+          "description": "Revenue projections \u2014 array or object"
+        }
       }
     },
     "team": {
@@ -144,37 +409,82 @@
       "description": "Team composition and hiring plan",
       "additionalProperties": true,
       "properties": {
-        "current": {"type": "integer", "minimum": 0, "description": "Current team size"},
-        "q2_2026_target": {"type": "integer", "minimum": 0},
-        "q4_2026_target": {"type": "integer", "minimum": 0},
-        "q2_2027_target": {"type": "integer", "minimum": 0},
-        "keyHires": {"type": "array", "items": {"$ref": "#/$defs/keyHire"}, "description": "Planned key hires"},
+        "current": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Current team size"
+        },
+        "q2_2026_target": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "q4_2026_target": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "q2_2027_target": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "keyHires": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/keyHire"
+          },
+          "description": "Planned key hires"
+        },
         "departments": {
           "type": "object",
           "additionalProperties": true
         }
       },
-      "required": ["current"]
+      "required": [
+        "current"
+      ]
     },
     "competitive": {
       "type": "object",
       "description": "Competitive landscape and positioning",
       "additionalProperties": true,
       "properties": {
-        "directCompetitors": {"type": "array", "items": {"type": "string"}},
-        "indirectCompetitors": {"type": "array", "items": {"type": "string"}},
-        "moats": {"type": "array", "items": {"type": "string"}},
+        "directCompetitors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "indirectCompetitors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "moats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "differentiators": {
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": true,
             "properties": {
-              "feature": {"type": "string"},
-              "description": {"type": "string"},
-              "competitorStatus": {"type": "string"}
+              "feature": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "competitorStatus": {
+                "type": "string"
+              }
             },
-            "required": ["feature", "description"]
+            "required": [
+              "feature",
+              "description"
+            ]
           }
         }
       }
@@ -184,11 +494,25 @@
       "description": "Market sizing and trends",
       "additionalProperties": true,
       "properties": {
-        "tam": {"type": "object", "additionalProperties": true},
-        "sam": {"type": "object", "additionalProperties": true},
-        "som": {"type": "object", "additionalProperties": true},
+        "tam": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "sam": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "som": {
+          "type": "object",
+          "additionalProperties": true
+        },
         "cagr": {},
-        "trends": {"type": "array", "items": {"type": "string"}}
+        "trends": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       }
     },
     "traction": {
@@ -196,12 +520,20 @@
       "description": "Customer traction, pilots, and metrics",
       "additionalProperties": true,
       "properties": {
-        "customerCount": {"type": "integer"},
-        "customers": {"type": "array"},
-        "testimonials": {"type": "array"},
+        "customerCount": {
+          "type": "integer"
+        },
+        "customers": {
+          "type": "array"
+        },
+        "testimonials": {
+          "type": "array"
+        },
         "pilotDetails": {},
         "metrics": {},
-        "heroes": {"type": "array"},
+        "heroes": {
+          "type": "array"
+        },
         "milestones": {}
       }
     },
@@ -210,7 +542,13 @@
       "description": "Pricing model and tier definitions",
       "additionalProperties": true
     },
-    "serviceTiers": {"type": "object", "description": "Product/service tier definitions", "additionalProperties": {"$ref": "#/$defs/serviceTier"}},
+    "serviceTiers": {
+      "type": "object",
+      "description": "Product/service tier definitions",
+      "additionalProperties": {
+        "$ref": "#/$defs/serviceTier"
+      }
+    },
     "presentation": {
       "type": "object",
       "description": "Slide presentation data for investor decks and pitch materials",
@@ -218,27 +556,46 @@
       "properties": {
         "bridge": {
           "type": "object",
-          "description": "Narrative bridge slide — problem to platform. Venture-specific.",
+          "description": "Narrative bridge slide \u2014 problem to platform. Venture-specific.",
           "properties": {
-            "eyebrow": { "type": "string" },
-            "headline": { "type": "string" },
-            "subheadline": { "type": "string" },
-            "pivotLabel": { "type": "string" },
+            "eyebrow": {
+              "type": "string"
+            },
+            "headline": {
+              "type": "string"
+            },
+            "subheadline": {
+              "type": "string"
+            },
+            "pivotLabel": {
+              "type": "string"
+            },
             "insight": {
               "type": "object",
               "properties": {
-                "label": { "type": "string" },
-                "text": { "type": "string" }
+                "label": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                }
               }
             },
             "stats": {
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["value", "label"],
+                "required": [
+                  "value",
+                  "label"
+                ],
                 "properties": {
-                  "value": { "type": "string" },
-                  "label": { "type": "string" }
+                  "value": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -247,42 +604,95 @@
         "moat": {
           "type": "object",
           "description": "Data sovereignty and structural moat slide. Required for all ventures.",
-          "required": ["eyebrow", "headline", "panels"],
+          "required": [
+            "eyebrow",
+            "headline",
+            "panels"
+          ],
           "properties": {
-            "eyebrow": { "type": "string" },
-            "headline": { "type": "string" },
+            "eyebrow": {
+              "type": "string"
+            },
+            "headline": {
+              "type": "string"
+            },
             "panels": {
               "type": "array",
               "minItems": 3,
               "maxItems": 3,
               "items": {
                 "type": "object",
-                "required": ["id", "label"],
+                "required": [
+                  "id",
+                  "label"
+                ],
                 "properties": {
-                  "id": { "type": "string", "enum": ["precedent", "evidence", "architecture"] },
-                  "label": { "type": "string" },
-                  "industry": { "type": "string" },
-                  "body": { "type": "string" },
-                  "outcome": { "type": "string" },
-                  "attribution": { "type": "string" },
+                  "id": {
+                    "type": "string",
+                    "enum": [
+                      "precedent",
+                      "evidence",
+                      "architecture"
+                    ]
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "industry": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "outcome": {
+                    "type": "string"
+                  },
+                  "attribution": {
+                    "type": "string"
+                  },
                   "quotes": {
                     "type": "array",
                     "items": {
                       "type": "object",
-                      "required": ["id", "text", "source"],
+                      "required": [
+                        "id",
+                        "text",
+                        "source"
+                      ],
                       "properties": {
-                        "id": { "type": "string" },
-                        "text": { "type": "string" },
-                        "source": { "type": "string" }
+                        "id": {
+                          "type": "string"
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "source": {
+                          "type": "string"
+                        }
                       }
                     }
                   },
-                  "note": { "type": "string" },
-                  "licenseQuote": { "type": "string" },
-                  "licenseSource": { "type": "string" },
-                  "revenueLines": { "type": "array", "items": { "type": "string" } },
-                  "principle": { "type": "string" },
-                  "networkArgument": { "type": "string" }
+                  "note": {
+                    "type": "string"
+                  },
+                  "licenseQuote": {
+                    "type": "string"
+                  },
+                  "licenseSource": {
+                    "type": "string"
+                  },
+                  "revenueLines": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "principle": {
+                    "type": "string"
+                  },
+                  "networkArgument": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -296,22 +706,66 @@
             "bullets": {
               "type": "array",
               "description": "Capital strategy bullet points.",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             }
           }
         }
       }
     },
-    "assets": {"type": "object", "description": "Brand assets and visual configuration", "additionalProperties": true},
-    "infrastructure": {"type": "object", "description": "Deployment and infrastructure configuration", "additionalProperties": true},
-    "partnerships": {"type": "object", "description": "Strategic partnerships", "additionalProperties": true},
-    "mcpToolCategories": {"type": "array", "items": {}, "description": "MCP tool categories — strings or structured objects"},
-    "repositorySplit": {"type": "object", "description": "Repository split configuration", "additionalProperties": true},
-    "phase_1_mvp": {"type": "object", "description": "Phase 1 MVP deliverables", "additionalProperties": true},
-    "phase_2": {"type": "object", "description": "Phase 2 deliverables", "additionalProperties": true},
-    "graphMetadata": {"$ref": "#/$defs/graphMetadata", "description": "Graph relationship metadata for AI navigation"},
-    "extensions": {"type": "object", "description": "Venture-specific extensions beyond base schema", "additionalProperties": true}
+    "assets": {
+      "type": "object",
+      "description": "Brand assets and visual configuration",
+      "additionalProperties": true
+    },
+    "infrastructure": {
+      "type": "object",
+      "description": "Deployment and infrastructure configuration",
+      "additionalProperties": true
+    },
+    "partnerships": {
+      "type": "object",
+      "description": "Strategic partnerships",
+      "additionalProperties": true
+    },
+    "mcpToolCategories": {
+      "type": "array",
+      "items": {},
+      "description": "MCP tool categories \u2014 strings or structured objects"
+    },
+    "repositorySplit": {
+      "type": "object",
+      "description": "Repository split configuration",
+      "additionalProperties": true
+    },
+    "phase_1_mvp": {
+      "type": "object",
+      "description": "Phase 1 MVP deliverables",
+      "additionalProperties": true
+    },
+    "phase_2": {
+      "type": "object",
+      "description": "Phase 2 deliverables",
+      "additionalProperties": true
+    },
+    "graphMetadata": {
+      "$ref": "#/$defs/graphMetadata",
+      "description": "Graph relationship metadata for AI navigation"
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Venture-specific extensions beyond base schema",
+      "additionalProperties": true
+    }
   },
-  "required": ["$schema", "$id", "schemaVersion", "ventureId", "lastUpdated", "organizationName"],
+  "required": [
+    "$schema",
+    "$id",
+    "schemaVersion",
+    "ventureId",
+    "lastUpdated",
+    "organizationName"
+  ],
   "additionalProperties": false
 }

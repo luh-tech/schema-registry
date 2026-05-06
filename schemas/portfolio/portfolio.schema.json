@@ -1,10 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/portfolio-v1.json",
+  "$id": "https://schemas.luh.tech/portfolio/portfolio.schema.json",
   "title": "LuhTech Portfolio Schema",
   "description": "Holdings-level schema capturing the complete LuhTech venture portfolio structure, strategic narrative, cross-venture relationships, IP assets, and key relationships.",
   "type": "object",
-  "required": ["$schema", "schemaVersion", "meta", "ventures", "narrative"],
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "meta",
+    "ventures",
+    "narrative"
+  ],
   "properties": {
     "$schema": {
       "type": "string",
@@ -65,7 +71,11 @@
     "portfolioMeta": {
       "type": "object",
       "description": "Portfolio document metadata",
-      "required": ["name", "lastUpdated", "status"],
+      "required": [
+        "name",
+        "lastUpdated",
+        "status"
+      ],
       "properties": {
         "name": {
           "type": "string",
@@ -87,7 +97,12 @@
         },
         "status": {
           "type": "string",
-          "enum": ["active", "paused", "archived", "draft"],
+          "enum": [
+            "active",
+            "paused",
+            "archived",
+            "draft"
+          ],
           "description": "Portfolio document status"
         },
         "author": {
@@ -105,11 +120,15 @@
         }
       }
     },
-
     "portfolioVenture": {
       "type": "object",
       "description": "Venture entry in the portfolio",
-      "required": ["id", "name", "layer", "status"],
+      "required": [
+        "id",
+        "name",
+        "layer",
+        "status"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -126,33 +145,72 @@
         },
         "layer": {
           "type": "string",
-          "enum": ["flagship", "base-triad", "extension", "vendor", "independent", "holding"],
+          "enum": [
+            "flagship",
+            "base-triad",
+            "extension",
+            "vendor",
+            "independent",
+            "holding"
+          ],
           "description": "Portfolio layer classification"
         },
         "type": {
           "oneOf": [
-            {"type": "string"},
-            {"type": "array", "items": {"type": "string"}}
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           ],
           "description": "Venture type(s)"
         },
         "architecture": {
           "type": "string",
-          "enum": ["Cloud-First", "Edge-First", "Hybrid", "API-Only", "Platform", "Edge + Cloud"],
+          "enum": [
+            "Cloud-First",
+            "Edge-First",
+            "Hybrid",
+            "API-Only",
+            "Platform",
+            "Edge + Cloud"
+          ],
           "description": "Technical architecture"
         },
         "status": {
           "type": "string",
-          "enum": ["active", "paused", "archived", "draft", "r&d", "planning", "pilot"],
+          "enum": [
+            "active",
+            "paused",
+            "archived",
+            "draft",
+            "r&d",
+            "planning",
+            "pilot"
+          ],
           "description": "Venture operational status"
         },
         "stage": {
           "type": "string",
-          "enum": ["concept", "poc", "pre-seed", "seed", "series-a", "growth"],
+          "enum": [
+            "concept",
+            "poc",
+            "pre-seed",
+            "seed",
+            "series-a",
+            "growth"
+          ],
           "description": "Development/funding stage"
         },
         "forkParent": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Parent venture ID if forked"
         },
         "codeReuse": {
@@ -187,11 +245,13 @@
         }
       }
     },
-
     "portfolioNarrative": {
       "type": "object",
       "description": "Strategic narrative for pitching the portfolio",
-      "required": ["thesis", "layers"],
+      "required": [
+        "thesis",
+        "layers"
+      ],
       "properties": {
         "thesis": {
           "type": "string",
@@ -215,7 +275,9 @@
             },
             "base": {
               "type": "array",
-              "items": {"type": "string"},
+              "items": {
+                "type": "string"
+              },
               "description": "Base triad venture IDs"
             },
             "description": {
@@ -229,18 +291,30 @@
           "description": "Portfolio layer definitions",
           "items": {
             "type": "object",
-            "required": ["name", "ventures"],
+            "required": [
+              "name",
+              "ventures"
+            ],
             "properties": {
               "name": {
                 "type": "string",
-                "enum": ["flagship", "base-triad", "extension", "vendor", "independent", "holding"]
+                "enum": [
+                  "flagship",
+                  "base-triad",
+                  "extension",
+                  "vendor",
+                  "independent",
+                  "holding"
+                ]
               },
               "description": {
                 "type": "string"
               },
               "ventures": {
                 "type": "array",
-                "items": {"type": "string"}
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -251,16 +325,24 @@
           "items": {
             "type": "object",
             "properties": {
-              "step": {"type": "integer"},
-              "title": {"type": "string"},
-              "narrative": {"type": "string"}
+              "step": {
+                "type": "integer"
+              },
+              "title": {
+                "type": "string"
+              },
+              "narrative": {
+                "type": "string"
+              }
             }
           }
         },
         "differentiators": {
           "type": "array",
           "description": "Key portfolio differentiators",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "synergies": {
           "type": "array",
@@ -268,19 +350,32 @@
           "items": {
             "type": "object",
             "properties": {
-              "ventures": {"type": "array", "items": {"type": "string"}},
-              "description": {"type": "string"},
-              "value": {"type": "string"}
+              "ventures": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "description": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
             }
           }
         }
       }
     },
-
     "ipAsset": {
       "type": "object",
       "description": "Intellectual property asset (summary)",
-      "required": ["id", "type", "status", "title"],
+      "required": [
+        "id",
+        "type",
+        "status",
+        "title"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -288,12 +383,24 @@
         },
         "type": {
           "type": "string",
-          "enum": ["patent", "trademark", "copyright", "trade-secret"],
+          "enum": [
+            "patent",
+            "trademark",
+            "copyright",
+            "trade-secret"
+          ],
           "description": "IP type"
         },
         "status": {
           "type": "string",
-          "enum": ["filed", "pending", "granted", "active", "expired", "abandoned"],
+          "enum": [
+            "filed",
+            "pending",
+            "granted",
+            "active",
+            "expired",
+            "abandoned"
+          ],
           "description": "IP status"
         },
         "title": {
@@ -325,12 +432,16 @@
         },
         "inventors": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Inventors/creators"
         },
         "claims": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Key claims (patents)"
         },
         "jurisdiction": {
@@ -344,11 +455,14 @@
         }
       }
     },
-
     "relationship": {
       "type": "object",
       "description": "Key stakeholder relationship",
-      "required": ["id", "name", "type"],
+      "required": [
+        "id",
+        "name",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -360,7 +474,16 @@
         },
         "type": {
           "type": "string",
-          "enum": ["investor", "partner", "customer", "advisor", "founder-candidate", "vendor", "accelerator", "employee"],
+          "enum": [
+            "investor",
+            "partner",
+            "customer",
+            "advisor",
+            "founder-candidate",
+            "vendor",
+            "accelerator",
+            "employee"
+          ],
           "description": "Relationship type"
         },
         "organization": {
@@ -373,20 +496,34 @@
         },
         "ventures": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Associated venture IDs"
         },
         "status": {
           "type": "string",
-          "enum": ["active", "dormant", "past"],
+          "enum": [
+            "active",
+            "dormant",
+            "past"
+          ],
           "description": "Relationship status"
         },
         "contact": {
           "type": "object",
           "properties": {
-            "email": {"type": "string", "format": "email"},
-            "linkedin": {"type": "string", "format": "uri"},
-            "phone": {"type": "string"}
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "linkedin": {
+              "type": "string",
+              "format": "uri"
+            },
+            "phone": {
+              "type": "string"
+            }
           }
         },
         "notes": {
@@ -400,11 +537,15 @@
         }
       }
     },
-
     "pipelineItem": {
       "type": "object",
       "description": "Dealflow pipeline entry",
-      "required": ["id", "name", "type", "stage"],
+      "required": [
+        "id",
+        "name",
+        "type",
+        "stage"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -416,12 +557,27 @@
         },
         "type": {
           "type": "string",
-          "enum": ["funding", "partnership", "customer", "acquisition", "hire"],
+          "enum": [
+            "funding",
+            "partnership",
+            "customer",
+            "acquisition",
+            "hire"
+          ],
           "description": "Pipeline type"
         },
         "stage": {
           "type": "string",
-          "enum": ["prospect", "contacted", "meeting", "due-diligence", "term-sheet", "closed-won", "closed-lost", "passed"],
+          "enum": [
+            "prospect",
+            "contacted",
+            "meeting",
+            "due-diligence",
+            "term-sheet",
+            "closed-won",
+            "closed-lost",
+            "passed"
+          ],
           "description": "Pipeline stage"
         },
         "ventureId": {
@@ -456,11 +612,14 @@
         }
       }
     },
-
     "portfolioMilestone": {
       "type": "object",
       "description": "Portfolio-level milestone",
-      "required": ["id", "date", "event"],
+      "required": [
+        "id",
+        "date",
+        "event"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -477,12 +636,22 @@
         },
         "ventures": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Affected ventures"
         },
         "type": {
           "type": "string",
-          "enum": ["technical", "business", "funding", "team", "launch", "partnership", "ip"],
+          "enum": [
+            "technical",
+            "business",
+            "funding",
+            "team",
+            "launch",
+            "partnership",
+            "ip"
+          ],
           "description": "Milestone type"
         },
         "gate": {
@@ -495,17 +664,22 @@
         },
         "status": {
           "type": "string",
-          "enum": ["complete", "current", "planned"],
+          "enum": [
+            "complete",
+            "current",
+            "planned"
+          ],
           "description": "Milestone status"
         },
         "dependsOn": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Dependent milestone IDs"
         }
       }
     },
-
     "acceleratorThesis": {
       "type": "object",
       "description": "Accelerator program thesis and structure",
@@ -524,7 +698,9 @@
         },
         "templateVentures": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Template venture IDs for accelerator"
         },
         "offerings": {
@@ -533,9 +709,15 @@
           "items": {
             "type": "object",
             "properties": {
-              "name": {"type": "string"},
-              "description": {"type": "string"},
-              "value": {"type": "string"}
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
             }
           }
         },
@@ -543,14 +725,25 @@
           "type": "object",
           "description": "Standard accelerator terms",
           "properties": {
-            "equity": {"type": "string"},
-            "investment": {"type": "string"},
-            "duration": {"type": "string"}
+            "equity": {
+              "type": "string"
+            },
+            "investment": {
+              "type": "string"
+            },
+            "duration": {
+              "type": "string"
+            }
           }
         },
         "status": {
           "type": "string",
-          "enum": ["concept", "developing", "active", "paused"],
+          "enum": [
+            "concept",
+            "developing",
+            "active",
+            "paused"
+          ],
           "description": "Accelerator program status"
         }
       }

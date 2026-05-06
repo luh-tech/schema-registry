@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://luhtech.dev/schemas/workflow-registry.schema.json",
+  "$id": "https://schemas.luh.tech/workflow-registry.schema.json",
   "title": "GitHub Actions Workflow Registry Schema",
   "description": "Schema for documenting and categorizing GitHub Actions workflows following luh-tech schema-first patterns. Used across all ventures for consistent CI/CD documentation.",
   "type": "object",
@@ -29,7 +29,11 @@
     },
     "metadata": {
       "type": "object",
-      "required": ["totalActive", "totalArchived", "slackEnabled"],
+      "required": [
+        "totalActive",
+        "totalArchived",
+        "slackEnabled"
+      ],
       "properties": {
         "totalActive": {
           "type": "integer",
@@ -109,7 +113,10 @@
   "$defs": {
     "category": {
       "type": "object",
-      "required": ["description", "purpose"],
+      "required": [
+        "description",
+        "purpose"
+      ],
       "properties": {
         "description": {
           "type": "string"
@@ -125,7 +132,13 @@
     },
     "workflow": {
       "type": "object",
-      "required": ["file", "name", "category", "purpose", "triggers"],
+      "required": [
+        "file",
+        "name",
+        "category",
+        "purpose",
+        "triggers"
+      ],
       "properties": {
         "file": {
           "type": "string",
@@ -180,7 +193,11 @@
         },
         "status": {
           "type": "string",
-          "enum": ["active", "deprecated", "archived"],
+          "enum": [
+            "active",
+            "deprecated",
+            "archived"
+          ],
           "default": "active"
         },
         "dependencies": {
@@ -199,7 +216,11 @@
         },
         "failureMode": {
           "type": "string",
-          "enum": ["fail", "warn", "skip"],
+          "enum": [
+            "fail",
+            "warn",
+            "skip"
+          ],
           "default": "fail",
           "description": "How workflow handles failures"
         },
@@ -231,12 +252,16 @@
             },
             "collectsFrom": {
               "type": "array",
-              "items": {"type": "string"},
+              "items": {
+                "type": "string"
+              },
               "description": "Data source IDs this workflow collects from"
             },
             "reportsTo": {
               "type": "array",
-              "items": {"type": "string"},
+              "items": {
+                "type": "string"
+              },
               "description": "Destination IDs this workflow reports to"
             }
           }

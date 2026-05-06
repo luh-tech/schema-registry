@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/feature.schema.json",
+  "$id": "https://schemas.luh.tech/feature.schema.json",
   "title": "Feature Specification Schema",
   "description": "Schema for FEATURE.json files that define feature specifications, milestones, deliverables, and business value tracking. Used across all luh-tech ventures for consistent documentation and validation.",
   "type": "object",
@@ -57,7 +57,12 @@
     "priority": {
       "type": "string",
       "description": "Feature priority level",
-      "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+      "enum": [
+        "CRITICAL",
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ]
     },
     "owner": {
       "type": "string",
@@ -98,25 +103,44 @@
         "migratedFrom": {
           "type": "array",
           "description": "Previous locations of this data",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       },
-      "required": ["sourceOfTruth", "lastUpdated"]
+      "required": [
+        "sourceOfTruth",
+        "lastUpdated"
+      ]
     },
     "pilot": {
       "type": "object",
       "description": "Pilot deployment information",
       "properties": {
-        "name": {"type": "string"},
-        "location": {"type": "string"},
-        "startDate": {"type": "string", "format": "date"},
-        "duration": {"type": "string"},
+        "name": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "duration": {
+          "type": "string"
+        },
         "participants": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       },
-      "required": ["name", "startDate"]
+      "required": [
+        "name",
+        "startDate"
+      ]
     },
     "description": {
       "type": "string",
@@ -138,7 +162,10 @@
           "additionalProperties": true
         }
       },
-      "required": ["before", "after"]
+      "required": [
+        "before",
+        "after"
+      ]
     },
     "value": {
       "type": "object",
@@ -181,22 +208,30 @@
         "schemas": {
           "type": "array",
           "description": "Required schema files",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "services": {
           "type": "array",
           "description": "Required services",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "features": {
           "type": "array",
           "description": "Dependent features",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "external": {
           "type": "array",
           "description": "External dependencies",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -217,11 +252,15 @@
         },
         "inEdges": {
           "type": "array",
-          "items": {"$ref": "#/$defs/graphEdge"}
+          "items": {
+            "$ref": "#/$defs/graphEdge"
+          }
         },
         "outEdges": {
           "type": "array",
-          "items": {"$ref": "#/$defs/graphEdge"}
+          "items": {
+            "$ref": "#/$defs/graphEdge"
+          }
         }
       }
     }
@@ -229,7 +268,12 @@
   "$defs": {
     "milestone": {
       "type": "object",
-      "required": ["id", "name", "status", "description"],
+      "required": [
+        "id",
+        "name",
+        "status",
+        "description"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -247,7 +291,13 @@
         },
         "status": {
           "type": "string",
-          "enum": ["NOT_STARTED", "IN_PROGRESS", "COMPLETE", "BLOCKED", "DEFERRED"]
+          "enum": [
+            "NOT_STARTED",
+            "IN_PROGRESS",
+            "COMPLETE",
+            "BLOCKED",
+            "DEFERRED"
+          ]
         },
         "description": {
           "type": "string",
@@ -256,12 +306,16 @@
         "deliverables": {
           "type": "array",
           "description": "List of deliverable file paths or descriptions",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "completionCriteria": {
           "type": "array",
           "description": "Criteria that must be met for completion",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "completedAt": {
           "type": "string",
@@ -278,28 +332,39 @@
             },
             "commits": {
               "type": "array",
-              "items": {"type": "string"}
+              "items": {
+                "type": "string"
+              }
             },
             "preExistingIssues": {
               "type": "array",
-              "items": {"type": "string"}
+              "items": {
+                "type": "string"
+              }
             },
             "artifacts": {
               "type": "array",
-              "items": {"type": "string"}
+              "items": {
+                "type": "string"
+              }
             }
           }
         },
         "blockedBy": {
           "type": "array",
           "description": "What is blocking this milestone",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
     "scenario": {
       "type": "object",
-      "required": ["name", "description"],
+      "required": [
+        "name",
+        "description"
+      ],
       "properties": {
         "name": {
           "type": "string"
@@ -340,10 +405,18 @@
         },
         "cardinality": {
           "type": "string",
-          "enum": ["ONE_TO_ONE", "ONE_TO_MANY", "MANY_TO_ONE", "MANY_TO_MANY"]
+          "enum": [
+            "ONE_TO_ONE",
+            "ONE_TO_MANY",
+            "MANY_TO_ONE",
+            "MANY_TO_MANY"
+          ]
         }
       },
-      "required": ["type", "target"]
+      "required": [
+        "type",
+        "target"
+      ]
     }
   },
   "additionalProperties": true

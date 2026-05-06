@@ -1,18 +1,31 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/pm/participant.schema.json",
+  "$id": "https://schemas.luh.tech/pm/participant.schema.json",
   "title": "Participant Schema",
   "description": "Project stakeholders who interact with PM decisions, voxels, and inspections. Includes roles, authority levels, and contact information.",
   "type": "object",
-  "required": ["$id", "$schema", "schemaVersion", "participantId", "name", "role"],
+  "required": [
+    "$id",
+    "$schema",
+    "schemaVersion",
+    "participantId",
+    "name",
+    "role"
+  ],
   "definitions": {
     "_metadata": {
       "type": "object",
       "description": "Schema metadata - not for validation",
       "properties": {
-        "version": { "const": "3.0.0" },
-        "lastUpdated": { "const": "2026-01-06" },
-        "maintainer": { "const": "LuhTech Enterprise Infrastructure" },
+        "version": {
+          "const": "3.0.0"
+        },
+        "lastUpdated": {
+          "const": "2026-01-06"
+        },
+        "maintainer": {
+          "const": "LuhTech Enterprise Infrastructure"
+        },
         "relatedSchemas": {
           "const": [
             "decision.schema.json",
@@ -32,12 +45,16 @@
       "properties": {
         "inEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         },
         "outEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         }
       }
@@ -62,7 +79,12 @@
     },
     "participantStatus": {
       "type": "string",
-      "enum": ["ACTIVE", "INACTIVE", "PENDING", "REMOVED"]
+      "enum": [
+        "ACTIVE",
+        "INACTIVE",
+        "PENDING",
+        "REMOVED"
+      ]
     }
   },
   "properties": {
@@ -80,9 +102,16 @@
     "meta": {
       "type": "object",
       "properties": {
-        "projectId": { "type": "string" },
-        "sourceOfTruth": { "type": "string" },
-        "lastUpdated": { "type": "string", "format": "date-time" }
+        "projectId": {
+          "type": "string"
+        },
+        "sourceOfTruth": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
     "participantId": {
@@ -107,7 +136,9 @@
     },
     "additionalRoles": {
       "type": "array",
-      "items": { "$ref": "#/definitions/participantRole" },
+      "items": {
+        "$ref": "#/definitions/participantRole"
+      },
       "description": "Additional roles this participant may hold"
     },
     "authorityLevel": {
@@ -127,12 +158,25 @@
     "company": {
       "type": "object",
       "properties": {
-        "name": { "type": "string" },
+        "name": {
+          "type": "string"
+        },
         "type": {
           "type": "string",
-          "enum": ["owner", "gc", "subcontractor", "architect", "engineer", "consultant", "regulatory", "other"]
+          "enum": [
+            "owner",
+            "gc",
+            "subcontractor",
+            "architect",
+            "engineer",
+            "consultant",
+            "regulatory",
+            "other"
+          ]
         },
-        "contractNumber": { "type": "string" }
+        "contractNumber": {
+          "type": "string"
+        }
       }
     },
     "certifications": {
@@ -140,10 +184,19 @@
       "items": {
         "type": "object",
         "properties": {
-          "name": { "type": "string" },
-          "issuingBody": { "type": "string" },
-          "number": { "type": "string" },
-          "expirationDate": { "type": "string", "format": "date" }
+          "name": {
+            "type": "string"
+          },
+          "issuingBody": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "date"
+          }
         }
       }
     },
@@ -153,9 +206,15 @@
       "items": {
         "type": "object",
         "properties": {
-          "building": { "type": "string" },
-          "level": { "type": "string" },
-          "zone": { "type": "string" }
+          "building": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string"
+          },
+          "zone": {
+            "type": "string"
+          }
         }
       }
     },
@@ -183,22 +242,55 @@
     "notificationPreferences": {
       "type": "object",
       "properties": {
-        "email": { "type": "boolean", "default": true },
-        "sms": { "type": "boolean", "default": false },
-        "push": { "type": "boolean", "default": true },
-        "decisionEscalations": { "type": "boolean", "default": true },
-        "inspectionReminders": { "type": "boolean", "default": true },
-        "dailyDigest": { "type": "boolean", "default": false }
+        "email": {
+          "type": "boolean",
+          "default": true
+        },
+        "sms": {
+          "type": "boolean",
+          "default": false
+        },
+        "push": {
+          "type": "boolean",
+          "default": true
+        },
+        "decisionEscalations": {
+          "type": "boolean",
+          "default": true
+        },
+        "inspectionReminders": {
+          "type": "boolean",
+          "default": true
+        },
+        "dailyDigest": {
+          "type": "boolean",
+          "default": false
+        }
       }
     },
     "timestamps": {
       "type": "object",
       "properties": {
-        "createdAt": { "type": "string", "format": "date-time" },
-        "updatedAt": { "type": "string", "format": "date-time" },
-        "lastActiveAt": { "type": "string", "format": "date-time" },
-        "invitedAt": { "type": "string", "format": "date-time" },
-        "joinedAt": { "type": "string", "format": "date-time" }
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastActiveAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "invitedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "joinedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
     "graphMetadata": {
