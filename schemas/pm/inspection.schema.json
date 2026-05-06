@@ -1,18 +1,32 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/pm/inspection.schema.json",
+  "$id": "https://schemas.luh.tech/pm/inspection.schema.json",
   "title": "Inspection Schema",
   "description": "Field inspection records that validate PM decisions and voxel completion. Supports regulatory inspections, quality checks, and safety audits.",
   "type": "object",
-  "required": ["$id", "$schema", "schemaVersion", "inspectionId", "type", "status", "voxelRef"],
+  "required": [
+    "$id",
+    "$schema",
+    "schemaVersion",
+    "inspectionId",
+    "type",
+    "status",
+    "voxelRef"
+  ],
   "definitions": {
     "_metadata": {
       "type": "object",
       "description": "Schema metadata - not for validation",
       "properties": {
-        "version": { "const": "3.0.0" },
-        "lastUpdated": { "const": "2026-01-06" },
-        "maintainer": { "const": "LuhTech Enterprise Infrastructure" },
+        "version": {
+          "const": "3.0.0"
+        },
+        "lastUpdated": {
+          "const": "2026-01-06"
+        },
+        "maintainer": {
+          "const": "LuhTech Enterprise Infrastructure"
+        },
         "relatedSchemas": {
           "const": [
             "decision.schema.json",
@@ -32,24 +46,40 @@
       "properties": {
         "inEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         },
         "outEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         },
         "edges": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["from", "to", "type"],
+            "required": [
+              "from",
+              "to",
+              "type"
+            ],
             "properties": {
-              "from": { "$ref": "#/definitions/urn" },
-              "to": { "$ref": "#/definitions/urn" },
-              "type": { "type": "string" },
-              "label": { "type": "string" }
+              "from": {
+                "$ref": "#/definitions/urn"
+              },
+              "to": {
+                "$ref": "#/definitions/urn"
+              },
+              "type": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
             }
           }
         }
@@ -75,7 +105,15 @@
     },
     "inspectionStatus": {
       "type": "string",
-      "enum": ["SCHEDULED", "IN_PROGRESS", "PASSED", "FAILED", "CONDITIONAL", "CANCELLED", "RESCHEDULED"]
+      "enum": [
+        "SCHEDULED",
+        "IN_PROGRESS",
+        "PASSED",
+        "FAILED",
+        "CONDITIONAL",
+        "CANCELLED",
+        "RESCHEDULED"
+      ]
     }
   },
   "properties": {
@@ -93,9 +131,16 @@
     "meta": {
       "type": "object",
       "properties": {
-        "projectId": { "type": "string" },
-        "sourceOfTruth": { "type": "string" },
-        "lastUpdated": { "type": "string", "format": "date-time" }
+        "projectId": {
+          "type": "string"
+        },
+        "sourceOfTruth": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
     "inspectionId": {
@@ -126,7 +171,9 @@
     },
     "additionalVoxels": {
       "type": "array",
-      "items": { "$ref": "#/definitions/urn" },
+      "items": {
+        "$ref": "#/definitions/urn"
+      },
       "description": "Additional voxels included in this inspection"
     },
     "relatedDecision": {
@@ -136,33 +183,64 @@
     "inspector": {
       "type": "object",
       "properties": {
-        "participantRef": { "$ref": "#/definitions/urn" },
-        "name": { "type": "string" },
-        "company": { "type": "string" },
+        "participantRef": {
+          "$ref": "#/definitions/urn"
+        },
+        "name": {
+          "type": "string"
+        },
+        "company": {
+          "type": "string"
+        },
         "certifications": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
-        "licenseNumber": { "type": "string" }
+        "licenseNumber": {
+          "type": "string"
+        }
       }
     },
     "authority": {
       "type": "object",
       "description": "Regulatory/authority information",
       "properties": {
-        "jurisdiction": { "type": "string" },
-        "permitNumber": { "type": "string" },
-        "codeReference": { "type": "string" },
-        "ahj": { "type": "string", "description": "Authority Having Jurisdiction" }
+        "jurisdiction": {
+          "type": "string"
+        },
+        "permitNumber": {
+          "type": "string"
+        },
+        "codeReference": {
+          "type": "string"
+        },
+        "ahj": {
+          "type": "string",
+          "description": "Authority Having Jurisdiction"
+        }
       }
     },
     "schedule": {
       "type": "object",
       "properties": {
-        "requestedDate": { "type": "string", "format": "date-time" },
-        "scheduledDate": { "type": "string", "format": "date-time" },
-        "actualDate": { "type": "string", "format": "date-time" },
-        "duration": { "type": "integer", "description": "Duration in minutes" }
+        "requestedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "scheduledDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "actualDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration": {
+          "type": "integer",
+          "description": "Duration in minutes"
+        }
       }
     },
     "checklist": {
@@ -170,21 +248,41 @@
       "description": "Inspection checklist items",
       "items": {
         "type": "object",
-        "required": ["item", "result"],
+        "required": [
+          "item",
+          "result"
+        ],
         "properties": {
-          "item": { "type": "string" },
-          "specification": { "type": "string" },
+          "item": {
+            "type": "string"
+          },
+          "specification": {
+            "type": "string"
+          },
           "result": {
             "type": "string",
-            "enum": ["pass", "fail", "na", "conditional"]
+            "enum": [
+              "pass",
+              "fail",
+              "na",
+              "conditional"
+            ]
           },
-          "notes": { "type": "string" },
+          "notes": {
+            "type": "string"
+          },
           "measurement": {
             "type": "object",
             "properties": {
-              "value": { "type": "number" },
-              "unit": { "type": "string" },
-              "tolerance": { "type": "string" }
+              "value": {
+                "type": "number"
+              },
+              "unit": {
+                "type": "string"
+              },
+              "tolerance": {
+                "type": "string"
+              }
             }
           }
         }
@@ -195,27 +293,64 @@
       "description": "Inspection findings/deficiencies",
       "items": {
         "type": "object",
-        "required": ["description", "severity"],
+        "required": [
+          "description",
+          "severity"
+        ],
         "properties": {
-          "findingId": { "type": "string" },
-          "description": { "type": "string" },
+          "findingId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
           "severity": {
             "type": "string",
-            "enum": ["minor", "major", "critical", "life-safety"]
+            "enum": [
+              "minor",
+              "major",
+              "critical",
+              "life-safety"
+            ]
           },
-          "codeViolation": { "type": "boolean" },
-          "codeReference": { "type": "string" },
-          "correctionRequired": { "type": "boolean" },
-          "correctionDeadline": { "type": "string", "format": "date" },
-          "correctionCompleted": { "type": "string", "format": "date-time" },
+          "codeViolation": {
+            "type": "boolean"
+          },
+          "codeReference": {
+            "type": "string"
+          },
+          "correctionRequired": {
+            "type": "boolean"
+          },
+          "correctionDeadline": {
+            "type": "string",
+            "format": "date"
+          },
+          "correctionCompleted": {
+            "type": "string",
+            "format": "date-time"
+          },
           "evidence": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "type": { "type": "string", "enum": ["photo", "document", "video", "measurement"] },
-                "uri": { "type": "string", "format": "uri" },
-                "description": { "type": "string" }
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "photo",
+                    "document",
+                    "video",
+                    "measurement"
+                  ]
+                },
+                "uri": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "description": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -227,15 +362,35 @@
       "properties": {
         "overallResult": {
           "type": "string",
-          "enum": ["passed", "failed", "conditional", "cancelled"]
+          "enum": [
+            "passed",
+            "failed",
+            "conditional",
+            "cancelled"
+          ]
         },
-        "passedItems": { "type": "integer" },
-        "failedItems": { "type": "integer" },
-        "conditionalItems": { "type": "integer" },
-        "reinspectionRequired": { "type": "boolean" },
-        "reinspectionDate": { "type": "string", "format": "date" },
-        "certificateIssued": { "type": "boolean" },
-        "certificateNumber": { "type": "string" }
+        "passedItems": {
+          "type": "integer"
+        },
+        "failedItems": {
+          "type": "integer"
+        },
+        "conditionalItems": {
+          "type": "integer"
+        },
+        "reinspectionRequired": {
+          "type": "boolean"
+        },
+        "reinspectionDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "certificateIssued": {
+          "type": "boolean"
+        },
+        "certificateNumber": {
+          "type": "string"
+        }
       }
     },
     "signatures": {
@@ -243,19 +398,38 @@
       "items": {
         "type": "object",
         "properties": {
-          "role": { "type": "string" },
-          "name": { "type": "string" },
-          "signedAt": { "type": "string", "format": "date-time" },
-          "signatureUri": { "type": "string", "format": "uri" }
+          "role": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "signedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "signatureUri": {
+            "type": "string",
+            "format": "uri"
+          }
         }
       }
     },
     "timestamps": {
       "type": "object",
       "properties": {
-        "createdAt": { "type": "string", "format": "date-time" },
-        "updatedAt": { "type": "string", "format": "date-time" },
-        "completedAt": { "type": "string", "format": "date-time" }
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
     "graphMetadata": {

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "urn:luhtech:schema:roadmap-business:v3.0",
+  "$id": "https://schemas.luh.tech/roadmap-business.schema.v3.0.draft.json",
   "title": "LuhTech Venture Roadmap Business v3.0",
   "description": "Business-layer data for LuhTech portfolio ventures. v3.0 introduces the full startup financial lifecycle schema: ComputedValue pattern extended to all financial domains (operating model, revenue model, funding model, unit economics, investor reporting). Every quantitative financial claim is a ComputedValue with variables, formula, result, and provenance. No bare scalar financial values. Breaking changes from v2.2: preSeed/seed become fundingModel.preSeed/seed ComputedValues; mrr/arr become ComputedValues; runway becomes ComputedValue; new sections: costStructure, revenueModel, pilotRevenue, dilutionModel, investorReporting.",
   "version": "3.0.0",
@@ -19,15 +19,29 @@
       "$comment": "Inline copy of Source from ComputedValue.schema.v1.0.json. Keep in sync with urn:luhtech:schema:computed-value:v1.0#/definitions/Source.",
       "type": "object",
       "description": "Provenance record for a variable. Appears as slide bylines and dataroom justification.",
-      "required": ["name", "type"],
+      "required": [
+        "name",
+        "type"
+      ],
       "properties": {
         "name": {
           "type": "string",
-          "description": "Full citation name — e.g. 'MarketsandMarkets — Construction Software Market 2024' or 'Internal — derivation from burnRate.result'."
+          "description": "Full citation name \u2014 e.g. 'MarketsandMarkets \u2014 Construction Software Market 2024' or 'Internal \u2014 derivation from burnRate.result'."
         },
-        "url": {"type": "string", "format": "uri", "description": "Source URL. Required for industry-report, government-data, external-research, and comparable."},
-        "date": {"type": "string", "description": "Date of source data: 'YYYY-MM-DD', 'YYYY-Qn', or 'YYYY'."},
-        "accessDate": {"type": "string", "format": "date", "description": "Date URL was accessed. Required when url is present."},
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Source URL. Required for industry-report, government-data, external-research, and comparable."
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of source data: 'YYYY-MM-DD', 'YYYY-Qn', or 'YYYY'."
+        },
+        "accessDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Date URL was accessed. Required when url is present."
+        },
         "type": {
           "type": "string",
           "enum": [
@@ -46,32 +60,97 @@
           ],
           "description": "Source classification. 'assumed' and 'internal-calc' REQUIRE comment field."
         },
-        "byline": {"type": "string", "description": "Short attribution for slides — under 60 characters."},
-        "comment": {"type": "string", "description": "Required for 'assumed' and 'internal-calc'. Explains basis and replacement plan."}
+        "byline": {
+          "type": "string",
+          "description": "Short attribution for slides \u2014 under 60 characters."
+        },
+        "comment": {
+          "type": "string",
+          "description": "Required for 'assumed' and 'internal-calc'. Explains basis and replacement plan."
+        }
       },
-      "if": {"properties": {"type": {"enum": ["assumed", "internal-calc"]}}},
-      "then": {"required": ["comment"]},
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "assumed",
+              "internal-calc"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "comment"
+        ]
+      },
       "additionalProperties": false
     },
     "variable": {
       "$comment": "Inline copy of Variable from ComputedValue.schema.v1.0.json.",
       "type": "object",
       "description": "Named, typed, sourced numeric input to a ComputedValue. The only thing that changes when reality changes.",
-      "required": ["id", "label", "value", "unit", "source"],
+      "required": [
+        "id",
+        "label",
+        "value",
+        "unit",
+        "source"
+      ],
       "properties": {
-        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "Stable snake_case id used in formula expressions."},
-        "label": {"type": "string", "description": "Human-readable label."},
-        "value": {"oneOf": [{"type": "number"}, {"type": "integer"}], "description": "Numeric value. Non-numeric values belong in metadata, not variables."},
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "description": "Stable snake_case id used in formula expressions."
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-readable label."
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "description": "Numeric value. Non-numeric values belong in metadata, not variables."
+        },
         "unit": {
           "type": "string",
           "description": "Unit: 'USD', 'USD_per_month', 'USD_billions', 'USD_millions', 'percent', 'months', 'years', 'headcount', 'count', 'ratio'.",
-          "examples": ["USD", "USD_per_month", "USD_billions", "USD_millions", "percent", "months", "years", "headcount", "ratio", "count"]
+          "examples": [
+            "USD",
+            "USD_per_month",
+            "USD_billions",
+            "USD_millions",
+            "percent",
+            "months",
+            "years",
+            "headcount",
+            "ratio",
+            "count"
+          ]
         },
-        "source": {"$ref": "#/definitions/source"},
-        "asOf": {"type": "string", "description": "Date value was last verified: 'YYYY-MM-DD' or 'YYYY-Qn'."},
+        "source": {
+          "$ref": "#/definitions/source"
+        },
+        "asOf": {
+          "type": "string",
+          "description": "Date value was last verified: 'YYYY-MM-DD' or 'YYYY-Qn'."
+        },
         "confidence": {
           "type": "string",
-          "enum": ["verified", "high", "medium", "low", "assumed", "internal"],
+          "enum": [
+            "verified",
+            "high",
+            "medium",
+            "low",
+            "assumed",
+            "internal"
+          ],
           "description": "Confidence in this variable. ComputedValue confidence should not exceed minimum variable confidence."
         }
       },
@@ -80,15 +159,52 @@
     "scenarioVariant": {
       "type": "object",
       "description": "Alternative variable overrides and recomputed result for one scenario. Uses parent ComputedValue formula. Only changed variables are listed.",
-      "required": ["variables", "result", "resultUnit"],
+      "required": [
+        "variables",
+        "result",
+        "resultUnit"
+      ],
       "properties": {
-        "label": {"type": "string"},
-        "description": {"type": "string"},
-        "variables": {"type": "array", "items": {"$ref": "#/definitions/variable"}, "description": "Only the variables that differ from base case."},
-        "result": {"oneOf": [{"type": "number"}, {"type": "integer"}]},
-        "resultUnit": {"type": "string"},
-        "displayValue": {"type": "string"},
-        "confidence": {"type": "string", "enum": ["verified", "high", "medium", "low", "assumed", "internal"]}
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "variables": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/variable"
+          },
+          "description": "Only the variables that differ from base case."
+        },
+        "result": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        "resultUnit": {
+          "type": "string"
+        },
+        "displayValue": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "high",
+            "medium",
+            "low",
+            "assumed",
+            "internal"
+          ]
+        }
       },
       "additionalProperties": false
     },
@@ -96,34 +212,91 @@
       "$comment": "Canonical ComputedValue. See urn:luhtech:schema:computed-value:v1.0 for standalone version.",
       "type": "object",
       "description": "A quantitative claim with full provenance. Variables + formula = result. Change a variable, rerun formula, result updates. The stored result is a performance cache; variables + formula are the truth.",
-      "required": ["id", "label", "variables", "formula", "result", "resultUnit"],
+      "required": [
+        "id",
+        "label",
+        "variables",
+        "formula",
+        "result",
+        "resultUnit"
+      ],
       "properties": {
-        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
-        "label": {"type": "string"},
-        "description": {"type": "string"},
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
         "variables": {
           "type": "array",
           "minItems": 1,
-          "items": {"$ref": "#/definitions/variable"}
+          "items": {
+            "$ref": "#/definitions/variable"
+          }
         },
         "formula": {
           "type": "string",
           "description": "JSONata-compatible expression using variable ids. Supported: + - * / ^ and parentheses."
         },
-        "formulaComment": {"type": "string", "description": "Plain-English derivation with numeric substitution shown."},
-        "result": {"oneOf": [{"type": "number"}, {"type": "integer"}], "description": "Pre-computed result. Recompute when any variable changes."},
-        "resultUnit": {"type": "string"},
-        "displayValue": {"type": "string", "description": "Formatted string for slides. Decoupled from result — may show range, rounding, or human-friendly format."},
-        "confidence": {"type": "string", "enum": ["verified", "high", "medium", "low", "assumed", "internal"]},
-        "byline": {"type": "string", "description": "Attribution for slide footnotes: 'Source: X; Y, 2024'."},
-        "lastComputed": {"type": "string", "format": "date-time", "description": "UTC timestamp of last evaluation."},
+        "formulaComment": {
+          "type": "string",
+          "description": "Plain-English derivation with numeric substitution shown."
+        },
+        "result": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "description": "Pre-computed result. Recompute when any variable changes."
+        },
+        "resultUnit": {
+          "type": "string"
+        },
+        "displayValue": {
+          "type": "string",
+          "description": "Formatted string for slides. Decoupled from result \u2014 may show range, rounding, or human-friendly format."
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "high",
+            "medium",
+            "low",
+            "assumed",
+            "internal"
+          ]
+        },
+        "byline": {
+          "type": "string",
+          "description": "Attribution for slide footnotes: 'Source: X; Y, 2024'."
+        },
+        "lastComputed": {
+          "type": "string",
+          "format": "date-time",
+          "description": "UTC timestamp of last evaluation."
+        },
         "scenarios": {
           "type": "object",
           "description": "Optional optimistic/base/pessimistic variants. Parent variables[] hold base case. Scenarios override only changed variables.",
           "properties": {
-            "optimistic": {"$ref": "#/definitions/scenarioVariant"},
-            "base": {"$ref": "#/definitions/scenarioVariant"},
-            "pessimistic": {"$ref": "#/definitions/scenarioVariant"}
+            "optimistic": {
+              "$ref": "#/definitions/scenarioVariant"
+            },
+            "base": {
+              "$ref": "#/definitions/scenarioVariant"
+            },
+            "pessimistic": {
+              "$ref": "#/definitions/scenarioVariant"
+            }
           },
           "additionalProperties": false
         }
@@ -133,56 +306,137 @@
     "costLineItem": {
       "type": "object",
       "description": "A single cost line item in the cost structure. Expressed as a ComputedValue so each cost has source, formula, and confidence.",
-      "required": ["category", "value"],
+      "required": [
+        "category",
+        "value"
+      ],
       "properties": {
         "category": {
           "type": "string",
           "description": "Cost category: 'infrastructure', 'saas-tools', 'founder-compensation', 'contractor', 'legal', 'accounting', 'insurance', 'marketing', 'sales', 'recruiting', 'office', 'other'."
         },
-        "subcategory": {"type": "string", "description": "More specific breakdown within category."},
-        "value": {"$ref": "#/definitions/computedValue"},
+        "subcategory": {
+          "type": "string",
+          "description": "More specific breakdown within category."
+        },
+        "value": {
+          "$ref": "#/definitions/computedValue"
+        },
         "costType": {
           "type": "string",
-          "enum": ["fixed", "variable", "semi-variable"],
+          "enum": [
+            "fixed",
+            "variable",
+            "semi-variable"
+          ],
           "description": "Fixed: same each month regardless of revenue. Variable: scales with revenue or usage. Semi-variable: step function (changes at scale thresholds)."
         },
-        "startDate": {"type": "string", "format": "date", "description": "When this cost begins."},
-        "endDate": {"type": "string", "format": "date", "description": "When this cost ends, if known."},
-        "notes": {"type": "string"}
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "When this cost begins."
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date",
+          "description": "When this cost ends, if known."
+        },
+        "notes": {
+          "type": "string"
+        }
       },
       "additionalProperties": false
     },
     "headcountHire": {
       "type": "object",
       "description": "Planned hire with loaded cost ComputedValue. Loaded cost = base salary + benefits + employer taxes + equipment + recruiting overhead.",
-      "required": ["role", "quarter"],
+      "required": [
+        "role",
+        "quarter"
+      ],
       "properties": {
-        "role": {"type": "string", "description": "Job title/function."},
-        "quarter": {"type": "string", "pattern": "^q[1-4]_20[0-9]{2}$", "description": "Target start quarter."},
-        "department": {"type": "string", "enum": ["engineering", "product", "sales", "marketing", "customer-success", "operations", "finance", "legal", "leadership"]},
-        "critical": {"type": "boolean", "default": false, "description": "If true, this hire blocks key milestones."},
+        "role": {
+          "type": "string",
+          "description": "Job title/function."
+        },
+        "quarter": {
+          "type": "string",
+          "pattern": "^q[1-4]_20[0-9]{2}$",
+          "description": "Target start quarter."
+        },
+        "department": {
+          "type": "string",
+          "enum": [
+            "engineering",
+            "product",
+            "sales",
+            "marketing",
+            "customer-success",
+            "operations",
+            "finance",
+            "legal",
+            "leadership"
+          ]
+        },
+        "critical": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, this hire blocks key milestones."
+        },
         "loadedMonthlyCost": {
           "$ref": "#/definitions/computedValue",
           "description": "Monthly loaded cost for this role including salary, benefits, employer taxes (~1.25x salary), and equipment amortization."
         },
-        "hiringSource": {"type": "string", "enum": ["direct", "recruiter", "network", "contractor-to-hire"], "description": "Expected hiring channel."},
-        "notes": {"type": "string"}
+        "hiringSource": {
+          "type": "string",
+          "enum": [
+            "direct",
+            "recruiter",
+            "network",
+            "contractor-to-hire"
+          ],
+          "description": "Expected hiring channel."
+        },
+        "notes": {
+          "type": "string"
+        }
       },
       "additionalProperties": false
     },
     "fundingRound": {
       "type": "object",
       "description": "A planned or completed funding round. Target amount is a ComputedValue (founder-set with justification). Actual raised is a ComputedValue (verified when closed).",
-      "required": ["roundType", "status"],
+      "required": [
+        "roundType",
+        "status"
+      ],
       "properties": {
         "roundType": {
           "type": "string",
-          "enum": ["pre-seed", "seed", "series-a", "series-b", "series-c", "bridge", "safe", "convertible-note", "grant", "revenue-based"],
+          "enum": [
+            "pre-seed",
+            "seed",
+            "series-a",
+            "series-b",
+            "series-c",
+            "bridge",
+            "safe",
+            "convertible-note",
+            "grant",
+            "revenue-based"
+          ],
           "description": "Round type."
         },
         "status": {
           "type": "string",
-          "enum": ["planning", "preparing", "raising", "soft-circling", "closing", "closed"],
+          "enum": [
+            "planning",
+            "preparing",
+            "raising",
+            "soft-circling",
+            "closing",
+            "closed"
+          ],
           "description": "Current status of this round."
         },
         "target": {
@@ -200,7 +454,13 @@
         },
         "instrument": {
           "type": "string",
-          "enum": ["priced-equity", "safe", "convertible-note", "grant", "revenue-share"],
+          "enum": [
+            "priced-equity",
+            "safe",
+            "convertible-note",
+            "grant",
+            "revenue-share"
+          ],
           "description": "Legal instrument."
         },
         "preMoneyValuation": {
@@ -212,19 +472,52 @@
           "description": "Allocation of proceeds across categories. Percentages must sum to 100.",
           "items": {
             "type": "object",
-            "required": ["category", "allocationPct", "description"],
+            "required": [
+              "category",
+              "allocationPct",
+              "description"
+            ],
             "properties": {
-              "category": {"type": "string", "enum": ["engineering", "product", "sales", "marketing", "customer-success", "operations", "infrastructure", "legal", "recruiting", "working-capital", "other"]},
-              "allocationPct": {"$ref": "#/definitions/computedValue", "description": "Percentage allocation as ComputedValue."},
-              "description": {"type": "string", "description": "What this allocation funds — specific and accountable."},
-              "milestones": {"type": "array", "items": {"type": "string"}, "description": "Milestones this spend unlocks."}
+              "category": {
+                "type": "string",
+                "enum": [
+                  "engineering",
+                  "product",
+                  "sales",
+                  "marketing",
+                  "customer-success",
+                  "operations",
+                  "infrastructure",
+                  "legal",
+                  "recruiting",
+                  "working-capital",
+                  "other"
+                ]
+              },
+              "allocationPct": {
+                "$ref": "#/definitions/computedValue",
+                "description": "Percentage allocation as ComputedValue."
+              },
+              "description": {
+                "type": "string",
+                "description": "What this allocation funds \u2014 specific and accountable."
+              },
+              "milestones": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Milestones this spend unlocks."
+              }
             },
             "additionalProperties": false
           }
         },
         "investors": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Investor names. Omit from T2 if not yet public."
         }
       },
@@ -233,122 +526,333 @@
     "safeNote": {
       "type": "object",
       "description": "SAFE note terms for dilution modeling.",
-      "required": ["amount", "valuationCap"],
+      "required": [
+        "amount",
+        "valuationCap"
+      ],
       "properties": {
-        "investorName": {"type": "string"},
-        "amount": {"$ref": "#/definitions/computedValue", "description": "SAFE amount in USD."},
-        "valuationCap": {"$ref": "#/definitions/computedValue", "description": "Valuation cap in USD."},
-        "discount": {"$ref": "#/definitions/computedValue", "description": "Discount rate (percent). Optional — not all SAFEs have discounts."},
-        "dateIssued": {"type": "string", "format": "date"},
-        "mfn": {"type": "boolean", "default": false, "description": "Most Favored Nation clause."},
-        "proRata": {"type": "boolean", "default": false, "description": "Pro-rata rights."},
-        "notes": {"type": "string"}
+        "investorName": {
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/definitions/computedValue",
+          "description": "SAFE amount in USD."
+        },
+        "valuationCap": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Valuation cap in USD."
+        },
+        "discount": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Discount rate (percent). Optional \u2014 not all SAFEs have discounts."
+        },
+        "dateIssued": {
+          "type": "string",
+          "format": "date"
+        },
+        "mfn": {
+          "type": "boolean",
+          "default": false,
+          "description": "Most Favored Nation clause."
+        },
+        "proRata": {
+          "type": "boolean",
+          "default": false,
+          "description": "Pro-rata rights."
+        },
+        "notes": {
+          "type": "string"
+        }
       },
       "additionalProperties": false
     },
     "pilotEngagement": {
       "type": "object",
-      "description": "An active or completed pilot customer engagement. Pilots are the pre-revenue bridge — they validate ICP, generate testimonials, and often convert to paid.",
-      "required": ["status"],
+      "description": "An active or completed pilot customer engagement. Pilots are the pre-revenue bridge \u2014 they validate ICP, generate testimonials, and often convert to paid.",
+      "required": [
+        "status"
+      ],
       "properties": {
-        "pilotId": {"type": "string", "description": "Opaque identifier for this pilot."},
-        "customerSegment": {"type": "string", "description": "ICP segment this pilot represents (e.g., 'mid-size GC, $50M-$200M revenue')."},
-        "status": {"type": "string", "enum": ["prospecting", "in-negotiation", "active", "completed", "converted", "churned"]},
-        "startDate": {"type": "string", "format": "date"},
-        "endDate": {"type": "string", "format": "date"},
-        "acv": {"$ref": "#/definitions/computedValue", "description": "Annual contract value for this pilot (may be $0 for free pilots)."},
-        "pilotValue": {"$ref": "#/definitions/computedValue", "description": "Estimated customer value delivered by pilot (cost savings, efficiency gains). Basis for ROI claims."},
-        "pilotRoi": {"$ref": "#/definitions/computedValue", "description": "ROI: (pilot_value - pilot_cost) / pilot_cost * 100."},
-        "paybackPeriodMonths": {"$ref": "#/definitions/computedValue", "description": "Customer payback period in months."},
-        "conversionPotential": {"type": "string", "enum": ["high", "medium", "low", "unknown"]},
-        "testimonialAvailable": {"type": "boolean", "default": false},
-        "notes": {"type": "string", "description": "Narrative context. Do not include PII or confidential customer details in T2."}
+        "pilotId": {
+          "type": "string",
+          "description": "Opaque identifier for this pilot."
+        },
+        "customerSegment": {
+          "type": "string",
+          "description": "ICP segment this pilot represents (e.g., 'mid-size GC, $50M-$200M revenue')."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "prospecting",
+            "in-negotiation",
+            "active",
+            "completed",
+            "converted",
+            "churned"
+          ]
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "acv": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Annual contract value for this pilot (may be $0 for free pilots)."
+        },
+        "pilotValue": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Estimated customer value delivered by pilot (cost savings, efficiency gains). Basis for ROI claims."
+        },
+        "pilotRoi": {
+          "$ref": "#/definitions/computedValue",
+          "description": "ROI: (pilot_value - pilot_cost) / pilot_cost * 100."
+        },
+        "paybackPeriodMonths": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Customer payback period in months."
+        },
+        "conversionPotential": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ]
+        },
+        "testimonialAvailable": {
+          "type": "boolean",
+          "default": false
+        },
+        "notes": {
+          "type": "string",
+          "description": "Narrative context. Do not include PII or confidential customer details in T2."
+        }
       },
       "additionalProperties": false
     },
     "pipelineStage": {
       "type": "object",
       "description": "A stage in the sales funnel with lead count and conversion rate.",
-      "required": ["stage", "count"],
+      "required": [
+        "stage",
+        "count"
+      ],
       "properties": {
-        "stage": {"type": "string", "enum": ["awareness", "lead", "qualified-lead", "discovery", "proposal", "negotiation", "closed-won", "closed-lost"]},
-        "count": {"$ref": "#/definitions/computedValue", "description": "Number of opportunities at this stage."},
-        "conversionRate": {"$ref": "#/definitions/computedValue", "description": "Rate at which opportunities advance to next stage (0.0–1.0 as decimal fraction)."},
-        "avgDealSizeUsd": {"$ref": "#/definitions/computedValue", "description": "Average ACV of opportunities at this stage."},
-        "avgDaysInStage": {"$ref": "#/definitions/computedValue", "description": "Average days spent at this stage."},
-        "notes": {"type": "string"}
+        "stage": {
+          "type": "string",
+          "enum": [
+            "awareness",
+            "lead",
+            "qualified-lead",
+            "discovery",
+            "proposal",
+            "negotiation",
+            "closed-won",
+            "closed-lost"
+          ]
+        },
+        "count": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Number of opportunities at this stage."
+        },
+        "conversionRate": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Rate at which opportunities advance to next stage (0.0\u20131.0 as decimal fraction)."
+        },
+        "avgDealSizeUsd": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Average ACV of opportunities at this stage."
+        },
+        "avgDaysInStage": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Average days spent at this stage."
+        },
+        "notes": {
+          "type": "string"
+        }
       },
       "additionalProperties": false
     },
     "grossMarginByTier": {
       "type": "object",
       "description": "Gross margin decomposition for a single service tier.",
-      "required": ["tierName", "grossMarginPercent"],
+      "required": [
+        "tierName",
+        "grossMarginPercent"
+      ],
       "properties": {
-        "tierName": {"type": "string", "description": "Service tier identifier matching serviceTiers keys."},
-        "revenue": {"$ref": "#/definitions/computedValue", "description": "Monthly revenue from this tier."},
-        "cogs": {"$ref": "#/definitions/computedValue", "description": "Cost of goods sold for this tier (hosting per user, support cost per customer, etc.)."},
-        "grossMarginPercent": {"$ref": "#/definitions/computedValue", "description": "Gross margin: (revenue - cogs) / revenue * 100."}
+        "tierName": {
+          "type": "string",
+          "description": "Service tier identifier matching serviceTiers keys."
+        },
+        "revenue": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Monthly revenue from this tier."
+        },
+        "cogs": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Cost of goods sold for this tier (hosting per user, support cost per customer, etc.)."
+        },
+        "grossMarginPercent": {
+          "$ref": "#/definitions/computedValue",
+          "description": "Gross margin: (revenue - cogs) / revenue * 100."
+        }
       },
       "additionalProperties": false
     },
     "teamMember": {
       "type": "object",
-      "required": ["name", "role"],
+      "required": [
+        "name",
+        "role"
+      ],
       "properties": {
-        "name": {"type": "string"},
-        "role": {"type": "string"},
-        "bio": {"type": "string"},
-        "linkedin": {"type": "string", "format": "uri"},
-        "email": {"type": "string", "format": "email"},
-        "expertise": {"type": "array", "items": {"type": "string"}},
-        "ventures": {"type": "array", "items": {"type": "string"}, "description": "LuhTech ventures this person is associated with."}
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "bio": {
+          "type": "string"
+        },
+        "linkedin": {
+          "type": "string",
+          "format": "uri"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "expertise": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ventures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "LuhTech ventures this person is associated with."
+        }
       },
       "additionalProperties": false
     },
     "serviceTier": {
       "type": "object",
       "description": "Product/service tier definition with ComputedValue pricing.",
-      "required": ["name", "target"],
+      "required": [
+        "name",
+        "target"
+      ],
       "properties": {
-        "name": {"type": "string"},
-        "target": {"type": "string", "description": "Target customer segment for this tier."},
+        "name": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string",
+          "description": "Target customer segment for this tier."
+        },
         "pricing": {
           "type": "object",
           "properties": {
-            "base": {"$ref": "#/definitions/computedValue", "description": "Base price as ComputedValue — captures pricing rationale, benchmarks, and confidence."},
-            "displayPrice": {"type": "string", "description": "Human-readable price string for slides: 'Free', '$299/mo', '$2,400/yr'."},
-            "billing": {"type": "string", "enum": ["free", "monthly", "annual", "usage-based", "custom"]},
-            "includes": {"type": "string", "description": "What is included at base price."}
+            "base": {
+              "$ref": "#/definitions/computedValue",
+              "description": "Base price as ComputedValue \u2014 captures pricing rationale, benchmarks, and confidence."
+            },
+            "displayPrice": {
+              "type": "string",
+              "description": "Human-readable price string for slides: 'Free', '$299/mo', '$2,400/yr'."
+            },
+            "billing": {
+              "type": "string",
+              "enum": [
+                "free",
+                "monthly",
+                "annual",
+                "usage-based",
+                "custom"
+              ]
+            },
+            "includes": {
+              "type": "string",
+              "description": "What is included at base price."
+            }
           }
         },
-        "features": {"type": "array", "items": {"type": "string"}},
-        "limits": {"type": "object", "additionalProperties": true},
-        "status": {"type": "string", "enum": ["planned", "beta", "ga", "deprecated"]}
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "beta",
+            "ga",
+            "deprecated"
+          ]
+        }
       },
       "additionalProperties": false
     },
     "slideContent": {
       "type": "object",
       "properties": {
-        "headline": {"type": "string"},
-        "subheadline": {"type": "string"},
-        "bullets": {"type": "array", "items": {"type": "string"}}
+        "headline": {
+          "type": "string"
+        },
+        "subheadline": {
+          "type": "string"
+        },
+        "bullets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       },
       "additionalProperties": false
     },
     "graphMetadata": {
       "type": "object",
       "properties": {
-        "nodeType": {"type": "string", "const": "file"},
+        "nodeType": {
+          "type": "string",
+          "const": "file"
+        },
         "edges": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "target": {"type": "string"},
-              "relationship": {"type": "string"},
-              "direction": {"type": "string", "enum": ["outgoing", "incoming"]}
+              "target": {
+                "type": "string"
+              },
+              "relationship": {
+                "type": "string"
+              },
+              "direction": {
+                "type": "string",
+                "enum": [
+                  "outgoing",
+                  "incoming"
+                ]
+              }
             }
           }
         }
@@ -356,22 +860,63 @@
     }
   },
   "properties": {
-    "$schema": {"type": "string", "description": "Schema identifier URN."},
-    "$id": {"type": "string", "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:file:roadmap-business$"},
-    "schemaVersion": {"type": "string", "const": "3.0.0"},
-    "ventureId": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
-    "organizationName": {"type": "string"},
-    "lastUpdated": {"type": "string", "format": "date-time"},
+    "$schema": {
+      "type": "string",
+      "description": "Schema identifier URN."
+    },
+    "$id": {
+      "type": "string",
+      "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:file:roadmap-business$"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "const": "3.0.0"
+    },
+    "ventureId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "organizationName": {
+      "type": "string"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time"
+    },
     "currentStage": {
       "type": "string",
-      "enum": ["concept", "ideation", "r&d", "validation", "mvp", "pilot", "growth", "scale", "active"],
-      "description": "Current venture stage — matches roadmap.json venture.currentStage."
+      "enum": [
+        "concept",
+        "ideation",
+        "r&d",
+        "validation",
+        "mvp",
+        "pilot",
+        "growth",
+        "scale",
+        "active"
+      ],
+      "description": "Current venture stage \u2014 matches roadmap.json venture.currentStage."
     },
-    "overallProgress": {"type": "string"},
-    "founded": {"type": "string", "description": "Founding date YYYY-MM-DD or YYYY."},
-    "industry": {"type": "array", "items": {"type": "string"}},
-    "location": {"type": "string"},
-    "license": {"type": "string"},
+    "overallProgress": {
+      "type": "string"
+    },
+    "founded": {
+      "type": "string",
+      "description": "Founding date YYYY-MM-DD or YYYY."
+    },
+    "industry": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "location": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    },
     "financials": {
       "type": "object",
       "description": "Top-level financial container. v3.0: all quantitative fields are ComputedValues. Sections: operatingModel, revenueModel, fundingModel, unitEconomics, investorReporting, market. The market section mirrors v2.2 but with extended ComputedValues.",
@@ -387,12 +932,16 @@
                 "fixed": {
                   "type": "array",
                   "description": "Fixed monthly costs: infrastructure, founder salaries, SaaS tools, legal retainers, accounting, insurance.",
-                  "items": {"$ref": "#/definitions/costLineItem"}
+                  "items": {
+                    "$ref": "#/definitions/costLineItem"
+                  }
                 },
                 "variable": {
                   "type": "array",
                   "description": "Variable costs that scale with revenue or usage: hosting per customer, support cost per ticket, payment processing fees.",
-                  "items": {"$ref": "#/definitions/costLineItem"}
+                  "items": {
+                    "$ref": "#/definitions/costLineItem"
+                  }
                 },
                 "totalFixedMonthly": {
                   "$ref": "#/definitions/computedValue",
@@ -407,11 +956,11 @@
             },
             "burnRate": {
               "$ref": "#/definitions/computedValue",
-              "description": "Total monthly cash outflow. Formula: totalFixedMonthly + totalVariableMonthly. This is the canonical burn rate field — all downstream consumers (runway, investor reporting) reference this value. Migrated from v2.2 financials.burnRate (same structure, new location)."
+              "description": "Total monthly cash outflow. Formula: totalFixedMonthly + totalVariableMonthly. This is the canonical burn rate field \u2014 all downstream consumers (runway, investor reporting) reference this value. Migrated from v2.2 financials.burnRate (same structure, new location)."
             },
             "cashPosition": {
               "$ref": "#/definitions/computedValue",
-              "description": "Current cash on hand in USD. Confidence 'verified' requires bank statement as source. This is the most time-sensitive field — update monthly."
+              "description": "Current cash on hand in USD. Confidence 'verified' requires bank statement as source. This is the most time-sensitive field \u2014 update monthly."
             },
             "runway": {
               "$ref": "#/definitions/computedValue",
@@ -421,10 +970,15 @@
               "type": "object",
               "description": "Hiring plan with loaded costs. Provides headcount timeline and cost projections for investor reporting.",
               "properties": {
-                "currentHeadcount": {"type": "integer", "minimum": 0},
+                "currentHeadcount": {
+                  "type": "integer",
+                  "minimum": 0
+                },
                 "hires": {
                   "type": "array",
-                  "items": {"$ref": "#/definitions/headcountHire"},
+                  "items": {
+                    "$ref": "#/definitions/headcountHire"
+                  },
                   "description": "Planned hires with target quarters and loaded monthly costs."
                 },
                 "totalLoadedMonthlyCost": {
@@ -448,11 +1002,11 @@
         },
         "revenueModel": {
           "type": "object",
-          "description": "Revenue tracking and projections. Source of truth for all revenue data. For pre-revenue ventures, values are $0 ComputedValues with confidence 'internal'. Do not use 'assumed' for a zero — zero IS the verified current state.",
+          "description": "Revenue tracking and projections. Source of truth for all revenue data. For pre-revenue ventures, values are $0 ComputedValues with confidence 'internal'. Do not use 'assumed' for a zero \u2014 zero IS the verified current state.",
           "properties": {
             "mrr": {
               "$ref": "#/definitions/computedValue",
-              "description": "Monthly Recurring Revenue. For pre-revenue ventures: result: 0, confidence: 'internal', single variable with value: 0. Grows as pilots convert. This is the headline metric — keep it current."
+              "description": "Monthly Recurring Revenue. For pre-revenue ventures: result: 0, confidence: 'internal', single variable with value: 0. Grows as pilots convert. This is the headline metric \u2014 keep it current."
             },
             "arr": {
               "$ref": "#/definitions/computedValue",
@@ -461,7 +1015,9 @@
             "revenueByTier": {
               "type": "object",
               "description": "MRR breakdown by service tier. Keys are tier identifiers matching serviceTiers. Enables gross margin analysis by tier. All values are ComputedValues.",
-              "additionalProperties": {"$ref": "#/definitions/computedValue"}
+              "additionalProperties": {
+                "$ref": "#/definitions/computedValue"
+              }
             },
             "projections": {
               "type": "object",
@@ -469,11 +1025,21 @@
               "additionalProperties": {
                 "type": "object",
                 "properties": {
-                  "arr": {"$ref": "#/definitions/computedValue"},
-                  "mrr": {"$ref": "#/definitions/computedValue"},
-                  "customers": {"$ref": "#/definitions/computedValue"},
-                  "arpu": {"$ref": "#/definitions/computedValue"},
-                  "notes": {"type": "string"}
+                  "arr": {
+                    "$ref": "#/definitions/computedValue"
+                  },
+                  "mrr": {
+                    "$ref": "#/definitions/computedValue"
+                  },
+                  "customers": {
+                    "$ref": "#/definitions/computedValue"
+                  },
+                  "arpu": {
+                    "$ref": "#/definitions/computedValue"
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
                 },
                 "additionalProperties": false
               }
@@ -482,13 +1048,27 @@
               "type": "object",
               "description": "Pilot engagement tracking. Pilots are pre-revenue bridge: they validate ICP and generate the testimonials and ROI data needed to close paid contracts. Critical for LuhTech ventures at pilot stage.",
               "properties": {
-                "activePilotCount": {"$ref": "#/definitions/computedValue", "description": "Number of active pilot engagements."},
-                "totalPilotAcv": {"$ref": "#/definitions/computedValue", "description": "Total ACV from all pilots (sum of acv per pilot). May be $0 for free pilots."},
-                "totalPilotValueDelivered": {"$ref": "#/definitions/computedValue", "description": "Estimated total customer value delivered across all pilots. Basis for ROI claims in decks."},
-                "pilotToPayConversionRate": {"$ref": "#/definitions/computedValue", "description": "Rate of pilots converting to paid contracts (0.0–1.0). Confidence 'assumed' until pipeline data exists."},
+                "activePilotCount": {
+                  "$ref": "#/definitions/computedValue",
+                  "description": "Number of active pilot engagements."
+                },
+                "totalPilotAcv": {
+                  "$ref": "#/definitions/computedValue",
+                  "description": "Total ACV from all pilots (sum of acv per pilot). May be $0 for free pilots."
+                },
+                "totalPilotValueDelivered": {
+                  "$ref": "#/definitions/computedValue",
+                  "description": "Estimated total customer value delivered across all pilots. Basis for ROI claims in decks."
+                },
+                "pilotToPayConversionRate": {
+                  "$ref": "#/definitions/computedValue",
+                  "description": "Rate of pilots converting to paid contracts (0.0\u20131.0). Confidence 'assumed' until pipeline data exists."
+                },
                 "engagements": {
                   "type": "array",
-                  "items": {"$ref": "#/definitions/pilotEngagement"},
+                  "items": {
+                    "$ref": "#/definitions/pilotEngagement"
+                  },
                   "description": "Individual pilot records."
                 }
               },
@@ -500,7 +1080,9 @@
               "properties": {
                 "stages": {
                   "type": "array",
-                  "items": {"$ref": "#/definitions/pipelineStage"}
+                  "items": {
+                    "$ref": "#/definitions/pipelineStage"
+                  }
                 },
                 "expectedMrrFromPipeline": {
                   "$ref": "#/definitions/computedValue",
@@ -515,7 +1097,7 @@
             },
             "churnRate": {
               "$ref": "#/definitions/computedValue",
-              "description": "Monthly gross churn rate (0.0–1.0 decimal fraction). For pre-revenue ventures: 0 with confidence 'internal'. Post-launch: compute from cohort data."
+              "description": "Monthly gross churn rate (0.0\u20131.0 decimal fraction). For pre-revenue ventures: 0 with confidence 'internal'. Post-launch: compute from cohort data."
             },
             "nrr": {
               "$ref": "#/definitions/computedValue",
@@ -534,7 +1116,9 @@
             },
             "rounds": {
               "type": "array",
-              "items": {"$ref": "#/definitions/fundingRound"},
+              "items": {
+                "$ref": "#/definitions/fundingRound"
+              },
               "description": "All funding rounds, planned and completed. Ordered chronologically."
             },
             "dilutionModel": {
@@ -559,13 +1143,17 @@
                 },
                 "safeNotes": {
                   "type": "array",
-                  "items": {"$ref": "#/definitions/safeNote"},
+                  "items": {
+                    "$ref": "#/definitions/safeNote"
+                  },
                   "description": "Outstanding SAFE notes. Each converts at the valuation cap on the next priced round."
                 },
                 "investorReturnScenarios": {
                   "type": "object",
                   "description": "Return modeling at exit multiples. Scenario keys: 'exit_3x', 'exit_5x', 'exit_10x', 'exit_20x'. Each is a ComputedValue for investor return in USD.",
-                  "additionalProperties": {"$ref": "#/definitions/computedValue"}
+                  "additionalProperties": {
+                    "$ref": "#/definitions/computedValue"
+                  }
                 }
               },
               "additionalProperties": false
@@ -575,7 +1163,7 @@
         },
         "unitEconomics": {
           "type": "object",
-          "description": "Unit economics — the per-customer financial model. All values are ComputedValues. For pre-revenue ventures, populate with benchmarked assumptions (confidence: 'assumed') and replace with actuals as data arrives.",
+          "description": "Unit economics \u2014 the per-customer financial model. All values are ComputedValues. For pre-revenue ventures, populate with benchmarked assumptions (confidence: 'assumed') and replace with actuals as data arrives.",
           "properties": {
             "arpu": {
               "$ref": "#/definitions/computedValue",
@@ -591,7 +1179,9 @@
             },
             "grossMarginByTier": {
               "type": "array",
-              "items": {"$ref": "#/definitions/grossMarginByTier"},
+              "items": {
+                "$ref": "#/definitions/grossMarginByTier"
+              },
               "description": "Gross margin decomposed by service tier. Identifies which tiers are margin-dilutive."
             },
             "cac": {
@@ -654,36 +1244,68 @@
             },
             "monthlySnapshot": {
               "type": "object",
-              "description": "Current-month investor reporting snapshot. The investor-update transform reads this section. Update at start of each month. Historical snapshots are NOT stored here — use a time-series store or the holding-level report.",
+              "description": "Current-month investor reporting snapshot. The investor-update transform reads this section. Update at start of each month. Historical snapshots are NOT stored here \u2014 use a time-series store or the holding-level report.",
               "properties": {
-                "reportingDate": {"type": "string", "format": "date", "description": "First day of the reporting month."},
-                "mrr": {"$ref": "#/definitions/computedValue", "description": "MRR as of reporting date."},
-                "customers": {"type": "integer", "minimum": 0, "description": "Total paying customer count."},
-                "pilots": {"type": "integer", "minimum": 0, "description": "Active pilot count."},
-                "burn": {"$ref": "#/definitions/computedValue", "description": "Monthly burn for this period."},
-                "cashOnHand": {"$ref": "#/definitions/computedValue", "description": "Cash on hand as of reporting date."},
-                "runway": {"$ref": "#/definitions/computedValue", "description": "Runway in months as of reporting date."},
+                "reportingDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "First day of the reporting month."
+                },
+                "mrr": {
+                  "$ref": "#/definitions/computedValue",
+                  "description": "MRR as of reporting date."
+                },
+                "customers": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Total paying customer count."
+                },
+                "pilots": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Active pilot count."
+                },
+                "burn": {
+                  "$ref": "#/definitions/computedValue",
+                  "description": "Monthly burn for this period."
+                },
+                "cashOnHand": {
+                  "$ref": "#/definitions/computedValue",
+                  "description": "Cash on hand as of reporting date."
+                },
+                "runway": {
+                  "$ref": "#/definitions/computedValue",
+                  "description": "Runway in months as of reporting date."
+                },
                 "highlights": {
                   "type": "array",
-                  "items": {"type": "string"},
+                  "items": {
+                    "type": "string"
+                  },
                   "description": "Top 3-5 positive developments this month. Be specific: 'Completed first paid pilot with XYZ Corp at $2K/mo'.",
                   "maxItems": 5
                 },
                 "lowlights": {
                   "type": "array",
-                  "items": {"type": "string"},
-                  "description": "Top 1-3 challenges or misses this month. Be honest — investors prefer transparency to surprises.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Top 1-3 challenges or misses this month. Be honest \u2014 investors prefer transparency to surprises.",
                   "maxItems": 3
                 },
                 "nextMilestones": {
                   "type": "array",
-                  "items": {"type": "string"},
+                  "items": {
+                    "type": "string"
+                  },
                   "description": "Top 3 milestones expected in the next 30-60 days.",
                   "maxItems": 3
                 },
                 "keyDecisions": {
                   "type": "array",
-                  "items": {"type": "string"},
+                  "items": {
+                    "type": "string"
+                  },
                   "description": "Decisions made this month that investors should be aware of.",
                   "maxItems": 3
                 }
@@ -698,7 +1320,7 @@
     },
     "market": {
       "type": "object",
-      "description": "Market sizing — unchanged from v2.2 pattern but with extended ComputedValue support (scenarios, stalenessPolicy). TAM → SAM → SOM derivation chain is explicit. All figures are ComputedValues.",
+      "description": "Market sizing \u2014 unchanged from v2.2 pattern but with extended ComputedValue support (scenarios, stalenessPolicy). TAM \u2192 SAM \u2192 SOM derivation chain is explicit. All figures are ComputedValues.",
       "properties": {
         "tam": {
           "$ref": "#/definitions/computedValue",
@@ -718,33 +1340,68 @@
         },
         "trends": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Key market trends driving TAM expansion or ICP urgency."
         },
         "icp": {
           "type": "object",
           "description": "Ideal Customer Profile definition. Used to bound SAM and inform sales targeting.",
           "properties": {
-            "segment": {"type": "string", "description": "Primary customer segment."},
-            "companySizeRevenue": {"type": "string", "description": "Target company revenue range."},
-            "companyHeadcount": {"type": "string", "description": "Target company headcount range."},
-            "geography": {"type": "string", "description": "Target geographies."},
-            "buyerPersona": {"type": "string", "description": "Primary buyer title/role."},
-            "painPoints": {"type": "array", "items": {"type": "string"}}
+            "segment": {
+              "type": "string",
+              "description": "Primary customer segment."
+            },
+            "companySizeRevenue": {
+              "type": "string",
+              "description": "Target company revenue range."
+            },
+            "companyHeadcount": {
+              "type": "string",
+              "description": "Target company headcount range."
+            },
+            "geography": {
+              "type": "string",
+              "description": "Target geographies."
+            },
+            "buyerPersona": {
+              "type": "string",
+              "description": "Primary buyer title/role."
+            },
+            "painPoints": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           },
           "additionalProperties": false
         },
         "competitivePricingBenchmarks": {
           "type": "array",
-          "description": "Competitor pricing data — used for ARPU and pricing tier design. Each entry is a ComputedValue with source pointing to public pricing page or report.",
+          "description": "Competitor pricing data \u2014 used for ARPU and pricing tier design. Each entry is a ComputedValue with source pointing to public pricing page or report.",
           "items": {
             "type": "object",
-            "required": ["competitorName", "pricePoint"],
+            "required": [
+              "competitorName",
+              "pricePoint"
+            ],
             "properties": {
-              "competitorName": {"type": "string"},
-              "pricePoint": {"$ref": "#/definitions/computedValue", "description": "Monthly ACV or per-seat price. Source must be public pricing page or comparable deal."},
-              "tier": {"type": "string", "description": "Which tier this price point represents."},
-              "notes": {"type": "string"}
+              "competitorName": {
+                "type": "string"
+              },
+              "pricePoint": {
+                "$ref": "#/definitions/computedValue",
+                "description": "Monthly ACV or per-seat price. Source must be public pricing page or comparable deal."
+              },
+              "tier": {
+                "type": "string",
+                "description": "Which tier this price point represents."
+              },
+              "notes": {
+                "type": "string"
+              }
             },
             "additionalProperties": false
           }
@@ -755,16 +1412,38 @@
     "team": {
       "type": "object",
       "description": "Team composition. Source of truth for all team data.",
-      "required": ["current"],
+      "required": [
+        "current"
+      ],
       "properties": {
-        "current": {"type": "integer", "minimum": 0},
-        "members": {"type": "array", "items": {"$ref": "#/definitions/teamMember"}},
-        "advisors": {"type": "array", "items": {"$ref": "#/definitions/teamMember"}},
-        "contractors": {"type": "array", "items": {"$ref": "#/definitions/teamMember"}},
+        "current": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/teamMember"
+          }
+        },
+        "advisors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/teamMember"
+          }
+        },
+        "contractors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/teamMember"
+          }
+        },
         "keyHires": {
           "type": "array",
-          "items": {"$ref": "#/definitions/headcountHire"},
-          "description": "Planned key hires. Same as financials.operatingModel.headcountPlan.hires — kept here for team section completeness. Transforms should prefer headcountPlan for financial calculations."
+          "items": {
+            "$ref": "#/definitions/headcountHire"
+          },
+          "description": "Planned key hires. Same as financials.operatingModel.headcountPlan.hires \u2014 kept here for team section completeness. Transforms should prefer headcountPlan for financial calculations."
         }
       },
       "additionalProperties": false
@@ -773,19 +1452,43 @@
       "type": "object",
       "description": "Competitive landscape and positioning.",
       "properties": {
-        "directCompetitors": {"type": "array", "items": {"type": "string"}},
-        "indirectCompetitors": {"type": "array", "items": {"type": "string"}},
-        "moats": {"type": "array", "items": {"type": "string"}},
+        "directCompetitors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "indirectCompetitors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "moats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "differentiators": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "feature": {"type": "string"},
-              "description": {"type": "string"},
-              "competitorStatus": {"type": "string"}
+              "feature": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "competitorStatus": {
+                "type": "string"
+              }
             },
-            "required": ["feature", "description"],
+            "required": [
+              "feature",
+              "description"
+            ],
             "additionalProperties": false
           }
         }
@@ -795,22 +1498,39 @@
     "serviceTiers": {
       "type": "array",
       "description": "Product/service tier definitions. Pricing is a ComputedValue. Used by revenueModel.revenueByTier and unitEconomics.grossMarginByTier.",
-      "items": {"$ref": "#/definitions/serviceTier"}
+      "items": {
+        "$ref": "#/definitions/serviceTier"
+      }
     },
     "traction": {
       "type": "object",
       "description": "Traction evidence. Non-financial validation data for investor decks.",
       "properties": {
-        "customerCount": {"type": "integer", "minimum": 0},
-        "customers": {"type": "array", "items": {"type": "string"}},
+        "customerCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "customers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "testimonials": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "quote": {"type": "string"},
-              "attribution": {"type": "string"},
-              "date": {"type": "string", "format": "date"}
+              "quote": {
+                "type": "string"
+              },
+              "attribution": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string",
+                "format": "date"
+              }
             },
             "additionalProperties": false
           }
@@ -820,9 +1540,20 @@
           "items": {
             "type": "object",
             "properties": {
-              "label": {"type": "string"},
-              "value": {"type": "string"},
-              "trend": {"type": "string", "enum": ["up", "down", "flat"]}
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "trend": {
+                "type": "string",
+                "enum": [
+                  "up",
+                  "down",
+                  "flat"
+                ]
+              }
             },
             "additionalProperties": false
           }
@@ -834,38 +1565,93 @@
       "type": "object",
       "description": "Human-curated slide content. Canonical source for investor deck copy.",
       "properties": {
-        "tagline": {"type": "string"},
-        "problem": {"$ref": "#/definitions/slideContent"},
-        "solution": {"$ref": "#/definitions/slideContent"},
-        "market": {"$ref": "#/definitions/slideContent"},
-        "businessModel": {"$ref": "#/definitions/slideContent"},
-        "differentiator": {"$ref": "#/definitions/slideContent"},
-        "traction": {"$ref": "#/definitions/slideContent"},
-        "ask": {"$ref": "#/definitions/slideContent"}
+        "tagline": {
+          "type": "string"
+        },
+        "problem": {
+          "$ref": "#/definitions/slideContent"
+        },
+        "solution": {
+          "$ref": "#/definitions/slideContent"
+        },
+        "market": {
+          "$ref": "#/definitions/slideContent"
+        },
+        "businessModel": {
+          "$ref": "#/definitions/slideContent"
+        },
+        "differentiator": {
+          "$ref": "#/definitions/slideContent"
+        },
+        "traction": {
+          "$ref": "#/definitions/slideContent"
+        },
+        "ask": {
+          "$ref": "#/definitions/slideContent"
+        }
       },
       "additionalProperties": false
     },
     "assets": {
       "type": "object",
       "properties": {
-        "colors": {"type": "object", "properties": {"primary": {"type": "string"}, "secondary": {"type": "string"}, "accent": {"type": "string"}}, "additionalProperties": false},
-        "fonts": {"type": "object", "properties": {"heading": {"type": "string"}, "body": {"type": "string"}}, "additionalProperties": false}
+        "colors": {
+          "type": "object",
+          "properties": {
+            "primary": {
+              "type": "string"
+            },
+            "secondary": {
+              "type": "string"
+            },
+            "accent": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "fonts": {
+          "type": "object",
+          "properties": {
+            "heading": {
+              "type": "string"
+            },
+            "body": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
       },
       "additionalProperties": false
     },
     "repositorySplit": {
       "type": "object",
       "properties": {
-        "planned": {"type": "boolean"},
-        "splitDate": {"type": "string"},
-        "publicRepo": {"type": "string"},
-        "publicLicense": {"type": "string"},
-        "businessRepo": {"type": "string"},
-        "businessLicense": {"type": "string"}
+        "planned": {
+          "type": "boolean"
+        },
+        "splitDate": {
+          "type": "string"
+        },
+        "publicRepo": {
+          "type": "string"
+        },
+        "publicLicense": {
+          "type": "string"
+        },
+        "businessRepo": {
+          "type": "string"
+        },
+        "businessLicense": {
+          "type": "string"
+        }
       },
       "additionalProperties": false
     },
-    "graphMetadata": {"$ref": "#/definitions/graphMetadata"},
+    "graphMetadata": {
+      "$ref": "#/definitions/graphMetadata"
+    },
     "extensions": {
       "type": "object",
       "description": "Venture-specific financial extensions. Use this for domain-specific fields (e.g., Ectropy project-level economics, JobsiteControl hardware margin). Keys should be prefixed with ventureid: e.g., 'extensions.ectropy.projectEconomics'. Never put base schema fields here.",
@@ -877,42 +1663,42 @@
     "from": "v2.2",
     "to": "v3.0",
     "breakingChanges": [
-      "financials.preSeed (string) → financials.fundingModel.rounds[0] (fundingRound with ComputedValue target)",
-      "financials.seed (string) → financials.fundingModel.rounds[1] (fundingRound with ComputedValue target)",
-      "financials.preSeedUse (object of strings) → financials.fundingModel.rounds[0].useOfFunds (array of ComputedValue allocations)",
-      "financials.mrr (string) → financials.revenueModel.mrr (ComputedValue)",
-      "financials.arr (string) → financials.revenueModel.arr (ComputedValue)",
-      "financials.runway (integer) → financials.operatingModel.runway (ComputedValue with cashPosition / burnRate formula)",
-      "financials.burnRate (ComputedValue) → financials.operatingModel.burnRate (same structure, new path)",
-      "financials.totalRaised (string) → financials.fundingModel.totalRaised (ComputedValue)",
-      "financials.roundStatus (string) → financials.fundingModel.rounds[].status (per-round)",
-      "financials.pilotValueProjection (bare object with nulls) → financials.revenueModel.pilotRevenue.engagements[] (full pilotEngagement schema)",
+      "financials.preSeed (string) \u2192 financials.fundingModel.rounds[0] (fundingRound with ComputedValue target)",
+      "financials.seed (string) \u2192 financials.fundingModel.rounds[1] (fundingRound with ComputedValue target)",
+      "financials.preSeedUse (object of strings) \u2192 financials.fundingModel.rounds[0].useOfFunds (array of ComputedValue allocations)",
+      "financials.mrr (string) \u2192 financials.revenueModel.mrr (ComputedValue)",
+      "financials.arr (string) \u2192 financials.revenueModel.arr (ComputedValue)",
+      "financials.runway (integer) \u2192 financials.operatingModel.runway (ComputedValue with cashPosition / burnRate formula)",
+      "financials.burnRate (ComputedValue) \u2192 financials.operatingModel.burnRate (same structure, new path)",
+      "financials.totalRaised (string) \u2192 financials.fundingModel.totalRaised (ComputedValue)",
+      "financials.roundStatus (string) \u2192 financials.fundingModel.rounds[].status (per-round)",
+      "financials.pilotValueProjection (bare object with nulls) \u2192 financials.revenueModel.pilotRevenue.engagements[] (full pilotEngagement schema)",
       "financials.unitEconomics preserved at financials.unitEconomics (unchanged path, same structure)"
     ],
     "nonBreakingAdditions": [
-      "financials.operatingModel.costStructure — new fixed/variable cost breakdown",
-      "financials.operatingModel.headcountPlan — new loaded cost model",
-      "financials.revenueModel.pipeline — new sales funnel tracking",
-      "financials.revenueModel.projections — replaces financials.projections (same structure, same path if ventures already populated it)",
-      "financials.fundingModel.dilutionModel — new cap table modeling",
-      "financials.investorReporting — entirely new section",
-      "market.icp — new ICP definition",
-      "market.competitivePricingBenchmarks — new competitor pricing data"
+      "financials.operatingModel.costStructure \u2014 new fixed/variable cost breakdown",
+      "financials.operatingModel.headcountPlan \u2014 new loaded cost model",
+      "financials.revenueModel.pipeline \u2014 new sales funnel tracking",
+      "financials.revenueModel.projections \u2014 replaces financials.projections (same structure, same path if ventures already populated it)",
+      "financials.fundingModel.dilutionModel \u2014 new cap table modeling",
+      "financials.investorReporting \u2014 entirely new section",
+      "market.icp \u2014 new ICP definition",
+      "market.competitivePricingBenchmarks \u2014 new competitor pricing data"
     ],
-    "migrationStrategy": "Run migration script: tools/migrate-v2.2-to-v3.0.py. Manually review all fields migrated to ComputedValue — ensure variables and sources are correct. Do not auto-fill sources; set confidence: 'assumed' with comment explaining why source is missing."
+    "migrationStrategy": "Run migration script: tools/migrate-v2.2-to-v3.0.py. Manually review all fields migrated to ComputedValue \u2014 ensure variables and sources are correct. Do not auto-fill sources; set confidence: 'assumed' with comment explaining why source is missing."
   },
   "x-changelog": [
     {
       "version": "3.0.0",
       "date": "2026-02-27",
       "changes": [
-        "ComputedValue schema consolidated as $defs type — consistent with ComputedValue.schema.v1.0.json",
+        "ComputedValue schema consolidated as $defs type \u2014 consistent with ComputedValue.schema.v1.0.json",
         "Added ConfidenceLevel: 'verified' and 'internal' levels (was: high/medium/low/assumed in v2.2)",
         "Added SourceType: 'internal-ref', 'internal-estimate', 'external-research' (expanding v2.2 set)",
         "Redesigned financials: split into operatingModel, revenueModel, fundingModel, unitEconomics, investorReporting",
-        "preSeed/seed → fundingModel.rounds[] (fundingRound objects with ComputedValue targets)",
-        "mrr/arr → revenueModel.mrr/arr (ComputedValues, was strings in v2.2)",
-        "runway → operatingModel.runway (ComputedValue, was integer in v2.2)",
+        "preSeed/seed \u2192 fundingModel.rounds[] (fundingRound objects with ComputedValue targets)",
+        "mrr/arr \u2192 revenueModel.mrr/arr (ComputedValues, was strings in v2.2)",
+        "runway \u2192 operatingModel.runway (ComputedValue, was integer in v2.2)",
         "Added operatingModel.costStructure with fixed/variable cost line items",
         "Added operatingModel.headcountPlan with loaded monthly cost per hire",
         "Added revenueModel.pilotRevenue for pilot engagement tracking",
@@ -923,7 +1709,7 @@
         "Added market.icp and market.competitivePricingBenchmarks",
         "Added serviceTiers.pricing.base as ComputedValue",
         "Added ScenarioVariant/Scenarios support to computedValue (optimistic/base/pessimistic)",
-        "All unitEconomics preserved from v2.2 — added ltvCacRatio, paybackPeriodMonths, grossMarginByTier"
+        "All unitEconomics preserved from v2.2 \u2014 added ltvCacRatio, paybackPeriodMonths, grossMarginByTier"
       ]
     },
     {

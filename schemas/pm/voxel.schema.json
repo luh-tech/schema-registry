@@ -1,18 +1,31 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/pm/voxel.schema.json",
+  "$id": "https://schemas.luh.tech/pm/voxel.schema.json",
   "title": "Voxel Schema",
   "description": "3D spatial container for PM decisions, labor tracking, materials, and carbon footprint. The fundamental unit of construction project management in Ectropy PM Core.",
   "type": "object",
-  "required": ["$id", "$schema", "schemaVersion", "voxelId", "coordinates", "status"],
+  "required": [
+    "$id",
+    "$schema",
+    "schemaVersion",
+    "voxelId",
+    "coordinates",
+    "status"
+  ],
   "definitions": {
     "_metadata": {
       "type": "object",
       "description": "Schema metadata - not for validation",
       "properties": {
-        "version": { "const": "3.0.0" },
-        "lastUpdated": { "const": "2026-01-06" },
-        "maintainer": { "const": "LuhTech Enterprise Infrastructure" },
+        "version": {
+          "const": "3.0.0"
+        },
+        "lastUpdated": {
+          "const": "2026-01-06"
+        },
+        "maintainer": {
+          "const": "LuhTech Enterprise Infrastructure"
+        },
         "relatedSchemas": {
           "const": [
             "decision.schema.json",
@@ -33,25 +46,45 @@
       "properties": {
         "inEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         },
         "outEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         },
         "edges": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["from", "to", "type"],
+            "required": [
+              "from",
+              "to",
+              "type"
+            ],
             "properties": {
-              "from": { "$ref": "#/definitions/urn" },
-              "to": { "$ref": "#/definitions/urn" },
-              "type": { "type": "string" },
-              "weight": { "type": "number", "minimum": 0, "maximum": 1 },
-              "label": { "type": "string" }
+              "from": {
+                "$ref": "#/definitions/urn"
+              },
+              "to": {
+                "$ref": "#/definitions/urn"
+              },
+              "type": {
+                "type": "string"
+              },
+              "weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "label": {
+                "type": "string"
+              }
             }
           }
         }
@@ -59,16 +92,40 @@
     },
     "voxelStatus": {
       "type": "string",
-      "enum": ["PLANNED", "IN_PROGRESS", "COMPLETE", "BLOCKED", "INSPECTION_REQUIRED", "REWORK"]
+      "enum": [
+        "PLANNED",
+        "IN_PROGRESS",
+        "COMPLETE",
+        "BLOCKED",
+        "INSPECTION_REQUIRED",
+        "REWORK"
+      ]
     },
     "coordinates": {
       "type": "object",
-      "required": ["x", "y", "z"],
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
       "properties": {
-        "x": { "type": "number", "description": "X coordinate in project coordinate system" },
-        "y": { "type": "number", "description": "Y coordinate in project coordinate system" },
-        "z": { "type": "number", "description": "Z coordinate (elevation)" },
-        "resolution": { "type": "number", "default": 1.0, "description": "Voxel size in meters" }
+        "x": {
+          "type": "number",
+          "description": "X coordinate in project coordinate system"
+        },
+        "y": {
+          "type": "number",
+          "description": "Y coordinate in project coordinate system"
+        },
+        "z": {
+          "type": "number",
+          "description": "Z coordinate (elevation)"
+        },
+        "resolution": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Voxel size in meters"
+        }
       }
     }
   },
@@ -87,15 +144,25 @@
     "meta": {
       "type": "object",
       "properties": {
-        "projectId": { "type": "string" },
-        "sourceOfTruth": { "type": "string" },
-        "lastUpdated": { "type": "string", "format": "date-time" },
+        "projectId": {
+          "type": "string"
+        },
+        "sourceOfTruth": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
         "syncStatus": {
           "type": "object",
           "properties": {
             "syncDirection": {
               "type": "string",
-              "enum": ["v3-is-source-of-truth", "bidirectional"]
+              "enum": [
+                "v3-is-source-of-truth",
+                "bidirectional"
+              ]
             }
           }
         }
@@ -113,30 +180,61 @@
       "type": "object",
       "description": "Full bounding box for non-cubic voxels",
       "properties": {
-        "min": { "$ref": "#/definitions/coordinates" },
-        "max": { "$ref": "#/definitions/coordinates" }
+        "min": {
+          "$ref": "#/definitions/coordinates"
+        },
+        "max": {
+          "$ref": "#/definitions/coordinates"
+        }
       }
     },
     "location": {
       "type": "object",
       "description": "Human-readable location context",
       "properties": {
-        "building": { "type": "string" },
-        "level": { "type": "string" },
-        "zone": { "type": "string" },
-        "gridReference": { "type": "string", "description": "Grid line reference (e.g., A-3 to B-4)" },
-        "room": { "type": "string" },
-        "system": { "type": "string", "description": "Building system (HVAC, Electrical, Plumbing, etc.)" }
+        "building": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string"
+        },
+        "zone": {
+          "type": "string"
+        },
+        "gridReference": {
+          "type": "string",
+          "description": "Grid line reference (e.g., A-3 to B-4)"
+        },
+        "room": {
+          "type": "string"
+        },
+        "system": {
+          "type": "string",
+          "description": "Building system (HVAC, Electrical, Plumbing, etc.)"
+        }
       }
     },
     "ifcReference": {
       "type": "object",
       "description": "Link to IFC model element",
       "properties": {
-        "ifcGuid": { "type": "string", "description": "IFC GlobalId" },
-        "ifcType": { "type": "string", "description": "IFC entity type (IfcWall, IfcDuct, etc.)" },
-        "modelUri": { "type": "string", "format": "uri", "description": "URI to IFC model" },
-        "speckleStreamId": { "type": "string", "description": "Speckle stream ID if applicable" }
+        "ifcGuid": {
+          "type": "string",
+          "description": "IFC GlobalId"
+        },
+        "ifcType": {
+          "type": "string",
+          "description": "IFC entity type (IfcWall, IfcDuct, etc.)"
+        },
+        "modelUri": {
+          "type": "string",
+          "format": "uri",
+          "description": "URI to IFC model"
+        },
+        "speckleStreamId": {
+          "type": "string",
+          "description": "Speckle stream ID if applicable"
+        }
       }
     },
     "status": {
@@ -153,29 +251,70 @@
       "description": "Materials contained in this voxel",
       "items": {
         "type": "object",
-        "required": ["materialId", "name"],
+        "required": [
+          "materialId",
+          "name"
+        ],
         "properties": {
-          "materialId": { "type": "string" },
-          "name": { "type": "string" },
+          "materialId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
           "category": {
             "type": "string",
-            "enum": ["concrete", "steel", "wood", "glass", "aluminum", "insulation", "drywall", "mechanical", "electrical", "plumbing", "other"]
+            "enum": [
+              "concrete",
+              "steel",
+              "wood",
+              "glass",
+              "aluminum",
+              "insulation",
+              "drywall",
+              "mechanical",
+              "electrical",
+              "plumbing",
+              "other"
+            ]
           },
-          "quantity": { "type": "number" },
-          "unit": { "type": "string" },
-          "carbonCoefficient": { "type": "number", "description": "kg CO2e per unit" },
+          "quantity": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "carbonCoefficient": {
+            "type": "number",
+            "description": "kg CO2e per unit"
+          },
           "cost": {
             "type": "object",
             "properties": {
-              "unitCost": { "type": "number" },
-              "totalCost": { "type": "number" },
-              "currency": { "type": "string", "default": "USD" }
+              "unitCost": {
+                "type": "number"
+              },
+              "totalCost": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string",
+                "default": "USD"
+              }
             }
           },
-          "supplier": { "type": "string" },
+          "supplier": {
+            "type": "string"
+          },
           "deliveryStatus": {
             "type": "string",
-            "enum": ["not-ordered", "ordered", "in-transit", "on-site", "installed"]
+            "enum": [
+              "not-ordered",
+              "ordered",
+              "in-transit",
+              "on-site",
+              "installed"
+            ]
           }
         }
       }
@@ -184,22 +323,47 @@
       "type": "object",
       "description": "Labor tracking for this voxel",
       "properties": {
-        "estimatedHours": { "type": "number" },
-        "actualHours": { "type": "number" },
-        "assignedTrade": { "type": "string" },
-        "assignedCrew": { "type": "string" },
-        "crewSize": { "type": "integer" },
-        "productivityRate": { "type": "number", "description": "Units per hour" },
+        "estimatedHours": {
+          "type": "number"
+        },
+        "actualHours": {
+          "type": "number"
+        },
+        "assignedTrade": {
+          "type": "string"
+        },
+        "assignedCrew": {
+          "type": "string"
+        },
+        "crewSize": {
+          "type": "integer"
+        },
+        "productivityRate": {
+          "type": "number",
+          "description": "Units per hour"
+        },
         "assignments": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "participantRef": { "$ref": "#/definitions/urn" },
-              "role": { "type": "string" },
-              "startDate": { "type": "string", "format": "date" },
-              "endDate": { "type": "string", "format": "date" },
-              "hoursLogged": { "type": "number" }
+              "participantRef": {
+                "$ref": "#/definitions/urn"
+              },
+              "role": {
+                "type": "string"
+              },
+              "startDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "hoursLogged": {
+                "type": "number"
+              }
             }
           }
         }
@@ -209,19 +373,40 @@
       "type": "object",
       "description": "Cost tracking for this voxel",
       "properties": {
-        "estimated": { "type": "number" },
-        "actual": { "type": "number" },
-        "committed": { "type": "number" },
-        "variance": { "type": "number" },
-        "currency": { "type": "string", "default": "USD" },
+        "estimated": {
+          "type": "number"
+        },
+        "actual": {
+          "type": "number"
+        },
+        "committed": {
+          "type": "number"
+        },
+        "variance": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        },
         "breakdown": {
           "type": "object",
           "properties": {
-            "materials": { "type": "number" },
-            "labor": { "type": "number" },
-            "equipment": { "type": "number" },
-            "subcontract": { "type": "number" },
-            "overhead": { "type": "number" }
+            "materials": {
+              "type": "number"
+            },
+            "labor": {
+              "type": "number"
+            },
+            "equipment": {
+              "type": "number"
+            },
+            "subcontract": {
+              "type": "number"
+            },
+            "overhead": {
+              "type": "number"
+            }
           }
         }
       }
@@ -230,41 +415,88 @@
       "type": "object",
       "description": "Carbon footprint tracking",
       "properties": {
-        "embodiedCarbon": { "type": "number", "description": "kg CO2e from materials" },
-        "transportCarbon": { "type": "number", "description": "kg CO2e from transportation" },
-        "constructionCarbon": { "type": "number", "description": "kg CO2e from construction process" },
-        "totalCarbon": { "type": "number", "description": "Total kg CO2e" },
-        "carbonTarget": { "type": "number", "description": "Target kg CO2e" },
-        "carbonVariance": { "type": "number", "description": "Variance from target" }
+        "embodiedCarbon": {
+          "type": "number",
+          "description": "kg CO2e from materials"
+        },
+        "transportCarbon": {
+          "type": "number",
+          "description": "kg CO2e from transportation"
+        },
+        "constructionCarbon": {
+          "type": "number",
+          "description": "kg CO2e from construction process"
+        },
+        "totalCarbon": {
+          "type": "number",
+          "description": "Total kg CO2e"
+        },
+        "carbonTarget": {
+          "type": "number",
+          "description": "Target kg CO2e"
+        },
+        "carbonVariance": {
+          "type": "number",
+          "description": "Variance from target"
+        }
       }
     },
     "schedule": {
       "type": "object",
       "description": "Schedule tracking",
       "properties": {
-        "plannedStart": { "type": "string", "format": "date-time" },
-        "plannedEnd": { "type": "string", "format": "date-time" },
-        "actualStart": { "type": "string", "format": "date-time" },
-        "actualEnd": { "type": "string", "format": "date-time" },
-        "duration": { "type": "number", "description": "Planned duration in days" },
-        "isCriticalPath": { "type": "boolean" },
-        "float": { "type": "number", "description": "Schedule float in days" },
-        "activityId": { "type": "string", "description": "Linked schedule activity ID" }
+        "plannedStart": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "plannedEnd": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "actualStart": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "actualEnd": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration": {
+          "type": "number",
+          "description": "Planned duration in days"
+        },
+        "isCriticalPath": {
+          "type": "boolean"
+        },
+        "float": {
+          "type": "number",
+          "description": "Schedule float in days"
+        },
+        "activityId": {
+          "type": "string",
+          "description": "Linked schedule activity ID"
+        }
       }
     },
     "decisions": {
       "type": "array",
-      "items": { "$ref": "#/definitions/urn" },
+      "items": {
+        "$ref": "#/definitions/urn"
+      },
       "description": "URN references to PM decisions attached to this voxel"
     },
     "inspections": {
       "type": "array",
-      "items": { "$ref": "#/definitions/urn" },
+      "items": {
+        "$ref": "#/definitions/urn"
+      },
       "description": "URN references to inspections for this voxel"
     },
     "consequences": {
       "type": "array",
-      "items": { "$ref": "#/definitions/urn" },
+      "items": {
+        "$ref": "#/definitions/urn"
+      },
       "description": "URN references to consequences affecting this voxel"
     },
     "dependencies": {
@@ -273,12 +505,16 @@
       "properties": {
         "predecessors": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "description": "Voxels that must complete before this one starts"
         },
         "successors": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "description": "Voxels that depend on this voxel completing"
         }
       }
@@ -287,17 +523,33 @@
       "type": "object",
       "description": "Quality metrics",
       "properties": {
-        "defectCount": { "type": "integer" },
-        "reworkRequired": { "type": "boolean" },
-        "qualityScore": { "type": "number", "minimum": 0, "maximum": 100 },
-        "punchListItems": { "type": "integer" }
+        "defectCount": {
+          "type": "integer"
+        },
+        "reworkRequired": {
+          "type": "boolean"
+        },
+        "qualityScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "punchListItems": {
+          "type": "integer"
+        }
       }
     },
     "timestamps": {
       "type": "object",
       "properties": {
-        "createdAt": { "type": "string", "format": "date-time" },
-        "updatedAt": { "type": "string", "format": "date-time" }
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
     "graphMetadata": {

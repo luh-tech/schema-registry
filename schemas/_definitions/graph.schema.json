@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/graph.json",
+  "$id": "https://schemas.luh.tech/_definitions/graph.schema.json",
   "title": "LuhTech Graph Definitions",
   "description": "URN identifiers and graph metadata definitions for portfolio-wide entity linking. Enables cross-venture graph queries and bidirectional relationship traversal.",
   "definitions": {
@@ -8,16 +8,23 @@
       "type": "object",
       "description": "Schema metadata - not for validation",
       "properties": {
-        "version": {"const": "1.1.0"},
-        "lastUpdated": {"const": "2026-01-06"},
-        "maintainer": {"const": "LuhTech Enterprise Infrastructure"},
-        "basedOn": {"const": "V3 Ectropy URN Pattern"},
+        "version": {
+          "const": "1.1.0"
+        },
+        "lastUpdated": {
+          "const": "2026-01-06"
+        },
+        "maintainer": {
+          "const": "LuhTech Enterprise Infrastructure"
+        },
+        "basedOn": {
+          "const": "V3 Ectropy URN Pattern"
+        },
         "changelog": {
           "const": "1.1.0: Added node, deliverable, workstream, document node types"
         }
       }
     },
-
     "urn": {
       "type": "string",
       "description": "LuhTech URN identifier. Format: urn:luhtech:{venture}:{nodeType}:{identifier}",
@@ -32,11 +39,12 @@
         "urn:luhtech:ectropy:node:p5a-infrastructure"
       ]
     },
-
     "urnReference": {
       "type": "object",
       "description": "URN reference with optional metadata",
-      "required": ["$ref"],
+      "required": [
+        "$ref"
+      ],
       "properties": {
         "$ref": {
           "$ref": "#/definitions/urn",
@@ -54,7 +62,6 @@
         }
       }
     },
-
     "nodeType": {
       "type": "string",
       "description": "Graph node type classification",
@@ -78,7 +85,6 @@
         "document"
       ]
     },
-
     "edgeType": {
       "type": "string",
       "description": "Graph edge relationship type",
@@ -97,11 +103,14 @@
         "relates-to"
       ]
     },
-
     "edge": {
       "type": "object",
       "description": "Directed edge between two nodes",
-      "required": ["from", "to", "type"],
+      "required": [
+        "from",
+        "to",
+        "type"
+      ],
       "additionalProperties": false,
       "properties": {
         "from": {
@@ -139,7 +148,6 @@
         }
       }
     },
-
     "graphMetadata": {
       "type": "object",
       "description": "Bidirectional graph traversal metadata for a node",
@@ -170,11 +178,13 @@
         }
       }
     },
-
     "graphNode": {
       "type": "object",
       "description": "A node in the portfolio graph",
-      "required": ["$id", "type"],
+      "required": [
+        "$id",
+        "type"
+      ],
       "properties": {
         "$id": {
           "$ref": "#/definitions/urn",
@@ -193,7 +203,7 @@
           "description": "Node description"
         },
         "ventureId": {
-          "$ref": "https://luhtech.dev/schemas/enums-v2.json#/definitions/ventureId",
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.v2.json#/definitions/ventureId",
           "description": "Owning venture"
         },
         "path": {
@@ -211,22 +221,34 @@
         }
       }
     },
-
     "portfolioGraph": {
       "type": "object",
       "description": "Complete portfolio graph structure",
-      "required": ["nodes"],
+      "required": [
+        "nodes"
+      ],
       "additionalProperties": false,
       "properties": {
         "meta": {
           "type": "object",
           "properties": {
-            "totalNodes": {"type": "integer", "minimum": 0},
-            "totalEdges": {"type": "integer", "minimum": 0},
-            "lastUpdated": {"type": "string", "format": "date-time"},
+            "totalNodes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "totalEdges": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "lastUpdated": {
+              "type": "string",
+              "format": "date-time"
+            },
             "nodeTypes": {
               "type": "array",
-              "items": {"$ref": "#/definitions/nodeType"}
+              "items": {
+                "$ref": "#/definitions/nodeType"
+              }
             }
           }
         },
@@ -253,22 +275,25 @@
               "description": "Node URNs grouped by type",
               "additionalProperties": {
                 "type": "array",
-                "items": {"$ref": "#/definitions/urn"}
+                "items": {
+                  "$ref": "#/definitions/urn"
+                }
               }
             },
             "byVenture": {
-              "type": "object", 
+              "type": "object",
               "description": "Node URNs grouped by venture",
               "additionalProperties": {
                 "type": "array",
-                "items": {"$ref": "#/definitions/urn"}
+                "items": {
+                  "$ref": "#/definitions/urn"
+                }
               }
             }
           }
         }
       }
     },
-
     "syncStatus": {
       "type": "object",
       "description": "Sync metadata for V3 compatibility",
@@ -284,7 +309,11 @@
         },
         "syncDirection": {
           "type": "string",
-          "enum": ["v3-is-source-of-truth", "bidirectional", "v1-is-source"],
+          "enum": [
+            "v3-is-source-of-truth",
+            "bidirectional",
+            "v1-is-source"
+          ],
           "default": "v3-is-source-of-truth"
         }
       }

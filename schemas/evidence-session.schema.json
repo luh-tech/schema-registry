@@ -1,39 +1,122 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/evidence-session-v1.json",
+  "$id": "https://schemas.luh.tech/evidence-session.schema.json",
   "title": "Evidence Session",
   "description": "Structured evidence and investigation tracking for LuhTech ventures. Provides session-based documentation with context, approach, outcomes, artifacts, and relationship mapping. Supports tiered retention policies and automated archival. Derived from Ectropy production current-truth.json (153KB, 152 sessions).",
   "type": "object",
-  "required": ["$schema", "version", "ventureId", "lastUpdated"],
+  "required": [
+    "$schema",
+    "version",
+    "ventureId",
+    "lastUpdated"
+  ],
   "additionalProperties": false,
   "properties": {
-    "$schema": {"type": "string", "const": "https://luhtech.dev/schemas/evidence-session-v1.json"},
-    "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Document version (semver)"},
-    "ventureId": {"$ref": "https://luhtech.dev/schemas/enums.json#/definitions/ventureId"},
-    "lastUpdated": {"type": "string", "format": "date-time", "description": "Last modification timestamp"},
-    "sessions": {"type": "array", "description": "Evidence session nodes", "items": {"$ref": "#/definitions/evidenceNode"}},
+    "$schema": {
+      "type": "string",
+      "const": "https://luhtech.dev/schemas/evidence-session-v1.json"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Document version (semver)"
+    },
+    "ventureId": {
+      "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/ventureId"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last modification timestamp"
+    },
+    "sessions": {
+      "type": "array",
+      "description": "Evidence session nodes",
+      "items": {
+        "$ref": "#/definitions/evidenceNode"
+      }
+    },
     "indexes": {
       "type": "object",
       "description": "Pre-computed indexes for efficient querying",
       "additionalProperties": false,
       "properties": {
-        "byStatus": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
-        "byCategory": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
-        "byPhase": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
-        "byNodeType": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
-        "byQuarter": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}}
+        "byStatus": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "byCategory": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "byPhase": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "byNodeType": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "byQuarter": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
       }
     },
-    "retentionConfig": {"type": "object", "description": "Global retention policy configuration", "$ref": "#/definitions/retentionConfig"},
+    "retentionConfig": {
+      "type": "object",
+      "description": "Global retention policy configuration",
+      "$ref": "#/definitions/retentionConfig"
+    },
     "stats": {
       "type": "object",
       "description": "Document statistics",
       "properties": {
-        "totalSessions": {"type": "integer", "minimum": 0},
-        "activeCount": {"type": "integer", "minimum": 0},
-        "completedCount": {"type": "integer", "minimum": 0},
-        "archivedCount": {"type": "integer", "minimum": 0},
-        "lastSessionDate": {"type": "string", "format": "date"}
+        "totalSessions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "activeCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completedCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "archivedCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lastSessionDate": {
+          "type": "string",
+          "format": "date"
+        }
       }
     }
   },
@@ -41,20 +124,91 @@
     "evidenceNode": {
       "type": "object",
       "description": "Single evidence session node",
-      "required": ["nodeId", "nodeType", "timestamp", "title", "status", "content", "metadata"],
+      "required": [
+        "nodeId",
+        "nodeType",
+        "timestamp",
+        "title",
+        "status",
+        "content",
+        "metadata"
+      ],
       "additionalProperties": false,
       "properties": {
-        "nodeId": {"type": "string", "pattern": "^node-[a-z0-9-]+-\\d{4}-\\d{2}-\\d{2}$", "description": "Unique node identifier (pattern: node-{topic}-{date})"},
-        "nodeType": {"type": "string", "enum": ["investigation", "deliverable", "milestone", "evidence", "decision", "incident", "retrospective", "spike", "poc", "research"], "description": "Type of evidence node"},
-        "timestamp": {"type": "string", "format": "date-time", "description": "Creation timestamp"},
-        "title": {"type": "string", "maxLength": 200, "description": "Human-readable title"},
-        "status": {"type": "string", "enum": ["planned", "in-progress", "completed", "blocked", "cancelled", "archived"], "description": "Session status"},
-        "priority": {"type": "string", "enum": ["critical", "high", "medium", "low"], "description": "Session priority"},
-        "labels": {"type": "array", "items": {"type": "string"}, "description": "Classification labels"},
-        "content": {"$ref": "#/definitions/sessionContent"},
-        "metadata": {"$ref": "#/definitions/sessionMetadata"},
-        "relationships": {"$ref": "#/definitions/sessionRelationships"},
-        "typeSpecific": {"type": "object", "description": "Node-type-specific fields", "additionalProperties": true}
+        "nodeId": {
+          "type": "string",
+          "pattern": "^node-[a-z0-9-]+-\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Unique node identifier (pattern: node-{topic}-{date})"
+        },
+        "nodeType": {
+          "type": "string",
+          "enum": [
+            "investigation",
+            "deliverable",
+            "milestone",
+            "evidence",
+            "decision",
+            "incident",
+            "retrospective",
+            "spike",
+            "poc",
+            "research"
+          ],
+          "description": "Type of evidence node"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Human-readable title"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "in-progress",
+            "completed",
+            "blocked",
+            "cancelled",
+            "archived"
+          ],
+          "description": "Session status"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low"
+          ],
+          "description": "Session priority"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Classification labels"
+        },
+        "content": {
+          "$ref": "#/definitions/sessionContent"
+        },
+        "metadata": {
+          "$ref": "#/definitions/sessionMetadata"
+        },
+        "relationships": {
+          "$ref": "#/definitions/sessionRelationships"
+        },
+        "typeSpecific": {
+          "type": "object",
+          "description": "Node-type-specific fields",
+          "additionalProperties": true
+        }
       }
     },
     "sessionContent": {
@@ -62,24 +216,76 @@
       "description": "Core session content",
       "additionalProperties": false,
       "properties": {
-        "context": {"type": "string", "description": "Problem statement or situation description"},
-        "motivation": {"type": "string", "description": "Why this investigation was needed"},
-        "scope": {"type": "string", "description": "Boundaries of the investigation"},
-        "approach": {"type": "string", "description": "Methodology or strategy used"},
-        "tools": {"type": "array", "items": {"type": "string"}, "description": "Tools used in the session"},
-        "outcome": {"type": "string", "description": "Results summary"},
-        "keyFindings": {"type": "array", "items": {"type": "string"}, "description": "Key findings or discoveries"},
-        "decisions": {"type": "array", "items": {"type": "string"}, "description": "Decisions made during session"},
-        "nextSteps": {"type": "array", "items": {"type": "string"}, "description": "Follow-up actions identified"},
-        "evidence": {"type": "array", "items": {"type": "string"}, "description": "File paths to evidence artifacts"},
+        "context": {
+          "type": "string",
+          "description": "Problem statement or situation description"
+        },
+        "motivation": {
+          "type": "string",
+          "description": "Why this investigation was needed"
+        },
+        "scope": {
+          "type": "string",
+          "description": "Boundaries of the investigation"
+        },
+        "approach": {
+          "type": "string",
+          "description": "Methodology or strategy used"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tools used in the session"
+        },
+        "outcome": {
+          "type": "string",
+          "description": "Results summary"
+        },
+        "keyFindings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key findings or discoveries"
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Decisions made during session"
+        },
+        "nextSteps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Follow-up actions identified"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "File paths to evidence artifacts"
+        },
         "externalReferences": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "url": {"type": "string", "format": "uri"},
-              "title": {"type": "string"},
-              "type": {"type": "string"}
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "title": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              }
             }
           },
           "description": "External links and references"
@@ -91,22 +297,109 @@
       "description": "Session metadata for tracking and governance",
       "additionalProperties": false,
       "properties": {
-        "author": {"type": "string", "description": "Session author"},
-        "contributors": {"type": "array", "items": {"type": "string"}, "description": "Additional contributors"},
-        "category": {"type": "string", "enum": ["infrastructure", "architecture", "security", "performance", "debugging", "deployment", "integration", "testing", "documentation", "research", "planning", "review"], "description": "Primary category"},
-        "tags": {"type": "array", "items": {"type": "string"}, "description": "Classification tags"},
-        "phase": {"type": "string", "description": "Project phase reference (e.g., 'phase-5a')"},
-        "sprint": {"type": "string", "description": "Sprint reference"},
-        "epic": {"type": "string", "description": "Epic reference"},
-        "relatedIssues": {"type": "array", "items": {"type": "string"}, "description": "GitHub issue references"},
-        "relatedPRs": {"type": "array", "items": {"type": "string"}, "description": "GitHub PR references"},
-        "commits": {"type": "array", "items": {"type": "string"}, "description": "Related commit references"},
-        "duration": {"type": "string", "description": "Session duration"},
-        "metrics": {"type": "object", "additionalProperties": true, "description": "Session-specific metrics"},
-        "retentionDays": {"type": "integer", "enum": [90, 180, 365, -1], "description": "Retention period in days (-1 = permanent)"},
-        "archiveDate": {"type": "string", "format": "date", "description": "Calculated archive date"},
-        "archived": {"type": "boolean", "default": false, "description": "Whether session is archived"},
-        "archivedAt": {"type": "string", "format": "date-time", "description": "Archive timestamp"}
+        "author": {
+          "type": "string",
+          "description": "Session author"
+        },
+        "contributors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Additional contributors"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "infrastructure",
+            "architecture",
+            "security",
+            "performance",
+            "debugging",
+            "deployment",
+            "integration",
+            "testing",
+            "documentation",
+            "research",
+            "planning",
+            "review"
+          ],
+          "description": "Primary category"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Classification tags"
+        },
+        "phase": {
+          "type": "string",
+          "description": "Project phase reference (e.g., 'phase-5a')"
+        },
+        "sprint": {
+          "type": "string",
+          "description": "Sprint reference"
+        },
+        "epic": {
+          "type": "string",
+          "description": "Epic reference"
+        },
+        "relatedIssues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "GitHub issue references"
+        },
+        "relatedPRs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "GitHub PR references"
+        },
+        "commits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related commit references"
+        },
+        "duration": {
+          "type": "string",
+          "description": "Session duration"
+        },
+        "metrics": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Session-specific metrics"
+        },
+        "retentionDays": {
+          "type": "integer",
+          "enum": [
+            90,
+            180,
+            365,
+            -1
+          ],
+          "description": "Retention period in days (-1 = permanent)"
+        },
+        "archiveDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Calculated archive date"
+        },
+        "archived": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether session is archived"
+        },
+        "archivedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Archive timestamp"
+        }
       }
     },
     "sessionRelationships": {
@@ -114,16 +407,70 @@
       "description": "Session relationships and dependencies",
       "additionalProperties": false,
       "properties": {
-        "triggers": {"type": "array", "items": {"type": "string"}, "description": "What initiated this session (node IDs or descriptions)"},
-        "dependencies": {"type": "array", "items": {"type": "string"}, "description": "Sessions this depends on"},
-        "relatedNodes": {"type": "array", "items": {"type": "string"}, "description": "Related session node IDs"},
-        "supersedes": {"type": "array", "items": {"type": "string"}, "description": "Sessions this supersedes"},
-        "supersededBy": {"type": "string", "description": "Session that supersedes this one"},
-        "documents": {"type": "array", "items": {"type": "string"}, "description": "Related document paths"},
-        "decisions": {"type": "array", "items": {"type": "string"}, "description": "Related decision log IDs"},
-        "services": {"type": "array", "items": {"type": "string"}, "description": "Related service IDs"},
-        "parentNode": {"type": "string", "description": "Parent session for hierarchical organization"},
-        "childNodes": {"type": "array", "items": {"type": "string"}, "description": "Child sessions"}
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What initiated this session (node IDs or descriptions)"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Sessions this depends on"
+        },
+        "relatedNodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related session node IDs"
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Sessions this supersedes"
+        },
+        "supersededBy": {
+          "type": "string",
+          "description": "Session that supersedes this one"
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related document paths"
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related decision log IDs"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related service IDs"
+        },
+        "parentNode": {
+          "type": "string",
+          "description": "Parent session for hierarchical organization"
+        },
+        "childNodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Child sessions"
+        }
       }
     },
     "retentionConfig": {
@@ -135,33 +482,75 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["category", "retentionDays"],
+            "required": [
+              "category",
+              "retentionDays"
+            ],
             "properties": {
-              "category": {"type": "string"},
-              "retentionDays": {"type": "integer"},
-              "rationale": {"type": "string"}
+              "category": {
+                "type": "string"
+              },
+              "retentionDays": {
+                "type": "integer"
+              },
+              "rationale": {
+                "type": "string"
+              }
             }
           }
         },
-        "defaultRetentionDays": {"type": "integer", "default": 90},
-        "archiveLocation": {"type": "string", "description": "Where archived sessions are stored"},
-        "autoArchive": {"type": "boolean", "default": true, "description": "Enable automatic archival"},
-        "lastArchiveRun": {"type": "string", "format": "date-time"}
+        "defaultRetentionDays": {
+          "type": "integer",
+          "default": 90
+        },
+        "archiveLocation": {
+          "type": "string",
+          "description": "Where archived sessions are stored"
+        },
+        "autoArchive": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic archival"
+        },
+        "lastArchiveRun": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
     "deliverableExtension": {
       "type": "object",
       "description": "Extension fields for deliverable node type",
       "properties": {
-        "requirements": {"type": "array", "items": {"type": "string"}},
-        "acceptance": {"type": "array", "items": {"type": "string"}},
-        "performance": {"type": "object", "additionalProperties": true},
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "acceptance": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "performance": {
+          "type": "object",
+          "additionalProperties": true
+        },
         "signoff": {
           "type": "object",
           "properties": {
-            "approvedBy": {"type": "string"},
-            "approvedAt": {"type": "string", "format": "date-time"},
-            "notes": {"type": "string"}
+            "approvedBy": {
+              "type": "string"
+            },
+            "approvedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "notes": {
+              "type": "string"
+            }
           }
         }
       }
@@ -170,47 +559,120 @@
       "type": "object",
       "description": "Extension fields for investigation node type",
       "properties": {
-        "hypothesis": {"type": "string"},
-        "methodology": {"type": "string"},
-        "dataCollected": {"type": "array", "items": {"type": "string"}},
-        "conclusions": {"type": "array", "items": {"type": "string"}},
-        "confidenceLevel": {"type": "string", "enum": ["high", "medium", "low"]}
+        "hypothesis": {
+          "type": "string"
+        },
+        "methodology": {
+          "type": "string"
+        },
+        "dataCollected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "conclusions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidenceLevel": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        }
       }
     },
     "incidentExtension": {
       "type": "object",
       "description": "Extension fields for incident node type",
       "properties": {
-        "severity": {"type": "string", "enum": ["critical", "major", "minor", "cosmetic"]},
-        "impactedServices": {"type": "array", "items": {"type": "string"}},
-        "impactedUsers": {"type": "string"},
-        "startTime": {"type": "string", "format": "date-time"},
-        "endTime": {"type": "string", "format": "date-time"},
-        "timeToDetect": {"type": "string"},
-        "timeToResolve": {"type": "string"},
-        "rootCause": {"type": "string"},
-        "preventionMeasures": {"type": "array", "items": {"type": "string"}},
-        "postmortemUrl": {"type": "string", "format": "uri"}
+        "severity": {
+          "type": "string",
+          "enum": [
+            "critical",
+            "major",
+            "minor",
+            "cosmetic"
+          ]
+        },
+        "impactedServices": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "impactedUsers": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timeToDetect": {
+          "type": "string"
+        },
+        "timeToResolve": {
+          "type": "string"
+        },
+        "rootCause": {
+          "type": "string"
+        },
+        "preventionMeasures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "postmortemUrl": {
+          "type": "string",
+          "format": "uri"
+        }
       }
     },
     "milestoneExtension": {
       "type": "object",
       "description": "Extension fields for milestone node type",
       "properties": {
-        "targetDate": {"type": "string", "format": "date"},
-        "actualDate": {"type": "string", "format": "date"},
+        "targetDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "actualDate": {
+          "type": "string",
+          "format": "date"
+        },
         "criteria": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "description": {"type": "string"},
-              "met": {"type": "boolean"}
+              "description": {
+                "type": "string"
+              },
+              "met": {
+                "type": "boolean"
+              }
             }
           }
         },
-        "blockers": {"type": "array", "items": {"type": "string"}},
-        "celebrationNotes": {"type": "string"}
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "celebrationNotes": {
+          "type": "string"
+        }
       }
     }
   }

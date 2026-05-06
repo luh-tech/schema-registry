@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "urn:luhtech:schema:roadmap:v3.3",
+  "$id": "https://schemas.luh.tech/roadmap.schema.v3.3.json",
   "title": "LuhTech Venture Roadmap v3.3",
   "description": "JSON-first roadmap schema for LuhTech portfolio ventures. v3.3 adds optional `provides: array[string]` and `lifecyclePhases: array[integer 0-7]` to feature objects, supporting the requires/provides matching infrastructure in business-tools (capabilities.json, challenges.json, lifecycle-phases.json). Neither field is required. v3.2 added required `scope` field. v3.1 added mission/vision/currentStage/overallProgress to the venture object. All other fields are a strict superset of v3.2.",
   "type": "object",
@@ -243,7 +243,7 @@
     },
     "ventureDetails": {
       "type": "object",
-      "description": "Venture classification, status, and business identity. v3.1 adds mission, vision, currentStage, and overallProgress — migrated from roadmap-business.json.",
+      "description": "Venture classification, status, and business identity. v3.1 adds mission, vision, currentStage, and overallProgress \u2014 migrated from roadmap-business.json.",
       "required": [
         "type",
         "architecture"
@@ -298,12 +298,12 @@
         "mission": {
           "type": "string",
           "minLength": 10,
-          "description": "Venture mission statement. NEW in v3.1 — migrated from roadmap-business.json. Canonical source of truth for all transforms."
+          "description": "Venture mission statement. NEW in v3.1 \u2014 migrated from roadmap-business.json. Canonical source of truth for all transforms."
         },
         "vision": {
           "type": "string",
           "minLength": 10,
-          "description": "Venture vision statement. NEW in v3.1 — migrated from roadmap-business.json. Canonical source of truth for all transforms."
+          "description": "Venture vision statement. NEW in v3.1 \u2014 migrated from roadmap-business.json. Canonical source of truth for all transforms."
         },
         "currentStage": {
           "type": "string",
@@ -324,13 +324,13 @@
             "active",
             "public"
           ],
-          "description": "Current venture stage. NEW in v3.1 — migrated from roadmap-business.json. Update when stage changes. Informs investor reports and portfolio dashboards."
+          "description": "Current venture stage. NEW in v3.1 \u2014 migrated from roadmap-business.json. Update when stage changes. Informs investor reports and portfolio dashboards."
         },
         "overallProgress": {
           "type": "integer",
           "minimum": 0,
           "maximum": 100,
-          "description": "Overall roadmap progress as a percentage (0–100). NEW in v3.1 — migrated from roadmap-business.json. Updated by founder judgment each sprint."
+          "description": "Overall roadmap progress as a percentage (0\u2013100). NEW in v3.1 \u2014 migrated from roadmap-business.json. Updated by founder judgment each sprint."
         }
       }
     },
@@ -501,7 +501,7 @@
             "type": "string"
           },
           "default": [],
-          "description": "Capabilities this feature provides. Each value must reference a capability id from data/capabilities.json in the business-tools monorepo. Used by xaas_graph to compute coverage matches against challenges (which declare 'requires') and personas (which declare 'needs'). Optional — features without provides[] produce zero coverage contributions."
+          "description": "Capabilities this feature provides. Each value must reference a capability id from data/capabilities.json in the business-tools monorepo. Used by xaas_graph to compute coverage matches against challenges (which declare 'requires') and personas (which declare 'needs'). Optional \u2014 features without provides[] produce zero coverage contributions."
         },
         "lifecyclePhases": {
           "type": "array",
@@ -511,7 +511,7 @@
             "maximum": 7
           },
           "default": [],
-          "description": "RIBA Plan of Work 2020 stages this feature applies to. Each integer 0-7 references a phase from data/lifecycle-phases.json in the business-tools monorepo. Stages: 0 Strategic Definition, 1 Preparation and Briefing, 2 Concept Design, 3 Spatial Coordination, 4 Technical Design, 5 Manufacturing and Construction, 6 Handover, 7 Use. Optional — features without lifecyclePhases[] are treated as phase-agnostic."
+          "description": "RIBA Plan of Work 2020 stages this feature applies to. Each integer 0-7 references a phase from data/lifecycle-phases.json in the business-tools monorepo. Stages: 0 Strategic Definition, 1 Preparation and Briefing, 2 Concept Design, 3 Spatial Coordination, 4 Technical Design, 5 Manufacturing and Construction, 6 Handover, 7 Use. Optional \u2014 features without lifecyclePhases[] are treated as phase-agnostic."
         }
       }
     },
@@ -1226,17 +1226,17 @@
         "MIGRATION: Added venture.vision (migrated from roadmap-business.json)",
         "MIGRATION: Added venture.currentStage (migrated from roadmap-business.json)",
         "MIGRATION: Added venture.overallProgress (migrated from roadmap-business.json)",
-        "Source: Transform Fabric Architecture v2.0.0 — business identity fields are team-visible, not financial",
-        "Strictly backward compatible with v3.0 — no fields removed"
+        "Source: Transform Fabric Architecture v2.0.0 \u2014 business identity fields are team-visible, not financial",
+        "Strictly backward compatible with v3.0 \u2014 no fields removed"
       ]
     },
     {
       "version": "3.0.0",
       "date": "2026-02-14",
       "changes": [
-        "Removed financials, team, competitive sections as required fields — live exclusively in roadmap-business.json",
+        "Removed financials, team, competitive sections as required fields \u2014 live exclusively in roadmap-business.json",
         "Preserved lightweight financials and team stubs for backward compatibility",
-        "Source: GAP 1 resolution — schema-v3-upstream-sync"
+        "Source: GAP 1 resolution \u2014 schema-v3-upstream-sync"
       ]
     },
     {

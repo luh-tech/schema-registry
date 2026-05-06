@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://luhtech.dev/schemas/metrics-pipeline.schema.json",
+  "$id": "https://schemas.luh.tech/metrics-pipeline.schema.json",
   "title": "Metrics Pipeline Schema",
   "description": "Schema for robust metrics collection, failure handling, and multi-destination reporting following luh-tech enterprise patterns. Used across all ventures for consistent observability.",
   "type": "object",
@@ -60,7 +60,12 @@
   "$defs": {
     "metricSource": {
       "type": "object",
-      "required": ["id", "type", "endpoint", "criticality"],
+      "required": [
+        "id",
+        "type",
+        "endpoint",
+        "criticality"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -69,7 +74,14 @@
         },
         "type": {
           "type": "string",
-          "enum": ["prometheus", "github-api", "grafana", "alertmanager", "custom-api", "file-system"],
+          "enum": [
+            "prometheus",
+            "github-api",
+            "grafana",
+            "alertmanager",
+            "custom-api",
+            "file-system"
+          ],
           "description": "Source type"
         },
         "endpoint": {
@@ -81,7 +93,13 @@
           "properties": {
             "type": {
               "type": "string",
-              "enum": ["none", "bearer-token", "basic-auth", "github-token", "api-key"]
+              "enum": [
+                "none",
+                "bearer-token",
+                "basic-auth",
+                "github-token",
+                "api-key"
+              ]
             },
             "secretRef": {
               "type": "string",
@@ -91,81 +109,213 @@
         },
         "criticality": {
           "type": "string",
-          "enum": ["critical", "important", "informational"],
+          "enum": [
+            "critical",
+            "important",
+            "informational"
+          ],
           "description": "How critical is this data source"
         },
-        "timeout": {"type": "integer", "default": 30, "description": "Request timeout in seconds"},
-        "retries": {"type": "integer", "default": 3, "description": "Number of retry attempts"},
+        "timeout": {
+          "type": "integer",
+          "default": 30,
+          "description": "Request timeout in seconds"
+        },
+        "retries": {
+          "type": "integer",
+          "default": 3,
+          "description": "Number of retry attempts"
+        },
         "healthCheck": {
           "type": "object",
           "properties": {
-            "endpoint": {"type": "string", "description": "Health check endpoint"},
-            "expectedStatus": {"type": "integer", "default": 200},
-            "interval": {"type": "string", "description": "How often to check health"}
+            "endpoint": {
+              "type": "string",
+              "description": "Health check endpoint"
+            },
+            "expectedStatus": {
+              "type": "integer",
+              "default": 200
+            },
+            "interval": {
+              "type": "string",
+              "description": "How often to check health"
+            }
           }
         },
         "fallback": {
           "type": "object",
           "properties": {
-            "type": {"type": "string", "enum": ["cache", "placeholder", "skip", "fail"]},
-            "cacheMaxAge": {"type": "string", "description": "Max age for cached data"},
-            "placeholderMessage": {"type": "string", "description": "Message when using placeholder"}
+            "type": {
+              "type": "string",
+              "enum": [
+                "cache",
+                "placeholder",
+                "skip",
+                "fail"
+              ]
+            },
+            "cacheMaxAge": {
+              "type": "string",
+              "description": "Max age for cached data"
+            },
+            "placeholderMessage": {
+              "type": "string",
+              "description": "Message when using placeholder"
+            }
           }
         }
       }
     },
     "reportingDestination": {
       "type": "object",
-      "required": ["id", "type", "priority"],
+      "required": [
+        "id",
+        "type",
+        "priority"
+      ],
       "properties": {
-        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
         "type": {
           "type": "string",
-          "enum": ["github-step-summary", "slack", "file-commit", "notion", "prometheus-pushgateway", "webhook"]
+          "enum": [
+            "github-step-summary",
+            "slack",
+            "file-commit",
+            "notion",
+            "prometheus-pushgateway",
+            "webhook"
+          ]
         },
-        "priority": {"type": "string", "enum": ["required", "best-effort"], "description": "required = fail if unreachable"},
-        "config": {"type": "object", "description": "Destination-specific configuration", "additionalProperties": true},
+        "priority": {
+          "type": "string",
+          "enum": [
+            "required",
+            "best-effort"
+          ],
+          "description": "required = fail if unreachable"
+        },
+        "config": {
+          "type": "object",
+          "description": "Destination-specific configuration",
+          "additionalProperties": true
+        },
         "filters": {
           "type": "object",
           "properties": {
-            "onSuccess": {"type": "boolean", "default": true},
-            "onWarning": {"type": "boolean", "default": true},
-            "onFailure": {"type": "boolean", "default": true},
-            "minSeverity": {"type": "string", "enum": ["info", "warning", "error", "critical"]}
+            "onSuccess": {
+              "type": "boolean",
+              "default": true
+            },
+            "onWarning": {
+              "type": "boolean",
+              "default": true
+            },
+            "onFailure": {
+              "type": "boolean",
+              "default": true
+            },
+            "minSeverity": {
+              "type": "string",
+              "enum": [
+                "info",
+                "warning",
+                "error",
+                "critical"
+              ]
+            }
           }
         },
         "format": {
           "type": "object",
           "properties": {
-            "template": {"type": "string", "description": "Template name or inline template"},
-            "includeMetrics": {"type": "array", "items": {"type": "string"}},
-            "excludeMetrics": {"type": "array", "items": {"type": "string"}}
+            "template": {
+              "type": "string",
+              "description": "Template name or inline template"
+            },
+            "includeMetrics": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "excludeMetrics": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       }
     },
     "failureHandler": {
       "type": "object",
-      "required": ["sourceId", "scenarios"],
+      "required": [
+        "sourceId",
+        "scenarios"
+      ],
       "properties": {
-        "sourceId": {"type": "string"},
+        "sourceId": {
+          "type": "string"
+        },
         "scenarios": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["condition", "action", "workflowResult"],
+            "required": [
+              "condition",
+              "action",
+              "workflowResult"
+            ],
             "properties": {
               "condition": {
                 "type": "string",
-                "enum": ["connection-timeout", "connection-refused", "rate-limited", "authentication-failed", "not-found", "server-error", "invalid-response", "partial-data"]
+                "enum": [
+                  "connection-timeout",
+                  "connection-refused",
+                  "rate-limited",
+                  "authentication-failed",
+                  "not-found",
+                  "server-error",
+                  "invalid-response",
+                  "partial-data"
+                ]
               },
               "action": {
                 "type": "string",
-                "enum": ["retry", "use-cache", "use-placeholder", "skip", "fail", "alert"]
+                "enum": [
+                  "retry",
+                  "use-cache",
+                  "use-placeholder",
+                  "skip",
+                  "fail",
+                  "alert"
+                ]
               },
-              "workflowResult": {"type": "string", "enum": ["success", "warning", "failure"], "description": "What the workflow reports"},
-              "message": {"type": "string", "description": "Human-readable message"},
-              "notify": {"type": "array", "items": {"type": "string"}, "description": "Destinations to notify"}
+              "workflowResult": {
+                "type": "string",
+                "enum": [
+                  "success",
+                  "warning",
+                  "failure"
+                ],
+                "description": "What the workflow reports"
+              },
+              "message": {
+                "type": "string",
+                "description": "Human-readable message"
+              },
+              "notify": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Destinations to notify"
+              }
             }
           }
         }
@@ -173,48 +323,167 @@
     },
     "normalizationRules": {
       "type": "object",
-      "required": ["resultMapping", "summaryFormat"],
+      "required": [
+        "resultMapping",
+        "summaryFormat"
+      ],
       "properties": {
         "resultMapping": {
           "type": "object",
           "description": "Maps internal states to GitHub Actions status",
           "properties": {
-            "success": {"type": "object", "properties": {"githubStatus": {"type": "string", "const": "success"}, "icon": {"type": "string", "default": "✅"}, "meaning": {"type": "string"}}},
-            "warning": {"type": "object", "properties": {"githubStatus": {"type": "string", "const": "success"}, "icon": {"type": "string", "default": "⚠️"}, "meaning": {"type": "string"}}},
-            "failure": {"type": "object", "properties": {"githubStatus": {"type": "string", "const": "failure"}, "icon": {"type": "string", "default": "❌"}, "meaning": {"type": "string"}}},
-            "skipped": {"type": "object", "properties": {"githubStatus": {"type": "string", "const": "success"}, "icon": {"type": "string", "default": "⏭️"}, "meaning": {"type": "string"}}}
+            "success": {
+              "type": "object",
+              "properties": {
+                "githubStatus": {
+                  "type": "string",
+                  "const": "success"
+                },
+                "icon": {
+                  "type": "string",
+                  "default": "\u2705"
+                },
+                "meaning": {
+                  "type": "string"
+                }
+              }
+            },
+            "warning": {
+              "type": "object",
+              "properties": {
+                "githubStatus": {
+                  "type": "string",
+                  "const": "success"
+                },
+                "icon": {
+                  "type": "string",
+                  "default": "\u26a0\ufe0f"
+                },
+                "meaning": {
+                  "type": "string"
+                }
+              }
+            },
+            "failure": {
+              "type": "object",
+              "properties": {
+                "githubStatus": {
+                  "type": "string",
+                  "const": "failure"
+                },
+                "icon": {
+                  "type": "string",
+                  "default": "\u274c"
+                },
+                "meaning": {
+                  "type": "string"
+                }
+              }
+            },
+            "skipped": {
+              "type": "object",
+              "properties": {
+                "githubStatus": {
+                  "type": "string",
+                  "const": "success"
+                },
+                "icon": {
+                  "type": "string",
+                  "default": "\u23ed\ufe0f"
+                },
+                "meaning": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
         "summaryFormat": {
           "type": "object",
           "properties": {
-            "includeTimestamp": {"type": "boolean", "default": true},
-            "includeSourceStatus": {"type": "boolean", "default": true},
-            "includeMetricsTable": {"type": "boolean", "default": true},
-            "includeFailureDetails": {"type": "boolean", "default": true}
+            "includeTimestamp": {
+              "type": "boolean",
+              "default": true
+            },
+            "includeSourceStatus": {
+              "type": "boolean",
+              "default": true
+            },
+            "includeMetricsTable": {
+              "type": "boolean",
+              "default": true
+            },
+            "includeFailureDetails": {
+              "type": "boolean",
+              "default": true
+            }
           }
         },
         "slackFormat": {
           "type": "object",
           "properties": {
-            "successColor": {"type": "string", "default": "good"},
-            "warningColor": {"type": "string", "default": "warning"},
-            "failureColor": {"type": "string", "default": "danger"},
-            "includeViewLogsButton": {"type": "boolean", "default": true}
+            "successColor": {
+              "type": "string",
+              "default": "good"
+            },
+            "warningColor": {
+              "type": "string",
+              "default": "warning"
+            },
+            "failureColor": {
+              "type": "string",
+              "default": "danger"
+            },
+            "includeViewLogsButton": {
+              "type": "boolean",
+              "default": true
+            }
           }
         }
       }
     },
     "metricsWorkflow": {
       "type": "object",
-      "required": ["file", "sources", "destinations"],
+      "required": [
+        "file",
+        "sources",
+        "destinations"
+      ],
       "properties": {
-        "file": {"type": "string", "description": "Workflow filename"},
-        "name": {"type": "string"},
-        "schedule": {"type": "string", "description": "Cron expression"},
-        "sources": {"type": "array", "items": {"type": "string"}, "description": "Source IDs this workflow collects from"},
-        "destinations": {"type": "array", "items": {"type": "string"}, "description": "Destination IDs this workflow reports to"},
-        "failureMode": {"type": "string", "enum": ["fail-fast", "collect-all", "best-effort"], "description": "How to handle partial failures"}
+        "file": {
+          "type": "string",
+          "description": "Workflow filename"
+        },
+        "name": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": "string",
+          "description": "Cron expression"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Source IDs this workflow collects from"
+        },
+        "destinations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Destination IDs this workflow reports to"
+        },
+        "failureMode": {
+          "type": "string",
+          "enum": [
+            "fail-fast",
+            "collect-all",
+            "best-effort"
+          ],
+          "description": "How to handle partial failures"
+        }
       }
     }
   }

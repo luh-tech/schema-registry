@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/interfaces.schema.json",
+  "$id": "https://schemas.luh.tech/interfaces.schema.json",
   "title": "Feature Interfaces Schema",
   "description": "Schema for interfaces.json files that define MCP tool signatures, REST API endpoints, GraphQL resolvers, and middleware specifications for features. Used across all luh-tech ventures.",
   "type": "object",
@@ -28,7 +28,11 @@
     },
     "meta": {
       "type": "object",
-      "required": ["ventureId", "featureId", "lastUpdated"],
+      "required": [
+        "ventureId",
+        "featureId",
+        "lastUpdated"
+      ],
       "properties": {
         "ventureId": {
           "type": "string",
@@ -140,7 +144,10 @@
   "$defs": {
     "mcpToolCategory": {
       "type": "object",
-      "required": ["name", "tools"],
+      "required": [
+        "name",
+        "tools"
+      ],
       "properties": {
         "name": {
           "type": "string",
@@ -159,7 +166,10 @@
     },
     "mcpTool": {
       "type": "object",
-      "required": ["name", "description"],
+      "required": [
+        "name",
+        "description"
+      ],
       "properties": {
         "name": {
           "type": "string",
@@ -172,8 +182,18 @@
         },
         "authorityRequired": {
           "oneOf": [
-            {"type": "integer", "minimum": 0, "maximum": 6},
-            {"type": "string", "enum": ["varies", "none"]}
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 6
+            },
+            {
+              "type": "string",
+              "enum": [
+                "varies",
+                "none"
+              ]
+            }
           ],
           "description": "Authority level required (0-6 or 'varies')"
         },
@@ -195,16 +215,24 @@
           "items": {
             "type": "object",
             "properties": {
-              "code": {"type": "string"},
-              "description": {"type": "string"}
+              "code": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
             }
           }
         },
         "rateLimit": {
           "type": "object",
           "properties": {
-            "requests": {"type": "integer"},
-            "window": {"type": "string"}
+            "requests": {
+              "type": "integer"
+            },
+            "window": {
+              "type": "string"
+            }
           }
         }
       }
@@ -214,7 +242,16 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["string", "number", "integer", "boolean", "array", "object", "urn", "enum"]
+          "enum": [
+            "string",
+            "number",
+            "integer",
+            "boolean",
+            "array",
+            "object",
+            "urn",
+            "enum"
+          ]
         },
         "required": {
           "type": "boolean",
@@ -224,38 +261,66 @@
           "type": "string",
           "description": "Regex pattern for string validation"
         },
-        "minLength": {"type": "integer"},
-        "maxLength": {"type": "integer"},
-        "min": {"type": "number"},
-        "max": {"type": "number"},
+        "minLength": {
+          "type": "integer"
+        },
+        "maxLength": {
+          "type": "integer"
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
         "values": {
           "type": "array",
           "description": "Enum values",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "items": {
           "type": "string",
           "description": "Array item type"
         },
-        "description": {"type": "string"}
+        "description": {
+          "type": "string"
+        }
       }
     },
     "restEndpoint": {
       "type": "object",
-      "required": ["method", "path", "description"],
+      "required": [
+        "method",
+        "path",
+        "description"
+      ],
       "properties": {
         "method": {
           "type": "string",
-          "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE"
+          ]
         },
         "path": {
           "type": "string",
           "description": "Endpoint path with parameters (e.g., /decisions/:id)"
         },
-        "description": {"type": "string"},
+        "description": {
+          "type": "string"
+        },
         "auth": {
           "type": "string",
-          "enum": ["required", "optional", "none"]
+          "enum": [
+            "required",
+            "optional",
+            "none"
+          ]
         },
         "authorityRequired": {
           "type": "integer",
@@ -265,74 +330,123 @@
         "request": {
           "type": "object",
           "properties": {
-            "params": {"type": "object"},
-            "query": {"type": "object"},
-            "body": {"type": "object"}
+            "params": {
+              "type": "object"
+            },
+            "query": {
+              "type": "object"
+            },
+            "body": {
+              "type": "object"
+            }
           }
         },
         "response": {
           "type": "object",
           "properties": {
-            "200": {"type": "object"},
-            "400": {"type": "object"},
-            "401": {"type": "object"},
-            "404": {"type": "object"},
-            "500": {"type": "object"}
+            "200": {
+              "type": "object"
+            },
+            "400": {
+              "type": "object"
+            },
+            "401": {
+              "type": "object"
+            },
+            "404": {
+              "type": "object"
+            },
+            "500": {
+              "type": "object"
+            }
           }
         }
       }
     },
     "graphqlResolver": {
       "type": "object",
-      "required": ["name", "returnType"],
+      "required": [
+        "name",
+        "returnType"
+      ],
       "properties": {
-        "name": {"type": "string"},
-        "description": {"type": "string"},
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
         "args": {
           "type": "object",
-          "additionalProperties": {"type": "string"}
+          "additionalProperties": {
+            "type": "string"
+          }
         },
-        "returnType": {"type": "string"},
-        "authorityRequired": {"type": "integer"}
+        "returnType": {
+          "type": "string"
+        },
+        "authorityRequired": {
+          "type": "integer"
+        }
       }
     },
     "middleware": {
       "type": "object",
-      "required": ["name", "description"],
+      "required": [
+        "name",
+        "description"
+      ],
       "properties": {
-        "name": {"type": "string"},
-        "description": {"type": "string"},
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
         "appliesTo": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
-        "config": {"type": "object"}
+        "config": {
+          "type": "object"
+        }
       }
     },
     "eventDefinition": {
       "type": "object",
-      "required": ["name", "description"],
+      "required": [
+        "name",
+        "description"
+      ],
       "properties": {
         "name": {
           "type": "string",
           "description": "Event name (SCREAMING_SNAKE_CASE)",
           "pattern": "^[A-Z][A-Z0-9_]*$"
         },
-        "description": {"type": "string"},
+        "description": {
+          "type": "string"
+        },
         "payload": {
           "type": "object",
           "additionalProperties": true
         },
         "emittedBy": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
     "dataType": {
       "type": "object",
       "properties": {
-        "description": {"type": "string"},
+        "description": {
+          "type": "string"
+        },
         "fields": {
           "type": "object",
           "additionalProperties": true

@@ -1,18 +1,34 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/pm/decision.schema.json",
+  "$id": "https://schemas.luh.tech/pm/decision.schema.json",
   "title": "PM Decision Schema",
   "description": "Construction project decision with voxel attachment and 7-tier authority cascade. Part of the Ectropy PM Core system.",
   "type": "object",
-  "required": ["$id", "$schema", "schemaVersion", "decisionId", "title", "type", "status", "authorityLevel", "voxelRef"],
+  "required": [
+    "$id",
+    "$schema",
+    "schemaVersion",
+    "decisionId",
+    "title",
+    "type",
+    "status",
+    "authorityLevel",
+    "voxelRef"
+  ],
   "definitions": {
     "_metadata": {
       "type": "object",
       "description": "Schema metadata - not for validation",
       "properties": {
-        "version": { "const": "3.0.0" },
-        "lastUpdated": { "const": "2026-01-06" },
-        "maintainer": { "const": "LuhTech Enterprise Infrastructure" },
+        "version": {
+          "const": "3.0.0"
+        },
+        "lastUpdated": {
+          "const": "2026-01-06"
+        },
+        "maintainer": {
+          "const": "LuhTech Enterprise Infrastructure"
+        },
         "relatedSchemas": {
           "const": [
             "voxel.schema.json",
@@ -33,13 +49,17 @@
       "properties": {
         "inEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true,
           "description": "URNs of entities pointing TO this decision"
         },
         "outEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true,
           "description": "URNs of entities this decision points TO"
         },
@@ -48,14 +68,33 @@
           "description": "Detailed edge definitions",
           "items": {
             "type": "object",
-            "required": ["from", "to", "type"],
+            "required": [
+              "from",
+              "to",
+              "type"
+            ],
             "properties": {
-              "from": { "$ref": "#/definitions/urn" },
-              "to": { "$ref": "#/definitions/urn" },
-              "type": { "$ref": "#/definitions/pmEdgeType" },
-              "weight": { "type": "number", "minimum": 0, "maximum": 1 },
-              "label": { "type": "string" },
-              "createdAt": { "type": "string", "format": "date-time" }
+              "from": {
+                "$ref": "#/definitions/urn"
+              },
+              "to": {
+                "$ref": "#/definitions/urn"
+              },
+              "type": {
+                "$ref": "#/definitions/pmEdgeType"
+              },
+              "weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "label": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              }
             }
           }
         }
@@ -63,15 +102,39 @@
     },
     "pmEdgeType": {
       "type": "string",
-      "enum": ["contains", "triggers", "proposes", "escalates-to", "validates", "authored-by", "approved-by", "affects", "supersedes", "references"]
+      "enum": [
+        "contains",
+        "triggers",
+        "proposes",
+        "escalates-to",
+        "validates",
+        "authored-by",
+        "approved-by",
+        "affects",
+        "supersedes",
+        "references"
+      ]
     },
     "pmDecisionType": {
       "type": "string",
-      "enum": ["APPROVAL", "REJECTION", "DEFERRAL", "ESCALATION", "PROPOSAL", "CONSEQUENCE"]
+      "enum": [
+        "APPROVAL",
+        "REJECTION",
+        "DEFERRAL",
+        "ESCALATION",
+        "PROPOSAL",
+        "CONSEQUENCE"
+      ]
     },
     "pmDecisionStatus": {
       "type": "string",
-      "enum": ["PENDING", "APPROVED", "REJECTED", "SUPERSEDED", "EXPIRED"]
+      "enum": [
+        "PENDING",
+        "APPROVED",
+        "REJECTED",
+        "SUPERSEDED",
+        "EXPIRED"
+      ]
     },
     "authorityLevelNumber": {
       "type": "integer",
@@ -113,7 +176,11 @@
           "properties": {
             "syncDirection": {
               "type": "string",
-              "enum": ["v3-is-source-of-truth", "bidirectional", "v1-is-source"]
+              "enum": [
+                "v3-is-source-of-truth",
+                "bidirectional",
+                "v1-is-source"
+              ]
             },
             "lastSync": {
               "type": "string",
@@ -149,7 +216,10 @@
     },
     "authorityLevel": {
       "type": "object",
-      "required": ["required", "current"],
+      "required": [
+        "required",
+        "current"
+      ],
       "properties": {
         "required": {
           "$ref": "#/definitions/authorityLevelNumber",
@@ -173,54 +243,102 @@
       "type": "object",
       "description": "Spatial context for the decision",
       "properties": {
-        "voxelId": { "type": "string" },
+        "voxelId": {
+          "type": "string"
+        },
         "coordinates": {
           "type": "object",
           "properties": {
-            "x": { "type": "number" },
-            "y": { "type": "number" },
-            "z": { "type": "number" }
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            }
           }
         },
-        "building": { "type": "string" },
-        "level": { "type": "string" },
-        "zone": { "type": "string" },
-        "system": { "type": "string" },
-        "gridReference": { "type": "string" }
+        "building": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string"
+        },
+        "zone": {
+          "type": "string"
+        },
+        "system": {
+          "type": "string"
+        },
+        "gridReference": {
+          "type": "string"
+        }
       }
     },
     "budgetImpact": {
       "type": "object",
       "properties": {
-        "estimated": { "type": "number", "description": "Estimated cost impact" },
-        "actual": { "type": "number", "description": "Actual cost (after completion)" },
-        "currency": { "type": "string", "default": "USD" },
-        "variance": { "type": "number", "description": "Difference between estimated and actual" }
+        "estimated": {
+          "type": "number",
+          "description": "Estimated cost impact"
+        },
+        "actual": {
+          "type": "number",
+          "description": "Actual cost (after completion)"
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        },
+        "variance": {
+          "type": "number",
+          "description": "Difference between estimated and actual"
+        }
       }
     },
     "scheduleImpact": {
       "type": "object",
       "properties": {
-        "delayDays": { "type": "integer", "description": "Days of delay caused" },
+        "delayDays": {
+          "type": "integer",
+          "description": "Days of delay caused"
+        },
         "affectedMilestones": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "description": "Milestones impacted by this decision"
         },
-        "criticalPath": { "type": "boolean", "description": "Whether this affects critical path" }
+        "criticalPath": {
+          "type": "boolean",
+          "description": "Whether this affects critical path"
+        }
       }
     },
     "participants": {
       "type": "object",
       "description": "People involved in this decision",
       "properties": {
-        "requestedBy": { "$ref": "#/definitions/urn" },
-        "approvedBy": { "$ref": "#/definitions/urn" },
-        "rejectedBy": { "$ref": "#/definitions/urn" },
-        "escalatedTo": { "$ref": "#/definitions/urn" },
+        "requestedBy": {
+          "$ref": "#/definitions/urn"
+        },
+        "approvedBy": {
+          "$ref": "#/definitions/urn"
+        },
+        "rejectedBy": {
+          "$ref": "#/definitions/urn"
+        },
+        "escalatedTo": {
+          "$ref": "#/definitions/urn"
+        },
         "reviewers": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" }
+          "items": {
+            "$ref": "#/definitions/urn"
+          }
         }
       }
     },
@@ -229,27 +347,52 @@
       "description": "Supporting evidence for this decision",
       "items": {
         "type": "object",
-        "required": ["type", "uri"],
+        "required": [
+          "type",
+          "uri"
+        ],
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["photo", "document", "voice-note", "video", "measurement", "drawing", "model"]
+            "enum": [
+              "photo",
+              "document",
+              "voice-note",
+              "video",
+              "measurement",
+              "drawing",
+              "model"
+            ]
           },
-          "uri": { "type": "string", "format": "uri" },
-          "timestamp": { "type": "string", "format": "date-time" },
-          "capturedBy": { "$ref": "#/definitions/urn" },
-          "description": { "type": "string" }
+          "uri": {
+            "type": "string",
+            "format": "uri"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "capturedBy": {
+            "$ref": "#/definitions/urn"
+          },
+          "description": {
+            "type": "string"
+          }
         }
       }
     },
     "consequences": {
       "type": "array",
-      "items": { "$ref": "#/definitions/urn" },
+      "items": {
+        "$ref": "#/definitions/urn"
+      },
       "description": "URN references to consequence records triggered by this decision"
     },
     "relatedDecisions": {
       "type": "array",
-      "items": { "$ref": "#/definitions/urn" },
+      "items": {
+        "$ref": "#/definitions/urn"
+      },
       "description": "URN references to related PM decisions"
     },
     "scheduleProposal": {
@@ -259,12 +402,30 @@
     "timestamps": {
       "type": "object",
       "properties": {
-        "createdAt": { "type": "string", "format": "date-time" },
-        "updatedAt": { "type": "string", "format": "date-time" },
-        "approvedAt": { "type": "string", "format": "date-time" },
-        "rejectedAt": { "type": "string", "format": "date-time" },
-        "expiredAt": { "type": "string", "format": "date-time" },
-        "escalatedAt": { "type": "string", "format": "date-time" }
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "approvedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "rejectedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expiredAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "escalatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
     "graphMetadata": {

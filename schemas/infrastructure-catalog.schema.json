@@ -1,10 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/infrastructure-catalog-v1.json",
+  "$id": "https://schemas.luh.tech/infrastructure-catalog.schema.json",
   "title": "Infrastructure Catalog",
   "description": "Standardized infrastructure documentation for LuhTech ventures. Provides service registry, environment configuration, secrets management, workflow documentation, and deployment specifications. Derived from Ectropy production infrastructure (202KB, v2.12.0). Updated v1.1.0: Added portfolioWorkflowsRef for cross-repo workflow discovery.",
   "type": "object",
-  "required": ["$schema", "version", "ventureId", "lastUpdated", "catalog"],
+  "required": [
+    "$schema",
+    "version",
+    "ventureId",
+    "lastUpdated",
+    "catalog"
+  ],
   "additionalProperties": false,
   "properties": {
     "$schema": {
@@ -17,7 +23,7 @@
       "description": "Catalog version (semver)"
     },
     "ventureId": {
-      "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/ventureId"
+      "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/ventureId"
     },
     "lastUpdated": {
       "type": "string",
@@ -26,39 +32,54 @@
     },
     "catalog": {
       "type": "object",
-      "required": ["environments", "services"],
+      "required": [
+        "environments",
+        "services"
+      ],
       "additionalProperties": false,
       "properties": {
         "environments": {
           "type": "array",
           "description": "Deployment environments",
-          "items": {"$ref": "#/definitions/environment"},
+          "items": {
+            "$ref": "#/definitions/environment"
+          },
           "minItems": 1
         },
         "services": {
           "type": "array",
           "description": "Service definitions",
-          "items": {"$ref": "#/definitions/service"}
+          "items": {
+            "$ref": "#/definitions/service"
+          }
         },
         "ports": {
           "type": "object",
           "description": "Port allocation matrix by service",
-          "additionalProperties": {"$ref": "#/definitions/portAllocation"}
+          "additionalProperties": {
+            "$ref": "#/definitions/portAllocation"
+          }
         },
         "environmentVariables": {
           "type": "array",
           "description": "Environment variable definitions",
-          "items": {"$ref": "#/definitions/envVariable"}
+          "items": {
+            "$ref": "#/definitions/envVariable"
+          }
         },
         "secrets": {
           "type": "array",
           "description": "Secret definitions with rotation policies",
-          "items": {"$ref": "#/definitions/secret"}
+          "items": {
+            "$ref": "#/definitions/secret"
+          }
         },
         "workflows": {
           "type": "array",
           "description": "CI/CD workflow definitions (venture-specific)",
-          "items": {"$ref": "#/definitions/workflow"}
+          "items": {
+            "$ref": "#/definitions/workflow"
+          }
         },
         "portfolioWorkflowsRef": {
           "$ref": "#/definitions/portfolioWorkflowsRef"
@@ -66,46 +87,62 @@
         "compositeActions": {
           "type": "array",
           "description": "Reusable GitHub Actions",
-          "items": {"$ref": "#/definitions/compositeAction"}
+          "items": {
+            "$ref": "#/definitions/compositeAction"
+          }
         },
         "deploymentScripts": {
           "type": "array",
           "description": "Deployment script specifications",
-          "items": {"$ref": "#/definitions/deploymentScript"}
+          "items": {
+            "$ref": "#/definitions/deploymentScript"
+          }
         },
         "dockerCompose": {
           "type": "array",
           "description": "Docker Compose file inventory",
-          "items": {"$ref": "#/definitions/dockerComposeFile"}
+          "items": {
+            "$ref": "#/definitions/dockerComposeFile"
+          }
         },
         "databases": {
           "type": "array",
           "description": "Database configurations",
-          "items": {"$ref": "#/definitions/database"}
+          "items": {
+            "$ref": "#/definitions/database"
+          }
         },
         "externalServices": {
           "type": "array",
           "description": "Third-party service integrations",
-          "items": {"$ref": "#/definitions/externalService"}
+          "items": {
+            "$ref": "#/definitions/externalService"
+          }
         }
       }
     },
     "auditTrail": {
       "type": "array",
       "description": "Version history and changes",
-      "items": {"$ref": "#/definitions/auditEntry"}
+      "items": {
+        "$ref": "#/definitions/auditEntry"
+      }
     },
     "notes": {
       "type": "array",
       "description": "Infrastructure notes and annotations",
-      "items": {"$ref": "https://luhtech.dev/schemas/definitions.json#/definitions/note"}
+      "items": {
+        "$ref": "https://schemas.luh.tech/_definitions/definitions.schema.json#/definitions/note"
+      }
     }
   },
   "definitions": {
     "portfolioWorkflowsRef": {
       "type": "object",
       "description": "Reference to portfolio-level workflow registry in business-tools. Enables ventures to discover and invoke portfolio-wide operations (validate, aggregate, generate) without duplicating workflow definitions.",
-      "required": ["$ref"],
+      "required": [
+        "$ref"
+      ],
       "additionalProperties": false,
       "properties": {
         "$ref": {
@@ -135,7 +172,11 @@
     "environment": {
       "type": "object",
       "description": "Deployment environment definition",
-      "required": ["id", "name", "type"],
+      "required": [
+        "id",
+        "name",
+        "type"
+      ],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -149,7 +190,13 @@
         },
         "type": {
           "type": "string",
-          "enum": ["development", "staging", "production", "preview", "testing"],
+          "enum": [
+            "development",
+            "staging",
+            "production",
+            "preview",
+            "testing"
+          ],
           "description": "Environment type"
         },
         "url": {
@@ -160,12 +207,16 @@
         "servers": {
           "type": "array",
           "description": "Associated server configurations",
-          "items": {"$ref": "#/definitions/server"}
+          "items": {
+            "$ref": "#/definitions/server"
+          }
         },
         "features": {
           "type": "object",
           "description": "Environment-specific feature flags",
-          "additionalProperties": {"type": "boolean"}
+          "additionalProperties": {
+            "type": "boolean"
+          }
         },
         "notes": {
           "type": "string",
@@ -176,7 +227,10 @@
     "server": {
       "type": "object",
       "description": "Server configuration",
-      "required": ["id", "name"],
+      "required": [
+        "id",
+        "name"
+      ],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -188,7 +242,17 @@
         },
         "provider": {
           "type": "string",
-          "enum": ["digitalocean", "aws", "gcp", "azure", "vercel", "railway", "fly", "render", "self-hosted"],
+          "enum": [
+            "digitalocean",
+            "aws",
+            "gcp",
+            "azure",
+            "vercel",
+            "railway",
+            "fly",
+            "render",
+            "self-hosted"
+          ],
           "description": "Cloud provider"
         },
         "region": {
@@ -198,10 +262,18 @@
         "specs": {
           "type": "object",
           "properties": {
-            "cpu": {"type": "string"},
-            "memory": {"type": "string"},
-            "storage": {"type": "string"},
-            "os": {"type": "string"}
+            "cpu": {
+              "type": "string"
+            },
+            "memory": {
+              "type": "string"
+            },
+            "storage": {
+              "type": "string"
+            },
+            "os": {
+              "type": "string"
+            }
           }
         },
         "ip": {
@@ -211,13 +283,20 @@
         "sshConfig": {
           "type": "object",
           "properties": {
-            "user": {"type": "string"},
-            "keyRef": {"type": "string", "description": "Reference to SSH key secret"}
+            "user": {
+              "type": "string"
+            },
+            "keyRef": {
+              "type": "string",
+              "description": "Reference to SSH key secret"
+            }
           }
         },
         "services": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Service IDs deployed on this server"
         }
       }
@@ -225,7 +304,11 @@
     "service": {
       "type": "object",
       "description": "Service definition",
-      "required": ["id", "name", "type"],
+      "required": [
+        "id",
+        "name",
+        "type"
+      ],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -269,9 +352,15 @@
         "ports": {
           "type": "object",
           "properties": {
-            "internal": {"type": "integer"},
-            "external": {"type": "integer"},
-            "health": {"type": "integer"}
+            "internal": {
+              "type": "integer"
+            },
+            "external": {
+              "type": "integer"
+            },
+            "health": {
+              "type": "integer"
+            }
           }
         },
         "healthCheck": {
@@ -279,12 +368,16 @@
         },
         "dependencies": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Service IDs this service depends on"
         },
         "environment": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Required environment variable names"
         },
         "volumes": {
@@ -292,22 +385,44 @@
           "items": {
             "type": "object",
             "properties": {
-              "name": {"type": "string"},
-              "path": {"type": "string"},
-              "type": {"type": "string", "enum": ["persistent", "config", "secret", "temp"]}
+              "name": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "persistent",
+                  "config",
+                  "secret",
+                  "temp"
+                ]
+              }
             }
           }
         },
         "scaling": {
           "type": "object",
           "properties": {
-            "minReplicas": {"type": "integer", "minimum": 0},
-            "maxReplicas": {"type": "integer", "minimum": 1},
-            "targetCPU": {"type": "integer", "minimum": 1, "maximum": 100}
+            "minReplicas": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "maxReplicas": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "targetCPU": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
           }
         },
         "status": {
-          "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/serviceStatus"
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/serviceStatus"
         }
       }
     },
@@ -361,7 +476,13 @@
         },
         "protocol": {
           "type": "string",
-          "enum": ["tcp", "udp", "http", "https", "grpc"],
+          "enum": [
+            "tcp",
+            "udp",
+            "http",
+            "https",
+            "grpc"
+          ],
           "default": "tcp"
         }
       }
@@ -369,7 +490,10 @@
     "envVariable": {
       "type": "object",
       "description": "Environment variable definition",
-      "required": ["name", "category"],
+      "required": [
+        "name",
+        "category"
+      ],
       "additionalProperties": false,
       "properties": {
         "name": {
@@ -393,7 +517,11 @@
         },
         "scope": {
           "type": "string",
-          "enum": ["build-time", "runtime", "both"],
+          "enum": [
+            "build-time",
+            "runtime",
+            "both"
+          ],
           "default": "runtime"
         },
         "required": {
@@ -414,16 +542,29 @@
         },
         "services": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Services that use this variable"
         },
         "validation": {
           "type": "object",
           "properties": {
-            "pattern": {"type": "string"},
-            "enum": {"type": "array", "items": {"type": "string"}},
-            "minLength": {"type": "integer"},
-            "maxLength": {"type": "integer"}
+            "pattern": {
+              "type": "string"
+            },
+            "enum": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "minLength": {
+              "type": "integer"
+            },
+            "maxLength": {
+              "type": "integer"
+            }
           }
         }
       }
@@ -431,7 +572,10 @@
     "secret": {
       "type": "object",
       "description": "Secret definition (no actual values stored)",
-      "required": ["name", "scope"],
+      "required": [
+        "name",
+        "scope"
+      ],
       "additionalProperties": false,
       "properties": {
         "name": {
@@ -440,12 +584,18 @@
         },
         "scope": {
           "type": "string",
-          "enum": ["repository", "organization", "environment"],
+          "enum": [
+            "repository",
+            "organization",
+            "environment"
+          ],
           "description": "GitHub secret scope"
         },
         "environments": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Environments where secret is available"
         },
         "rotationPolicy": {
@@ -453,7 +603,12 @@
           "properties": {
             "frequency": {
               "type": "string",
-              "enum": ["never", "monthly", "quarterly", "annually"],
+              "enum": [
+                "never",
+                "monthly",
+                "quarterly",
+                "annually"
+              ],
               "default": "quarterly"
             },
             "lastRotated": {
@@ -472,7 +627,13 @@
         },
         "provider": {
           "type": "string",
-          "enum": ["github-secrets", "vault", "aws-secrets-manager", "doppler", "manual"],
+          "enum": [
+            "github-secrets",
+            "vault",
+            "aws-secrets-manager",
+            "doppler",
+            "manual"
+          ],
           "default": "github-secrets"
         },
         "description": {
@@ -480,7 +641,9 @@
         },
         "usedBy": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Workflow or service references"
         }
       }
@@ -488,7 +651,10 @@
     "workflow": {
       "type": "object",
       "description": "CI/CD workflow definition",
-      "required": ["name", "file"],
+      "required": [
+        "name",
+        "file"
+      ],
       "additionalProperties": false,
       "properties": {
         "name": {
@@ -515,12 +681,16 @@
         },
         "branches": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Branch filters"
         },
         "paths": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Path filters"
         },
         "maturity": {
@@ -537,15 +707,23 @@
           "items": {
             "type": "object",
             "properties": {
-              "name": {"type": "string"},
-              "runsOn": {"type": "string"},
-              "steps": {"type": "integer"}
+              "name": {
+                "type": "string"
+              },
+              "runsOn": {
+                "type": "string"
+              },
+              "steps": {
+                "type": "integer"
+              }
             }
           }
         },
         "secrets": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Required secret names"
         },
         "permissions": {
@@ -553,7 +731,11 @@
           "description": "Required GitHub permissions",
           "additionalProperties": {
             "type": "string",
-            "enum": ["read", "write", "none"]
+            "enum": [
+              "read",
+              "write",
+              "none"
+            ]
           }
         },
         "estimatedDuration": {
@@ -565,7 +747,10 @@
     "compositeAction": {
       "type": "object",
       "description": "Reusable GitHub Action",
-      "required": ["name", "path"],
+      "required": [
+        "name",
+        "path"
+      ],
       "additionalProperties": false,
       "properties": {
         "name": {
@@ -583,10 +768,18 @@
           "items": {
             "type": "object",
             "properties": {
-              "name": {"type": "string"},
-              "required": {"type": "boolean"},
-              "default": {"type": "string"},
-              "description": {"type": "string"}
+              "name": {
+                "type": "string"
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "default": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
             }
           }
         },
@@ -595,14 +788,20 @@
           "items": {
             "type": "object",
             "properties": {
-              "name": {"type": "string"},
-              "description": {"type": "string"}
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
             }
           }
         },
         "usedBy": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Workflows that use this action"
         }
       }
@@ -610,7 +809,10 @@
     "deploymentScript": {
       "type": "object",
       "description": "Deployment script specification",
-      "required": ["name", "path"],
+      "required": [
+        "name",
+        "path"
+      ],
       "additionalProperties": false,
       "properties": {
         "name": {
@@ -624,11 +826,18 @@
         },
         "targetEnvironment": {
           "type": "string",
-          "enum": ["development", "staging", "production", "all"]
+          "enum": [
+            "development",
+            "staging",
+            "production",
+            "all"
+          ]
         },
         "preConditions": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Required conditions before execution"
         },
         "features": {
@@ -651,14 +860,17 @@
           "type": "string"
         },
         "riskLevel": {
-          "$ref": "https://luhtech.dev/schemas/enums.json#/definitions/riskLevel"
+          "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/riskLevel"
         }
       }
     },
     "dockerComposeFile": {
       "type": "object",
       "description": "Docker Compose file specification",
-      "required": ["name", "path"],
+      "required": [
+        "name",
+        "path"
+      ],
       "additionalProperties": false,
       "properties": {
         "name": {
@@ -669,20 +881,33 @@
         },
         "purpose": {
           "type": "string",
-          "enum": ["development", "testing", "production", "ci", "base", "override"]
+          "enum": [
+            "development",
+            "testing",
+            "production",
+            "ci",
+            "base",
+            "override"
+          ]
         },
         "services": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Service IDs defined in this file"
         },
         "networks": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "volumes": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "extends": {
           "type": "string",
@@ -693,7 +918,11 @@
     "database": {
       "type": "object",
       "description": "Database configuration",
-      "required": ["id", "name", "type"],
+      "required": [
+        "id",
+        "name",
+        "type"
+      ],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -705,7 +934,15 @@
         },
         "type": {
           "type": "string",
-          "enum": ["postgresql", "mysql", "mongodb", "redis", "sqlite", "neo4j", "elasticsearch"]
+          "enum": [
+            "postgresql",
+            "mysql",
+            "mongodb",
+            "redis",
+            "sqlite",
+            "neo4j",
+            "elasticsearch"
+          ]
         },
         "version": {
           "type": "string"
@@ -725,14 +962,22 @@
         "backupPolicy": {
           "type": "object",
           "properties": {
-            "frequency": {"type": "string"},
-            "retention": {"type": "string"},
-            "location": {"type": "string"}
+            "frequency": {
+              "type": "string"
+            },
+            "retention": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            }
           }
         },
         "extensions": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Database extensions (e.g., PostGIS, pgvector)"
         }
       }
@@ -740,7 +985,11 @@
     "externalService": {
       "type": "object",
       "description": "Third-party service integration",
-      "required": ["id", "name", "category"],
+      "required": [
+        "id",
+        "name",
+        "category"
+      ],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -779,12 +1028,19 @@
         },
         "pricing": {
           "type": "string",
-          "enum": ["free", "freemium", "paid", "enterprise"],
+          "enum": [
+            "free",
+            "freemium",
+            "paid",
+            "enterprise"
+          ],
           "description": "Pricing tier"
         },
         "credentialRefs": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Secret names for credentials"
         }
       }
@@ -792,7 +1048,11 @@
     "auditEntry": {
       "type": "object",
       "description": "Catalog version audit entry",
-      "required": ["timestamp", "version", "author"],
+      "required": [
+        "timestamp",
+        "version",
+        "author"
+      ],
       "additionalProperties": false,
       "properties": {
         "timestamp": {
@@ -808,16 +1068,22 @@
         },
         "changes": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Summary of changes"
         },
         "relatedPRs": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "relatedIssues": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       }
     }

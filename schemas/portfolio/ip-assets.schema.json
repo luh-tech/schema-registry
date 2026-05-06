@@ -1,10 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/ip-assets-v1.json",
+  "$id": "https://schemas.luh.tech/portfolio/ip-assets.schema.json",
   "title": "LuhTech IP Assets Registry",
   "description": "Comprehensive intellectual property tracking for all portfolio ventures including patents, trademarks, copyrights, and trade secrets.",
   "type": "object",
-  "required": ["$schema", "schemaVersion", "meta", "assets"],
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "meta",
+    "assets"
+  ],
   "properties": {
     "$schema": {
       "type": "string",
@@ -16,7 +21,9 @@
     },
     "meta": {
       "type": "object",
-      "required": ["lastUpdated"],
+      "required": [
+        "lastUpdated"
+      ],
       "properties": {
         "lastUpdated": {
           "type": "string",
@@ -50,7 +57,13 @@
   "definitions": {
     "ipAsset": {
       "type": "object",
-      "required": ["id", "type", "status", "title", "ventureId"],
+      "required": [
+        "id",
+        "type",
+        "status",
+        "title",
+        "ventureId"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -59,12 +72,25 @@
         },
         "type": {
           "type": "string",
-          "enum": ["patent", "trademark", "copyright", "trade-secret"],
+          "enum": [
+            "patent",
+            "trademark",
+            "copyright",
+            "trade-secret"
+          ],
           "description": "IP type classification"
         },
         "status": {
           "type": "string",
-          "enum": ["filed", "pending", "granted", "active", "expired", "abandoned", "provisional"],
+          "enum": [
+            "filed",
+            "pending",
+            "granted",
+            "active",
+            "expired",
+            "abandoned",
+            "provisional"
+          ],
           "description": "Current IP status"
         },
         "title": {
@@ -80,7 +106,6 @@
           "type": "string",
           "description": "Legal assignee entity"
         },
-
         "patent": {
           "type": "object",
           "description": "Patent-specific details",
@@ -107,7 +132,9 @@
             },
             "inventors": {
               "type": "array",
-              "items": {"type": "string"}
+              "items": {
+                "type": "string"
+              }
             },
             "claims": {
               "type": "array",
@@ -115,32 +142,49 @@
               "items": {
                 "type": "object",
                 "properties": {
-                  "number": {"type": "integer"},
-                  "type": {"type": "string", "enum": ["independent", "dependent"]},
-                  "summary": {"type": "string"}
+                  "number": {
+                    "type": "integer"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "independent",
+                      "dependent"
+                    ]
+                  },
+                  "summary": {
+                    "type": "string"
+                  }
                 }
               }
             },
             "classifications": {
               "type": "array",
               "description": "Patent classifications (CPC, IPC)",
-              "items": {"type": "string"}
+              "items": {
+                "type": "string"
+              }
             },
             "citations": {
               "type": "object",
               "properties": {
-                "citedBy": {"type": "integer"},
-                "cites": {"type": "integer"}
+                "citedBy": {
+                  "type": "integer"
+                },
+                "cites": {
+                  "type": "integer"
+                }
               }
             },
             "family": {
               "type": "array",
               "description": "Related patent family members",
-              "items": {"type": "string"}
+              "items": {
+                "type": "string"
+              }
             }
           }
         },
-
         "trademark": {
           "type": "object",
           "description": "Trademark-specific details",
@@ -157,12 +201,20 @@
             },
             "markType": {
               "type": "string",
-              "enum": ["wordmark", "logo", "combined", "sound", "color"]
+              "enum": [
+                "wordmark",
+                "logo",
+                "combined",
+                "sound",
+                "color"
+              ]
             },
             "classes": {
               "type": "array",
               "description": "Nice Classification classes",
-              "items": {"type": "integer"}
+              "items": {
+                "type": "integer"
+              }
             },
             "filingDate": {
               "type": "string",
@@ -178,7 +230,6 @@
             }
           }
         },
-
         "copyright": {
           "type": "object",
           "description": "Copyright-specific details",
@@ -188,7 +239,13 @@
             },
             "workType": {
               "type": "string",
-              "enum": ["software", "documentation", "artwork", "video", "audio"]
+              "enum": [
+                "software",
+                "documentation",
+                "artwork",
+                "video",
+                "audio"
+              ]
             },
             "creationDate": {
               "type": "string",
@@ -200,26 +257,41 @@
             },
             "authors": {
               "type": "array",
-              "items": {"type": "string"}
+              "items": {
+                "type": "string"
+              }
             }
           }
         },
-
         "tradeSecret": {
           "type": "object",
           "description": "Trade secret details",
           "properties": {
             "category": {
               "type": "string",
-              "enum": ["algorithm", "process", "formula", "design", "customer-list", "business-method"]
+              "enum": [
+                "algorithm",
+                "process",
+                "formula",
+                "design",
+                "customer-list",
+                "business-method"
+              ]
             },
             "protectionMeasures": {
               "type": "array",
-              "items": {"type": "string"}
+              "items": {
+                "type": "string"
+              }
             },
             "accessLevel": {
               "type": "string",
-              "enum": ["founder-only", "executive", "team", "nda-required"]
+              "enum": [
+                "founder-only",
+                "executive",
+                "team",
+                "nda-required"
+              ]
             },
             "documentedDate": {
               "type": "string",
@@ -227,14 +299,15 @@
             }
           }
         },
-
         "jurisdiction": {
           "type": "string",
           "description": "Primary jurisdiction"
         },
         "additionalJurisdictions": {
           "type": "array",
-          "items": {"type": "string"},
+          "items": {
+            "type": "string"
+          },
           "description": "Additional filing jurisdictions"
         },
         "link": {
@@ -245,15 +318,25 @@
         "internalDocuments": {
           "type": "array",
           "description": "Internal documentation links",
-          "items": {"type": "string", "format": "uri"}
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
         },
         "value": {
           "type": "object",
           "description": "IP valuation",
           "properties": {
-            "estimate": {"type": "string"},
-            "method": {"type": "string"},
-            "date": {"type": "string", "format": "date"}
+            "estimate": {
+              "type": "string"
+            },
+            "method": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string",
+              "format": "date"
+            }
           }
         },
         "notes": {
@@ -261,17 +344,26 @@
         }
       }
     },
-
     "pendingFiling": {
       "type": "object",
-      "required": ["id", "type", "title", "ventureId", "targetDate"],
+      "required": [
+        "id",
+        "type",
+        "title",
+        "ventureId",
+        "targetDate"
+      ],
       "properties": {
         "id": {
           "type": "string"
         },
         "type": {
           "type": "string",
-          "enum": ["patent", "trademark", "copyright"]
+          "enum": [
+            "patent",
+            "trademark",
+            "copyright"
+          ]
         },
         "title": {
           "type": "string"
@@ -288,11 +380,21 @@
         },
         "priority": {
           "type": "string",
-          "enum": ["critical", "high", "medium", "low"]
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low"
+          ]
         },
         "status": {
           "type": "string",
-          "enum": ["research", "drafting", "review", "ready-to-file"]
+          "enum": [
+            "research",
+            "drafting",
+            "review",
+            "ready-to-file"
+          ]
         },
         "assignedTo": {
           "type": "string"
@@ -302,7 +404,6 @@
         }
       }
     },
-
     "ipStrategy": {
       "type": "object",
       "description": "Portfolio IP strategy",
@@ -317,16 +418,27 @@
           "items": {
             "type": "object",
             "properties": {
-              "area": {"type": "string"},
-              "rationale": {"type": "string"},
-              "ventures": {"type": "array", "items": {"type": "string"}}
+              "area": {
+                "type": "string"
+              },
+              "rationale": {
+                "type": "string"
+              },
+              "ventures": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
         "defensivePositions": {
           "type": "array",
           "description": "Defensive IP positions",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "licensingStrategy": {
           "type": "string",

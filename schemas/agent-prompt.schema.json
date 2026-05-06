@@ -1,10 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/agent-prompt.json",
+  "$id": "https://schemas.luh.tech/agent-prompt.schema.json",
   "title": "Agent Prompt",
   "description": "Structured agent handoff and reference documentation for LuhTech ventures. Supports two modes: task-oriented prompts (with steps, success criteria, rollback plans) and reference documents (with patterns, anti-patterns, guidelines). Derived from Ectropy production agent-prompts: prisma-m3-completion.json and test-isolation-patterns.json.",
   "type": "object",
-  "required": ["$schema", "schemaVersion", "meta"],
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "meta"
+  ],
   "properties": {
     "$schema": {
       "type": "string",
@@ -95,7 +99,11 @@
     "meta": {
       "type": "object",
       "description": "Document metadata for tracking authorship, purpose, and scheduling",
-      "required": ["createdAt", "createdBy", "purpose"],
+      "required": [
+        "createdAt",
+        "createdBy",
+        "purpose"
+      ],
       "additionalProperties": false,
       "properties": {
         "createdAt": {
@@ -122,7 +130,13 @@
         },
         "priority": {
           "type": "string",
-          "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "REFERENCE"],
+          "enum": [
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "REFERENCE"
+          ],
           "description": "Task priority or document classification"
         },
         "decision": {
@@ -143,7 +157,10 @@
     "repoSplitConfirmation": {
       "type": "object",
       "description": "Confirmation that work can proceed relative to repository split status",
-      "required": ["canProceed", "rationale"],
+      "required": [
+        "canProceed",
+        "rationale"
+      ],
       "additionalProperties": false,
       "properties": {
         "canProceed": {
@@ -156,7 +173,11 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["source", "key", "value"],
+            "required": [
+              "source",
+              "key",
+              "value"
+            ],
             "additionalProperties": false,
             "properties": {
               "source": {
@@ -182,7 +203,9 @@
     "taskPhase": {
       "type": "object",
       "description": "A single phase within a task overview",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "properties": {
         "name": {
           "type": "string",
@@ -240,7 +263,10 @@
     "overview": {
       "type": "object",
       "description": "Document overview for reference-oriented prompts",
-      "required": ["title", "description"],
+      "required": [
+        "title",
+        "description"
+      ],
       "additionalProperties": false,
       "properties": {
         "title": {
@@ -262,7 +288,12 @@
     "agentPrompt": {
       "type": "object",
       "description": "Executable agent instructions",
-      "required": ["title", "instructions", "steps", "successCriteria"],
+      "required": [
+        "title",
+        "instructions",
+        "steps",
+        "successCriteria"
+      ],
       "additionalProperties": false,
       "properties": {
         "title": {
@@ -309,7 +340,10 @@
     "agentStep": {
       "type": "object",
       "description": "A single execution step within an agent prompt",
-      "required": ["step", "action"],
+      "required": [
+        "step",
+        "action"
+      ],
       "properties": {
         "step": {
           "type": "integer",
@@ -401,7 +435,10 @@
     "pattern": {
       "type": "object",
       "description": "A documented pattern for reference prompts",
-      "required": ["id", "name"],
+      "required": [
+        "id",
+        "name"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -454,7 +491,9 @@
     "antiPattern": {
       "type": "object",
       "description": "An anti-pattern to avoid",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "properties": {
         "name": {
           "type": "string"

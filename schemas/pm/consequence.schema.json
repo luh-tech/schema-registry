@@ -1,18 +1,33 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/pm/consequence.schema.json",
+  "$id": "https://schemas.luh.tech/pm/consequence.schema.json",
   "title": "Consequence Schema",
   "description": "Tracks downstream effects of PM decisions including schedule delays, cost increases, safety risks, and other impacts. Enables impact analysis and audit trails.",
   "type": "object",
-  "required": ["$id", "$schema", "schemaVersion", "consequenceId", "category", "severity", "sourceDecision", "status"],
+  "required": [
+    "$id",
+    "$schema",
+    "schemaVersion",
+    "consequenceId",
+    "category",
+    "severity",
+    "sourceDecision",
+    "status"
+  ],
   "definitions": {
     "_metadata": {
       "type": "object",
       "description": "Schema metadata - not for validation",
       "properties": {
-        "version": { "const": "3.0.0" },
-        "lastUpdated": { "const": "2026-01-06" },
-        "maintainer": { "const": "LuhTech Enterprise Infrastructure" },
+        "version": {
+          "const": "3.0.0"
+        },
+        "lastUpdated": {
+          "const": "2026-01-06"
+        },
+        "maintainer": {
+          "const": "LuhTech Enterprise Infrastructure"
+        },
         "relatedSchemas": {
           "const": [
             "decision.schema.json",
@@ -32,25 +47,45 @@
       "properties": {
         "inEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         },
         "outEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         },
         "edges": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["from", "to", "type"],
+            "required": [
+              "from",
+              "to",
+              "type"
+            ],
             "properties": {
-              "from": { "$ref": "#/definitions/urn" },
-              "to": { "$ref": "#/definitions/urn" },
-              "type": { "type": "string" },
-              "weight": { "type": "number", "minimum": 0, "maximum": 1 },
-              "label": { "type": "string" }
+              "from": {
+                "$ref": "#/definitions/urn"
+              },
+              "to": {
+                "$ref": "#/definitions/urn"
+              },
+              "type": {
+                "type": "string"
+              },
+              "weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "label": {
+                "type": "string"
+              }
             }
           }
         }
@@ -75,11 +110,24 @@
     },
     "consequenceSeverity": {
       "type": "string",
-      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ]
     },
     "consequenceStatus": {
       "type": "string",
-      "enum": ["IDENTIFIED", "ASSESSED", "MITIGATING", "MITIGATED", "ACCEPTED", "CLOSED", "ESCALATED"]
+      "enum": [
+        "IDENTIFIED",
+        "ASSESSED",
+        "MITIGATING",
+        "MITIGATED",
+        "ACCEPTED",
+        "CLOSED",
+        "ESCALATED"
+      ]
     }
   },
   "properties": {
@@ -97,15 +145,25 @@
     "meta": {
       "type": "object",
       "properties": {
-        "projectId": { "type": "string" },
-        "sourceOfTruth": { "type": "string" },
-        "lastUpdated": { "type": "string", "format": "date-time" },
+        "projectId": {
+          "type": "string"
+        },
+        "sourceOfTruth": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
         "syncStatus": {
           "type": "object",
           "properties": {
             "syncDirection": {
               "type": "string",
-              "enum": ["v3-is-source-of-truth", "bidirectional"]
+              "enum": [
+                "v3-is-source-of-truth",
+                "bidirectional"
+              ]
             }
           }
         }
@@ -133,7 +191,9 @@
     },
     "additionalCategories": {
       "type": "array",
-      "items": { "$ref": "#/definitions/consequenceCategory" },
+      "items": {
+        "$ref": "#/definitions/consequenceCategory"
+      },
       "description": "Secondary impact categories"
     },
     "severity": {
@@ -150,38 +210,69 @@
     },
     "relatedDecisions": {
       "type": "array",
-      "items": { "$ref": "#/definitions/urn" },
+      "items": {
+        "$ref": "#/definitions/urn"
+      },
       "description": "Other decisions related to this consequence"
     },
     "affectedVoxels": {
       "type": "array",
-      "items": { "$ref": "#/definitions/urn" },
+      "items": {
+        "$ref": "#/definitions/urn"
+      },
       "description": "Voxels impacted by this consequence"
     },
     "budgetImpact": {
       "type": "object",
       "properties": {
-        "amount": { "type": "number", "description": "Cost impact in currency units" },
-        "currency": { "type": "string", "default": "USD" },
-        "isConfirmed": { "type": "boolean", "description": "Whether cost is confirmed or estimated" },
+        "amount": {
+          "type": "number",
+          "description": "Cost impact in currency units"
+        },
+        "currency": {
+          "type": "string",
+          "default": "USD"
+        },
+        "isConfirmed": {
+          "type": "boolean",
+          "description": "Whether cost is confirmed or estimated"
+        },
         "costType": {
           "type": "string",
-          "enum": ["direct", "indirect", "contingency", "insurance"]
+          "enum": [
+            "direct",
+            "indirect",
+            "contingency",
+            "insurance"
+          ]
         },
-        "fundingSource": { "type": "string" }
+        "fundingSource": {
+          "type": "string"
+        }
       }
     },
     "scheduleImpact": {
       "type": "object",
       "properties": {
-        "delayDays": { "type": "integer", "description": "Days of schedule impact" },
+        "delayDays": {
+          "type": "integer",
+          "description": "Days of schedule impact"
+        },
         "affectedMilestones": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" }
+          "items": {
+            "$ref": "#/definitions/urn"
+          }
         },
-        "criticalPathImpact": { "type": "boolean" },
-        "recoveryPossible": { "type": "boolean" },
-        "recoveryPlan": { "type": "string" }
+        "criticalPathImpact": {
+          "type": "boolean"
+        },
+        "recoveryPossible": {
+          "type": "boolean"
+        },
+        "recoveryPlan": {
+          "type": "string"
+        }
       }
     },
     "safetyImpact": {
@@ -189,11 +280,23 @@
       "properties": {
         "riskLevel": {
           "type": "string",
-          "enum": ["none", "low", "medium", "high", "critical"]
+          "enum": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
         },
-        "description": { "type": "string" },
-        "mitigationRequired": { "type": "boolean" },
-        "incidentReport": { "type": "string" }
+        "description": {
+          "type": "string"
+        },
+        "mitigationRequired": {
+          "type": "boolean"
+        },
+        "incidentReport": {
+          "type": "string"
+        }
       }
     },
     "qualityImpact": {
@@ -201,33 +304,58 @@
       "properties": {
         "affectedSpecifications": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
-        "reworkRequired": { "type": "boolean" },
-        "acceptanceCriteria": { "type": "string" }
+        "reworkRequired": {
+          "type": "boolean"
+        },
+        "acceptanceCriteria": {
+          "type": "string"
+        }
       }
     },
     "mitigationPlan": {
       "type": "object",
       "properties": {
-        "description": { "type": "string" },
+        "description": {
+          "type": "string"
+        },
         "actions": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "action": { "type": "string" },
-              "assignee": { "$ref": "#/definitions/urn" },
-              "dueDate": { "type": "string", "format": "date" },
+              "action": {
+                "type": "string"
+              },
+              "assignee": {
+                "$ref": "#/definitions/urn"
+              },
+              "dueDate": {
+                "type": "string",
+                "format": "date"
+              },
               "status": {
                 "type": "string",
-                "enum": ["pending", "in-progress", "complete", "cancelled"]
+                "enum": [
+                  "pending",
+                  "in-progress",
+                  "complete",
+                  "cancelled"
+                ]
               }
             }
           }
         },
-        "estimatedCost": { "type": "number" },
-        "estimatedDuration": { "type": "integer", "description": "Days to mitigate" }
+        "estimatedCost": {
+          "type": "number"
+        },
+        "estimatedDuration": {
+          "type": "integer",
+          "description": "Days to mitigate"
+        }
       }
     },
     "owner": {
@@ -236,18 +364,38 @@
     },
     "reviewers": {
       "type": "array",
-      "items": { "$ref": "#/definitions/urn" },
+      "items": {
+        "$ref": "#/definitions/urn"
+      },
       "description": "People who need to review/approve handling"
     },
     "timestamps": {
       "type": "object",
       "properties": {
-        "identifiedAt": { "type": "string", "format": "date-time" },
-        "assessedAt": { "type": "string", "format": "date-time" },
-        "mitigatedAt": { "type": "string", "format": "date-time" },
-        "closedAt": { "type": "string", "format": "date-time" },
-        "createdAt": { "type": "string", "format": "date-time" },
-        "updatedAt": { "type": "string", "format": "date-time" }
+        "identifiedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "assessedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "mitigatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "closedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
     "graphMetadata": {

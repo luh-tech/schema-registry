@@ -1,10 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/roadmap-v2.2.json",
+  "$id": "https://schemas.luh.tech/roadmap.schema.v2.2.json",
   "title": "LuhTech Roadmap Schema v2.2.0",
   "description": "Extended roadmap schema with resources block, vendor-agnostic features, and business field separation. Additive extension of v2.1.0.",
   "type": "object",
-  "required": ["$schema", "schemaVersion", "meta", "venture", "quarters"],
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "meta",
+    "venture",
+    "quarters"
+  ],
   "properties": {
     "$schema": {
       "type": "string",
@@ -15,89 +21,95 @@
       "pattern": "^2\\.(0|1|2)\\.[0-9]+$",
       "description": "Schema version (2.0.x, 2.1.x, or 2.2.x)"
     },
-    "meta": { "$ref": "#/definitions/meta" },
-    "venture": { "$ref": "#/definitions/venture" },
-    "pitch": { "$ref": "#/definitions/pitch" },
-    
+    "meta": {
+      "$ref": "#/definitions/meta"
+    },
+    "venture": {
+      "$ref": "#/definitions/venture"
+    },
+    "pitch": {
+      "$ref": "#/definitions/pitch"
+    },
     "features": {
       "type": "array",
       "description": "User-facing capabilities",
-      "items": { "$ref": "#/definitions/feature" }
+      "items": {
+        "$ref": "#/definitions/feature"
+      }
     },
-    
     "releases": {
       "type": "array",
       "description": "Versioned releases",
-      "items": { "$ref": "#/definitions/release" }
+      "items": {
+        "$ref": "#/definitions/release"
+      }
     },
-    
     "resources": {
       "type": "object",
       "description": "Infrastructure resource requirements (NEW in v2.2)",
       "$ref": "#/definitions/resources"
     },
-    
     "quarters": {
       "type": "object",
       "description": "Quarterly planning with deliverables",
       "patternProperties": {
-        "^q[1-4]_20[0-9]{2}$": { "$ref": "#/definitions/quarter" }
+        "^q[1-4]_20[0-9]{2}$": {
+          "$ref": "#/definitions/quarter"
+        }
       },
       "additionalProperties": false
     },
-    
     "keyMilestones": {
       "type": "array",
       "description": "Critical milestones across quarters",
-      "items": { "$ref": "#/definitions/keyMilestone" }
+      "items": {
+        "$ref": "#/definitions/keyMilestone"
+      }
     },
-    
     "flagshipFeatures": {
       "type": "array",
       "description": "Flagship features with detailed specifications"
     },
-    
     "metricsReporting": {
       "type": "object",
       "description": "Metrics and reporting data"
     },
-    
     "completedMilestones": {
       "type": "array",
       "description": "Historical completed milestones"
     },
-    
     "crossVentureDependencies": {
       "type": "array",
       "description": "Cross-venture dependencies"
     },
-    
-    "erikAllocation": { 
+    "erikAllocation": {
       "type": "object",
       "description": "Erik's time allocation across quarters"
     },
-    
-    "financials": { 
+    "financials": {
       "type": "object",
       "description": "DEPRECATED in v2.2 - Move to roadmap-business.json",
       "deprecated": true
     },
-    "team": { 
+    "team": {
       "type": "object",
       "description": "DEPRECATED in v2.2 - Move to roadmap-business.json",
       "deprecated": true
     },
-    "competitive": { 
+    "competitive": {
       "type": "object",
       "description": "DEPRECATED in v2.2 - Move to roadmap-business.json",
       "deprecated": true
     }
   },
-  
   "definitions": {
     "meta": {
       "type": "object",
-      "required": ["ventureId", "ventureName", "status"],
+      "required": [
+        "ventureId",
+        "ventureName",
+        "status"
+      ],
       "properties": {
         "ventureId": {
           "type": "string",
@@ -119,7 +131,17 @@
         },
         "status": {
           "type": "string",
-          "enum": ["active", "paused", "archived", "pre-formation", "pre-seed", "r&d", "poc", "concept", "planning"],
+          "enum": [
+            "active",
+            "paused",
+            "archived",
+            "pre-formation",
+            "pre-seed",
+            "r&d",
+            "poc",
+            "concept",
+            "planning"
+          ],
           "description": "Current venture status"
         },
         "sourceDoc": {
@@ -128,7 +150,9 @@
         },
         "strategicDocuments": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "References to strategic documents"
         },
         "syncStatus": {
@@ -137,7 +161,11 @@
         },
         "repositoryType": {
           "type": "string",
-          "enum": ["public", "private", "fork"],
+          "enum": [
+            "public",
+            "private",
+            "fork"
+          ],
           "description": "Repository visibility"
         },
         "upstreamRepo": {
@@ -149,20 +177,30 @@
           "description": "Schema version change history (NEW in v2.2)",
           "items": {
             "type": "object",
-            "required": ["version", "date", "changes"],
+            "required": [
+              "version",
+              "date",
+              "changes"
+            ],
             "properties": {
-              "version": { "type": "string" },
-              "date": { "type": "string", "format": "date" },
+              "version": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
               "changes": {
                 "type": "array",
-                "items": { "type": "string" }
+                "items": {
+                  "type": "string"
+                }
               }
             }
           }
         }
       }
     },
-    
     "resources": {
       "type": "object",
       "description": "Infrastructure resource requirements (NEW in v2.2)",
@@ -171,10 +209,14 @@
           "type": "object",
           "description": "Compute/processing requirements",
           "properties": {
-            "description": { "type": "string" },
+            "description": {
+              "type": "string"
+            },
             "items": {
               "type": "array",
-              "items": { "$ref": "#/definitions/resourceItem" }
+              "items": {
+                "$ref": "#/definitions/resourceItem"
+              }
             }
           }
         },
@@ -182,10 +224,14 @@
           "type": "object",
           "description": "Data storage requirements",
           "properties": {
-            "description": { "type": "string" },
+            "description": {
+              "type": "string"
+            },
             "items": {
               "type": "array",
-              "items": { "$ref": "#/definitions/resourceItem" }
+              "items": {
+                "$ref": "#/definitions/resourceItem"
+              }
             }
           }
         },
@@ -193,10 +239,14 @@
           "type": "object",
           "description": "Network/bandwidth requirements",
           "properties": {
-            "description": { "type": "string" },
+            "description": {
+              "type": "string"
+            },
             "items": {
               "type": "array",
-              "items": { "$ref": "#/definitions/resourceItem" }
+              "items": {
+                "$ref": "#/definitions/resourceItem"
+              }
             }
           }
         },
@@ -204,10 +254,14 @@
           "type": "object",
           "description": "Physical hardware requirements",
           "properties": {
-            "description": { "type": "string" },
+            "description": {
+              "type": "string"
+            },
             "items": {
               "type": "array",
-              "items": { "$ref": "#/definitions/resourceItem" }
+              "items": {
+                "$ref": "#/definitions/resourceItem"
+              }
             }
           }
         },
@@ -215,24 +269,33 @@
           "type": "object",
           "description": "Team/headcount requirements",
           "properties": {
-            "description": { "type": "string" },
-            "reference": { 
+            "description": {
+              "type": "string"
+            },
+            "reference": {
               "type": "string",
               "description": "Reference to detailed personnel info (e.g., roadmap-business.json#/team)"
             },
             "summary": {
               "type": "object",
-              "additionalProperties": { "type": ["integer", "string"] }
+              "additionalProperties": {
+                "type": [
+                  "integer",
+                  "string"
+                ]
+              }
             }
           }
         }
       }
     },
-    
     "resourceItem": {
       "type": "object",
       "description": "Individual resource requirement",
-      "required": ["type", "purpose"],
+      "required": [
+        "type",
+        "purpose"
+      ],
       "properties": {
         "type": {
           "type": "string",
@@ -247,7 +310,10 @@
           "description": "Size/capacity"
         },
         "quantity": {
-          "type": ["integer", "string"],
+          "type": [
+            "integer",
+            "string"
+          ],
           "description": "Quantity needed"
         },
         "provider": {
@@ -264,11 +330,15 @@
         }
       }
     },
-    
     "feature": {
       "type": "object",
       "description": "User-facing product capability",
-      "required": ["id", "name", "category", "status"],
+      "required": [
+        "id",
+        "name",
+        "category",
+        "status"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -304,12 +374,23 @@
         },
         "status": {
           "type": "string",
-          "enum": ["planned", "in-progress", "beta", "complete", "deprecated", "future"],
+          "enum": [
+            "planned",
+            "in-progress",
+            "beta",
+            "complete",
+            "deprecated",
+            "future"
+          ],
           "description": "Current feature status"
         },
         "visibility": {
           "type": "string",
-          "enum": ["public", "business", "both"],
+          "enum": [
+            "public",
+            "business",
+            "both"
+          ],
           "default": "public",
           "description": "Which repo track this feature belongs to"
         },
@@ -329,7 +410,9 @@
         },
         "deliverableIds": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "IDs of deliverables composing this feature"
         },
         "completionMilestoneId": {
@@ -365,15 +448,24 @@
           "properties": {
             "status": {
               "type": "string",
-              "enum": ["research-required", "evaluating", "selected", "deferred"]
+              "enum": [
+                "research-required",
+                "evaluating",
+                "selected",
+                "deferred"
+              ]
             },
             "candidates": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             },
             "requirements": {
               "type": "array",
-              "items": { "type": "string" },
+              "items": {
+                "type": "string"
+              },
               "description": "Links to evaluation requirement docs"
             },
             "selectedVendor": {
@@ -388,11 +480,14 @@
         }
       }
     },
-    
     "release": {
       "type": "object",
       "description": "Versioned release package",
-      "required": ["id", "version", "status"],
+      "required": [
+        "id",
+        "version",
+        "status"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -410,13 +505,22 @@
         },
         "track": {
           "type": "string",
-          "enum": ["public", "business"],
+          "enum": [
+            "public",
+            "business"
+          ],
           "default": "public",
           "description": "Which version track (public vs business)"
         },
         "status": {
           "type": "string",
-          "enum": ["planned", "in-development", "rc", "released", "deprecated"]
+          "enum": [
+            "planned",
+            "in-development",
+            "rc",
+            "released",
+            "deprecated"
+          ]
         },
         "targetDate": {
           "type": "string",
@@ -430,7 +534,9 @@
         },
         "featureIds": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Features included in this release"
         },
         "changelog": {
@@ -438,23 +544,33 @@
           "properties": {
             "features": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             },
             "enhancements": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             },
             "fixes": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             },
             "breaking": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             },
             "deprecated": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             }
           }
         },
@@ -477,11 +593,12 @@
         }
       }
     },
-    
     "deliverable": {
       "type": "object",
       "description": "Work item",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -497,7 +614,13 @@
         },
         "type": {
           "type": "string",
-          "enum": ["feature", "infrastructure", "documentation", "fix", "refactor"],
+          "enum": [
+            "feature",
+            "infrastructure",
+            "documentation",
+            "fix",
+            "refactor"
+          ],
           "default": "feature",
           "description": "Work type classification"
         },
@@ -508,7 +631,14 @@
         },
         "status": {
           "type": "string",
-          "enum": ["planned", "in-progress", "review", "complete", "blocked", "deferred"],
+          "enum": [
+            "planned",
+            "in-progress",
+            "review",
+            "complete",
+            "blocked",
+            "deferred"
+          ],
           "description": "Current status"
         },
         "progress": {
@@ -528,7 +658,10 @@
           "description": "Feature name reference"
         },
         "priority": {
-          "type": ["integer", "string"],
+          "type": [
+            "integer",
+            "string"
+          ],
           "description": "Priority (1=highest or 'critical')"
         },
         "hours": {
@@ -546,8 +679,13 @@
           "description": "Completion timestamp"
         },
         "evidence": {
-          "type": ["array", "string"],
-          "items": { "type": "string" },
+          "type": [
+            "array",
+            "string"
+          ],
+          "items": {
+            "type": "string"
+          },
           "description": "Verification criteria or links"
         },
         "value": {
@@ -560,10 +698,11 @@
         }
       }
     },
-    
     "quarter": {
       "type": "object",
-      "required": ["focus"],
+      "required": [
+        "focus"
+      ],
       "properties": {
         "focus": {
           "type": "string",
@@ -575,21 +714,31 @@
         },
         "phases": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Phase references"
         },
         "status": {
           "type": "string",
-          "enum": ["planned", "active", "complete"],
+          "enum": [
+            "planned",
+            "active",
+            "complete"
+          ],
           "description": "Quarter status"
         },
         "milestones": {
           "type": "array",
-          "items": { "$ref": "#/definitions/quarterMilestone" }
+          "items": {
+            "$ref": "#/definitions/quarterMilestone"
+          }
         },
         "deliverables": {
           "type": "array",
-          "items": { "$ref": "#/definitions/deliverable" }
+          "items": {
+            "$ref": "#/definitions/deliverable"
+          }
         },
         "metrics": {
           "type": "object",
@@ -598,17 +747,28 @@
         "resources": {
           "type": "object",
           "properties": {
-            "team": { "type": ["integer", "string"] },
-            "budget": { "type": "string" }
+            "team": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            },
+            "budget": {
+              "type": "string"
+            }
           }
         },
         "risks": {
           "type": "array",
-          "items": { "$ref": "#/definitions/risk" }
+          "items": {
+            "$ref": "#/definitions/risk"
+          }
         },
         "dependencies": {
           "type": "array",
-          "items": { "$ref": "#/definitions/dependency" }
+          "items": {
+            "$ref": "#/definitions/dependency"
+          }
         },
         "erikHours": {
           "type": "integer",
@@ -618,10 +778,11 @@
         }
       }
     },
-    
     "quarterMilestone": {
       "type": "object",
-      "required": ["event"],
+      "required": [
+        "event"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -647,25 +808,41 @@
         },
         "status": {
           "type": "string",
-          "enum": ["planned", "in-progress", "complete", "blocked"],
+          "enum": [
+            "planned",
+            "in-progress",
+            "complete",
+            "blocked"
+          ],
           "description": "Milestone status"
         },
         "type": {
           "type": "string",
-          "enum": ["technical", "business", "funding", "team", "launch", "release"],
+          "enum": [
+            "technical",
+            "business",
+            "funding",
+            "team",
+            "launch",
+            "release"
+          ],
           "description": "Milestone category"
         },
         "dependsOn": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Dependent milestone IDs"
         }
       }
     },
-    
     "keyMilestone": {
       "type": "object",
-      "required": ["date", "event"],
+      "required": [
+        "date",
+        "event"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -689,59 +866,123 @@
         },
         "status": {
           "type": "string",
-          "enum": ["planned", "in-progress", "complete", "blocked"]
+          "enum": [
+            "planned",
+            "in-progress",
+            "complete",
+            "blocked"
+          ]
         }
       }
     },
-    
     "risk": {
       "type": "object",
-      "required": ["risk"],
+      "required": [
+        "risk"
+      ],
       "properties": {
-        "risk": { "type": "string" },
+        "risk": {
+          "type": "string"
+        },
         "probability": {
           "type": "string",
-          "enum": ["low", "medium", "medium-high", "high", "critical"]
+          "enum": [
+            "low",
+            "medium",
+            "medium-high",
+            "high",
+            "critical"
+          ]
         },
         "impact": {
           "type": "string",
-          "enum": ["low", "medium", "medium-high", "high", "critical"]
+          "enum": [
+            "low",
+            "medium",
+            "medium-high",
+            "high",
+            "critical"
+          ]
         },
-        "mitigation": { "type": "string" }
+        "mitigation": {
+          "type": "string"
+        }
       }
     },
-    
     "dependency": {
       "type": "object",
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["upstream", "downstream", "cross-venture", "internal", "external"]
+          "enum": [
+            "upstream",
+            "downstream",
+            "cross-venture",
+            "internal",
+            "external"
+          ]
         },
-        "ventureId": { "type": "string" },
-        "milestone": { "type": "string" },
-        "blocking": { "type": "boolean", "default": false }
+        "ventureId": {
+          "type": "string"
+        },
+        "milestone": {
+          "type": "string"
+        },
+        "blocking": {
+          "type": "boolean",
+          "default": false
+        }
       }
     },
-    
     "venture": {
       "type": "object",
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["Platform", "Application", "Hardware", "Hardware + SaaS", "Service", "Marketplace", "Protocol", "Holding", "SaaS"]
+          "enum": [
+            "Platform",
+            "Application",
+            "Hardware",
+            "Hardware + SaaS",
+            "Service",
+            "Marketplace",
+            "Protocol",
+            "Holding",
+            "SaaS"
+          ]
         },
         "architecture": {
           "type": "string",
-          "enum": ["Cloud-First", "Cloud-Native", "Edge-First", "Hybrid", "API-Only", "Platform"]
+          "enum": [
+            "Cloud-First",
+            "Cloud-Native",
+            "Edge-First",
+            "Hybrid",
+            "API-Only",
+            "Platform"
+          ]
         },
         "status": {
           "type": "string",
-          "enum": ["active", "paused", "archived", "pre-formation", "pre-seed", "r&d", "poc", "concept"]
+          "enum": [
+            "active",
+            "paused",
+            "archived",
+            "pre-formation",
+            "pre-seed",
+            "r&d",
+            "poc",
+            "concept"
+          ]
         },
         "forkParent": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "codeReuse": {
           "type": "integer",
@@ -760,24 +1001,48 @@
           "type": "string",
           "format": "uri"
         },
-        "platformProgress": { "type": "string" },
-        "currentPhase": { "type": "string" }
+        "platformProgress": {
+          "type": "string"
+        },
+        "currentPhase": {
+          "type": "string"
+        }
       }
     },
-    
     "pitch": {
       "type": "object",
       "properties": {
-        "oneLiner": { "type": "string", "maxLength": 150 },
-        "problem": { "type": "string" },
-        "solution": { "type": "string" },
-        "market": { "type": "string" },
-        "differentiator": { "type": "string" },
-        "businessModel": { "type": "string" },
-        "evolutionPath": { "type": "string" },
-        "traction": { "type": "string" },
-        "ask": { "type": "string" },
-        "technology": { "type": "string" }
+        "oneLiner": {
+          "type": "string",
+          "maxLength": 150
+        },
+        "problem": {
+          "type": "string"
+        },
+        "solution": {
+          "type": "string"
+        },
+        "market": {
+          "type": "string"
+        },
+        "differentiator": {
+          "type": "string"
+        },
+        "businessModel": {
+          "type": "string"
+        },
+        "evolutionPath": {
+          "type": "string"
+        },
+        "traction": {
+          "type": "string"
+        },
+        "ask": {
+          "type": "string"
+        },
+        "technology": {
+          "type": "string"
+        }
       }
     }
   }

@@ -1,18 +1,32 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/pm/schedule-proposal.schema.json",
+  "$id": "https://schemas.luh.tech/pm/schedule-proposal.schema.json",
   "title": "Schedule Proposal Schema",
   "description": "Modifications to the 10-day look-ahead schedule triggered by PM decisions. Tracks proposed changes, approvals, and schedule impacts.",
   "type": "object",
-  "required": ["$id", "$schema", "schemaVersion", "proposalId", "status", "sourceDecision", "proposedChanges"],
+  "required": [
+    "$id",
+    "$schema",
+    "schemaVersion",
+    "proposalId",
+    "status",
+    "sourceDecision",
+    "proposedChanges"
+  ],
   "definitions": {
     "_metadata": {
       "type": "object",
       "description": "Schema metadata - not for validation",
       "properties": {
-        "version": { "const": "3.0.0" },
-        "lastUpdated": { "const": "2026-01-06" },
-        "maintainer": { "const": "LuhTech Enterprise Infrastructure" },
+        "version": {
+          "const": "3.0.0"
+        },
+        "lastUpdated": {
+          "const": "2026-01-06"
+        },
+        "maintainer": {
+          "const": "LuhTech Enterprise Infrastructure"
+        },
         "relatedSchemas": {
           "const": [
             "decision.schema.json",
@@ -32,23 +46,42 @@
       "properties": {
         "inEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         },
         "outEdges": {
           "type": "array",
-          "items": { "$ref": "#/definitions/urn" },
+          "items": {
+            "$ref": "#/definitions/urn"
+          },
           "uniqueItems": true
         }
       }
     },
     "proposalStatus": {
       "type": "string",
-      "enum": ["DRAFT", "SUBMITTED", "UNDER_REVIEW", "APPROVED", "REJECTED", "IMPLEMENTED", "CANCELLED"]
+      "enum": [
+        "DRAFT",
+        "SUBMITTED",
+        "UNDER_REVIEW",
+        "APPROVED",
+        "REJECTED",
+        "IMPLEMENTED",
+        "CANCELLED"
+      ]
     },
     "changeType": {
       "type": "string",
-      "enum": ["DELAY", "ACCELERATION", "RESEQUENCE", "RESOURCE_CHANGE", "SCOPE_CHANGE", "DEPENDENCY_CHANGE"]
+      "enum": [
+        "DELAY",
+        "ACCELERATION",
+        "RESEQUENCE",
+        "RESOURCE_CHANGE",
+        "SCOPE_CHANGE",
+        "DEPENDENCY_CHANGE"
+      ]
     }
   },
   "properties": {
@@ -66,9 +99,16 @@
     "meta": {
       "type": "object",
       "properties": {
-        "projectId": { "type": "string" },
-        "sourceOfTruth": { "type": "string" },
-        "lastUpdated": { "type": "string", "format": "date-time" }
+        "projectId": {
+          "type": "string"
+        },
+        "sourceOfTruth": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
     "proposalId": {
@@ -98,9 +138,17 @@
       "type": "object",
       "description": "The look-ahead period this proposal affects",
       "properties": {
-        "startDate": { "type": "string", "format": "date" },
-        "endDate": { "type": "string", "format": "date" },
-        "weekNumber": { "type": "integer" }
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "weekNumber": {
+          "type": "integer"
+        }
       }
     },
     "proposedChanges": {
@@ -108,45 +156,92 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["changeType", "description"],
+        "required": [
+          "changeType",
+          "description"
+        ],
         "properties": {
-          "changeId": { "type": "string" },
-          "changeType": { "$ref": "#/definitions/changeType" },
-          "description": { "type": "string" },
+          "changeId": {
+            "type": "string"
+          },
+          "changeType": {
+            "$ref": "#/definitions/changeType"
+          },
+          "description": {
+            "type": "string"
+          },
           "affectedVoxels": {
             "type": "array",
-            "items": { "$ref": "#/definitions/urn" }
+            "items": {
+              "$ref": "#/definitions/urn"
+            }
           },
           "affectedActivities": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
           "currentSchedule": {
             "type": "object",
             "properties": {
-              "startDate": { "type": "string", "format": "date-time" },
-              "endDate": { "type": "string", "format": "date-time" },
-              "duration": { "type": "number", "description": "Duration in days" }
+              "startDate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "duration": {
+                "type": "number",
+                "description": "Duration in days"
+              }
             }
           },
           "proposedSchedule": {
             "type": "object",
             "properties": {
-              "startDate": { "type": "string", "format": "date-time" },
-              "endDate": { "type": "string", "format": "date-time" },
-              "duration": { "type": "number", "description": "Duration in days" }
+              "startDate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "duration": {
+                "type": "number",
+                "description": "Duration in days"
+              }
             }
           },
-          "deltadays": { "type": "integer", "description": "Net schedule impact in days" },
+          "deltadays": {
+            "type": "integer",
+            "description": "Net schedule impact in days"
+          },
           "resourceChanges": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "resourceType": { "type": "string", "enum": ["labor", "equipment", "material"] },
-                "currentAllocation": { "type": "string" },
-                "proposedAllocation": { "type": "string" },
-                "reason": { "type": "string" }
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "labor",
+                    "equipment",
+                    "material"
+                  ]
+                },
+                "currentAllocation": {
+                  "type": "string"
+                },
+                "proposedAllocation": {
+                  "type": "string"
+                },
+                "reason": {
+                  "type": "string"
+                }
               }
             }
           }
@@ -157,31 +252,57 @@
       "type": "object",
       "description": "Overall impact assessment",
       "properties": {
-        "totalScheduleImpact": { "type": "integer", "description": "Total days of schedule impact" },
-        "criticalPathImpact": { "type": "boolean" },
+        "totalScheduleImpact": {
+          "type": "integer",
+          "description": "Total days of schedule impact"
+        },
+        "criticalPathImpact": {
+          "type": "boolean"
+        },
         "milestoneImpacts": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "milestoneRef": { "$ref": "#/definitions/urn" },
-              "currentDate": { "type": "string", "format": "date" },
-              "proposedDate": { "type": "string", "format": "date" },
-              "deltadays": { "type": "integer" }
+              "milestoneRef": {
+                "$ref": "#/definitions/urn"
+              },
+              "currentDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "proposedDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "deltadays": {
+                "type": "integer"
+              }
             }
           }
         },
         "costImpact": {
           "type": "object",
           "properties": {
-            "amount": { "type": "number" },
-            "currency": { "type": "string", "default": "USD" },
+            "amount": {
+              "type": "number"
+            },
+            "currency": {
+              "type": "string",
+              "default": "USD"
+            },
             "breakdown": {
               "type": "object",
               "properties": {
-                "acceleration": { "type": "number" },
-                "delay": { "type": "number" },
-                "resources": { "type": "number" }
+                "acceleration": {
+                  "type": "number"
+                },
+                "delay": {
+                  "type": "number"
+                },
+                "resources": {
+                  "type": "number"
+                }
               }
             }
           }
@@ -199,11 +320,27 @@
       "items": {
         "type": "object",
         "properties": {
-          "level": { "type": "integer" },
-          "approver": { "$ref": "#/definitions/urn" },
-          "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
-          "timestamp": { "type": "string", "format": "date-time" },
-          "comments": { "type": "string" }
+          "level": {
+            "type": "integer"
+          },
+          "approver": {
+            "$ref": "#/definitions/urn"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "approved",
+              "rejected"
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "comments": {
+            "type": "string"
+          }
         }
       }
     },
@@ -214,11 +351,26 @@
     "timestamps": {
       "type": "object",
       "properties": {
-        "createdAt": { "type": "string", "format": "date-time" },
-        "submittedAt": { "type": "string", "format": "date-time" },
-        "approvedAt": { "type": "string", "format": "date-time" },
-        "implementedAt": { "type": "string", "format": "date-time" },
-        "updatedAt": { "type": "string", "format": "date-time" }
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "submittedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "approvedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "implementedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     },
     "graphMetadata": {

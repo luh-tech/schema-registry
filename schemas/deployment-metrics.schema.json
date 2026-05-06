@@ -1,91 +1,262 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://luhtech.dev/schemas/deployment-metrics.schema.json",
+  "$id": "https://schemas.luh.tech/deployment-metrics.schema.json",
   "title": "Deployment Metrics Schema",
   "description": "Schema for tracking deployment metrics from Watchtower auto-deployment pattern, following luh-tech enterprise patterns. Used across all ventures for consistent deployment monitoring.",
   "type": "object",
-  "required": ["$schema", "version", "lastUpdated", "watchtowerStatus", "environments"],
+  "required": [
+    "$schema",
+    "version",
+    "lastUpdated",
+    "watchtowerStatus",
+    "environments"
+  ],
   "properties": {
-    "$schema": {"type": "string", "description": "Reference to this schema"},
-    "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
-    "lastUpdated": {"type": "string", "format": "date-time"},
-    "watchtowerStatus": {"$ref": "#/$defs/watchtowerStatus"},
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this schema"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "watchtowerStatus": {
+      "$ref": "#/$defs/watchtowerStatus"
+    },
     "environments": {
       "type": "object",
       "description": "Deployment metrics per environment",
       "properties": {
-        "staging": {"$ref": "#/$defs/environmentMetrics"},
-        "production": {"$ref": "#/$defs/environmentMetrics"}
+        "staging": {
+          "$ref": "#/$defs/environmentMetrics"
+        },
+        "production": {
+          "$ref": "#/$defs/environmentMetrics"
+        }
       }
     }
   },
   "$defs": {
     "watchtowerStatus": {
       "type": "object",
-      "required": ["operational", "pollInterval", "lastCheck"],
+      "required": [
+        "operational",
+        "pollInterval",
+        "lastCheck"
+      ],
       "properties": {
-        "operational": {"type": "boolean", "description": "Whether Watchtower is running and healthy"},
-        "pollInterval": {"type": "integer", "description": "Poll interval in seconds"},
-        "lastCheck": {"type": "string", "format": "date-time"},
-        "notificationsEnabled": {"type": "boolean"},
-        "httpApiEnabled": {"type": "boolean"},
-        "metricsEndpoint": {"type": "string", "description": "HTTP API metrics endpoint URL"}
+        "operational": {
+          "type": "boolean",
+          "description": "Whether Watchtower is running and healthy"
+        },
+        "pollInterval": {
+          "type": "integer",
+          "description": "Poll interval in seconds"
+        },
+        "lastCheck": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "notificationsEnabled": {
+          "type": "boolean"
+        },
+        "httpApiEnabled": {
+          "type": "boolean"
+        },
+        "metricsEndpoint": {
+          "type": "string",
+          "description": "HTTP API metrics endpoint URL"
+        }
       }
     },
     "environmentMetrics": {
       "type": "object",
-      "required": ["services", "lastDeployment", "statistics"],
+      "required": [
+        "services",
+        "lastDeployment",
+        "statistics"
+      ],
       "properties": {
         "services": {
           "type": "object",
           "description": "Deployment status per service",
-          "additionalProperties": {"$ref": "#/$defs/serviceDeployment"}
+          "additionalProperties": {
+            "$ref": "#/$defs/serviceDeployment"
+          }
         },
-        "lastDeployment": {"$ref": "#/$defs/deploymentEvent"},
-        "statistics": {"$ref": "#/$defs/deploymentStatistics"}
+        "lastDeployment": {
+          "$ref": "#/$defs/deploymentEvent"
+        },
+        "statistics": {
+          "$ref": "#/$defs/deploymentStatistics"
+        }
       }
     },
     "serviceDeployment": {
       "type": "object",
-      "required": ["image", "status", "deployedAt"],
+      "required": [
+        "image",
+        "status",
+        "deployedAt"
+      ],
       "properties": {
-        "image": {"type": "string", "description": "Full image reference (registry/repo:tag)"},
-        "imageDigest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$", "description": "Image digest for immutable reference"},
-        "tag": {"type": "string", "description": "Image tag (latest, commit-sha, etc.)"},
-        "commitSha": {"type": "string", "pattern": "^[a-f0-9]{40}$", "description": "Git commit SHA"},
-        "status": {"type": "string", "enum": ["healthy", "unhealthy", "deploying", "unknown"], "description": "Current service status"},
-        "deployedAt": {"type": "string", "format": "date-time"},
-        "deployedBy": {"type": "string", "enum": ["watchtower", "manual", "ci-cd"], "default": "watchtower"},
-        "uptime": {"type": "string", "description": "Human-readable uptime"},
-        "healthScore": {"type": "integer", "minimum": 0, "maximum": 100, "description": "Service health score"},
-        "restartCount": {"type": "integer", "minimum": 0, "description": "Number of container restarts"}
+        "image": {
+          "type": "string",
+          "description": "Full image reference (registry/repo:tag)"
+        },
+        "imageDigest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "description": "Image digest for immutable reference"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Image tag (latest, commit-sha, etc.)"
+        },
+        "commitSha": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$",
+          "description": "Git commit SHA"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "healthy",
+            "unhealthy",
+            "deploying",
+            "unknown"
+          ],
+          "description": "Current service status"
+        },
+        "deployedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deployedBy": {
+          "type": "string",
+          "enum": [
+            "watchtower",
+            "manual",
+            "ci-cd"
+          ],
+          "default": "watchtower"
+        },
+        "uptime": {
+          "type": "string",
+          "description": "Human-readable uptime"
+        },
+        "healthScore": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Service health score"
+        },
+        "restartCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of container restarts"
+        }
       }
     },
     "deploymentEvent": {
       "type": "object",
-      "required": ["timestamp", "status"],
+      "required": [
+        "timestamp",
+        "status"
+      ],
       "properties": {
-        "timestamp": {"type": "string", "format": "date-time"},
-        "commitSha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
-        "status": {"type": "string", "enum": ["success", "failed", "in-progress"], "description": "Deployment result"},
-        "triggeredBy": {"type": "string", "enum": ["watchtower-poll", "manual", "ci-cd-push"]},
-        "servicesUpdated": {"type": "array", "items": {"type": "string"}, "description": "List of services updated"},
-        "duration": {"type": "integer", "description": "Deployment duration in seconds"}
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "commitSha": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "success",
+            "failed",
+            "in-progress"
+          ],
+          "description": "Deployment result"
+        },
+        "triggeredBy": {
+          "type": "string",
+          "enum": [
+            "watchtower-poll",
+            "manual",
+            "ci-cd-push"
+          ]
+        },
+        "servicesUpdated": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of services updated"
+        },
+        "duration": {
+          "type": "integer",
+          "description": "Deployment duration in seconds"
+        }
       }
     },
     "deploymentStatistics": {
       "type": "object",
-      "required": ["totalDeployments", "successRate", "averageDeploymentTime"],
+      "required": [
+        "totalDeployments",
+        "successRate",
+        "averageDeploymentTime"
+      ],
       "properties": {
-        "totalDeployments": {"type": "integer", "minimum": 0, "description": "Total deployments tracked"},
-        "successfulDeployments": {"type": "integer", "minimum": 0},
-        "failedDeployments": {"type": "integer", "minimum": 0},
-        "successRate": {"type": "number", "minimum": 0, "maximum": 100, "description": "Success rate percentage"},
-        "averageDeploymentTime": {"type": "integer", "minimum": 0, "description": "Average deployment time in seconds"},
-        "deploymentsLast24h": {"type": "integer", "minimum": 0},
-        "deploymentsLast7d": {"type": "integer", "minimum": 0},
-        "lastSuccess": {"type": "string", "format": "date-time", "description": "Timestamp of last successful deployment"},
-        "lastFailure": {"type": "string", "format": "date-time", "description": "Timestamp of last failed deployment"}
+        "totalDeployments": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total deployments tracked"
+        },
+        "successfulDeployments": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failedDeployments": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "successRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Success rate percentage"
+        },
+        "averageDeploymentTime": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Average deployment time in seconds"
+        },
+        "deploymentsLast24h": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "deploymentsLast7d": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lastSuccess": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of last successful deployment"
+        },
+        "lastFailure": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of last failed deployment"
+        }
       }
     }
   }

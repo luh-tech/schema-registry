@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://luhtech.dev/schemas/definitions.json",
+  "$id": "https://schemas.luh.tech/_definitions/definitions.schema.json",
   "title": "LuhTech Shared Definitions",
   "description": "Reusable schema definitions for common patterns across all LuhTech schemas.",
   "definitions": {
@@ -41,23 +41,33 @@
         }
       }
     },
-
     "address": {
       "type": "object",
       "description": "Physical address",
       "properties": {
-        "street": {"type": "string"},
-        "city": {"type": "string"},
-        "state": {"type": "string"},
-        "postalCode": {"type": "string"},
-        "country": {"type": "string"}
+        "street": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        }
       }
     },
-
     "dateRange": {
       "type": "object",
       "description": "Date range with start and optional end",
-      "required": ["start"],
+      "required": [
+        "start"
+      ],
       "properties": {
         "start": {
           "type": "string",
@@ -65,29 +75,35 @@
           "description": "Start date"
         },
         "end": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "format": "date",
           "description": "End date (null for ongoing)"
         }
       }
     },
-
     "dateTimeRange": {
       "type": "object",
       "description": "DateTime range with timestamps",
-      "required": ["start"],
+      "required": [
+        "start"
+      ],
       "properties": {
         "start": {
           "type": "string",
           "format": "date-time"
         },
         "end": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "format": "date-time"
         }
       }
     },
-
     "quarterRange": {
       "type": "object",
       "description": "Quarter range for planning",
@@ -102,25 +118,32 @@
         }
       }
     },
-
     "urn": {
-      "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/urn",
+      "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/urn",
       "description": "LuhTech URN identifier - see graph.schema.json for full spec"
     },
-
     "graphMetadata": {
-      "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/graphMetadata",
+      "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/graphMetadata",
       "description": "Graph traversal metadata - see graph.schema.json for full spec"
     },
-
     "reference": {
       "type": "object",
       "description": "Cross-schema reference (legacy - prefer URN for new schemas)",
-      "required": ["type", "id"],
+      "required": [
+        "type",
+        "id"
+      ],
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["venture", "milestone", "dependency", "relationship", "ip-asset", "service"],
+          "enum": [
+            "venture",
+            "milestone",
+            "dependency",
+            "relationship",
+            "ip-asset",
+            "service"
+          ],
           "description": "Reference target type"
         },
         "id": {
@@ -128,7 +151,7 @@
           "description": "Target identifier"
         },
         "$id": {
-          "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/urn",
+          "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/urn",
           "description": "URN identifier (preferred)"
         },
         "schema": {
@@ -142,11 +165,13 @@
         }
       }
     },
-
     "money": {
       "type": "object",
       "description": "Monetary amount with currency",
-      "required": ["amount", "currency"],
+      "required": [
+        "amount",
+        "currency"
+      ],
       "properties": {
         "amount": {
           "type": "number",
@@ -163,7 +188,6 @@
         }
       }
     },
-
     "percentage": {
       "type": "object",
       "description": "Percentage value",
@@ -179,7 +203,6 @@
         }
       }
     },
-
     "auditInfo": {
       "type": "object",
       "description": "Audit trail information",
@@ -204,11 +227,12 @@
         }
       }
     },
-
     "link": {
       "type": "object",
       "description": "External link with metadata",
-      "required": ["url"],
+      "required": [
+        "url"
+      ],
       "properties": {
         "url": {
           "type": "string",
@@ -219,20 +243,26 @@
         },
         "type": {
           "type": "string",
-          "enum": ["document", "repository", "website", "video", "presentation", "spreadsheet", "other"]
+          "enum": [
+            "document",
+            "repository",
+            "website",
+            "video",
+            "presentation",
+            "spreadsheet",
+            "other"
+          ]
         },
         "description": {
           "type": "string"
         }
       }
     },
-
     "tag": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9-]*$",
       "description": "Lowercase hyphenated tag"
     },
-
     "tags": {
       "type": "array",
       "items": {
@@ -240,17 +270,18 @@
       },
       "uniqueItems": true
     },
-
     "person": {
       "type": "object",
       "description": "Person record",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "properties": {
         "id": {
           "type": "string"
         },
         "$id": {
-          "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/urn",
+          "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/urn",
           "description": "URN identifier for graph linking"
         },
         "name": {
@@ -273,21 +304,22 @@
           "$ref": "#/definitions/contact"
         },
         "graphMetadata": {
-          "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/graphMetadata"
+          "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/graphMetadata"
         }
       }
     },
-
     "organization": {
       "type": "object",
       "description": "Organization record",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "properties": {
         "id": {
           "type": "string"
         },
         "$id": {
-          "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/urn",
+          "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/urn",
           "description": "URN identifier for graph linking"
         },
         "name": {
@@ -295,7 +327,15 @@
         },
         "type": {
           "type": "string",
-          "enum": ["company", "investor", "accelerator", "university", "government", "nonprofit", "other"]
+          "enum": [
+            "company",
+            "investor",
+            "accelerator",
+            "university",
+            "government",
+            "nonprofit",
+            "other"
+          ]
         },
         "website": {
           "type": "string",
@@ -307,7 +347,9 @@
         },
         "industry": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         },
         "location": {
           "type": "string"
@@ -319,23 +361,29 @@
           "$ref": "#/definitions/contact"
         },
         "graphMetadata": {
-          "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/graphMetadata"
+          "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/graphMetadata"
         }
       }
     },
-
     "metric": {
       "type": "object",
       "description": "Business metric",
-      "required": ["name", "value"],
+      "required": [
+        "name",
+        "value"
+      ],
       "properties": {
         "name": {
           "type": "string"
         },
         "value": {
           "oneOf": [
-            {"type": "string"},
-            {"type": "number"}
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "unit": {
@@ -346,12 +394,20 @@
         },
         "trend": {
           "type": "string",
-          "enum": ["up", "down", "flat"]
+          "enum": [
+            "up",
+            "down",
+            "flat"
+          ]
         },
         "target": {
           "oneOf": [
-            {"type": "string"},
-            {"type": "number"}
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
           ]
         },
         "asOf": {
@@ -360,11 +416,13 @@
         }
       }
     },
-
     "note": {
       "type": "object",
       "description": "Timestamped note",
-      "required": ["content", "date"],
+      "required": [
+        "content",
+        "date"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -384,9 +442,8 @@
         }
       }
     },
-
     "syncStatus": {
-      "$ref": "https://luhtech.dev/schemas/graph.json#/definitions/syncStatus",
+      "$ref": "https://schemas.luh.tech/_definitions/graph.schema.json#/definitions/syncStatus",
       "description": "V3 sync metadata - see graph.schema.json for full spec"
     }
   }
