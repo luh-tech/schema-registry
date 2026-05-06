@@ -13,7 +13,10 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "const": "https://luhtech.dev/schemas/boundaries-v1.json"
+      "enum": [
+        "https://luhtech.dev/schemas/boundaries-v1.json",
+        "https://schemas.luh.tech/boundaries.schema.json"
+      ]
     },
     "version": {
       "type": "string",

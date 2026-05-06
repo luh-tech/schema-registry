@@ -167,7 +167,10 @@
       "description": "URN identifier. Pattern: urn:luhtech:{venture}:authority-level:cascade"
     },
     "$schema": {
-      "const": "https://luhtech.dev/schemas/pm/authority-level.schema.json"
+      "enum": [
+        "https://luhtech.dev/schemas/pm/authority-level.schema.json",
+        "https://schemas.luh.tech/pm/authority-level.schema.json"
+      ]
     },
     "schemaVersion": {
       "type": "string",

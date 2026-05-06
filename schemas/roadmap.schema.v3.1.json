@@ -20,7 +20,8 @@
         "https://luhtech.dev/schemas/roadmap-v2.json",
         "https://luhtech.dev/schemas/roadmap-v2.3.json",
         "https://luhtech.dev/schemas/roadmap-v2.4.json",
-        "luhtechnology-roadmap-v2"
+        "luhtechnology-roadmap-v2",
+        "https://schemas.luh.tech/roadmap.schema.v3.1.json"
       ]
     },
     "schemaVersion": {

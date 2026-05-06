@@ -15,7 +15,10 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "const": "https://luhtech.dev/schemas/infrastructure-catalog-v1.json"
+      "enum": [
+        "https://luhtech.dev/schemas/infrastructure-catalog-v1.json",
+        "https://schemas.luh.tech/infrastructure-catalog.schema.json"
+      ]
     },
     "version": {
       "type": "string",

@@ -16,7 +16,8 @@
       "type": "string",
       "enum": [
         "https://luhtech.dev/schemas/venture-summary.json",
-        "https://luhtech.dev/schemas/venture-summary-v1.json"
+        "https://luhtech.dev/schemas/venture-summary-v1.json",
+        "https://schemas.luh.tech/venture-summary.schema.json"
       ]
     },
     "version": {

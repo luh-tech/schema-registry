@@ -15,7 +15,10 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "const": "https://luhtech.dev/schemas/tech-stack-v1.json"
+      "enum": [
+        "https://luhtech.dev/schemas/tech-stack-v1.json",
+        "https://schemas.luh.tech/tech-stack.schema.json"
+      ]
     },
     "version": {
       "type": "string",

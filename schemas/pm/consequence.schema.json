@@ -136,7 +136,10 @@
       "description": "URN identifier. Pattern: urn:luhtech:{project}:consequence:{consequenceId}"
     },
     "$schema": {
-      "const": "https://luhtech.dev/schemas/pm/consequence.schema.json"
+      "enum": [
+        "https://luhtech.dev/schemas/pm/consequence.schema.json",
+        "https://schemas.luh.tech/pm/consequence.schema.json"
+      ]
     },
     "schemaVersion": {
       "type": "string",

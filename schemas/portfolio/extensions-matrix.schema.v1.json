@@ -13,7 +13,10 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "const": "https://luhtech.dev/schemas/portfolio/extensions-matrix-v1.json"
+      "enum": [
+        "https://luhtech.dev/schemas/portfolio/extensions-matrix-v1.json",
+        "https://schemas.luh.tech/portfolio/extensions-matrix.schema.v1.json"
+      ]
     },
     "lastUpdated": {
       "type": "string",
