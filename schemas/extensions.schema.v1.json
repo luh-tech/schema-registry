@@ -13,10 +13,7 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "enum": [
-        "https://luhtech.dev/schemas/extensions-v1.json",
-        "https://schemas.luh.tech/extensions.schema.v1.json"
-      ]
+      "const": "https://schemas.luh.tech/extensions.schema.v1.json"
     },
     "ventureId": {
       "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/ventureIdPattern",

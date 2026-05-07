@@ -93,10 +93,7 @@
       "description": "URN identifier. Pattern: urn:luhtech:{project}:participant:{participantId}"
     },
     "$schema": {
-      "enum": [
-        "https://luhtech.dev/schemas/pm/participant.schema.json",
-        "https://schemas.luh.tech/pm/participant.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/pm/participant.schema.json"
     },
     "schemaVersion": {
       "type": "string",

@@ -14,11 +14,7 @@
     "$schema": {
       "type": "string",
       "description": "Schema identifier",
-      "enum": [
-        "https://luhtech.dev/schemas/portfolio/brand.json",
-        "luhtechnology-brand-v1",
-        "https://schemas.luh.tech/portfolio/brand.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/portfolio/brand.schema.json"
     },
     "schemaVersion": {
       "$ref": "../_enums/luhtech-enums.schema.v2.json#/definitions/semver"

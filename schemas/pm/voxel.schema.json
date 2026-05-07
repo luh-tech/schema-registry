@@ -135,10 +135,7 @@
       "description": "URN identifier. Pattern: urn:luhtech:{project}:voxel:{voxelId}"
     },
     "$schema": {
-      "enum": [
-        "https://luhtech.dev/schemas/pm/voxel.schema.json",
-        "https://schemas.luh.tech/pm/voxel.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/pm/voxel.schema.json"
     },
     "schemaVersion": {
       "type": "string",

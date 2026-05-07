@@ -14,10 +14,7 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "enum": [
-        "https://luhtech.dev/schemas/roadmap-v1.json",
-        "https://schemas.luh.tech/roadmap.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/roadmap.schema.json"
     },
     "version": {
       "type": "string",

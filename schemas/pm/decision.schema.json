@@ -149,10 +149,7 @@
       "description": "URN identifier. Pattern: urn:luhtech:{project}:pm-decision:{decisionId}"
     },
     "$schema": {
-      "enum": [
-        "https://luhtech.dev/schemas/pm/decision.schema.json",
-        "https://schemas.luh.tech/pm/decision.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/pm/decision.schema.json"
     },
     "schemaVersion": {
       "type": "string",

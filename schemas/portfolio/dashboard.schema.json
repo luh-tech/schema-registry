@@ -14,10 +14,7 @@
   "properties": {
     "$schema": {
       "description": "Schema reference (required for schema-first compliance)",
-      "enum": [
-        "https://luhtech.dev/schemas/portfolio/dashboard.schema.json",
-        "https://schemas.luh.tech/portfolio/dashboard.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/portfolio/dashboard.schema.json"
     },
     "schemaVersion": {
       "type": "string",

@@ -13,11 +13,7 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "enum": [
-        "https://luhtech.dev/schemas/dependencies.json",
-        "https://luhtech.dev/schemas/dependencies-v1.json",
-        "https://schemas.luh.tech/dependencies.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/dependencies.schema.json"
     },
     "version": {
       "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/semver"

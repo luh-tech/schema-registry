@@ -13,10 +13,7 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "enum": [
-        "https://luhtech.dev/schemas/portfolio-graph.v1.json",
-        "https://schemas.luh.tech/portfolio/portfolio-graph.schema.v1.json"
-      ]
+      "const": "https://schemas.luh.tech/portfolio/portfolio-graph.schema.v1.json"
     },
     "meta": {
       "type": "object",

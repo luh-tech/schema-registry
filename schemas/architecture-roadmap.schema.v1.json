@@ -14,10 +14,7 @@
     "$schema": {
       "type": "string",
       "description": "Schema identifier - MUST reference this canonical schema",
-      "enum": [
-        "https://luhtech.dev/schemas/architecture-roadmap-v1.json",
-        "https://schemas.luh.tech/architecture-roadmap.schema.v1.json"
-      ]
+      "const": "https://schemas.luh.tech/architecture-roadmap.schema.v1.json"
     },
     "schemaVersion": {
       "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/semver",
