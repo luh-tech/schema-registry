@@ -90,10 +90,7 @@
       "description": "URN identifier. Pattern: urn:luhtech:{project}:schedule-proposal:{proposalId}"
     },
     "$schema": {
-      "enum": [
-        "https://luhtech.dev/schemas/pm/schedule-proposal.schema.json",
-        "https://schemas.luh.tech/pm/schedule-proposal.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/pm/schedule-proposal.schema.json"
     },
     "schemaVersion": {
       "type": "string",

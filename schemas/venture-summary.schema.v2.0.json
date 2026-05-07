@@ -15,12 +15,7 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "enum": [
-        "https://luhtech.dev/schemas/venture-summary.json",
-        "https://luhtech.dev/schemas/venture-summary-v1.json",
-        "urn:luhtech:schema:venture-summary:v2.0",
-        "https://schemas.luh.tech/venture-summary.schema.v2.0.json"
-      ]
+      "const": "https://schemas.luh.tech/venture-summary.schema.v2.0.json"
     },
     "version": {
       "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/semver"

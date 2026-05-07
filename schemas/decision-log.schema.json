@@ -13,10 +13,7 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "enum": [
-        "https://luhtech.dev/schemas/decision-log-v1.json",
-        "https://schemas.luh.tech/decision-log.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/decision-log.schema.json"
     },
     "version": {
       "type": "string",

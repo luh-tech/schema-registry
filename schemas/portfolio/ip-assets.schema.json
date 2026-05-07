@@ -13,10 +13,7 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "enum": [
-        "https://luhtech.dev/schemas/ip-assets-v1.json",
-        "https://schemas.luh.tech/portfolio/ip-assets.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/portfolio/ip-assets.schema.json"
     },
     "schemaVersion": {
       "type": "string",

@@ -14,10 +14,7 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "enum": [
-        "https://luhtech.dev/schemas/portfolio/workflow-registry-v1.json",
-        "https://schemas.luh.tech/portfolio/workflow-registry.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/portfolio/workflow-registry.schema.json"
     },
     "schemaVersion": {
       "type": "string",

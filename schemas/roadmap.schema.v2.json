@@ -15,11 +15,7 @@
     "$schema": {
       "type": "string",
       "description": "Schema identifier",
-      "enum": [
-        "https://luhtech.dev/schemas/roadmap-v2.json",
-        "luhtechnology-roadmap-v2",
-        "https://schemas.luh.tech/roadmap.schema.v2.json"
-      ]
+      "const": "https://schemas.luh.tech/roadmap.schema.v2.json"
     },
     "schemaVersion": {
       "type": "string",

@@ -14,10 +14,7 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "enum": [
-        "https://luhtech.dev/schemas/portfolio-v1.json",
-        "https://schemas.luh.tech/portfolio/portfolio.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/portfolio/portfolio.schema.json"
     },
     "schemaVersion": {
       "type": "string",

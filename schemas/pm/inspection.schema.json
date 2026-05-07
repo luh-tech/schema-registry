@@ -122,10 +122,7 @@
       "description": "URN identifier. Pattern: urn:luhtech:{project}:inspection:{inspectionId}"
     },
     "$schema": {
-      "enum": [
-        "https://luhtech.dev/schemas/pm/inspection.schema.json",
-        "https://schemas.luh.tech/pm/inspection.schema.json"
-      ]
+      "const": "https://schemas.luh.tech/pm/inspection.schema.json"
     },
     "schemaVersion": {
       "type": "string",
