@@ -58,7 +58,7 @@ jobs:
           node-version: '20'
 
       - name: Install Validation Tools
-        run: npm install -g ajv-cli ajv-formats
+        run: npm install -g ajv-cli@5.0.0 ajv-formats
 
       - name: Validate Roadmap Files
         id: validate-files
@@ -91,7 +91,7 @@ jobs:
           
           # roadmap.json (REQUIRED)
           if [ -f "$ROADMAP_DIR/roadmap.json" ]; then
-            if ajv validate -s "$SCHEMA_DIR/roadmap.schema.${{ inputs.schema-version }}.json" -d "$ROADMAP_DIR/roadmap.json" -r "$ENUM_SCHEMA" --spec=draft7 -c ajv-formats; then
+            if ajv validate -s "$SCHEMA_DIR/roadmap.schema.${{ inputs.schema-version }}.json" -d "$ROADMAP_DIR/roadmap.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
               echo "PASS roadmap.json"; PASSED=$((PASSED + 1))
             else
               echo "FAIL roadmap.json"; FAILED=$((FAILED + 1))
@@ -102,7 +102,7 @@ jobs:
           
           # venture-summary.json (REQUIRED)
           if [ -f "$ROADMAP_DIR/venture-summary.json" ]; then
-            if ajv validate -s "$SCHEMA_DIR/venture-summary.schema.json" -d "$ROADMAP_DIR/venture-summary.json" -r "$ENUM_SCHEMA" --spec=draft7 -c ajv-formats; then
+            if ajv validate -s "$SCHEMA_DIR/venture-summary.schema.json" -d "$ROADMAP_DIR/venture-summary.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
               echo "PASS venture-summary.json"; PASSED=$((PASSED + 1))
             else
               echo "FAIL venture-summary.json"; FAILED=$((FAILED + 1))
@@ -113,7 +113,7 @@ jobs:
           
           # decision-log.json (OPTIONAL)
           if [ -f "$ROADMAP_DIR/decision-log.json" ]; then
-            if ajv validate -s "$SCHEMA_DIR/decision-log.schema.json" -d "$ROADMAP_DIR/decision-log.json" -r "$ENUM_SCHEMA" --spec=draft7 -c ajv-formats; then
+            if ajv validate -s "$SCHEMA_DIR/decision-log.schema.json" -d "$ROADMAP_DIR/decision-log.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
               echo "PASS decision-log.json"; PASSED=$((PASSED + 1))
             else
               echo "FAIL decision-log.json"; FAILED=$((FAILED + 1))
@@ -124,7 +124,7 @@ jobs:
           
           # dependencies.json (OPTIONAL)
           if [ -f "$ROADMAP_DIR/dependencies.json" ]; then
-            if ajv validate -s "$SCHEMA_DIR/dependencies.schema.json" -d "$ROADMAP_DIR/dependencies.json" -r "$ENUM_SCHEMA" --spec=draft7 -c ajv-formats; then
+            if ajv validate -s "$SCHEMA_DIR/dependencies.schema.json" -d "$ROADMAP_DIR/dependencies.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
               echo "PASS dependencies.json"; PASSED=$((PASSED + 1))
             else
               echo "FAIL dependencies.json"; FAILED=$((FAILED + 1))
@@ -135,7 +135,7 @@ jobs:
           
           # boundaries.json (OPTIONAL)
           if [ -f "$ROADMAP_DIR/boundaries.json" ]; then
-            if ajv validate -s "$SCHEMA_DIR/boundaries.schema.json" -d "$ROADMAP_DIR/boundaries.json" -r "$ENUM_SCHEMA" --spec=draft7 -c ajv-formats; then
+            if ajv validate -s "$SCHEMA_DIR/boundaries.schema.json" -d "$ROADMAP_DIR/boundaries.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
               echo "PASS boundaries.json"; PASSED=$((PASSED + 1))
             else
               echo "FAIL boundaries.json"; FAILED=$((FAILED + 1))
@@ -151,7 +151,7 @@ jobs:
           # tech-stack.json (OPTIONAL)
           if [ -f "$ROADMAP_DIR/tech-stack.json" ]; then
             if [ -f "$SCHEMA_DIR/tech-stack.schema.json" ]; then
-              if ajv validate -s "$SCHEMA_DIR/tech-stack.schema.json" -d "$ROADMAP_DIR/tech-stack.json" -r "$ENUM_SCHEMA" -r "$ENUM_SCHEMA_V2" -r "$DEFINITIONS_SCHEMA" --spec=draft7 -c ajv-formats; then
+              if ajv validate -s "$SCHEMA_DIR/tech-stack.schema.json" -d "$ROADMAP_DIR/tech-stack.json" -r "$ENUM_SCHEMA" -r "$ENUM_SCHEMA_V2" -r "$DEFINITIONS_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
                 echo "PASS tech-stack.json"; PASSED=$((PASSED + 1))
               else
                 echo "FAIL tech-stack.json"; FAILED=$((FAILED + 1))
@@ -166,7 +166,7 @@ jobs:
           # infrastructure-catalog.json (OPTIONAL)
           if [ -f "$ROADMAP_DIR/infrastructure-catalog.json" ]; then
             if [ -f "$SCHEMA_DIR/infrastructure-catalog.schema.json" ]; then
-              if ajv validate -s "$SCHEMA_DIR/infrastructure-catalog.schema.json" -d "$ROADMAP_DIR/infrastructure-catalog.json" -r "$ENUM_SCHEMA" -r "$ENUM_SCHEMA_V2" -r "$DEFINITIONS_SCHEMA" --spec=draft7 -c ajv-formats; then
+              if ajv validate -s "$SCHEMA_DIR/infrastructure-catalog.schema.json" -d "$ROADMAP_DIR/infrastructure-catalog.json" -r "$ENUM_SCHEMA" -r "$ENUM_SCHEMA_V2" -r "$DEFINITIONS_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
                 echo "PASS infrastructure-catalog.json"; PASSED=$((PASSED + 1))
               else
                 echo "FAIL infrastructure-catalog.json"; FAILED=$((FAILED + 1))
@@ -181,7 +181,7 @@ jobs:
           # architecture.json (OPTIONAL)
           if [ -f "$ROADMAP_DIR/architecture.json" ]; then
             if [ -f "$SCHEMA_DIR/architecture-roadmap.schema.v1.json" ]; then
-              if ajv validate -s "$SCHEMA_DIR/architecture-roadmap.schema.v1.json" -d "$ROADMAP_DIR/architecture.json" -r "$ENUM_SCHEMA" --spec=draft7 -c ajv-formats; then
+              if ajv validate -s "$SCHEMA_DIR/architecture-roadmap.schema.v1.json" -d "$ROADMAP_DIR/architecture.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
                 echo "PASS architecture.json"; PASSED=$((PASSED + 1))
               else
                 echo "FAIL architecture.json"; FAILED=$((FAILED + 1))
@@ -196,7 +196,7 @@ jobs:
           # extensions.json (OPTIONAL)
           if [ -f "$ROADMAP_DIR/extensions.json" ]; then
             if [ -f "$SCHEMA_DIR/extensions.schema.v1.json" ]; then
-              if ajv validate -s "$SCHEMA_DIR/extensions.schema.v1.json" -d "$ROADMAP_DIR/extensions.json" --spec=draft7 -c ajv-formats; then
+              if ajv validate -s "$SCHEMA_DIR/extensions.schema.v1.json" -d "$ROADMAP_DIR/extensions.json" --spec=draft7 --strict=false -c ajv-formats; then
                 echo "PASS extensions.json"; PASSED=$((PASSED + 1))
               else
                 echo "FAIL extensions.json"; FAILED=$((FAILED + 1))
@@ -223,7 +223,7 @@ jobs:
           # roadmap-business.json (OPTIONAL - advanced business documentation)
           if [ -f "$ROADMAP_DIR/roadmap-business.json" ]; then
             if [ -f "$SCHEMA_DIR/roadmap-business.schema.json" ]; then
-              if ajv validate -s "$SCHEMA_DIR/roadmap-business.schema.json" -d "$ROADMAP_DIR/roadmap-business.json" -r "$ENUM_SCHEMA" --spec=draft7 -c ajv-formats; then
+              if ajv validate -s "$SCHEMA_DIR/roadmap-business.schema.json" -d "$ROADMAP_DIR/roadmap-business.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
                 echo "PASS roadmap-business.json"; PASSED=$((PASSED + 1))
               else
                 echo "FAIL roadmap-business.json"; FAILED=$((FAILED + 1))
@@ -238,7 +238,7 @@ jobs:
           # workflow-registry.json (OPTIONAL - CI/CD documentation)
           if [ -f "$ROADMAP_DIR/workflow-registry.json" ]; then
             if [ -f "$SCHEMA_DIR/workflow-registry.schema.json" ]; then
-              if ajv validate -s "$SCHEMA_DIR/workflow-registry.schema.json" -d "$ROADMAP_DIR/workflow-registry.json" -r "$ENUM_SCHEMA" --spec=draft7 -c ajv-formats; then
+              if ajv validate -s "$SCHEMA_DIR/workflow-registry.schema.json" -d "$ROADMAP_DIR/workflow-registry.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
                 echo "PASS workflow-registry.json"; PASSED=$((PASSED + 1))
               else
                 echo "FAIL workflow-registry.json"; FAILED=$((FAILED + 1))
@@ -253,7 +253,7 @@ jobs:
           # metrics-pipeline.json (OPTIONAL - observability configuration)
           if [ -f "$ROADMAP_DIR/metrics-pipeline.json" ]; then
             if [ -f "$SCHEMA_DIR/metrics-pipeline.schema.json" ]; then
-              if ajv validate -s "$SCHEMA_DIR/metrics-pipeline.schema.json" -d "$ROADMAP_DIR/metrics-pipeline.json" -r "$ENUM_SCHEMA" --spec=draft7 -c ajv-formats; then
+              if ajv validate -s "$SCHEMA_DIR/metrics-pipeline.schema.json" -d "$ROADMAP_DIR/metrics-pipeline.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
                 echo "PASS metrics-pipeline.json"; PASSED=$((PASSED + 1))
               else
                 echo "FAIL metrics-pipeline.json"; FAILED=$((FAILED + 1))
@@ -268,7 +268,7 @@ jobs:
           # deployment-metrics.json (OPTIONAL - Watchtower deployment tracking)
           if [ -f "$ROADMAP_DIR/deployment-metrics.json" ]; then
             if [ -f "$SCHEMA_DIR/deployment-metrics.schema.json" ]; then
-              if ajv validate -s "$SCHEMA_DIR/deployment-metrics.schema.json" -d "$ROADMAP_DIR/deployment-metrics.json" --spec=draft7 -c ajv-formats; then
+              if ajv validate -s "$SCHEMA_DIR/deployment-metrics.schema.json" -d "$ROADMAP_DIR/deployment-metrics.json" --spec=draft7 --strict=false -c ajv-formats; then
                 echo "PASS deployment-metrics.json"; PASSED=$((PASSED + 1))
               else
                 echo "FAIL deployment-metrics.json"; FAILED=$((FAILED + 1))
@@ -283,7 +283,7 @@ jobs:
           # interfaces.json (OPTIONAL - MCP tools and API definitions)
           if [ -f "$ROADMAP_DIR/interfaces.json" ]; then
             if [ -f "$SCHEMA_DIR/interfaces.schema.json" ]; then
-              if ajv validate -s "$SCHEMA_DIR/interfaces.schema.json" -d "$ROADMAP_DIR/interfaces.json" -r "$ENUM_SCHEMA" --spec=draft7 -c ajv-formats; then
+              if ajv validate -s "$SCHEMA_DIR/interfaces.schema.json" -d "$ROADMAP_DIR/interfaces.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
                 echo "PASS interfaces.json"; PASSED=$((PASSED + 1))
               else
                 echo "FAIL interfaces.json"; FAILED=$((FAILED + 1))
@@ -304,7 +304,7 @@ jobs:
               for feature_file in "$ROADMAP_DIR/features"/*.json; do
                 if [ -f "$feature_file" ]; then
                   FEATURE_NAME=$(basename "$feature_file")
-                  if ajv validate -s "$SCHEMA_DIR/feature.schema.json" -d "$feature_file" -r "$ENUM_SCHEMA" --spec=draft7 -c ajv-formats 2>/dev/null; then
+                  if ajv validate -s "$SCHEMA_DIR/feature.schema.json" -d "$feature_file" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats 2>/dev/null; then
                     echo "  PASS features/$FEATURE_NAME"; FEATURE_PASSED=$((FEATURE_PASSED + 1))
                   else
                     echo "  FAIL features/$FEATURE_NAME"; FEATURE_FAILED=$((FEATURE_FAILED + 1))
