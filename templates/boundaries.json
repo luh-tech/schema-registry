@@ -1,5 +1,5 @@
 {
-  "$schema": "https://luhtech.dev/schemas/boundaries-v1.json",
+  "$schema": "https://schemas.luh.tech/boundaries.schema.json",
   "version": "1.0.0",
   "venture": "venture-id",
   "lastUpdated": "2026-01-01T00:00:00Z",
@@ -28,8 +28,13 @@
   ],
   "upstreamSync": {
     "enabled": false,
-    "branches": ["main"],
-    "excludePaths": [".roadmap/**", "apps/venture-id/**"],
+    "branches": [
+      "main"
+    ],
+    "excludePaths": [
+      ".roadmap/**",
+      "apps/venture-id/**"
+    ],
     "frequency": "manual",
     "lastSync": null,
     "lastSyncCommit": null

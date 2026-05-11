@@ -100,7 +100,7 @@ All entities include `graphMetadata` for bidirectional graph traversal:
 ```json
 {
   "$id": "urn:luhtech:project-alpha:pm-decision:DEC-2026-0001",
-  "$schema": "https://luhtech.dev/schemas/pm/decision.schema.json",
+  "$schema": "https://schemas.luh.tech/pm/decision.schema.json",
   "schemaVersion": "3.0.0",
   "decisionId": "DEC-2026-0001",
   "title": "HVAC Duct Routing Modification",

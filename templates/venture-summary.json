@@ -1,5 +1,5 @@
 {
-  "$schema": "https://luhtech.dev/schemas/venture-summary.json",
+  "$schema": "https://schemas.luh.tech/venture-summary.schema.v2.0.json",
   "version": "1.0.0",
   "lastUpdated": "2026-01-01T00:00:00Z",
   "venture": {
@@ -9,7 +9,10 @@
     "stage": "pre-seed",
     "founded": "2026-01-01",
     "domain": "example.com",
-    "industry": ["Construction", "Technology"],
+    "industry": [
+      "Construction",
+      "Technology"
+    ],
     "location": "San Francisco, CA"
   },
   "pitch": {

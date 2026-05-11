@@ -1,5 +1,5 @@
 {
-  "$schema": "https://luhtech.dev/schemas/decision-log-v2.json",
+  "$schema": "https://schemas.luh.tech/decision-log.schema.v2.json",
   "version": "1.0.0",
   "ventureId": "VENTURE_ID",
   "lastUpdated": "2025-12-11T00:00:00Z",
@@ -24,10 +24,15 @@
   },
   "governance": {
     "requiredApprovers": 1,
-    "approverRoles": ["founder", "tech-lead"],
+    "approverRoles": [
+      "founder",
+      "tech-lead"
+    ],
     "autoApproveCategories": [],
     "reviewIntervalDays": 180,
-    "escalationPath": ["erik-luhtech"],
+    "escalationPath": [
+      "erik-luhtech"
+    ],
     "notificationChannels": []
   },
   "stats": {

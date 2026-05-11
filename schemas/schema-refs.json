@@ -1,18 +1,27 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/schema-refs.json",
-  "title": "LuhTech Schema Registry v1.8.0",
-  "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.8.0: roadmap schema bumped to v3.3 (adds optional `provides` + `lifecyclePhases` on feature objects).",
+  "title": "LuhTech Schema Registry v1.9.0",
+  "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.9.0: add follow-up-register and decision-log entries; new entries use URL id convention matching canonical $ids.",
   "meta": {
-    "version": "1.8.0",
-    "lastUpdated": "2026-04-17T00:00:00Z",
+    "version": "1.9.0",
+    "lastUpdated": "2026-05-11T00:00:00Z",
     "changelog": [
+      {
+        "version": "1.9.0",
+        "date": "2026-05-11",
+        "changes": [
+          "follow-up-register schema: NEW entry — https://schemas.luh.tech/follow-up-register.schema.json (promoted to canonical in PR #5)",
+          "decision-log schema: NEW entry — https://schemas.luh.tech/decision-log.schema.v2.json (v2 is portfolio standard; v1 retained for backward-compat only)",
+          "Convention note: new entries use URL form for `id` field (matching canonical $id of hosted schema); existing URN-form entries are not retroactively changed"
+        ]
+      },
       {
         "version": "1.8.0",
         "date": "2026-04-17",
         "changes": [
-          "roadmap schema: v3.2 \u2192 v3.3 (adds optional `provides: array[string]` and `lifecyclePhases: array[integer 0-7]` on feature objects)",
-          "Source: requires/provides matching infrastructure in business-tools (5bd5c4c3) \u2014 capabilities.json, challenges.json, lifecycle-phases.json",
+          "roadmap schema: v3.2 → v3.3 (adds optional `provides: array[string]` and `lifecyclePhases: array[integer 0-7]` on feature objects)",
+          "Source: requires/provides matching infrastructure in business-tools (5bd5c4c3) — capabilities.json, challenges.json, lifecycle-phases.json",
           "Note: xaasServices, xaasServicePrimary, personaRelevance continue to ride on additionalProperties:true and are intentionally NOT formalized in this revision; a future schema version may regularize."
         ]
       },
@@ -20,19 +29,19 @@
         "version": "1.7.0",
         "date": "2026-04-16",
         "changes": [
-          "roadmap schema: v3.1 \u2192 v3.2 (adds required `scope` field on feature objects \u2014 product/infrastructure/enterprise-tool/standard enum)",
-          "Source: ECTROPY-OPENCORE-STRATEGY-2026-04-16 Decision 1 \u2014 Phase A schema introduction for scope classification"
+          "roadmap schema: v3.1 → v3.2 (adds required `scope` field on feature objects — product/infrastructure/enterprise-tool/standard enum)",
+          "Source: ECTROPY-OPENCORE-STRATEGY-2026-04-16 Decision 1 — Phase A schema introduction for scope classification"
         ]
       },
       {
         "version": "1.6.0",
         "date": "2026-02-26",
         "changes": [
-          "roadmap schema: v2.4 \u2192 v3.1 (adds mission/vision/currentStage/overallProgress to venture block)",
-          "roadmap-business schema: v2.0 \u2192 v2.1 (removes mission/vision/currentStage/overallProgress)",
-          "venture-summary schema: v1.0 \u2192 v2.0 (adds required meta provenance block, DERIVED ARTIFACT warning)",
-          "transform-template schema: v1.0 (NEW) \u2014 governs transform template file format",
-          "Source: Transform Fabric Architecture Strategy v2.0.0 \u2014 2026-02-26"
+          "roadmap schema: v2.4 → v3.1 (adds mission/vision/currentStage/overallProgress to venture block)",
+          "roadmap-business schema: v2.0 → v2.1 (removes mission/vision/currentStage/overallProgress)",
+          "venture-summary schema: v1.0 → v2.0 (adds required meta provenance block, DERIVED ARTIFACT warning)",
+          "transform-template schema: v1.0 (NEW) — governs transform template file format",
+          "Source: Transform Fabric Architecture Strategy v2.0.0 — 2026-02-26"
         ]
       }
     ]
@@ -42,13 +51,13 @@
       "id": "urn:luhtech:schema:roadmap:v3.3",
       "file": "roadmap.schema.v3.3.json",
       "version": "3.3.0",
-      "description": "Technical canonical source \u2014 team-visible roadmap data. v3.3 adds optional `provides` + `lifecyclePhases` on features (requires/provides matching infrastructure)."
+      "description": "Technical canonical source — team-visible roadmap data. v3.3 adds optional `provides` + `lifecyclePhases` on features (requires/provides matching infrastructure)."
     },
     "roadmap-business": {
       "id": "urn:luhtech:schema:roadmap-business:v2.1",
       "file": "roadmap-business.schema.v2.1.json",
       "version": "2.1.0",
-      "description": "Business canonical source \u2014 founder/investor-only financial and strategic data"
+      "description": "Business canonical source — founder/investor-only financial and strategic data"
     },
     "venture-summary": {
       "id": "urn:luhtech:schema:venture-summary:v2.0",
@@ -61,6 +70,18 @@
       "file": "transform-template.schema.v1.0.json",
       "version": "1.0.0",
       "description": "Governs the format of luhtech-transform template JSON files"
+    },
+    "follow-up-register": {
+      "id": "https://schemas.luh.tech/follow-up-register.schema.json",
+      "file": "follow-up-register.schema.json",
+      "version": "1.0.0",
+      "description": "Follow-up item tracking — open work, deferred actions, cross-repo coordination. Adopted portfolio-wide."
+    },
+    "decision-log": {
+      "id": "https://schemas.luh.tech/decision-log.schema.v2.json",
+      "file": "decision-log.schema.v2.json",
+      "version": "2.0.0",
+      "description": "Enhanced ADR with governance, voting, indexes, and implementation tracking. Portfolio-wide standard. v1 (decision-log.schema.json) retained for backward-compat only."
     }
   }
 }

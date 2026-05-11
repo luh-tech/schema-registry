@@ -1,5 +1,5 @@
 {
-  "$schema": "https://luhtech.dev/schemas/infrastructure-catalog-v1.json",
+  "$schema": "https://schemas.luh.tech/infrastructure-catalog.schema.json",
   "version": "1.0.0",
   "ventureId": "VENTURE_ID",
   "lastUpdated": "2025-12-11T00:00:00Z",
@@ -80,7 +80,10 @@
       {
         "name": "DATABASE_URL",
         "scope": "repository",
-        "environments": ["staging", "production"],
+        "environments": [
+          "staging",
+          "production"
+        ],
         "rotationPolicy": {
           "frequency": "quarterly",
           "autoRotate": false
@@ -93,8 +96,14 @@
       {
         "name": "CI Pipeline",
         "file": ".github/workflows/ci.yml",
-        "triggers": ["push", "pull_request"],
-        "branches": ["main", "develop"],
+        "triggers": [
+          "push",
+          "pull_request"
+        ],
+        "branches": [
+          "main",
+          "develop"
+        ],
         "maturity": 3,
         "description": "Continuous integration pipeline"
       }
@@ -116,7 +125,9 @@
       "timestamp": "2025-12-11T00:00:00Z",
       "version": "1.0.0",
       "author": "AUTHOR",
-      "changes": ["Initial infrastructure catalog creation"]
+      "changes": [
+        "Initial infrastructure catalog creation"
+      ]
     }
   ]
 }

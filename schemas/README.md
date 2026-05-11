@@ -29,7 +29,8 @@ This schema system provides standardized infrastructure documentation for the Lu
 
 | Schema | Version | Size | Purpose |
 |--------|---------|------|---------|
-| `roadmap.schema.v3.2.json` | v3.2.0 | ~40KB | **LATEST** - Adds required `scope` field on features (product/infrastructure/enterprise-tool/standard) |
+| `roadmap.schema.v3.3.json` | v3.3.0 | ~40KB | **LATEST** - Adds optional `provides` + `lifecyclePhases` on feature objects (requires/provides matching infrastructure) |
+| `roadmap.schema.v3.2.json` | v3.2.0 | ~40KB | Adds required `scope` field on features (product/infrastructure/enterprise-tool/standard) |
 | `roadmap.schema.v3.1.json` | v3.1.0 | ~40KB | Adds mission/vision/currentStage/overallProgress to venture block |
 | `roadmap.schema.v2.2.json` | v2.2.0 | ~25KB | Venture roadmap with resources block, vendor-agnostic features |
 | `roadmap.schema.v2.1.json` | v2.1.0 | ~19KB | Features array, releases tracking |
@@ -94,7 +95,7 @@ Feature specifications with milestones, deliverables, and business value trackin
 **Example Structure:**
 ```json
 {
-  "$schema": "https://luhtech.dev/schemas/feature.schema.json",
+  "$schema": "https://schemas.luh.tech/feature.schema.json",
   "$id": "urn:luhtech:ectropy:feature:decision-lifecycle",
   "featureId": "decision-lifecycle",
   "name": "Decision Lifecycle",
@@ -128,7 +129,7 @@ MCP tool signatures, REST API endpoints, GraphQL resolvers, and middleware speci
 **Example Structure:**
 ```json
 {
-  "$schema": "https://luhtech.dev/schemas/interfaces.schema.json",
+  "$schema": "https://schemas.luh.tech/interfaces.schema.json",
   "mcpTools": {
     "totalCount": 39,
     "categories": [
@@ -163,7 +164,7 @@ GitHub Actions workflow documentation and categorization following enterprise pa
 **Example Structure:**
 ```json
 {
-  "$schema": "https://luhtech.dev/schemas/workflow-registry.schema.json",
+  "$schema": "https://schemas.luh.tech/workflow-registry.schema.json",
   "meta": {
     "schemaFirst": true,
     "version": "1.0.0"
@@ -196,7 +197,7 @@ Robust metrics collection with failure handling and multi-destination reporting.
 **Example Structure:**
 ```json
 {
-  "$schema": "https://luhtech.dev/schemas/metrics-pipeline.schema.json",
+  "$schema": "https://schemas.luh.tech/metrics-pipeline.schema.json",
   "sources": [
     {
       "id": "github-ci",
@@ -236,7 +237,7 @@ Watchtower auto-deployment tracking with per-environment service status.
 **Example Structure:**
 ```json
 {
-  "$schema": "https://luhtech.dev/schemas/deployment-metrics.schema.json",
+  "$schema": "https://schemas.luh.tech/deployment-metrics.schema.json",
   "environments": {
     "production": {
       "services": [
@@ -269,7 +270,7 @@ Business roadmap data including financials, team planning, and competitive posit
 **Example Structure:**
 ```json
 {
-  "$schema": "https://luhtech.dev/schemas/roadmap-business.schema.json",
+  "$schema": "https://schemas.luh.tech/roadmap-business.schema.json",
   "financials": {
     "currentMRR": 0,
     "projectedARR": 500000,

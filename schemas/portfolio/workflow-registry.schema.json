@@ -54,7 +54,7 @@
           "format": "uri",
           "description": "URI to the schema that governs this file",
           "examples": [
-            "https://luhtech.dev/schemas/portfolio/workflow-registry-v1.json"
+            "https://schemas.luh.tech/portfolio/workflow-registry.schema.json"
           ]
         },
         "maintainer": {
