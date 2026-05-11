@@ -1,0 +1,317 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/patent/manifest.schema.json",
+  "title": "Patent Manifest",
+  "description": "Internal-only sidecar to a provisional. Records the decision log, source inventory, paragraph-to-source map, and changelog. Never filed at USPTO. One per provisional version.",
+  "type": "object",
+  "required": [
+    "documentId",
+    "provisionalNumber",
+    "version",
+    "decisionsLog"
+  ],
+  "properties": {
+    "documentId": {
+      "type": "string",
+      "pattern": "^LUHTECH-[A-Z0-9-]+$",
+      "description": "Stable manifest ID (e.g., 'LUHTECH-CTA-001PV1' for P1). The umbrella token in the ID is preserved across umbrella renames \u2014 the document ID is part of the document control system, not the marketing name."
+    },
+    "provisionalNumber": {
+      "type": "string",
+      "pattern": "^P[0-9]+$"
+    },
+    "provisionalTitle": {
+      "type": "string"
+    },
+    "cluster": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^v\\d+\\.\\d+(\\.\\d+)?$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "DRAFT \u2014 pending review",
+        "DRAFT \u2014 review in progress",
+        "LOCKED \u2014 filing-ready",
+        "FILED"
+      ]
+    },
+    "inventor": {
+      "type": "string"
+    },
+    "applicant": {
+      "type": "string"
+    },
+    "customerNumber": {
+      "type": "string",
+      "pattern": "^[0-9]{6}$"
+    },
+    "createdDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "versionDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "filingTarget": {
+      "type": "string",
+      "format": "date"
+    },
+    "counsel": {
+      "type": "string"
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Snapshot of provisional.metrics at this manifest version. Maintained by manifest-builder.",
+      "additionalProperties": true
+    },
+    "sourceInventory": {
+      "type": "array",
+      "description": "Every internal source contributing substantive content to this version of the spec.",
+      "items": {
+        "type": "object",
+        "required": [
+          "sourceId",
+          "type",
+          "contribution"
+        ],
+        "properties": {
+          "sourceId": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Architecture",
+              "Prior Art",
+              "Drop-in",
+              "Prior version",
+              "Engineering",
+              "Inventor pub",
+              "Terminology",
+              "Inventor IP",
+              "Conception"
+            ]
+          },
+          "contribution": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sectionToSourceMap": {
+      "type": "array",
+      "description": "Every paragraph (or paragraph range) of the spec traces to one or more sources.",
+      "items": {
+        "type": "object",
+        "required": [
+          "section",
+          "paragraphs",
+          "sources"
+        ],
+        "properties": {
+          "section": {
+            "type": "string"
+          },
+          "paragraphs": {
+            "type": "string",
+            "description": "e.g., '[001]' or '[003]\u2013[009]'."
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "decisionsLog": {
+      "type": "array",
+      "description": "Patent-internal decisions for this provisional. Inline shape pending FU-DECISION-LOG-V3-CANONICAL-1 resolution; refactor to $ref once canonical decision-log schema is confirmed.",
+      "items": {
+        "type": "object",
+        "required": [
+          "decisionId",
+          "date",
+          "title",
+          "decision",
+          "rationale",
+          "status"
+        ],
+        "properties": {
+          "decisionId": {
+            "type": "string",
+            "description": "Convention: 'd-YYYY-MM-DD-{slug}' for new entries; legacy 'DEC-NNN' accepted."
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "title": {
+            "type": "string"
+          },
+          "decision": {
+            "type": "string"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "proposed",
+              "approved",
+              "implemented",
+              "deferred",
+              "reversed",
+              "superseded"
+            ]
+          },
+          "alternatives": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "context": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "impact": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "approvedBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "impactedDeliverables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "version",
+          "date",
+          "summary"
+        ],
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "inventorExceptionTracking": {
+      "type": "object",
+      "description": "\u00a7102(b)(1)(A) tracking specific to this provisional. Mirrors portfolio.priorArtAnchor for audit isolation.",
+      "properties": {
+        "publications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "published": {
+                "type": "string",
+                "format": "date"
+              },
+              "barDate": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          }
+        },
+        "filingDeadline": {
+          "type": "string",
+          "format": "date"
+        },
+        "currentTargetWithinWindow": {
+          "type": "boolean"
+        }
+      }
+    },
+    "pendingItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "blocking": {
+            "type": "boolean"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "targetResolution": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    }
+  }
+}

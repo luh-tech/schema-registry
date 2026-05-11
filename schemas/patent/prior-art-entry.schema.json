@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/patent/prior-art-entry.schema.json",
+  "title": "Prior Art Entry",
+  "description": "Single prior-art block. The prior-art library is a list of these. The library serves two purposes: (1) authoring drop-in prose blocks for the spec's Background section, and (2) maintaining a portfolio-wide ground-truth of what's been considered (defensive completeness for prosecution).",
+  "type": "object",
+  "required": ["entryId", "citation", "type", "relevance", "status"],
+  "properties": {
+    "entryId": {
+      "type": "string",
+      "pattern": "^PA-[A-Z0-9-]+$",
+      "description": "Stable identifier (e.g., 'PA-W3C-PROV-DM', 'PA-USPTO-11184334')."
+    },
+    "citation": {
+      "type": "string",
+      "description": "Full canonical citation as it would appear in a spec or prosecution document."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "patent",
+        "patent-application",
+        "academic-paper",
+        "standard",
+        "industry-publication",
+        "npm-package",
+        "open-source-software",
+        "inventor-prior-disclosure"
+      ]
+    },
+    "year": { "type": "integer" },
+    "authors": { "type": "array", "items": { "type": "string" } },
+    "venue": { "type": "string" },
+    "url": { "type": "string", "format": "uri" },
+    "relevance": {
+      "type": "string",
+      "description": "Why this prior art matters to the portfolio. Specifically: what does it teach, and how does the present invention distinguish from it?"
+    },
+    "distinctionFromInvention": {
+      "type": "string",
+      "description": "The specific structural or methodological gap this prior art has that the invention fills. Used both for spec drafting and for prosecution arguments."
+    },
+    "appliesToProvisionals": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^P[0-9]+$" }
+    },
+    "blockProse": {
+      "type": "string",
+      "description": "Drop-in prose block for use in spec Background sections. Plain text; rendered into spec at build time. Optional — prior-art entries can be reference-only without block prose."
+    },
+    "blockSection": {
+      "type": "string",
+      "description": "Section label in the prior-art library document (e.g., '§1.2 Patent landscape', '§2A Sensor positioning')."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["candidate", "evaluated", "cited", "rejected"],
+      "description": "candidate = found in research, not yet evaluated. evaluated = read and assessed, may or may not be cited. cited = appears in at least one spec. rejected = evaluated and intentionally not cited (with rationale)."
+    },
+    "rejectionRationale": {
+      "type": "string"
+    },
+    "addedDate": { "type": "string", "format": "date" },
+    "lastReviewedDate": { "type": "string", "format": "date" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "rejected" } }, "required": ["status"] },
+      "then": { "required": ["rejectionRationale"] }
+    }
+  ]
+}
