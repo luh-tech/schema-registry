@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/patent/figure-sidecar.schema.json",
+  "title": "Patent Figure Sidecar",
+  "description": "Per-figure metadata. Lives alongside each fig##_name.svg.js generator (or .svg/.png for hand-drawn). Source of truth for the locked reference numerals used in that figure and for the figure's caption text in the spec's Brief Description.",
+  "type": "object",
+  "required": ["provisional", "figureNumber", "title", "generationMethod", "status"],
+  "properties": {
+    "provisional": {
+      "type": "string",
+      "pattern": "^P[0-9]+$"
+    },
+    "figureNumber": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Integer figure number; matches the FIG-NN in the filename."
+    },
+    "title": {
+      "type": "string",
+      "description": "Short descriptive title shown above the figure on the rendered page (not in the spec text)."
+    },
+    "generationMethod": {
+      "type": "string",
+      "enum": ["svg-handauthored", "svg-ai-assisted", "svg-generated", "mermaid", "hand-scanned"],
+      "description": "How the figure source is produced. 'svg-generated' = built by Node script under figures/. 'mermaid' is currently disallowed pending upstream htmlLabels:false fix; flag if used."
+    },
+    "sourceDiagram": {
+      "type": "string",
+      "description": "If derived from an internal engineering diagram, cite source (e.g., 'BOX-ARCHITECTURE-2026-03-26 §3.1')."
+    },
+    "caption": {
+      "type": "string",
+      "description": "The full figure caption as it appears in the spec's Brief Description of the Drawings (e.g., 'FIG. 1 is a schematic block diagram...'). MUST match the spec text verbatim."
+    },
+    "referenceNumerals": {
+      "type": "array",
+      "description": "Locked numeral assignments used in this figure. Numerals MUST be drawn from the portfolio numerals registry; first use of a numeral in any figure or spec locks the assignment.",
+      "items": {
+        "type": "object",
+        "required": ["numeral", "element"],
+        "properties": {
+          "numeral": { "type": "integer", "minimum": 1 },
+          "element": { "type": "string" },
+          "subElements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "suffix": { "type": "string", "pattern": "^[a-z]$" },
+                "element": { "type": "string" }
+              }
+            },
+            "description": "Sub-element variants like 10a, 10b, 10c."
+          }
+        }
+      }
+    },
+    "specParagraphIntroducingFigure": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Paragraph number in spec where this figure is first introduced in Brief Description of the Drawings."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "review", "filing-ready"]
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief prose description of what the figure shows, written for a future regeneration task."
+    },
+    "designNotes": {
+      "type": "string"
+    },
+    "crossReferences": {
+      "type": "object",
+      "properties": {
+        "specParagraphs": { "type": "array", "items": { "type": "integer" } },
+        "relatedFigures": { "type": "array", "items": { "type": "integer" } },
+        "crossProvisionalReferences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "provisional": { "type": "string", "pattern": "^P[0-9]+$" },
+              "figureNumber": { "type": "integer" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

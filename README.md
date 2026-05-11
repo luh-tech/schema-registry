@@ -86,6 +86,7 @@ cp path/to/luh-tech-roadmap-template/.github/workflows/roadmap-sync.yml .github/
 | `decision-log.schema.json` | Decision tracking | Yes |
 | `dependencies.schema.json` | Cross-venture dependencies | Yes |
 | `boundaries.schema.json` | Fork tracking | Only for forks |
+| `patent/*.schema.json` | Patent portfolio infrastructure (SBPA family — 7 schemas) | No (LuhTech IP only) |
 
 ## Directory Structure
 
