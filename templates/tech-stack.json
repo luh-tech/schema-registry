@@ -1,5 +1,5 @@
 {
-  "$schema": "https://luhtech.dev/schemas/tech-stack-v1.json",
+  "$schema": "https://schemas.luh.tech/tech-stack.schema.json",
   "version": "1.0.0",
   "ventureId": "VENTURE_ID",
   "lastUpdated": "2025-12-11T00:00:00Z",
@@ -8,7 +8,10 @@
       {
         "name": "TypeScript",
         "version": "5.3",
-        "purpose": ["backend", "frontend"],
+        "purpose": [
+          "backend",
+          "frontend"
+        ],
         "primary": true,
         "runtimeVersion": "Node.js 20 LTS"
       }

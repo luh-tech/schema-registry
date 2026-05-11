@@ -1,5 +1,5 @@
 {
-  "$schema": "https://luhtech.dev/schemas/evidence-session-v1.json",
+  "$schema": "https://schemas.luh.tech/evidence-session.schema.json",
   "version": "1.0.0",
   "ventureId": "VENTURE_ID",
   "lastUpdated": "2025-12-11T00:00:00Z",

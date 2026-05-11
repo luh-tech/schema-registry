@@ -1,5 +1,5 @@
 {
-  "$schema": "https://luhtech.dev/schemas/dependencies.json",
+  "$schema": "https://schemas.luh.tech/dependencies.schema.json",
   "version": "1.0.0",
   "ventureId": "venture-id",
   "lastUpdated": "2026-01-01T00:00:00Z",

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://luhtech.dev/schemas/roadmap-v2.2.json",
+  "$schema": "https://schemas.luh.tech/roadmap.schema.v3.3.json",
   "schemaVersion": "2.2.0",
   "meta": {
     "ventureId": "venture-id",
@@ -29,7 +29,9 @@
     "q1_2026": {
       "focus": "Foundation",
       "theme": "Initial setup and architecture decisions",
-      "phases": ["Foundation"],
+      "phases": [
+        "Foundation"
+      ],
       "status": "planned",
       "milestones": [
         {
