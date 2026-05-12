@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/_enums/service-exchange.enum.json",
+  "title": "Service Exchange (SNx member)",
+  "description": "Canonical SNx (Service Network Exchange) member acronym. Replaces XaaS taxonomy per DEC-SVX-001. See NAMING-SVCEXCHANGE-2026-05-04.json for full convention.",
+  "type": "string",
+  "enum": ["GSx", "CSx", "PSx", "HSx", "RSx", "ASx", "ESx", "MSx", "ISx"],
+  "x-mapping": {
+    "GSx": { "long": "GovSx", "spelledOut": "Governance Service Exchange", "supersedes": "GaaS" },
+    "CSx": { "long": "CorSx", "spelledOut": "Coordination Service Exchange", "supersedes": "CaaS" },
+    "PSx": { "long": "PaySx", "spelledOut": "Payment Service Exchange", "supersedes": "PaaS" },
+    "HSx": { "long": "HumSx", "spelledOut": "Human Service Exchange", "supersedes": "HaaS" },
+    "RSx": { "long": "RobSx", "spelledOut": "Robot Service Exchange", "supersedes": "RaaS" },
+    "ASx": { "long": "AgtSx", "spelledOut": "Agent Service Exchange", "supersedes": "AaaS" },
+    "ESx": { "long": "EqpSx", "spelledOut": "Equipment Service Exchange", "supersedes": "EaaS" },
+    "MSx": { "long": "MatSx", "spelledOut": "Material Service Exchange", "supersedes": "MaaS" },
+    "ISx": { "long": "InsSx", "spelledOut": "Inspection Service Exchange", "supersedes": "IaaS" }
+  }
+}
