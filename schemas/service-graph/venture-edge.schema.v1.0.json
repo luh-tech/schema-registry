@@ -251,7 +251,7 @@
   },
   "x-luhtech": {
     "schemaFamily": "service-graph",
-    "registry": "luh-tech-roadmap-template/schemas/",
+    "registry": "schema-registry/schemas/",
     "instanceLocation": "luh-tech/business-tools/data/service-graph/edges/",
     "appendOnly": "ledger",
     "transformConsumer": "service-graph-rollup.transform.v1.json",

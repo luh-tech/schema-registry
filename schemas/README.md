@@ -374,7 +374,7 @@ urn:luhtech:holdings:venture:ectropy
 
 ```
 TIER 0: CANONICAL SCHEMAS (Single Source of Truth)
-luh-tech/luh-tech-roadmap-template/schemas/
+luh-tech/schema-registry/schemas/
 
 ├── VENTURE-LEVEL (Per-venture .roadmap/ files)
 │   ├── roadmap.schema.v2.json
@@ -585,7 +585,7 @@ npx ajv validate -s schemas/roadmap-business.schema.json -d .roadmap/roadmap-bus
 ## Enterprise Excellence Checkpoint
 
 ✅ Schema-first architecture (not code-first)  
-✅ Single source of truth (luh-tech-roadmap-template)  
+✅ Single source of truth (schema-registry)  
 ✅ Derived from proven system (Ectropy V3 production)  
 ✅ Comprehensive documentation  
 ✅ CI validation ready  

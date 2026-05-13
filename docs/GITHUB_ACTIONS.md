@@ -19,7 +19,7 @@ This repository provides **reusable GitHub Actions workflows** that all LuhTech 
 ## Architecture
 
 ```
-luh-tech-roadmap-template/
+schema-registry/
 ├── .github/
 │   └── workflows/
 │       └── roadmap-validate.yml   ← REUSABLE WORKFLOW
@@ -36,7 +36,7 @@ luh-tech-roadmap-template/
 ### Location
 
 ```
-luh-tech/luh-tech-roadmap-template/.github/workflows/roadmap-validate.yml
+luh-tech/schema-registry/.github/workflows/roadmap-validate.yml
 ```
 
 ### Inputs
@@ -88,7 +88,7 @@ on:
 jobs:
   validate:
     name: Validate Roadmap
-    uses: luh-tech/luh-tech-roadmap-template/.github/workflows/roadmap-validate.yml@v1
+    uses: luh-tech/schema-registry/.github/workflows/roadmap-validate.yml@v1
     with:
       venture-id: 'YOUR_VENTURE_ID'  # ← Change this
       schema-version: 'v2'
@@ -101,7 +101,7 @@ jobs:
 ### Recommended: Use `@v1`
 
 ```yaml
-uses: luh-tech/luh-tech-roadmap-template/.github/workflows/roadmap-validate.yml@v1
+uses: luh-tech/schema-registry/.github/workflows/roadmap-validate.yml@v1
 ```
 
 This floating tag always points to the latest stable v1.x release.
@@ -155,7 +155,7 @@ Error: Unable to find reusable workflow
 
 **Solution:** Ensure the workflow path is exactly:
 ```
-luh-tech/luh-tech-roadmap-template/.github/workflows/roadmap-validate.yml@v1
+luh-tech/schema-registry/.github/workflows/roadmap-validate.yml@v1
 ```
 
 ### Schema Validation Failed

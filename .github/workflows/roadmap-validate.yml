@@ -57,7 +57,7 @@ jobs:
       - name: Checkout Schema Repository
         uses: actions/checkout@v4
         with:
-          repository: luh-tech/luh-tech-roadmap-template
+          repository: luh-tech/schema-registry
           path: template
           sparse-checkout: |
             schemas/

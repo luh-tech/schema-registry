@@ -1,4 +1,4 @@
-# luh-tech-roadmap-template
+# schema-registry
 
 > JSON-first documentation system for LuhTech portfolio ventures
 
@@ -40,10 +40,10 @@ mkdir -p .roadmap/metrics
 
 ```bash
 # Copy schemas for validation
-cp -r path/to/luh-tech-roadmap-template/schemas .roadmap/
+cp -r path/to/schema-registry/schemas .roadmap/
 
 # Create from examples
-cp path/to/luh-tech-roadmap-template/examples/roadmap.json .roadmap/
+cp path/to/schema-registry/examples/roadmap.json .roadmap/
 ```
 
 ### 3. Customize for Your Venture
@@ -57,7 +57,7 @@ Edit `.roadmap/roadmap.json` with your venture's:
 ### 4. Set Up CI Validation
 
 ```bash
-cp path/to/luh-tech-roadmap-template/.github/workflows/roadmap-sync.yml .github/workflows/
+cp path/to/schema-registry/.github/workflows/roadmap-sync.yml .github/workflows/
 ```
 
 ## Schemas
@@ -144,7 +144,7 @@ This template is part of the **luh-tech template system**:
 
 | Template | Purpose | Status |
 |----------|---------|--------|
-| `luh-tech-roadmap-template` | Roadmap & documentation | ✅ Complete |
+| `schema-registry` | Roadmap & documentation | ✅ Complete |
 | `luh-tech-mcp-template` | Node.js MCP server | ⏳ Planned |
 | `luh-tech-mcp-template-python` | Python MCP server | ⏳ Planned |
 | `luh-tech-business-template` | CRM, n8n, billing | ⏳ Planned |

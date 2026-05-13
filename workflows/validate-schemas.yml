@@ -19,7 +19,7 @@ jobs:
       - name: Checkout template repo for schemas
         uses: actions/checkout@v4
         with:
-          repository: luh-tech/luh-tech-roadmap-template
+          repository: luh-tech/schema-registry
           path: template-repo
 
       - name: Setup Node.js
