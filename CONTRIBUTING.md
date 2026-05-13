@@ -1,4 +1,4 @@
-# Contributing to luh-tech-roadmap-template
+# Contributing to schema-registry
 
 > Implementation guide for the LuhTech venture `.roadmap/` directory structure
 
@@ -22,7 +22,7 @@ Before implementing, understand the naming conventions:
 | Term | Meaning | Example |
 |------|---------|---------|
 | **luh-tech** | GitHub organization | `github.com/luh-tech` |
-| **luh-tech templates** | Canonical templates for all ventures | `luh-tech-roadmap-template` |
+| **luh-tech templates** | Canonical templates for all ventures | `schema-registry` |
 | **LuhTech** | The holding company venture | LuhTechnology Ventures |
 | **Ectropy** | Flagship platform (template origin) | `ectropy.ai` |
 
@@ -231,12 +231,12 @@ Automated triggers on:
 
 2. **Copy schemas for reference:**
    ```bash
-   cp -r path/to/luh-tech-roadmap-template/schemas .roadmap/
+   cp -r path/to/schema-registry/schemas .roadmap/
    ```
 
 3. **Initialize from examples:**
    ```bash
-   cp path/to/luh-tech-roadmap-template/examples/*.json .roadmap/
+   cp path/to/schema-registry/examples/*.json .roadmap/
    ```
 
 4. **Customize for your venture:**
@@ -248,7 +248,7 @@ Automated triggers on:
 5. **Set up CI:**
    ```bash
    mkdir -p .github/workflows
-   cp path/to/luh-tech-roadmap-template/.github/workflows/roadmap-sync.yml .github/workflows/
+   cp path/to/schema-registry/.github/workflows/roadmap-sync.yml .github/workflows/
    ```
 
 ### For Existing Ventures

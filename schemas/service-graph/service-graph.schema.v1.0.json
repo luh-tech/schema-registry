@@ -350,7 +350,7 @@
   },
   "x-luhtech": {
     "schemaFamily": "service-graph",
-    "registry": "luh-tech-roadmap-template/schemas/",
+    "registry": "schema-registry/schemas/",
     "instanceFile": "luh-tech/business-tools/data/service-graph/portfolio-graph.json",
     "derivedArtifact": true,
     "transformId": "service-graph-rollup.transform.v1.json",

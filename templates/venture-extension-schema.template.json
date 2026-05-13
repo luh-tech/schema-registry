@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "urn:luhtech:{{VENTURE_ID}}:schema:roadmap-local:v1.0",
   "title": "{{VENTURE_NAME}} Local Roadmap Extension Schema v1.0",
-  "description": "Venture-local extension schema for {{VENTURE_NAME}}. Extends the canonical roadmap.json schema with domain-specific fields. Extension fields MUST live under extensions.* — canonical field names are reserved. This schema lives in the venture repo, NOT in luh-tech-roadmap-template. See SCHEMA_EXTENSIONS.md for governance rules and the promotion pathway for fields that become cross-venture canonical.",
+  "description": "Venture-local extension schema for {{VENTURE_NAME}}. Extends the canonical roadmap.json schema with domain-specific fields. Extension fields MUST live under extensions.* — canonical field names are reserved. This schema lives in the venture repo, NOT in schema-registry. See SCHEMA_EXTENSIONS.md for governance rules and the promotion pathway for fields that become cross-venture canonical.",
   "allOf": [
     {
       "$ref": "urn:luhtech:schema:roadmap:v3.1",

@@ -45,7 +45,7 @@ Individual ventures can extend the canonical roadmap schema for domain-specific 
 | Rule | Description |
 |------|-------------|
 | **Namespace** | Extension fields MUST live under `extensions.*`. Any field at the canonical level is reserved. |
-| **Location** | Extension schemas live in the venture repo — NOT in `luh-tech-roadmap-template`. |
+| **Location** | Extension schemas live in the venture repo — NOT in `schema-registry`. |
 | **Transform isolation** | The canonical `venture-summary-full` transform ignores `extensions.*` fields. Extension data does not appear in portfolio-level summary unless an explicit venture-specific transform is registered. |
 | **Venture-local transforms** | Ventures may register additional transforms (e.g., `jobsitecontrol-hardware-report.transform.v1.json`) that use extension fields to produce venture-specific outputs. |
 | **Promotion pathway** | If an extension field proves useful across 3+ ventures, open a PR to promote it to the canonical schema. Extensions are incubators for future canonical fields. |
@@ -68,7 +68,7 @@ This is the essential abstraction pattern for scaling: **ventures own their doma
 
 When an extension field is useful across 3+ ventures:
 
-1. Open a PR to `luh-tech/luh-tech-roadmap-template` with the proposed canonical field.
+1. Open a PR to `luh-tech/schema-registry` with the proposed canonical field.
 2. The PR must include:
    - Schema change to `roadmap.schema.v3.x.json`
    - Migration guide for existing extension users

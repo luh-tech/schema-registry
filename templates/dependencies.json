@@ -27,7 +27,7 @@
   ],
   "templates": [
     {
-      "templateId": "luh-tech-roadmap-template",
+      "templateId": "schema-registry",
       "version": "2.2.0",
       "status": "applied",
       "appliedOn": "2026-01-01",
