@@ -196,7 +196,7 @@ jobs:
           # extensions.json (OPTIONAL)
           if [ -f "$ROADMAP_DIR/extensions.json" ]; then
             if [ -f "$SCHEMA_DIR/extensions.schema.v1.json" ]; then
-              if ajv validate -s "$SCHEMA_DIR/extensions.schema.v1.json" -d "$ROADMAP_DIR/extensions.json" --spec=draft7 --strict=false -c ajv-formats; then
+              if ajv validate -s "$SCHEMA_DIR/extensions.schema.v1.json" -r "$ENUM_SCHEMA" -d "$ROADMAP_DIR/extensions.json" --spec=draft7 --strict=false -c ajv-formats; then
                 echo "PASS extensions.json"; PASSED=$((PASSED + 1))
               else
                 echo "FAIL extensions.json"; FAILED=$((FAILED + 1))
