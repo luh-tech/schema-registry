@@ -1,0 +1,47 @@
+# Enforces canonical meta-schema across all registry schemas.
+# Decision: Draft 7 is the portfolio canonical standard (decided 2026-05-12).
+# Distribution at decision time: 61/64 Draft 7, 3 outliers migrated.
+# Closes FU-CANONICAL-SCHEMA-META-VERSION-ALIGNMENT-1.
+
+name: Meta-Schema Standard Check
+
+on:
+  pull_request:
+    paths:
+      - 'schemas/**/*.json'
+      - '.github/workflows/meta-schema-check.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'schemas/**/*.json'
+      - '.github/workflows/meta-schema-check.yml'
+
+jobs:
+  check-canonical-meta-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify all schemas declare canonical Draft 7 meta-schema
+        run: |
+          set -e
+          CANONICAL="http://json-schema.org/draft-07/schema#"
+
+          violations=0
+          checked=0
+          while IFS= read -r f; do
+            checked=$((checked + 1))
+            declared=$(python3 -c "import json,sys; print(json.load(open('$f')).get('\$schema', '<MISSING>'))")
+            if [ "$declared" != "$CANONICAL" ]; then
+              echo "::error file=$f::Schema declares \$schema=$declared, expected $CANONICAL (canonical Draft 7). See chore/canonical-meta-schema-draft7-alignment-2026-05-12."
+              violations=$((violations + 1))
+            fi
+          done < <(find schemas -name '*.schema*.json' -type f | sort)
+
+          echo
+          echo "  Checked $checked schema file(s)."
+          if [ $violations -gt 0 ]; then
+            echo "::error::$violations schema(s) declare non-canonical meta-schema. Portfolio standard is Draft 7."
+            exit 1
+          fi
+          echo "  ✓ All $checked schemas declare canonical Draft 7 meta-schema."

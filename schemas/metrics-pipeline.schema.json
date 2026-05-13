@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/metrics-pipeline.schema.json",
   "title": "Metrics Pipeline Schema",
   "description": "Schema for robust metrics collection, failure handling, and multi-destination reporting following luh-tech enterprise patterns. Used across all ventures for consistent observability.",

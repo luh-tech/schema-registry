@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/deployment-metrics.schema.json",
   "title": "Deployment Metrics Schema",
   "description": "Schema for tracking deployment metrics from Watchtower auto-deployment pattern, following luh-tech enterprise patterns. Used across all ventures for consistent deployment monitoring.",
