@@ -12,6 +12,16 @@ on:
         required: false
         type: string
         default: 'v2'
+      venture-summary-version:
+        description: 'Venture-summary schema version (e.g. v2.0). Defaults to v2.0.'
+        required: false
+        type: string
+        default: 'v2.0'
+      decision-log-version:
+        description: 'Decision-log schema version (e.g. v2). Defaults to v2.'
+        required: false
+        type: string
+        default: 'v2'
       fail-on-warning:
         description: 'Whether warnings should fail the build'
         required: false
@@ -102,7 +112,7 @@ jobs:
           
           # venture-summary.json (REQUIRED)
           if [ -f "$ROADMAP_DIR/venture-summary.json" ]; then
-            if ajv validate -s "$SCHEMA_DIR/venture-summary.schema.json" -d "$ROADMAP_DIR/venture-summary.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
+            if ajv validate -s "$SCHEMA_DIR/venture-summary.schema.${{ inputs.venture-summary-version }}.json" -d "$ROADMAP_DIR/venture-summary.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
               echo "PASS venture-summary.json"; PASSED=$((PASSED + 1))
             else
               echo "FAIL venture-summary.json"; FAILED=$((FAILED + 1))
@@ -113,7 +123,7 @@ jobs:
           
           # decision-log.json (OPTIONAL)
           if [ -f "$ROADMAP_DIR/decision-log.json" ]; then
-            if ajv validate -s "$SCHEMA_DIR/decision-log.schema.json" -d "$ROADMAP_DIR/decision-log.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
+            if ajv validate -s "$SCHEMA_DIR/decision-log.schema.${{ inputs.decision-log-version }}.json" -d "$ROADMAP_DIR/decision-log.json" -r "$ENUM_SCHEMA" -r "$DEFINITIONS_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
               echo "PASS decision-log.json"; PASSED=$((PASSED + 1))
             else
               echo "FAIL decision-log.json"; FAILED=$((FAILED + 1))
