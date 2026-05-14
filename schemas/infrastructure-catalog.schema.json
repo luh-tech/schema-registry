@@ -221,6 +221,42 @@
         "notes": {
           "type": "string",
           "description": "Environment notes"
+        },
+        "objectStorage": {
+          "type": "object",
+          "description": "Object storage configuration for this environment (e.g., DigitalOcean Spaces, AWS S3). Optional — populate when the environment uses external object storage.",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "enum": [
+                "do-spaces",
+                "aws-s3",
+                "gcs",
+                "azure-blob"
+              ],
+              "description": "Object storage provider."
+            },
+            "region": {
+              "type": "string",
+              "description": "Provider-specific region identifier (e.g., 'sfo3' for DO Spaces, 'us-west-2' for AWS S3)."
+            },
+            "endpoint": {
+              "type": "string",
+              "format": "uri",
+              "description": "Object storage HTTP endpoint (e.g., 'https://sfo3.digitaloceanspaces.com')."
+            },
+            "bucket": {
+              "type": "string",
+              "description": "Bucket / container name."
+            }
+          },
+          "required": [
+            "provider",
+            "region",
+            "endpoint",
+            "bucket"
+          ],
+          "additionalProperties": false
         }
       }
     },
