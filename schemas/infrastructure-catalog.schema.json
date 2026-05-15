@@ -223,40 +223,66 @@
           "description": "Environment notes"
         },
         "objectStorage": {
-          "type": "object",
-          "description": "Object storage configuration for this environment (e.g., DigitalOcean Spaces, AWS S3). Optional — populate when the environment uses external object storage.",
-          "properties": {
-            "provider": {
-              "type": "string",
-              "enum": [
-                "do-spaces",
-                "aws-s3",
-                "gcs",
-                "azure-blob"
-              ],
-              "description": "Object storage provider."
-            },
-            "region": {
-              "type": "string",
-              "description": "Provider-specific region identifier (e.g., 'sfo3' for DO Spaces, 'us-west-2' for AWS S3)."
-            },
-            "endpoint": {
-              "type": "string",
-              "format": "uri",
-              "description": "Object storage HTTP endpoint (e.g., 'https://sfo3.digitaloceanspaces.com')."
-            },
-            "bucket": {
-              "type": "string",
-              "description": "Bucket / container name."
+          "type": "array",
+          "description": "Per-purpose object storage entries for this environment. Each entry represents a distinct bucket dedicated to a specific service or workload, allowing multiple buckets per environment without mixing concerns (config-sync data, IFC extraction artifacts, BIM model data, etc. each in their own bucket with their own lifecycle policy). Service consumers look up their bucket by purpose. Empty array or missing field is allowed (env has no object storage). See FU-CIS-INFRA-ADDRESSING-1 (E-B chain step 4) for config-sync wiring precedent.",
+          "items": {
+            "type": "object",
+            "required": [
+              "purpose",
+              "provider",
+              "region",
+              "endpoint",
+              "bucket"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "purpose": {
+                "type": "string",
+                "enum": [
+                  "config-sync",
+                  "ifc-extraction"
+                ],
+                "description": "Service or workload this bucket serves. Extensible — new purposes added as new services with storage needs arrive (BIM artifacts, voxel data, decision archives, SEPPA tool outputs, etc.). Schema enum gates valid values; CI lint MAY enforce uniqueness-per-purpose-per-env."
+              },
+              "provider": {
+                "type": "string",
+                "enum": [
+                  "do-spaces",
+                  "aws-s3",
+                  "gcs",
+                  "azure-blob"
+                ]
+              },
+              "region": {
+                "type": "string"
+              },
+              "endpoint": {
+                "type": "string",
+                "format": "uri"
+              },
+              "bucket": {
+                "type": "string"
+              }
             }
           },
-          "required": [
-            "provider",
-            "region",
-            "endpoint",
-            "bucket"
-          ],
-          "additionalProperties": false
+          "examples": [
+            [
+              {
+                "purpose": "config-sync",
+                "provider": "do-spaces",
+                "region": "sfo3",
+                "endpoint": "https://sfo3.digitaloceanspaces.com",
+                "bucket": "ectropy-staging-configs"
+              },
+              {
+                "purpose": "ifc-extraction",
+                "provider": "do-spaces",
+                "region": "sfo3",
+                "endpoint": "https://sfo3.digitaloceanspaces.com",
+                "bucket": "ectropy-staging-ifc-extraction"
+              }
+            ]
+          ]
         }
       }
     },
