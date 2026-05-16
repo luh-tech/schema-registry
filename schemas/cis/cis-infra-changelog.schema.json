@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/cis/cis-infra-changelog.schema.json",
+  "title": "CIS Infrastructure Changelog",
+  "description": "Structured audit ledger for CIS infrastructure changes (CI workflows, terraform, deploy config, registry, droplet provisioning). Each entry captures context, change, verification evidence, and follow-ups.",
+  "type": "object",
+  "required": ["schemaVersion", "purpose", "entryConventions", "changes"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "schemaTodo": {
+      "type": "string"
+    },
+    "entryConventions": {
+      "type": "object",
+      "additionalProperties": true,
+      "$comment": "TODO: tighten schema after stable use — describes id/type/verification conventions"
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChangeEntry"
+      }
+    }
+  },
+  "definitions": {
+    "ChangeEntry": {
+      "type": "object",
+      "required": ["id", "type", "title", "context", "change", "rationale", "verification", "timestamp", "follow_ups"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^INFRA-\\d{4}-\\d{2}-\\d{2}-\\d{3}$",
+          "description": "Sequential infra change ID: INFRA-{YYYY-MM-DD}-{NNN}"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["ci_fix", "ci_feature", "terraform", "deploy", "registry", "droplet", "secret_rotation", "other"]
+        },
+        "title": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "change": {
+          "type": "object",
+          "required": ["summary"],
+          "additionalProperties": true,
+          "$comment": "TODO: tighten — 'files' array most common but 'repos', 'pr_url', 'cherry_pick_sha' also observed",
+          "properties": {
+            "files": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "repos": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "summary": {
+              "type": "string"
+            },
+            "pr_url": { "type": "string" },
+            "cherry_pick_sha": { "type": "string" },
+            "original_sha": { "type": "string" }
+          }
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "verification": {
+          "type": "object",
+          "required": ["status"],
+          "additionalProperties": true,
+          "$comment": "TODO: tighten verification shape — status is PENDING|VERIFIED|FAILED; evidence, verified_at, verified_by_run_id are optional until verification commit",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["PENDING", "VERIFIED", "FAILED"]
+            },
+            "method": { "type": "string" },
+            "evidence": { "type": ["string", "null"] },
+            "verified_at": { "type": ["string", "null"], "format": "date-time" },
+            "verified_by_run_id": { "type": ["string", "number", "null"] }
+          }
+        },
+        "commit_sha": {
+          "type": ["string", "null"]
+        },
+        "branch": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "follow_ups": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

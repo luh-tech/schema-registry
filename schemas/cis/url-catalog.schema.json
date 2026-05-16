@@ -1,0 +1,140 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/cis/url-catalog.schema.json",
+  "title": "LuhTech URL Catalog",
+  "description": "Canonical catalog of all LuhTech domain registrations, Cloudflare account assignments, migration status, and per-venture URL endpoints.",
+  "type": "object",
+  "required": ["version", "meta", "ventures"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "meta": {
+      "type": "object",
+      "required": ["lastUpdated", "sourceOfTruth", "totalDomains"],
+      "additionalProperties": false,
+      "properties": {
+        "lastUpdated": { "type": "string", "format": "date-time" },
+        "sourceOfTruth": { "type": "string" },
+        "schemaFirst": { "type": "boolean" },
+        "totalDomains": { "type": "integer", "minimum": 0 },
+        "changelog": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["version", "date", "changes"],
+            "additionalProperties": false,
+            "properties": {
+              "version": { "type": "string" },
+              "date": { "type": "string", "format": "date" },
+              "changes": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "cloudflareAccounts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "$comment": "TODO: tighten — id, email, role, postSplitDomains observed",
+            "additionalProperties": true
+          }
+        },
+        "migrationPlan": {
+          "type": "object",
+          "additionalProperties": true,
+          "$comment": "TODO: tighten migration plan shape — registrar, zones, sequence observed"
+        }
+      }
+    },
+    "ventures": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/Venture"
+      }
+    },
+    "luhtechnologyAccount": {
+      "type": "object",
+      "additionalProperties": true,
+      "$comment": "TODO: tighten luhtechnology account holding shape"
+    },
+    "portfolio": {
+      "type": "object",
+      "additionalProperties": true,
+      "$comment": "TODO: tighten portfolio infrastructure/nonRenewal/legacy shape"
+    },
+    "triad": {
+      "type": "object",
+      "additionalProperties": true,
+      "$comment": "TODO: tighten triad description/components/dataFlow shape"
+    },
+    "hardwareLayer": {
+      "type": "object",
+      "additionalProperties": true,
+      "$comment": "TODO: tighten hardware layer shape"
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": true,
+      "$comment": "TODO: tighten summary shape — byVenture, luhtechnologyAccount, portfolioInfrastructure, nonRenewal, byCloudflareAccount observed"
+    }
+  },
+  "definitions": {
+    "Venture": {
+      "type": "object",
+      "required": ["id", "name", "domains"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "positioning": { "type": "string" },
+        "cloudflareAccountPre": { "type": ["string", "null"] },
+        "cloudflareAccountPost": { "type": ["string", "null"] },
+        "registrar": { "type": ["string", "null"] },
+        "registrarMigrationTarget": { "type": ["string", "null"] },
+        "domains": {
+          "type": "object",
+          "required": ["primary"],
+          "additionalProperties": true,
+          "$comment": "TODO: tighten domains — primary, aliases, typoProtection, registrarByDomain, migrationStatus, migrationNotes observed; subdomainBrands, openCommunity also seen",
+          "properties": {
+            "primary": { "type": "string" },
+            "aliases": { "type": "array", "items": { "type": "string" } },
+            "typoProtection": { "type": "array", "items": { "type": "string" } },
+            "registrarByDomain": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "migrationStatus": { "type": "string" },
+            "migrationNotes": { "type": "string" }
+          }
+        },
+        "urls": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "format": "uri" }
+        },
+        "repositories": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "format": "uri" }
+        },
+        "dashboards": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "subdomains": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "$comment": "subdomain, purpose, status observed; shape may vary"
+          },
+          "description": "Optional per-venture subdomain catalog"
+        }
+      }
+    }
+  }
+}
