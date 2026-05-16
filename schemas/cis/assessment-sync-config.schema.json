@@ -4,9 +4,14 @@
   "title": "Strategic Assessment Sync Configuration",
   "description": "Configuration for syncing Portfolio Strategic Assessment data to Notion dashboards via n8n webhooks.",
   "type": "object",
-  "required": ["strategicAssessment"],
+  "required": [
+    "strategicAssessment"
+  ],
   "additionalProperties": false,
   "properties": {
+    "$schema": {
+      "type": "string"
+    },
     "$comment": {
       "type": "string"
     },
@@ -15,28 +20,62 @@
       "additionalProperties": true,
       "$comment": "TODO: tighten n8n workflow shape — name, description, trigger, nodes observed",
       "properties": {
-        "name": { "type": "string" },
-        "description": { "type": "string" },
-        "trigger": { "type": "object", "additionalProperties": true },
-        "nodes": { "type": "array", "items": { "type": "object", "additionalProperties": true } }
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "trigger": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
       }
     },
     "strategicAssessment": {
       "type": "object",
-      "required": ["id", "title", "description", "sourceFiles", "generator", "syncConfig", "components", "notionSections"],
+      "required": [
+        "id",
+        "title",
+        "description",
+        "sourceFiles",
+        "generator",
+        "syncConfig",
+        "components",
+        "notionSections"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "string" },
-        "title": { "type": "string" },
-        "description": { "type": "string" },
-        "notionPageId": { "type": "string" },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "notionPageId": {
+          "type": "string"
+        },
         "sourceFiles": {
           "type": "object",
           "additionalProperties": true,
           "$comment": "TODO: tighten — json and markdown keys observed",
           "properties": {
-            "json": { "type": "string" },
-            "markdown": { "type": "string" }
+            "json": {
+              "type": "string"
+            },
+            "markdown": {
+              "type": "string"
+            }
           }
         },
         "generator": {
@@ -44,22 +83,41 @@
           "additionalProperties": true,
           "$comment": "TODO: tighten — script, template, executiveSummaryTemplate keys observed",
           "properties": {
-            "script": { "type": "string" },
-            "template": { "type": "string" },
-            "executiveSummaryTemplate": { "type": "string" }
+            "script": {
+              "type": "string"
+            },
+            "template": {
+              "type": "string"
+            },
+            "executiveSummaryTemplate": {
+              "type": "string"
+            }
           }
         },
         "syncConfig": {
           "type": "object",
-          "required": ["enabled", "trigger", "webhook"],
+          "required": [
+            "enabled",
+            "trigger",
+            "webhook"
+          ],
           "additionalProperties": true,
           "properties": {
-            "enabled": { "type": "boolean" },
-            "trigger": { "type": "string" },
-            "webhook": { "type": "string", "format": "uri" },
+            "enabled": {
+              "type": "boolean"
+            },
+            "trigger": {
+              "type": "string"
+            },
+            "webhook": {
+              "type": "string",
+              "format": "uri"
+            },
             "notionTargets": {
               "type": "object",
-              "additionalProperties": { "type": "string" }
+              "additionalProperties": {
+                "type": "string"
+              }
             }
           }
         },
@@ -75,12 +133,19 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "type"],
+            "required": [
+              "id",
+              "type"
+            ],
             "additionalProperties": true,
             "$comment": "TODO: tighten section shapes (callout, metrics-row, progress-bars, timeline differ)",
             "properties": {
-              "id": { "type": "string" },
-              "type": { "type": "string" }
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              }
             }
           }
         }
