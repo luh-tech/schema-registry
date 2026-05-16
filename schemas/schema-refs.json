@@ -1,12 +1,23 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/schema-refs.json",
-  "title": "LuhTech Schema Registry v1.11.0",
+  "title": "LuhTech Schema Registry v1.12.0",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {
-    "version": "1.11.0",
-    "lastUpdated": "2026-05-12T00:00:00Z",
+    "version": "1.12.0",
+    "lastUpdated": "2026-05-15T00:00:00Z",
     "changelog": [
+      {
+        "version": "1.12.0",
+        "date": "2026-05-15",
+        "changes": [
+          "cis/ namespace: NEW — 3 schemas for B-T operational config files",
+          "cis/url-catalog.schema.json (v1.0.0): domain catalog, replaces luh.tech/schemas/url-catalog-v2.json",
+          "cis/assessment-sync-config.schema.json (v1.0.0): strategic assessment sync to Notion",
+          "cis/cis-infra-changelog.schema.json (v1.0.0): CIS infrastructure change audit ledger",
+          "Unblocks B-T FU-CANON-CLASSIFY-URL-CATALOG-LUH-TECH-DOMAIN-1 and FU-CANON-CLASSIFY-SCHEMA-AUTHORING-1"
+        ]
+      },
       {
         "version": "1.11.0",
         "date": "2026-05-12",
@@ -146,6 +157,24 @@
           "version": "1.0.0"
         }
       }
+    },
+    "cis-url-catalog": {
+      "id": "https://schemas.luh.tech/cis/url-catalog.schema.json",
+      "file": "cis/url-catalog.schema.json",
+      "version": "1.0.0",
+      "description": "LuhTech domain and URL catalog — per-venture Cloudflare account assignments, migration status, URL endpoints. Replaces luh.tech/schemas/url-catalog-v2.json."
+    },
+    "cis-assessment-sync-config": {
+      "id": "https://schemas.luh.tech/cis/assessment-sync-config.schema.json",
+      "file": "cis/assessment-sync-config.schema.json",
+      "version": "1.0.0",
+      "description": "Strategic assessment dashboard sync configuration — n8n webhook config and Notion sync targets."
+    },
+    "cis-infra-changelog": {
+      "id": "https://schemas.luh.tech/cis/cis-infra-changelog.schema.json",
+      "file": "cis/cis-infra-changelog.schema.json",
+      "version": "1.0.0",
+      "description": "CIS infrastructure changelog — structured audit ledger for CI, terraform, deploy, registry, and droplet changes."
     }
   }
 }
