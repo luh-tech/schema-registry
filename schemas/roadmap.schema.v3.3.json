@@ -340,7 +340,28 @@
           "maxLength": 200
         },
         "problem": {
-          "type": "string"
+          "description": "Problem statement — either a plain string or a structured object with headline/subheadline/problemColumns",
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "object",
+              "properties": {
+                "headline":      { "type": "string" },
+                "subheadline":   { "type": "string" },
+                "problemColumns": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "header":  { "type": "string" },
+                      "bullets": { "type": "array", "items": { "type": "string" } }
+                    }
+                  }
+                }
+              },
+              "additionalProperties": true
+            }
+          ]
         },
         "solution": {
           "type": "string"
