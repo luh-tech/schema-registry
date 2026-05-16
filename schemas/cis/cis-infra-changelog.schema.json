@@ -4,9 +4,17 @@
   "title": "CIS Infrastructure Changelog",
   "description": "Structured audit ledger for CIS infrastructure changes (CI workflows, terraform, deploy config, registry, droplet provisioning). Each entry captures context, change, verification evidence, and follow-ups.",
   "type": "object",
-  "required": ["schemaVersion", "purpose", "entryConventions", "changes"],
+  "required": [
+    "schemaVersion",
+    "purpose",
+    "entryConventions",
+    "changes"
+  ],
   "additionalProperties": false,
   "properties": {
+    "$schema": {
+      "type": "string"
+    },
     "schemaVersion": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$"
@@ -32,7 +40,17 @@
   "definitions": {
     "ChangeEntry": {
       "type": "object",
-      "required": ["id", "type", "title", "context", "change", "rationale", "verification", "timestamp", "follow_ups"],
+      "required": [
+        "id",
+        "type",
+        "title",
+        "context",
+        "change",
+        "rationale",
+        "verification",
+        "timestamp",
+        "follow_ups"
+      ],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -42,7 +60,16 @@
         },
         "type": {
           "type": "string",
-          "enum": ["ci_fix", "ci_feature", "terraform", "deploy", "registry", "droplet", "secret_rotation", "other"]
+          "enum": [
+            "ci_fix",
+            "ci_feature",
+            "terraform",
+            "deploy",
+            "registry",
+            "droplet",
+            "secret_rotation",
+            "other"
+          ]
         },
         "title": {
           "type": "string"
@@ -52,24 +79,36 @@
         },
         "change": {
           "type": "object",
-          "required": ["summary"],
+          "required": [
+            "summary"
+          ],
           "additionalProperties": true,
           "$comment": "TODO: tighten — 'files' array most common but 'repos', 'pr_url', 'cherry_pick_sha' also observed",
           "properties": {
             "files": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             },
             "repos": {
               "type": "array",
-              "items": { "type": "string" }
+              "items": {
+                "type": "string"
+              }
             },
             "summary": {
               "type": "string"
             },
-            "pr_url": { "type": "string" },
-            "cherry_pick_sha": { "type": "string" },
-            "original_sha": { "type": "string" }
+            "pr_url": {
+              "type": "string"
+            },
+            "cherry_pick_sha": {
+              "type": "string"
+            },
+            "original_sha": {
+              "type": "string"
+            }
           }
         },
         "rationale": {
@@ -77,22 +116,50 @@
         },
         "verification": {
           "type": "object",
-          "required": ["status"],
+          "required": [
+            "status"
+          ],
           "additionalProperties": true,
           "$comment": "TODO: tighten verification shape — status is PENDING|VERIFIED|FAILED; evidence, verified_at, verified_by_run_id are optional until verification commit",
           "properties": {
             "status": {
               "type": "string",
-              "enum": ["PENDING", "VERIFIED", "FAILED"]
+              "enum": [
+                "PENDING",
+                "VERIFIED",
+                "FAILED"
+              ]
             },
-            "method": { "type": "string" },
-            "evidence": { "type": ["string", "null"] },
-            "verified_at": { "type": ["string", "null"], "format": "date-time" },
-            "verified_by_run_id": { "type": ["string", "number", "null"] }
+            "method": {
+              "type": "string"
+            },
+            "evidence": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "verified_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "verified_by_run_id": {
+              "type": [
+                "string",
+                "number",
+                "null"
+              ]
+            }
           }
         },
         "commit_sha": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "branch": {
           "type": "string"
@@ -103,7 +170,9 @@
         },
         "follow_ups": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       }
     }
