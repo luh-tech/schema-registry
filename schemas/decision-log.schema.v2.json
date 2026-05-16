@@ -16,10 +16,56 @@
       "type": "string",
       "const": "https://schemas.luh.tech/decision-log.schema.v2.json"
     },
+    "$id": {
+      "type": "string",
+      "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:file:decision-log$",
+      "description": "URN identifier for this decision log document"
+    },
     "version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$",
       "description": "Document version (semver)"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version of this document (semver)"
+    },
+    "meta": {
+      "type": "object",
+      "description": "Document metadata — migration provenance and operational state",
+      "additionalProperties": false,
+      "properties": {
+        "sourceOfTruth": {
+          "type": "string",
+          "description": "Canonical file path for this document"
+        },
+        "migratedFrom": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Previous file paths this document was migrated from"
+        },
+        "migrationDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of migration to current canonical location"
+        },
+        "totalDecisions": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total decision count at last update (informational, may be stale)"
+        },
+        "syncStatus": {
+          "type": "object",
+          "description": "Sync state between legacy and canonical paths",
+          "additionalProperties": false,
+          "properties": {
+            "v1Path":        { "type": "string" },
+            "lastSync":      { "type": "string", "format": "date-time" },
+            "syncDirection": { "type": "string" }
+          }
+        }
+      }
     },
     "ventureId": {
       "$ref": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json#/definitions/ventureId"
