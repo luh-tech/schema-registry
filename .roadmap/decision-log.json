@@ -17,7 +17,9 @@
       "status": "approved",
       "category": "tooling",
       "impact": "high",
-      "approvedBy": ["erik"],
+      "approvedBy": [
+        "erik"
+      ],
       "approvalDate": "2026-05-17T00:00:00Z",
       "consequences": {
         "positive": [
@@ -44,11 +46,77 @@
           "rejectionReason": "Portfolio-specific rules (URL $id host enforcement, acronym catalog enforcement, classification and boundary semantics) require plugin development equivalent in scope to the in-house tool."
         }
       ],
-      "tags": ["schema-first", "tooling", "portfolio", "T0", "luhtech-schema"],
+      "tags": [
+        "schema-first",
+        "tooling",
+        "portfolio",
+        "T0",
+        "luhtech-schema"
+      ],
       "externalLinks": [
         {
           "url": "https://github.com/luh-tech/schema-registry/blob/main/LUHTECH-PLATFORM-SCHEMA-STRATEGY-AND-TOOLING-2026-05-17.md",
           "description": "Locked strategy document — captures D1 through D8, T0 through T9 build sequence, SH-1 through SH-7 hygiene gate."
+        }
+      ]
+    },
+    {
+      "decisionId": "d-2026-05-17-luhtech-schema-t1",
+      "timestamp": "2026-05-17T00:00:00Z",
+      "title": "luhtech-schema T1: acronyms catalog as schema-validated artifact (SH-7) and D9 streams principle",
+      "context": "T0 closed with the luhtech-schema scaffold. T1 lands the first canonical instance — the LuhTech vocabulary catalog — parsed from canonical_glossary_v1.2 (2026-05-05, 162 terms, 16 sections). The act of landing this instance surfaces D9: all canonical artifacts should be served via stream URLs rather than file paths.",
+      "decision": "Adopt the acronyms catalog as the first portfolio-canonical instance at stream URL https://schemas.luh.tech/acronyms-catalog.json. Adopt D9 as portfolio-wide architectural commitment. Add acronyms check and acronyms register subcommands to luhtech-schema. Schema at https://schemas.luh.tech/acronyms-catalog.schema.json.",
+      "rationale": "D9 generalizes D2 (URL $id for schemas) to all canonical artifacts. The glossary v1.2 is patent-prep quality and the right seed for a schema-validated catalog. Building the acronyms subcommands alongside the catalog closes SH-7 and validates D9 end-to-end at T1.",
+      "status": "approved",
+      "category": "tooling",
+      "impact": "high",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-05-17T00:00:00Z",
+      "consequences": {
+        "positive": [
+          "D9 LOCKED: every future canonical instance gets a stream URL; file references are tech debt.",
+          "SH-7 CLOSED: acronyms catalog is schema-validated; canonical vocabulary has a contract.",
+          "luhtech-schema validate accepts http(s) URLs (D9-aware).",
+          "acronyms check fetches from stream URL by default; --local for offline dev / pre-commit hooks.",
+          "162 terms parsed from glossary v1.2 across 16 sections (119 LOCKED, 32 PATENT-OWNED, 11 DEPRECATED)."
+        ],
+        "negative": [
+          "Catalog instance requires schema-validated updates; ad-hoc edits must conform to acronyms-catalog.schema.json."
+        ],
+        "risks": [
+          "Stream URL (schemas.luh.tech/acronyms-catalog.json) must be live before downstream consumers use acronyms check without --local."
+        ]
+      },
+      "alternatives": [
+        {
+          "option": "Catalog as repo-local file with path references",
+          "rejectionReason": "Tech debt per D9; cross-repo consumers couple to producer file location."
+        },
+        {
+          "option": "Use existing ACRONYMS-CATALOG-2026-05-04.json (215 terms, different schema shape)",
+          "rejectionReason": "Different term shape (type/category/domain/verified vs status/sourceStatus) and carries deprecated luhtech.dev $schema URL. Migration to schemas.luh.tech is SH-1/T5 scope. Glossary v1.2 is the correct seed for the new canonical schema shape."
+        }
+      ],
+      "tags": [
+        "schema-first",
+        "tooling",
+        "portfolio",
+        "T1",
+        "SH-7",
+        "D9",
+        "streams",
+        "luhtech-schema"
+      ],
+      "externalLinks": [
+        {
+          "url": "https://schemas.luh.tech/acronyms-catalog.schema.json",
+          "description": "Schema governing the canonical vocabulary catalog."
+        },
+        {
+          "url": "https://schemas.luh.tech/acronyms-catalog.json",
+          "description": "D9 stream URL for the catalog instance."
         }
       ]
     }
