@@ -1,3 +1,6 @@
+> **Historical reference (repository renamed 2026-05-18):** This document was authored 2026-01-28 against the prior repository name `luh-tech/luh-tech-roadmap-template`. The repository was renamed to [`luh-tech/schema-registry`](https://github.com/luh-tech/schema-registry) on 2026-05-18; references to the old name below are historically accurate for the document's authorship date and remain unchanged.
+
+---
 # Portfolio Dependency Architecture Implementation Report
 ## Schema v2.3.0 + DAG Validation System
 
