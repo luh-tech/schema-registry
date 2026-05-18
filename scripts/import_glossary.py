@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 SRC = Path("sources/canonical_glossary_v1.2.md")
-OUT = Path("acronyms-catalog.json")
+OUT = Path("schemas/acronyms-catalog.json")
 STREAM_URL = "https://schemas.luh.tech/acronyms-catalog.json"
 SCHEMA_URL = "https://schemas.luh.tech/acronyms-catalog.schema.json"
 
