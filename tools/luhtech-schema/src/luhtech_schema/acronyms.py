@@ -16,9 +16,12 @@ import sys
 import unicodedata
 from pathlib import Path
 from urllib.error import URLError
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
+
+from luhtech_schema import __version__
 
 CATALOG_STREAM_URL = "https://schemas.luh.tech/acronyms-catalog.json"
+_UA = f"luhtech-schema/{__version__}"
 
 # Tokens that look like acronyms or canonical identifiers
 _TERM_RE = re.compile(r"\b([A-Z][A-Z0-9§]{1,}|[A-Z][a-z]+[A-Z][A-Za-z0-9]*)\b")
@@ -29,7 +32,8 @@ def _load_catalog(stream_url: str | None, local: str | None) -> dict:
         return json.loads(Path(local).read_text(encoding="utf-8"))
     url = stream_url or CATALOG_STREAM_URL
     try:
-        with urlopen(url, timeout=10) as resp:
+        req = Request(url, headers={"User-Agent": _UA, "Accept": "application/json, */*;q=0.5"})
+        with urlopen(req, timeout=10) as resp:
             return json.loads(resp.read().decode("utf-8"))
     except URLError as e:
         raise RuntimeError(f"failed to fetch catalog from {url}: {e}") from e
