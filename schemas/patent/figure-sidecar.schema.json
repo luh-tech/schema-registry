@@ -1,10 +1,17 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/patent/figure-sidecar.schema.json",
   "title": "Patent Figure Sidecar",
   "description": "Per-figure metadata. Lives alongside each fig##_name.svg.js generator (or .svg/.png for hand-drawn). Source of truth for the locked reference numerals used in that figure and for the figure's caption text in the spec's Brief Description.",
   "type": "object",
-  "required": ["provisional", "figureNumber", "title", "generationMethod", "status"],
+  "required": [
+    "provisional",
+    "figureNumber",
+    "title",
+    "generationMethod",
+    "status"
+  ],
   "properties": {
     "provisional": {
       "type": "string",
@@ -21,7 +28,13 @@
     },
     "generationMethod": {
       "type": "string",
-      "enum": ["svg-handauthored", "svg-ai-assisted", "svg-generated", "mermaid", "hand-scanned"],
+      "enum": [
+        "svg-handauthored",
+        "svg-ai-assisted",
+        "svg-generated",
+        "mermaid",
+        "hand-scanned"
+      ],
       "description": "How the figure source is produced. 'svg-generated' = built by Node script under figures/. 'mermaid' is currently disallowed pending upstream htmlLabels:false fix; flag if used."
     },
     "sourceDiagram": {
@@ -37,17 +50,30 @@
       "description": "Locked numeral assignments used in this figure. Numerals MUST be drawn from the portfolio numerals registry; first use of a numeral in any figure or spec locks the assignment.",
       "items": {
         "type": "object",
-        "required": ["numeral", "element"],
+        "required": [
+          "numeral",
+          "element"
+        ],
         "properties": {
-          "numeral": { "type": "integer", "minimum": 1 },
-          "element": { "type": "string" },
+          "numeral": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "element": {
+            "type": "string"
+          },
           "subElements": {
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
-                "suffix": { "type": "string", "pattern": "^[a-z]$" },
-                "element": { "type": "string" }
+                "suffix": {
+                  "type": "string",
+                  "pattern": "^[a-z]$"
+                },
+                "element": {
+                  "type": "string"
+                }
               }
             },
             "description": "Sub-element variants like 10a, 10b, 10c."
@@ -62,7 +88,11 @@
     },
     "status": {
       "type": "string",
-      "enum": ["draft", "review", "filing-ready"]
+      "enum": [
+        "draft",
+        "review",
+        "filing-ready"
+      ]
     },
     "description": {
       "type": "string",
@@ -74,15 +104,30 @@
     "crossReferences": {
       "type": "object",
       "properties": {
-        "specParagraphs": { "type": "array", "items": { "type": "integer" } },
-        "relatedFigures": { "type": "array", "items": { "type": "integer" } },
+        "specParagraphs": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "relatedFigures": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
         "crossProvisionalReferences": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "provisional": { "type": "string", "pattern": "^P[0-9]+$" },
-              "figureNumber": { "type": "integer" }
+              "provisional": {
+                "type": "string",
+                "pattern": "^P[0-9]+$"
+              },
+              "figureNumber": {
+                "type": "integer"
+              }
             }
           }
         }

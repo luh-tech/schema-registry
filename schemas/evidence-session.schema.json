@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/evidence-session.schema.json",
   "title": "Evidence Session",
   "description": "Structured evidence and investigation tracking for LuhTech ventures. Provides session-based documentation with context, approach, outcomes, artifacts, and relationship mapping. Supports tiered retention policies and automated archival. Derived from Ectropy production current-truth.json (153KB, 152 sessions).",

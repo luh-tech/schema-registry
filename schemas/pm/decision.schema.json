@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/pm/decision.schema.json",
   "title": "PM Decision Schema",
   "description": "Construction project decision with voxel attachment and 7-tier authority cascade. Part of the Ectropy PM Core system.",

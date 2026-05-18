@@ -1,14 +1,23 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/patent/portfolio.schema.json",
   "title": "Patent Portfolio",
   "description": "Single-source-of-truth horizontal view across all provisionals in a patent portfolio. One file per portfolio (e.g., SBPA). Derived documents (status dashboard, claims cross-reference, kickoff prompts) regenerate from this file.",
   "type": "object",
-  "required": ["portfolio", "applicant", "provisionals"],
+  "required": [
+    "portfolio",
+    "applicant",
+    "provisionals"
+  ],
   "properties": {
     "portfolio": {
       "type": "object",
-      "required": ["umbrella", "umbrellaFull", "umbrellaLockedDate"],
+      "required": [
+        "umbrella",
+        "umbrellaFull",
+        "umbrellaLockedDate"
+      ],
       "properties": {
         "umbrella": {
           "type": "string",
@@ -27,12 +36,25 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["name", "deprecatedDate", "reason"],
+            "required": [
+              "name",
+              "deprecatedDate",
+              "reason"
+            ],
             "properties": {
-              "name": { "type": "string" },
-              "full": { "type": "string" },
-              "deprecatedDate": { "type": "string", "format": "date" },
-              "reason": { "type": "string" }
+              "name": {
+                "type": "string"
+              },
+              "full": {
+                "type": "string"
+              },
+              "deprecatedDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "reason": {
+                "type": "string"
+              }
             }
           },
           "description": "Prior umbrella names retained for cross-reference. Example: CTA → SBPA on 2026-05-05."
@@ -41,16 +63,31 @@
     },
     "applicant": {
       "type": "object",
-      "required": ["name", "role", "entityStatus", "usptoCustomerNumber"],
+      "required": [
+        "name",
+        "role",
+        "entityStatus",
+        "usptoCustomerNumber"
+      ],
       "properties": {
-        "name": { "type": "string" },
+        "name": {
+          "type": "string"
+        },
         "role": {
           "type": "string",
-          "enum": ["sole inventor", "joint inventor", "assignee"]
+          "enum": [
+            "sole inventor",
+            "joint inventor",
+            "assignee"
+          ]
         },
         "entityStatus": {
           "type": "string",
-          "enum": ["micro", "small", "large"],
+          "enum": [
+            "micro",
+            "small",
+            "large"
+          ],
           "description": "USPTO entity status. Determines fee schedule."
         },
         "usptoCustomerNumber": {
@@ -67,11 +104,17 @@
     "patentCounsel": {
       "type": "object",
       "properties": {
-        "firm": { "type": "string" },
-        "role": { "type": "string" },
+        "firm": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
         "engagementScope": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -87,17 +130,31 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["name", "version", "published", "barDate"],
+            "required": [
+              "name",
+              "version",
+              "published",
+              "barDate"
+            ],
             "properties": {
-              "name": { "type": "string" },
-              "version": { "type": "string" },
-              "published": { "type": "string", "format": "date" },
+              "name": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "published": {
+                "type": "string",
+                "format": "date"
+              },
               "barDate": {
                 "type": "string",
                 "format": "date",
                 "description": "published + 1 year. Provisional must file on or before this date."
               },
-              "verifiedVia": { "type": "string" }
+              "verifiedVia": {
+                "type": "string"
+              }
             }
           }
         }
@@ -109,13 +166,28 @@
       "items": {
         "type": "object",
         "properties": {
-          "patentNumber": { "type": "string" },
-          "title": { "type": "string" },
-          "shortName": { "type": "string" },
-          "inventor": { "type": "string" },
-          "granted": { "type": "string" },
-          "activeThrough": { "type": "string", "format": "date" },
-          "relevance": { "type": "string" }
+          "patentNumber": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "shortName": {
+            "type": "string"
+          },
+          "inventor": {
+            "type": "string"
+          },
+          "granted": {
+            "type": "string"
+          },
+          "activeThrough": {
+            "type": "string",
+            "format": "date"
+          },
+          "relevance": {
+            "type": "string"
+          }
         }
       }
     },
@@ -135,9 +207,17 @@
         "^P[0-9]+$": {
           "type": "object",
           "properties": {
-            "log": { "type": "string", "description": "Path to manifest file containing decision log for this provisional." },
-            "logSection": { "type": "string" },
-            "lockedDecisionsCount": { "type": "integer", "minimum": 0 }
+            "log": {
+              "type": "string",
+              "description": "Path to manifest file containing decision log for this provisional."
+            },
+            "logSection": {
+              "type": "string"
+            },
+            "lockedDecisionsCount": {
+              "type": "integer",
+              "minimum": 0
+            }
           }
         }
       }
@@ -145,7 +225,9 @@
     "toolchain": {
       "type": "object",
       "description": "Versions of pipeline tools used to produce the current portfolio state. Pinned for reproducibility.",
-      "additionalProperties": { "type": "string" }
+      "additionalProperties": {
+        "type": "string"
+      }
     }
   }
 }

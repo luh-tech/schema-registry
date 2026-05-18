@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/follow-up-register.schema.json",
   "title": "Follow-Up Register",
   "description": "Schema for tracking follow-up items, decisions, open work, and deferred actions within a venture's .roadmap/follow-up-register.json. Adopted portfolio-wide to standardize how ventures track in-flight work that doesn't yet warrant a milestone or decision-log entry.",

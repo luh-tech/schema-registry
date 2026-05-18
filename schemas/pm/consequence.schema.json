@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/pm/consequence.schema.json",
   "title": "Consequence Schema",
   "description": "Tracks downstream effects of PM decisions including schedule delays, cost increases, safety risks, and other impacts. Enables impact analysis and audit trails.",

@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/workflow-registry.schema.json",
   "title": "GitHub Actions Workflow Registry Schema",
   "description": "Schema for documenting and categorizing GitHub Actions workflows following luh-tech schema-first patterns. Used across all ventures for consistent CI/CD documentation.",

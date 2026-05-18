@@ -1,10 +1,17 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/patent/glossary.schema.json",
   "title": "Patent Glossary",
   "description": "Top-level glossary file. Single source of truth for all terminology used across the patent portfolio. The glossary builder reads this and renders sectioned tables to .docx + .md.",
   "type": "object",
-  "required": ["documentId", "version", "umbrella", "sections", "entries"],
+  "required": [
+    "documentId",
+    "version",
+    "umbrella",
+    "sections",
+    "entries"
+  ],
   "properties": {
     "documentId": {
       "type": "string",
@@ -27,18 +34,32 @@
       "type": "object",
       "description": "Pointer to the upstream catalog this glossary defers to for non-patent-owned terms. For SBPA: ACRONYMS-CATALOG-2026-05-04.",
       "properties": {
-        "documentId": { "type": "string" },
-        "deferralRule": { "type": "string", "description": "Plain-language description of which terms defer to upstream and which are owned by this glossary." }
+        "documentId": {
+          "type": "string"
+        },
+        "deferralRule": {
+          "type": "string",
+          "description": "Plain-language description of which terms defer to upstream and which are owned by this glossary."
+        }
       }
     },
     "sections": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "title"],
+        "required": [
+          "id",
+          "title"
+        ],
         "properties": {
-          "id": { "type": "string", "pattern": "^[A-Z][0-9]?$", "description": "Single capital letter, optional digit (e.g., 'A', 'E2')." },
-          "title": { "type": "string" },
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z][0-9]?$",
+            "description": "Single capital letter, optional digit (e.g., 'A', 'E2')."
+          },
+          "title": {
+            "type": "string"
+          },
           "patentOwned": {
             "type": "boolean",
             "default": false,
@@ -49,21 +70,49 @@
     },
     "entries": {
       "type": "array",
-      "items": { "$ref": "https://schemas.luh.tech/patent/glossary-entry.schema.json" },
+      "items": {
+        "$ref": "https://schemas.luh.tech/patent/glossary-entry.schema.json"
+      },
       "minItems": 1
     },
     "changelog": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["version", "date", "summary"],
+        "required": [
+          "version",
+          "date",
+          "summary"
+        ],
         "properties": {
-          "version": { "type": "string" },
-          "date": { "type": "string", "format": "date" },
-          "summary": { "type": "string" },
-          "addedTerms": { "type": "array", "items": { "type": "string" } },
-          "modifiedTerms": { "type": "array", "items": { "type": "string" } },
-          "deprecatedTerms": { "type": "array", "items": { "type": "string" } }
+          "version": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "addedTerms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "modifiedTerms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deprecatedTerms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         }
       }
     }

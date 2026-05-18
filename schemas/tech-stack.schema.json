@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/tech-stack.schema.json",
   "title": "Tech Stack",
   "description": "Technology stack documentation for LuhTech ventures. Provides comprehensive visibility into languages, frameworks, databases, infrastructure, and architectural patterns. Enables portfolio-wide technology governance and fork tracking.",

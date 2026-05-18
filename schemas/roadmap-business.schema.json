@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/roadmap-business.schema.json",
   "title": "Roadmap Business Schema v2.2",
   "description": "Schema for venture business data including financials, team, competitive positioning, service tiers, and presentation slides. Base schema extensible for all luh-tech holdings ventures.",
@@ -400,7 +401,7 @@
           "description": "Raise structure with tranches"
         },
         "revenueProjections": {
-          "description": "Revenue projections \u2014 array or object"
+          "description": "Revenue projections — array or object"
         }
       }
     },
@@ -556,7 +557,7 @@
       "properties": {
         "bridge": {
           "type": "object",
-          "description": "Narrative bridge slide \u2014 problem to platform. Venture-specific.",
+          "description": "Narrative bridge slide — problem to platform. Venture-specific.",
           "properties": {
             "eyebrow": {
               "type": "string"
@@ -732,7 +733,7 @@
     "mcpToolCategories": {
       "type": "array",
       "items": {},
-      "description": "MCP tool categories \u2014 strings or structured objects"
+      "description": "MCP tool categories — strings or structured objects"
     },
     "repositorySplit": {
       "type": "object",

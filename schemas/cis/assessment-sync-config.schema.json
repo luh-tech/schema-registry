@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/cis/assessment-sync-config.schema.json",
   "title": "Strategic Assessment Sync Configuration",
   "description": "Configuration for syncing Portfolio Strategic Assessment data to Notion dashboards via n8n webhooks.",

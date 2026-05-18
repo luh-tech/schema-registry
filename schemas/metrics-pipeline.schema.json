@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/metrics-pipeline.schema.json",
   "title": "Metrics Pipeline Schema",
   "description": "Schema for robust metrics collection, failure handling, and multi-destination reporting following luh-tech enterprise patterns. Used across all ventures for consistent observability.",
@@ -341,7 +342,7 @@
                 },
                 "icon": {
                   "type": "string",
-                  "default": "\u2705"
+                  "default": "✅"
                 },
                 "meaning": {
                   "type": "string"
@@ -357,7 +358,7 @@
                 },
                 "icon": {
                   "type": "string",
-                  "default": "\u26a0\ufe0f"
+                  "default": "⚠️"
                 },
                 "meaning": {
                   "type": "string"
@@ -373,7 +374,7 @@
                 },
                 "icon": {
                   "type": "string",
-                  "default": "\u274c"
+                  "default": "❌"
                 },
                 "meaning": {
                   "type": "string"
@@ -389,7 +390,7 @@
                 },
                 "icon": {
                   "type": "string",
-                  "default": "\u23ed\ufe0f"
+                  "default": "⏭️"
                 },
                 "meaning": {
                   "type": "string"

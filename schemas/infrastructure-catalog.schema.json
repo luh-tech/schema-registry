@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/infrastructure-catalog.schema.json",
   "title": "Infrastructure Catalog",
   "description": "Standardized infrastructure documentation for LuhTech ventures. Provides service registry, environment configuration, secrets management, workflow documentation, and deployment specifications. Derived from Ectropy production infrastructure (202KB, v2.12.0). Updated v1.1.0: Added portfolioWorkflowsRef for cross-repo workflow discovery.",
