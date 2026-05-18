@@ -4,10 +4,10 @@
   "schemaVersion": "1.0.0",
   "version": "1.0.0",
   "ventureId": "schema-registry",
-  "lastUpdated": "2026-05-18T15:16:14Z",
+  "lastUpdated": "2026-05-18T23:44:40Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
-    "totalCount": 5
+    "totalCount": 6
   },
   "followUps": [
     {
@@ -44,14 +44,19 @@
       "id": "FU-ECTROPY-XAAS-MIGRATION-1",
       "title": "Bundle XaaS→SNx migration into T5 — directory renames, URN segments, description strings",
       "priority": "P2",
-      "status": "open",
+      "status": "closed",
       "opened": "2026-05-18T17:57:56Z",
       "openedDuring": "luhtech-schema T4 (2026-05-18)",
       "scope": "T4 substrate confirmed XaaS terminology survives in three Ectropy-domain surfaces: (a) directory names caas/, gaas/, paas/, maas/ holding 6 schemas; (b) URN $id segments encoded into those path components; (c) description-string prose in usf/usf-work-packet, maas/material-supplier, schema-index.json. Bundle into T5 (urn-to-url) so directory rename + URN segment update + description polish land in one coherent mutation pass. Pre-T5: resolve SNx naming-form decision (csx/ vs corsx/ vs full noun); scan Ectropy product code for hard-coded caas/gaas/paas/maas imports that break on rename.",
       "blockedBy": [],
       "blocks": [],
       "trackingRepo": "luh-tech/schema-registry",
-      "coordination": "SNx naming-form decision needed from Erik before T5 substrate. Also coordinate with Ectropy-Business and BPC on import paths."
+      "coordination": "SNx naming-form decision needed from Erik before T5 substrate. Also coordinate with Ectropy-Business and BPC on import paths.",
+      "resolution": {
+        "closedDate": "2026-05-18",
+        "closedDuring": "T5.4 (2026-05-18)",
+        "summary": "Completed across T5.1 + T5.3 + T5.4. T5.1 (Ectropy-ai/schemas#5) renamed 4 XaaS directories to SNx (caas→corsx, gaas→govsx, paas→paysx, maas→matsx), converted 57 URN $ids to URL form, updated schema-index.json slugs, corrected description prose. T5.3 (Ectropy-Business#143) migrated consumer-side URN→URL. T5.2 struck. T5.4 aligned schema-registry schema-map. Final: 99/99 D2 compliance."
+      }
     },
     {
       "id": "FU-V1-TO-V3-DEPRECATE-1",
@@ -69,7 +74,7 @@
       "id": "FU-CATALOG-DAAS-INVESTIGATE-1",
       "title": "Remove unauthorized DaaS parenthetical from ectropy-ai/schemas/schema-index.json",
       "priority": "P3",
-      "status": "open",
+      "status": "closed",
       "opened": "2026-05-18T17:57:56Z",
       "openedDuring": "luhtech-schema T4 (2026-05-18)",
       "scope": "schema-index.json carries 'Decision Lifecycle (DaaS)' as a category name. Erik confirmed: DaaS was never approved — it is not in the canonical catalog section J. The Decision Lifecycle category itself is real (decision/ subdir, 5 schemas); only the (DaaS) parenthetical is wrong. Recommended fix: drop the parenthetical. Bundle into FU-ECTROPY-XAAS-MIGRATION-1 Ectropy editing pass at T5. Also audit VaaS, CaaS, PaaS, MaaS, RaaS/HaaS category name parentheticals for the same issue.",
@@ -78,30 +83,48 @@
         "FU-ECTROPY-XAAS-MIGRATION-1"
       ],
       "trackingRepo": "luh-tech/schema-registry",
-      "coordination": "Bundled into FU-ECTROPY-XAAS-MIGRATION-1 — do the schema-index.json cleanup in the same T5 editing pass as XaaS directory renames. No new DSx acronym needed — Decision Lifecycle as a category does not need an SNx-style parenthetical."
+      "coordination": "Bundled into FU-ECTROPY-XAAS-MIGRATION-1 — do the schema-index.json cleanup in the same T5 editing pass as XaaS directory renames. No new DSx acronym needed — Decision Lifecycle as a category does not need an SNx-style parenthetical.",
+      "resolution": {
+        "closedDate": "2026-05-18",
+        "closedDuring": "T5.1 (2026-05-18)",
+        "summary": "Resolved during T5.1 schema-index slug migration. DaaS slug renamed to 'decision' (directory-aligned; decision/ schemas are data primitives, not service exchanges). VaaS slug renamed to 'voxel' by the same logic. DaaS parenthetical stripped from the 'Decision Lifecycle' category display name. No DSx acronym added to catalog because 'Decision Lifecycle' names a schema primitive tier, not a service-exchange interface."
+      }
+    },
+    {
+      "id": "FU-VENTURE-TYPE-ENUM-REVIEW-1",
+      "title": "Review ventureType enum — propose 5-bucket consolidation (Platform/Hardware/Service/Marketplace/Holding)",
+      "priority": "P3",
+      "status": "open",
+      "opened": "2026-05-18T23:44:40Z",
+      "openedDuring": "T5.4 (2026-05-18)",
+      "scope": "Per D-T5-C (deferred from T5 arc): luhtech-enums.schema.v2.json ventureType enum includes SaaS, API, Platform, Hardware, Marketplace, Holding. Proposed 5-bucket consolidation: Platform | Hardware | Service | Marketplace | Holding — absorbs SaaS + API into Service (broader model covering SaaS, managed-services, professional-services). Requires: audit current usage across 8 venture roadmap.json files; draft migration mapping (SaaS→Service, API→Platform); file DEC with breaking-change semantics; schema change additive then deprecation pass.",
+      "blockedBy": [],
+      "blocks": []
     }
   ],
   "indexes": {
-    "byPriority": {
-      "P2": [
-        "FU-CATALOG-STREAM-MIGRATION-1",
-        "FU-V1-TO-V3-DEPRECATE-1",
-        "FU-ECTROPY-XAAS-MIGRATION-1"
-      ],
-      "P3": [
-        "FU-RESOLVER-PROPAGATION-1",
-        "FU-CATALOG-DAAS-INVESTIGATE-1"
-      ]
-    },
     "byStatus": {
       "open": [
         "FU-CATALOG-STREAM-MIGRATION-1",
         "FU-V1-TO-V3-DEPRECATE-1",
-        "FU-CATALOG-DAAS-INVESTIGATE-1",
-        "FU-ECTROPY-XAAS-MIGRATION-1"
+        "FU-VENTURE-TYPE-ENUM-REVIEW-1"
       ],
       "closed": [
-        "FU-RESOLVER-PROPAGATION-1"
+        "FU-RESOLVER-PROPAGATION-1",
+        "FU-ECTROPY-XAAS-MIGRATION-1",
+        "FU-CATALOG-DAAS-INVESTIGATE-1"
+      ]
+    },
+    "byPriority": {
+      "P2": [
+        "FU-CATALOG-STREAM-MIGRATION-1",
+        "FU-ECTROPY-XAAS-MIGRATION-1",
+        "FU-V1-TO-V3-DEPRECATE-1"
+      ],
+      "P3": [
+        "FU-RESOLVER-PROPAGATION-1",
+        "FU-CATALOG-DAAS-INVESTIGATE-1",
+        "FU-VENTURE-TYPE-ENUM-REVIEW-1"
       ]
     },
     "byBlockedBy": {}

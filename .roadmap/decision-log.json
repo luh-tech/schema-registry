@@ -2,7 +2,7 @@
   "$schema": "https://schemas.luh.tech/decision-log.schema.v2.json",
   "version": "1.0.0",
   "ventureId": "luhtech",
-  "lastUpdated": "2026-05-17T00:00:00Z",
+  "lastUpdated": "2026-05-18T23:44:40Z",
   "meta": {
     "sourceOfTruth": ".roadmap/decision-log.json"
   },
@@ -294,6 +294,51 @@
           "url": "https://schemas.luh.tech/_meta/schema-map.json",
           "description": "Post-T4 schema-map: 99 schemas, byRegistry portfolio=42 ectropy-domain=57."
         }
+      ]
+    },
+    {
+      "decisionId": "d-2026-05-18-luhtech-schema-t5-4",
+      "timestamp": "2026-05-18T23:44:40Z",
+      "title": "luhtech-schema T5.4 — schema-map prefix ectropy-domain/ → ectropy/ + 99/99 D2 closure",
+      "context": "T5.1 (Ectropy-ai/schemas#5) converted 57 Ectropy domain schemas from URN to URL $id form at https://schemas.luh.tech/ectropy/<path>, renamed 4 XaaS directories (caas→corsx, gaas→govsx, paas→paysx, maas→matsx), and established .roadmap/ in the Ectropy registry. T5.3 (Ectropy-Business#143) migrated consumer-side: 2 service-file URN→URL edits + 4 local-copy directory renames + 61 URN conversions across .roadmap/schemas/. T5.2 was correctly struck — @ectropy/schemas npm ships TypeScript types only; JSON schema directory changes did not affect the npm distribution surface. T5.4 closes the arc by aligning luhtech-schema schema_map.py with D-T5-A canonical hosting form.",
+      "decision": "Update luhtech-schema schema_map.py path prefix from ectropy-domain/ to ectropy/ (matching D-T5-A canonical URL hosting at https://schemas.luh.tech/ectropy/<path>). Normalize byRegistry dict key from ectropy-domain to ectropy. Regenerate schema-map.json against post-T5.1 Ectropy registry (commit 2a9aee1). Result: 99/99 D2 compliance across both registers (42 portfolio + 57 Ectropy, all URL $id form). L11 SH-1 CLOSED.",
+      "rationale": "The ectropy-domain/ prefix was a T4 placeholder selected before D-T5-A locked the canonical hosting URL. With T5.1 + T5.3 merged, the map path prefix must match the authoritative URL form so that byRegistry statistics, local-resolver coverage, and downstream tools reading paths from schema-map.json all use the canonical hosting path. Identity-mapping the dict key (ectropy-domain → ectropy) closes the same gap at the statistics-aggregation layer.",
+      "status": "approved",
+      "category": "tooling",
+      "impact": "high",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-05-18T23:44:40Z",
+      "consequences": {
+        "positive": [
+          "L11 SH-1 CLOSED: 99/99 schemas D2-compliant across portfolio + Ectropy registries.",
+          "schema-map.json paths align with canonical hosting form (schemas.luh.tech/ectropy/<path>).",
+          "byRegistry key normalized — downstream consumers read a single canonical key.",
+          "T5 arc complete: T5.1 merged, T5.2 struck, T5.3 merged, T5.4 closed."
+        ],
+        "negative": [
+          "Breaking change to byRegistry key for any consumer reading byRegistry['ectropy-domain']; must migrate to byRegistry['ectropy']."
+        ],
+        "risks": [
+          "L11 SH-2 (54/57 Ectropy schemas missing top-level version) remains open — FU-L11-VERSION-FIELDS-1 in Ectropy registry tracks.",
+          "schema-map.schema.json version may warrant a major bump for the byRegistry key change; deferred."
+        ]
+      },
+      "alternatives": [
+        {
+          "option": "Keep the ectropy-domain/ prefix to maintain backward compatibility with T4 consumers.",
+          "rejectionReason": "D-T5-A locks schemas.luh.tech/ectropy/ as the single source of truth for L11 hosting. Permitting map-vs-host divergence creates a second canonical form and undermines schema-first discipline."
+        }
+      ],
+      "tags": [
+        "T5",
+        "T5-4",
+        "schema-map",
+        "L11",
+        "SH-1",
+        "D2",
+        "luhtech-schema"
       ]
     }
   ]
