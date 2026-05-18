@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schemas.luh.tech/decision-log.schema.v2.json",
+  "version": "1.0.0",
+  "ventureId": "luhtech",
+  "lastUpdated": "2026-05-17T00:00:00Z",
+  "meta": {
+    "sourceOfTruth": ".roadmap/decision-log.json"
+  },
+  "decisions": [
+    {
+      "decisionId": "d-2026-05-17-luhtech-schema-t0",
+      "timestamp": "2026-05-17T00:00:00Z",
+      "title": "Adopt luhtech-schema as schema-first execution substrate",
+      "context": "Eight months of platform construction at LuhTech Holdings produced infrastructure, schemas, ventures, and AI agents in parallel. Hand-maintained hygiene cannot scale: drift accumulates faster than a solo founder can manually defend against. The portfolio needs mechanical validation as the durable answer to the hygiene problem.",
+      "decision": "Adopt the luhtech-schema Python tool as the single substrate for all schema-touching operations across the portfolio. Schemas are not documentation; they are the executable specification of the platform. Every schema-touching commit flows through canonical contracts validated by luhtech-schema, integrated into pre-commit hooks, CI gates, and MCP exposure to AI agents.",
+      "rationale": "The tool unifies and supersedes the eight planning-arc decisions D1 through D8 captured in LUHTECH-PLATFORM-SCHEMA-STRATEGY-AND-TOOLING-2026-05-17. Building in-house rather than adopting a third-party linter is justified by portfolio-specific canonical rules (URL $id host enforcement, acronym catalog enforcement, classification and boundary semantics) that have no off-the-shelf equivalent. The T0–T9 build sequence provides a concrete incremental path from scaffold to full enforcement.",
+      "status": "approved",
+      "category": "tooling",
+      "impact": "high",
+      "approvedBy": ["erik"],
+      "approvalDate": "2026-05-17T00:00:00Z",
+      "consequences": {
+        "positive": [
+          "All schemas in both registries migrate to URL $id form at https://schemas.luh.tech/ — D2, closes SH-1 at T5.",
+          "Every schema carries an explicit top-level semver version field — D6, closes SH-2 at T3.",
+          "Acronyms catalog becomes a schema-validated artifact governed by acronyms-catalog.schema.json — D4, closes SH-7 at T1.",
+          "Schema-registry rename luh-tech/luh-tech-roadmap-template to luh-tech/schema-registry executed 2026-05-18 — D3.",
+          "venture-summary.json and metrics-pipeline.json deprecated from active dataflows; schemas retained as canonical contracts — D7."
+        ],
+        "negative": [
+          "Migration burden: T3 and T5 require touching every schema file in the registry to add version fields and migrate URN $id to URL form."
+        ],
+        "risks": [
+          "CI enforcement gate (T8) must not land before all consuming repos have been updated — otherwise PRs block."
+        ]
+      },
+      "alternatives": [
+        {
+          "option": "Continue hand-maintained hygiene",
+          "rejectionReason": "Scaling failure mode already observed: drift accumulates faster than a solo founder can manually defend against."
+        },
+        {
+          "option": "Adopt an existing third-party schema linter",
+          "rejectionReason": "Portfolio-specific rules (URL $id host enforcement, acronym catalog enforcement, classification and boundary semantics) require plugin development equivalent in scope to the in-house tool."
+        }
+      ],
+      "tags": ["schema-first", "tooling", "portfolio", "T0", "luhtech-schema"],
+      "externalLinks": [
+        {
+          "url": "https://github.com/luh-tech/schema-registry/blob/main/LUHTECH-PLATFORM-SCHEMA-STRATEGY-AND-TOOLING-2026-05-17.md",
+          "description": "Locked strategy document — captures D1 through D8, T0 through T9 build sequence, SH-1 through SH-7 hygiene gate."
+        }
+      ]
+    }
+  ]
+}

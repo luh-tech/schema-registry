@@ -1,0 +1,16 @@
+# Pre-commit configuration for luh-tech/schema-registry.
+# T0 stub — INERT until T8 industrializes pre-commit portfolio-wide.
+# Run manually: pre-commit run --hook-stage manual --all-files
+
+default_stages: [manual]
+
+repos:
+  - repo: local
+    hooks:
+      - id: luhtech-schema-validate
+        name: luhtech-schema validate registry (manual / opt-in until T8)
+        entry: luhtech-schema validate registry
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [manual]

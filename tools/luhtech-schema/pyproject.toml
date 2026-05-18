@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "luhtech-schema"
+version = "0.1.0"
+description = "Schema-first validation, classification, and authoring substrate for LuhTech Holdings"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "LuhTech Holdings", email = "hello@luh.tech" }]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Quality Assurance"
+]
+dependencies = [
+  "jsonschema>=4.20",
+  "referencing>=0.30"
+]
+
+[project.scripts]
+luhtech-schema = "luhtech_schema.cli:main"
+
+[project.urls]
+Homepage = "https://schemas.luh.tech"
+Repository = "https://github.com/luh-tech/schema-registry"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
