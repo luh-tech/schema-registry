@@ -24,29 +24,29 @@ def build_schema_map(registry_root: Path, ectropy_root: Path | None = None) -> d
     for p in _iter_schema_files(registry_root):
         schemas.append(classify(p, registry_root))
 
-    # Ectropy-domain walk (L11) — prefix paths with ectropy-domain/
+    # Ectropy-domain walk (L11) — prefix paths with ectropy/
     if ectropy_root is not None and ectropy_root.exists():
         for p in _iter_schema_files(ectropy_root):
             entry = classify(p, ectropy_root, registry_label="ectropy-domain")
-            entry["path"] = f"ectropy-domain/{entry['path']}"
+            entry["path"] = f"ectropy/{entry['path']}"
             schemas.append(entry)
 
     by_layer = Counter(e.get("layer","—") for e in schemas)
     by_subdir = Counter(e.get("subdir","—") for e in schemas)
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    portfolio_count = sum(1 for e in schemas if not e["path"].startswith("ectropy-domain/"))
-    ectropy_count = sum(1 for e in schemas if e["path"].startswith("ectropy-domain/"))
+    portfolio_count = sum(1 for e in schemas if not e["path"].startswith("ectropy/"))
+    ectropy_count = sum(1 for e in schemas if e["path"].startswith("ectropy/"))
 
     return {
         "$schema": SCHEMA_URL, "streamUrl": STREAM_URL, "version": "1.0.0",
         "generatedAt": now, "generatedBy": f"luhtech-schema map (v{__version__})",
-        "registry": "luh-tech/schema-registry + ectropy-ai/schemas (L11)" if ectropy_root else "luh-tech/schema-registry",
+        "registry": "luh-tech/schema-registry + ectropy-ai/schemas (L11, post-T5)" if ectropy_root else "luh-tech/schema-registry",
         "schemaCount": len(schemas),
         "meta": {
             "d2Compliant": sum(1 for e in schemas if e.get("d2Compliant")),
             "d6Compliant": sum(1 for e in schemas if e.get("d6Compliant")),
             "byLayer": dict(by_layer), "bySubdir": dict(by_subdir),
-            "byRegistry": {"portfolio": portfolio_count, "ectropy-domain": ectropy_count},
+            "byRegistry": {"portfolio": portfolio_count, "ectropy": ectropy_count},
         },
         "schemas": schemas,
     }
