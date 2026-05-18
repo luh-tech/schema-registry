@@ -1,4 +1,4 @@
-"""luhtech-schema CLI dispatch. T3: validate, acronyms, classify, map, migrate."""
+"""luhtech-schema CLI dispatch. T4: validate, acronyms, classify, map, migrate."""
 from __future__ import annotations
 import argparse, sys
 from luhtech_schema import __version__
@@ -19,6 +19,8 @@ def build_parser():
     rp = asp.add_parser("register"); rp.add_argument("term"); rp.add_argument("--expansion", default=None); rp.add_argument("--definition", default=None); rp.add_argument("--section", default="K")
     clp = sp.add_parser("classify"); clp.add_argument("target"); clp.add_argument("--registry-root", default=".")
     mp = sp.add_parser("map"); mp.add_argument("--registry-root", default=".")
+    mp.add_argument("--include-ectropy-domain", default=None,
+                    help="Path to ectropy-ai/schemas root for L11 inclusion.")
     mig = sp.add_parser("migrate"); mig_sp = mig.add_subparsers(dest="mig_command", required=True)
     av = mig_sp.add_parser("add-versions"); av.add_argument("--registry-root", default="."); av.add_argument("--apply", action="store_true")
     return p
@@ -31,7 +33,7 @@ def main(argv=None):
         if args.acro_command == "check": return acronyms_check(args.text, stream_url=args.stream_url, local=args.local)
         if args.acro_command == "register": return acronyms_register(args.term, expansion=args.expansion, definition=args.definition, section=args.section)
     if args.command == "classify": return classify_cmd(args.target, registry_root=args.registry_root)
-    if args.command == "map": return map_cmd(registry_root=args.registry_root)
+    if args.command == "map": return map_cmd(registry_root=args.registry_root, include_ectropy_domain=args.include_ectropy_domain)
     if args.command == "migrate": return migrate_cmd(args.mig_command, registry_root=args.registry_root, apply=args.apply)
     parser.print_help(); return 2
 

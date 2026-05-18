@@ -2,29 +2,58 @@
   "$schema": "https://schemas.luh.tech/_meta/schema-map.schema.json",
   "streamUrl": "https://schemas.luh.tech/_meta/schema-map.json",
   "version": "1.0.0",
-  "generatedAt": "2026-05-18T16:05:30Z",
-  "generatedBy": "luhtech-schema map (v0.3.0)",
-  "registry": "luh-tech/schema-registry",
-  "schemaCount": 42,
+  "generatedAt": "2026-05-18T17:56:33Z",
+  "generatedBy": "luhtech-schema map (v0.4.0)",
+  "registry": "luh-tech/schema-registry + ectropy-ai/schemas (L11)",
+  "schemaCount": 99,
   "meta": {
     "d2Compliant": 42,
-    "d6Compliant": 42,
+    "d6Compliant": 45,
     "byLayer": {
       "vocabulary": 4,
       "infrastructure": 8,
       "governance": 12,
       "venture-ops": 4,
       "portfolio-ops": 7,
-      "ip": 7
+      "ip": 7,
+      "domain": 57
     },
     "bySubdir": {
       "_definitions": 2,
       "_enums": 1,
-      "(root)": 16,
+      "(root)": 22,
       "cis": 3,
       "patent": 7,
       "pm": 7,
-      "portfolio": 6
+      "portfolio": 6,
+      "authority": 1,
+      "caas": 2,
+      "carbon": 2,
+      "closeout": 3,
+      "commissioning": 3,
+      "consequence": 2,
+      "contract": 3,
+      "dashboard": 1,
+      "decision": 5,
+      "definitions": 1,
+      "efas": 1,
+      "eil": 4,
+      "foundation": 1,
+      "gaas": 2,
+      "inspection": 1,
+      "ipd": 3,
+      "maas": 1,
+      "paas": 1,
+      "ros-mro": 3,
+      "schedule": 2,
+      "seed": 2,
+      "usf": 2,
+      "voxel": 2,
+      "warranty": 3
+    },
+    "byRegistry": {
+      "portfolio": 42,
+      "ectropy-domain": 57
     }
   },
   "schemas": [
@@ -829,6 +858,983 @@
       "refs": [
         "#/$defs/category",
         "#/$defs/workflow"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:authority:authority-level",
+      "path": "ectropy-domain/authority/authority-level.schema.json",
+      "version": null,
+      "title": "Authority Level Schema",
+      "subdir": "authority",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 4,
+      "refs": [
+        "#/$defs/authorityLevel",
+        "#/$defs/escalationRule",
+        "#/$defs/graphMetadata",
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:caas:takt-wagon",
+      "path": "ectropy-domain/caas/takt-wagon.schema.json",
+      "version": null,
+      "title": "Takt Wagon",
+      "subdir": "caas",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:caas:takt-zone",
+      "path": "ectropy-domain/caas/takt-zone.schema.json",
+      "version": null,
+      "title": "Takt Zone",
+      "subdir": "caas",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/definitions/ZoneGeometry"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:carbon:carbon-offset",
+      "path": "ectropy-domain/carbon/carbon-offset.schema.json",
+      "version": null,
+      "title": "Carbon Offset",
+      "subdir": "carbon",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 2,
+      "refs": [
+        "#/definitions/CreditVerification",
+        "#/definitions/OffsetSupplier"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:carbon:epd-cache",
+      "path": "ectropy-domain/carbon/epd-cache.schema.json",
+      "version": null,
+      "title": "EPD Cache Entry",
+      "subdir": "carbon",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/definitions/GWPData"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:closeout",
+      "path": "ectropy-domain/closeout/closeout.schema.json",
+      "version": null,
+      "title": "Project Closeout Schema",
+      "subdir": "closeout",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:g704-certificate",
+      "path": "ectropy-domain/closeout/g704-certificate.schema.json",
+      "version": null,
+      "title": "G704 Certificate of Substantial Completion Schema",
+      "subdir": "closeout",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 2,
+      "refs": [
+        "#/$defs/signature",
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:punch-item",
+      "path": "ectropy-domain/closeout/punch-item.schema.json",
+      "version": null,
+      "title": "Punch Item Schema",
+      "subdir": "closeout",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:commissioning-system",
+      "path": "ectropy-domain/commissioning/commissioning-system.schema.json",
+      "version": null,
+      "title": "Commissioning System Schema",
+      "subdir": "commissioning",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:cx-issue",
+      "path": "ectropy-domain/commissioning/cx-issue.schema.json",
+      "version": null,
+      "title": "Commissioning Issue Schema",
+      "subdir": "commissioning",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:functional-test",
+      "path": "ectropy-domain/commissioning/functional-test.schema.json",
+      "version": null,
+      "title": "Functional Performance Test Schema",
+      "subdir": "commissioning",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:consequence:consequence-v3",
+      "path": "ectropy-domain/consequence/consequence-v3.schema.json",
+      "version": null,
+      "title": "Consequence Schema",
+      "subdir": "consequence",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:consequence:consequence",
+      "path": "ectropy-domain/consequence/consequence.schema.json",
+      "version": null,
+      "title": "Consequence",
+      "subdir": "consequence",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 3,
+      "refs": [
+        "#/definitions/Evidence",
+        "#/definitions/Participant",
+        "#/definitions/SpatialReference"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:contract-party",
+      "path": "ectropy-domain/contract/contract-party.schema.json",
+      "version": null,
+      "title": "Contract Party Schema",
+      "subdir": "contract",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:contract-template",
+      "path": "ectropy-domain/contract/contract-template.schema.json",
+      "version": null,
+      "title": "Contract Template Schema",
+      "subdir": "contract",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 2,
+      "refs": [
+        "#/$defs/extractionRule",
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:contract",
+      "path": "ectropy-domain/contract/contract.schema.json",
+      "version": null,
+      "title": "Contract Schema",
+      "subdir": "contract",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 12,
+      "refs": [
+        "#/$defs/authorityMapping",
+        "#/$defs/disputeResolution",
+        "#/$defs/financialTerms",
+        "#/$defs/governanceStructure",
+        "#/$defs/graphMetadata",
+        "#/$defs/insuranceRequirement",
+        "#/$defs/keyDates",
+        "#/$defs/meta",
+        "#/$defs/partyDetail",
+        "#/$defs/sourceDocument",
+        "#/$defs/timestamps",
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:dashboard:data-layer",
+      "path": "ectropy-domain/dashboard/dashboard-data-layer.schema.json",
+      "version": "1.0.0",
+      "title": "Dashboard Data Layer Schema",
+      "subdir": "dashboard",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": true,
+      "refCount": 2,
+      "refs": [
+        "#/definitions/DashboardDataConfig",
+        "#/definitions/DataSource"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:decision:decision-event",
+      "path": "ectropy-domain/decision/decision-event.schema.json",
+      "version": null,
+      "title": "Decision Event",
+      "subdir": "decision",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 13,
+      "refs": [
+        "#/definitions/Action",
+        "#/definitions/DecisionOutcome",
+        "#/definitions/DecisionTrigger",
+        "#/definitions/Engine1Output",
+        "#/definitions/Engine2Output",
+        "#/definitions/GraphMetadata",
+        "#/definitions/MediationDecision",
+        "#/definitions/MonitoringTrigger",
+        "#/definitions/Option",
+        "#/definitions/PatternSummary",
+        "#/definitions/ProjectedOutcome",
+        "#/definitions/RiskProfile",
+        "#/definitions/StateSnapshot"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:decision:decision",
+      "path": "ectropy-domain/decision/decision.schema.json",
+      "version": null,
+      "title": "Decision",
+      "subdir": "decision",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 6,
+      "refs": [
+        "#/definitions/AuthorityChain",
+        "#/definitions/DecisionContext",
+        "#/definitions/DecisionRelationships",
+        "#/definitions/Evidence",
+        "#/definitions/Participant",
+        "#/definitions/SpatialReference"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:decision:pm-decision",
+      "path": "ectropy-domain/decision/pm-decision.schema.json",
+      "version": null,
+      "title": "PM Decision Schema",
+      "subdir": "decision",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 13,
+      "refs": [
+        "#/$defs/authorityLevel",
+        "#/$defs/budgetImpact",
+        "#/$defs/decisionContext",
+        "#/$defs/edge",
+        "#/$defs/evidence",
+        "#/$defs/graphMetadata",
+        "#/$defs/meta",
+        "#/$defs/participants",
+        "#/$defs/scheduleImpact",
+        "#/$defs/timestamps",
+        "#/$defs/urn",
+        "#/$defs/voxelAttachment",
+        "#/$defs/voxelContext"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:decision:sdi-snapshot",
+      "path": "ectropy-domain/decision/sdi-snapshot.schema.json",
+      "version": null,
+      "title": "SDI Snapshot",
+      "subdir": "decision",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:decision:success-pattern",
+      "path": "ectropy-domain/decision/success-pattern.schema.json",
+      "version": null,
+      "title": "Success Pattern",
+      "subdir": "decision",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:definitions:classification",
+      "path": "ectropy-domain/definitions/classification.schema.json",
+      "version": null,
+      "title": "Classification Definitions",
+      "subdir": "definitions",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:ops:deployment-metrics",
+      "path": "ectropy-domain/deployment-metrics.schema.json",
+      "version": "1.0.0",
+      "title": "Deployment Metrics Schema",
+      "subdir": "(root)",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": true,
+      "refCount": 5,
+      "refs": [
+        "#/definitions/deploymentEvent",
+        "#/definitions/deploymentStatistics",
+        "#/definitions/environmentMetrics",
+        "#/definitions/serviceDeployment",
+        "#/definitions/watchtowerStatus"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:efas:eigenmode-forecast",
+      "path": "ectropy-domain/efas/eigenmode-forecast.schema.json",
+      "version": null,
+      "title": "Eigenmode Forecast",
+      "subdir": "efas",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:eil:assistant-conversation",
+      "path": "ectropy-domain/eil/assistant-conversation.schema.json",
+      "version": null,
+      "title": "Assistant Conversation Schema",
+      "subdir": "eil",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/definitions/AssistantMessage"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:eil:assistant-message",
+      "path": "ectropy-domain/eil/assistant-message.schema.json",
+      "version": null,
+      "title": "Assistant Message Schema",
+      "subdir": "eil",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 3,
+      "refs": [
+        "#/$defs/citation",
+        "#/$defs/toolCall",
+        "#/$defs/toolResult"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:eil:sms-conversation",
+      "path": "ectropy-domain/eil/sms-conversation.schema.json",
+      "version": null,
+      "title": "SMS Conversation Schema",
+      "subdir": "eil",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/definitions/SMSMessage"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:eil:sms-message",
+      "path": "ectropy-domain/eil/sms-message.schema.json",
+      "version": null,
+      "title": "SMS Message Schema",
+      "subdir": "eil",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:feature",
+      "path": "ectropy-domain/feature.schema.json",
+      "version": null,
+      "title": "Feature Specification Schema",
+      "subdir": "(root)",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 3,
+      "refs": [
+        "#/$defs/graphEdge",
+        "#/$defs/milestone",
+        "#/$defs/scenario"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:foundation:sensor-plan",
+      "path": "ectropy-domain/foundation/sensor-plan.schema.json",
+      "version": null,
+      "title": "Sensor Deployment Plan",
+      "subdir": "foundation",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/definitions/DeploymentStrategy"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:gaas:authority-tier",
+      "path": "ectropy-domain/gaas/authority-tier.schema.json",
+      "version": null,
+      "title": "Authority Tier",
+      "subdir": "gaas",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 3,
+      "refs": [
+        "#/definitions/DecisionThresholds",
+        "#/definitions/DelegationRules",
+        "#/definitions/EscalationRules"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:gaas:compliance-charter",
+      "path": "ectropy-domain/gaas/compliance-charter.schema.json",
+      "version": null,
+      "title": "Compliance Charter",
+      "subdir": "gaas",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 6,
+      "refs": [
+        "#/definitions/CarbonCompliance",
+        "#/definitions/ChapterMetadata",
+        "#/definitions/ComplianceRequirements",
+        "#/definitions/QualityStandards",
+        "#/definitions/RegulatoryCompliance",
+        "#/definitions/SafetyCompliance"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:graph",
+      "path": "ectropy-domain/graph.schema.json",
+      "version": null,
+      "title": "Ectropy Roadmap Knowledge Graph",
+      "subdir": "(root)",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 5,
+      "refs": [
+        "#/definitions/Edge",
+        "#/definitions/EdgeType",
+        "#/definitions/GraphMetadata",
+        "#/definitions/Node",
+        "#/definitions/NodeType"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:inspection:inspection",
+      "path": "ectropy-domain/inspection/inspection.schema.json",
+      "version": null,
+      "title": "Inspection Schema",
+      "subdir": "inspection",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:interfaces",
+      "path": "ectropy-domain/interfaces.schema.json",
+      "version": null,
+      "title": "Feature Interfaces Schema",
+      "subdir": "(root)",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 8,
+      "refs": [
+        "#/$defs/dataType",
+        "#/$defs/eventDefinition",
+        "#/$defs/graphqlResolver",
+        "#/$defs/mcpTool",
+        "#/$defs/mcpToolCategory",
+        "#/$defs/middleware",
+        "#/$defs/parameterDef",
+        "#/$defs/restEndpoint"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:savings-distribution",
+      "path": "ectropy-domain/ipd/savings-distribution.schema.json",
+      "version": null,
+      "title": "IPD Savings Distribution Schema",
+      "subdir": "ipd",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:target-cost",
+      "path": "ectropy-domain/ipd/target-cost.schema.json",
+      "version": null,
+      "title": "IPD Target Cost Schema",
+      "subdir": "ipd",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 2,
+      "refs": [
+        "#/$defs/amendment",
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:voting-session",
+      "path": "ectropy-domain/ipd/voting-session.schema.json",
+      "version": null,
+      "title": "IPD Voting Session Schema",
+      "subdir": "ipd",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 2,
+      "refs": [
+        "#/$defs/urn",
+        "#/$defs/vote"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:maas:material-supplier",
+      "path": "ectropy-domain/maas/material-supplier.schema.json",
+      "version": null,
+      "title": "Material Supplier",
+      "subdir": "maas",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:ops:metrics-pipeline",
+      "path": "ectropy-domain/metrics-pipeline.schema.json",
+      "version": "1.0.0",
+      "title": "Metrics Pipeline Schema",
+      "subdir": "(root)",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": true,
+      "refCount": 5,
+      "refs": [
+        "#/definitions/failureHandler",
+        "#/definitions/metricSource",
+        "#/definitions/metricsWorkflow",
+        "#/definitions/normalizationRules",
+        "#/definitions/reportingDestination"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:paas:pay-application",
+      "path": "ectropy-domain/paas/pay-application.schema.json",
+      "version": null,
+      "title": "Pay Application (AIA G702)",
+      "subdir": "paas",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 2,
+      "refs": [
+        "#/definitions/G703LineItem",
+        "#/definitions/RetainageCalculation"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:ros-mro:coordination-view",
+      "path": "ectropy-domain/ros-mro/coordination-view.schema.json",
+      "version": null,
+      "title": "ROS MRO Coordination View Schema",
+      "subdir": "ros-mro",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 6,
+      "refs": [
+        "#/definitions/ActivityItem",
+        "#/definitions/CoordinationConfig",
+        "#/definitions/Point3D",
+        "#/definitions/ViewState",
+        "#/definitions/VoxelAggregation",
+        "#/definitions/VoxelData"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:ros-mro:voxel-filter",
+      "path": "ectropy-domain/ros-mro/voxel-filter.schema.json",
+      "version": null,
+      "title": "Voxel Filter Schema",
+      "subdir": "ros-mro",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 4,
+      "refs": [
+        "#/definitions/VoxelFilter",
+        "#/definitions/VoxelPagination",
+        "#/definitions/VoxelQueryParams",
+        "#/definitions/VoxelSort"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:ros-mro:voxel-stream",
+      "path": "ectropy-domain/ros-mro/voxel-stream.schema.json",
+      "version": null,
+      "title": "Voxel Stream Message Schema",
+      "subdir": "ros-mro",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 2,
+      "refs": [
+        "#/definitions/VoxelBatchUpdateMessage",
+        "#/definitions/VoxelUpdateMessage"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:schedule:schedule-proposal-v3",
+      "path": "ectropy-domain/schedule/schedule-proposal-v3.schema.json",
+      "version": null,
+      "title": "Schedule Proposal Schema",
+      "subdir": "schedule",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:schedule:schedule-proposal",
+      "path": "ectropy-domain/schedule/schedule-proposal.schema.json",
+      "version": null,
+      "title": "ScheduleProposal",
+      "subdir": "schedule",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/definitions/Participant"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:seed:orchestrator",
+      "path": "ectropy-domain/seed/seed-orchestrator.schema.json",
+      "version": null,
+      "title": "Seed Orchestrator Configuration Schema",
+      "subdir": "seed",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:seed:validation",
+      "path": "ectropy-domain/seed/seed-validation.schema.json",
+      "version": null,
+      "title": "Seed Validation Criteria Schema",
+      "subdir": "seed",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 9,
+      "refs": [
+        "#/definitions/customQueryCriteria",
+        "#/definitions/dataIntegrityCriteria",
+        "#/definitions/foreignKeyCriteria",
+        "#/definitions/idempotencyCriteria",
+        "#/definitions/recordCountCriteria",
+        "#/definitions/referentialIntegrityCriteria",
+        "#/definitions/schemaValidationCriteria",
+        "#/definitions/tenantIsolationCriteria",
+        "#/definitions/uniquenessCriteria"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:usf:usf-profile",
+      "path": "ectropy-domain/usf/usf-profile.schema.json",
+      "version": null,
+      "title": "USF Profile Schema",
+      "subdir": "usf",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 5,
+      "refs": [
+        "#/$defs/graphMetadata",
+        "#/$defs/meta",
+        "#/$defs/timestamps",
+        "#/$defs/urn",
+        "#/$defs/usfSnapshot"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:usf:usf-work-packet",
+      "path": "ectropy-domain/usf/usf-work-packet.schema.json",
+      "version": null,
+      "title": "USF Work Packet Schema",
+      "subdir": "usf",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 6,
+      "refs": [
+        "#/$defs/attributionItem",
+        "#/$defs/graphMetadata",
+        "#/$defs/laborAllocationItem",
+        "#/$defs/meta",
+        "#/$defs/timestamps",
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:voxel:voxel-v3",
+      "path": "ectropy-domain/voxel/voxel-v3.schema.json",
+      "version": null,
+      "title": "Voxel Schema",
+      "subdir": "voxel",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 23,
+      "refs": [
+        "#/$defs/acknowledgment",
+        "#/$defs/attachedDecision",
+        "#/$defs/bounds",
+        "#/$defs/carbon",
+        "#/$defs/coordinates",
+        "#/$defs/cost",
+        "#/$defs/decisionSurface",
+        "#/$defs/dependencies",
+        "#/$defs/edge",
+        "#/$defs/graphMetadata",
+        "#/$defs/inspectionState",
+        "#/$defs/inspectionStatus",
+        "#/$defs/labor",
+        "#/$defs/location",
+        "#/$defs/material",
+        "#/$defs/meta",
+        "#/$defs/preApproval",
+        "#/$defs/schedule",
+        "#/$defs/timestamps",
+        "#/$defs/toleranceOverride",
+        "#/$defs/urn",
+        "#/$defs/voxelAlert",
+        "#/$defs/workStatus"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:voxel:voxel",
+      "path": "ectropy-domain/voxel/voxel.schema.json",
+      "version": null,
+      "title": "Voxel",
+      "subdir": "voxel",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 8,
+      "refs": [
+        "#/definitions/Acknowledgment",
+        "#/definitions/AttachedDecision",
+        "#/definitions/DecisionSurface",
+        "#/definitions/InspectionStatus",
+        "#/definitions/PreApproval",
+        "#/definitions/ToleranceOverride",
+        "#/definitions/VoxelAlert",
+        "#/definitions/WorkStatus"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:building-history",
+      "path": "ectropy-domain/warranty/building-history.schema.json",
+      "version": null,
+      "title": "Building History Schema",
+      "subdir": "warranty",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:warranty-claim",
+      "path": "ectropy-domain/warranty/warranty-claim.schema.json",
+      "version": null,
+      "title": "Warranty Claim Schema",
+      "subdir": "warranty",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:warranty",
+      "path": "ectropy-domain/warranty/warranty.schema.json",
+      "version": null,
+      "title": "Warranty Schema",
+      "subdir": "warranty",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 1,
+      "refs": [
+        "#/$defs/urn"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "urn:luhtech:ectropy:schema:workflow-registry",
+      "path": "ectropy-domain/workflow-registry.schema.json",
+      "version": null,
+      "title": "GitHub Actions Workflow Registry Schema",
+      "subdir": "(root)",
+      "layer": "domain",
+      "d2Compliant": false,
+      "d6Compliant": false,
+      "refCount": 2,
+      "refs": [
+        "#/definitions/category",
+        "#/definitions/workflow"
       ],
       "loadable": true
     }
