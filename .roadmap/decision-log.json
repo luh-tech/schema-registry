@@ -119,6 +119,68 @@
           "description": "D9 stream URL for the catalog instance."
         }
       ]
+    },
+    {
+      "decisionId": "d-2026-05-18-luhtech-schema-t2",
+      "timestamp": "2026-05-18T15:16:14Z",
+      "title": "luhtech-schema T2: classify + map + local resolver + 403 fix",
+      "context": "T1 closed with D9 stream-fetch in production but surfaced two bugs: (1) Python urllib gets 403 from Cloudflare with its default user-agent — acronyms check silently failed without --local. (2) jsonschema auto-fetches $refs over the network, triggering a deprecation warning. Substrate also confirmed 42/42 D2-compliant schemas and 41/42 SH-2 violations — the planned T3 target. No existing classification metadata in any schema; directory structure IS the natural taxonomy.",
+      "decision": "Ship T2 as four interlocked deliverables: (1) fix 403 by adding explicit User-Agent header to all urllib calls; (2) wire referencing.Registry built from schemas/_meta/schema-map.json to retire auto-fetch warning; (3) classify + map subcommands producing schemas/_meta/schema-map.json — second D9 stream artifact; (4) seed schema-registry .roadmap/follow-up-register.json with FU-CATALOG-STREAM-MIGRATION-1. Classification is non-invasive (external index, schemas unmodified), pragmatic 8-value layer enum.",
+      "rationale": "The 403 fix and local resolver are prerequisite correctness fixes for D9. The schema-map closes the T2 milestone and becomes the substrate for T3 (add-versions sweep knows exactly which 41 schemas need version fields). Non-invasive classification respects the schemas-as-substrate principle: metadata about schemas lives in indices, not in schemas themselves.",
+      "status": "approved",
+      "category": "tooling",
+      "impact": "high",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-05-18T15:16:14Z",
+      "consequences": {
+        "positive": [
+          "D9 stream-fetch works from Python (403 fixed for validate URL and acronyms check).",
+          "schema-map.json is second D9 stream artifact — 42-schema registry queryable from one URL.",
+          "Local $ref resolution active via referencing.Registry — no network fetch for $refs.",
+          "Tool version 0.1.0 → 0.2.0 (classify + map public surface).",
+          "schema-registry .roadmap/follow-up-register.json seeded — parity with decision-log.json.",
+          "42/42 D2-compliant, 1/42 D6-compliant — T3 scope confirmed programmatically."
+        ],
+        "negative": [
+          "schema-map.json must be regenerated whenever schemas are added/renamed/removed."
+        ],
+        "risks": [
+          "Ectropy domain registry (ectropy-ai/schemas) deferred from map scope — two local clones, canonical path unresolved. Filed as context for T2 DEC; resolution needed before T6."
+        ]
+      },
+      "alternatives": [
+        {
+          "option": "Add tier/layer fields to each schema file",
+          "rejectionReason": "Invasive; couples T2 to SH-2 migration; metadata about schemas belongs in indices not schemas."
+        },
+        {
+          "option": "Ship 403 fix as separate PR before new T2 surface",
+          "rejectionReason": "Interlocked: map cmd validates schema-map.json via local resolver via fixed urlopen; single PR is cleaner."
+        }
+      ],
+      "tags": [
+        "schema-first",
+        "tooling",
+        "portfolio",
+        "T2",
+        "D9",
+        "local-resolver",
+        "classify",
+        "map",
+        "luhtech-schema"
+      ],
+      "externalLinks": [
+        {
+          "url": "https://schemas.luh.tech/_meta/schema-map.json",
+          "description": "D9 stream URL for the schema map instance."
+        },
+        {
+          "url": "https://schemas.luh.tech/_meta/schema-map.schema.json",
+          "description": "Schema governing the map."
+        }
+      ]
     }
   ]
 }

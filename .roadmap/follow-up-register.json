@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schemas.luh.tech/follow-up-register.schema.json",
+  "$id": "urn:luhtech:schema-registry:file:follow-up-register",
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "ventureId": "schema-registry",
+  "lastUpdated": "2026-05-18T15:16:14Z",
+  "meta": {
+    "sourceOfTruth": ".roadmap/follow-up-register.json",
+    "totalCount": 2
+  },
+  "followUps": [
+    {
+      "id": "FU-CATALOG-STREAM-MIGRATION-1",
+      "title": "Migrate downstream consumers of acronyms-catalog from file/name refs to D9 stream URL",
+      "priority": "P2",
+      "status": "open",
+      "opened": "2026-05-18T15:16:14Z",
+      "openedDuring": "luhtech-schema T1 substrate (2026-05-18)",
+      "scope": "5 downstream consumers identified in T1 substrate Step 7: schema-registry/schemas/patent/glossary.schema.json — update $ref to https://schemas.luh.tech/acronyms-catalog.json; LuhTech-business/filings/glossary.md + glossary.yml — link to stream URL; LuhTech-business/docs/LUHTECH-PATENT-FOUNDATION-CORRECTIONS-2026-05-06.md — update reference; LuhTech-business/.roadmap/follow-up-register.json — close stale catalog-absence FU entries.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry",
+      "coordination": "Ectropy-Business follow-up-register should also note this as a cross-repo concern once D9 stream URL is validated live."
+    },
+    {
+      "id": "FU-RESOLVER-PROPAGATION-1",
+      "title": "Resolve cosmetic jsonschema deprecation warning for decision-log DEC validation",
+      "priority": "P3",
+      "status": "open",
+      "opened": "2026-05-18T15:23:44Z",
+      "openedDuring": "luhtech-schema T2 Phase 1 (2026-05-18)",
+      "scope": "Step 17 of T2 Phase 1: DEC log validation passes but triggers jsonschema network auto-fetch deprecation warning. Root cause: decision-log.schema.v2 $refs luhtech-enums; the Draft7Validator may not propagate the local registry through to internal sub-validator $ref resolution. Audit referencing.Registry propagation in validate.py; confirm luhtech-enums $id coverage in schema-map; consider explicit pre-resolution walk.",
+      "blockedBy": [],
+      "blocks": [],
+      "coordination": "Likely folds into T3 substrate prep — fixing propagation lets T3 instance validations run clean. Cosmetic only; validation passes."
+    }
+  ],
+  "indexes": {
+    "byPriority": {
+      "P2": [
+        "FU-CATALOG-STREAM-MIGRATION-1"
+      ],
+      "P3": [
+        "FU-RESOLVER-PROPAGATION-1"
+      ]
+    },
+    "byStatus": {
+      "open": [
+        "FU-CATALOG-STREAM-MIGRATION-1",
+        "FU-RESOLVER-PROPAGATION-1"
+      ]
+    },
+    "byBlockedBy": {}
+  }
+}
