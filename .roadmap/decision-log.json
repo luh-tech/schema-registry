@@ -238,6 +238,63 @@
           "description": "Post-T3 schema-map: d6Compliant=42/42."
         }
       ]
+    },
+    {
+      "decisionId": "d-2026-05-18-luhtech-schema-t4",
+      "timestamp": "2026-05-18T18:01:49Z",
+      "title": "luhtech-schema T4: schema-map L11 expansion + scope reshape for XaaS/deprecation work",
+      "context": "T4's strategy-doc framing was 'migrate xaas-to-snx + v1-to-v3-deprecate'. Substrate revealed: (1) service-exchange.enum.json already encodes the canonical SNx→XaaS-supersedes mapping — code-level migration done; (2) XaaS survives in three Ectropy-domain surfaces more coherent to bundle into T5 (urn-to-url); (3) v-suffix deprecation has unresolved policy questions. Schema-map L11 expansion was a clean, concrete need.",
+      "decision": "Reshape T4 to schema-map L11 expansion only. luhtech-schema map gains --include-ectropy-domain flag. classify.py adds 'domain' layer for L11 entries. schema-map.schema.json adds 'domain' to layer enum + byRegistry to meta (bump 1.0.0→1.1.0). Three FUs filed: FU-ECTROPY-XAAS-MIGRATION-1 (bundle XaaS into T5), FU-V1-TO-V3-DEPRECATE-1 (deprecation policy), FU-CATALOG-DAAS-INVESTIGATE-1 (DaaS reference investigation).",
+      "rationale": "Schema-map L11 expansion has no policy dependencies and delivers immediate value: 99-schema portfolio-spanning view, L11 SH-1 baseline visible (57/57 URN), L11 D6 baseline visible (3/57 have version). Bundling XaaS into T5 avoids intermediate inconsistent states where directory paths rename but URN segments don't yet match. Deprecation policy must be explicit before mutation to avoid long-lived precedent mistakes.",
+      "status": "approved",
+      "category": "tooling",
+      "impact": "medium",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-05-18T18:01:49Z",
+      "consequences": {
+        "positive": [
+          "schema-map.json indexes 99 schemas (42 portfolio + 57 Ectropy domain) — first portfolio-spanning view.",
+          "L11 SH-1 baseline visible: 57/57 URN $id (all T5 migration targets).",
+          "L11 D6 baseline visible: 3/57 Ectropy schemas with version; 54 are SH-2 scope in the L11 registry.",
+          "Tool version 0.3.0 → 0.4.0 (multi-root capability).",
+          "schema-map.schema.json 1.0.0 → 1.1.0 (new optional fields, backward-compatible).",
+          "FU register grows to 5 entries (4 open, 1 closed) — explicit capture of deferred scope."
+        ],
+        "negative": [
+          "T5 now inherits expanded scope: urn-to-url (57 URNs) + XaaS terminology cleanup (directory rename + URN segments + description strings)."
+        ],
+        "risks": [
+          "SNx directory naming form (csx/ vs corsx/ vs full noun) decision needed before T5 substrate — affects URN segment updates and product code imports."
+        ]
+      },
+      "alternatives": [
+        {
+          "option": "Ship migrate xaas-to-snx as a substantive T4 subcommand",
+          "rejectionReason": "At code/enum level the migration is already done (service-exchange.enum.json). Description-string polish alone doesn't merit a migrate subcommand."
+        },
+        {
+          "option": "Ship migrate v1-to-v3-deprecate without policy resolution",
+          "rejectionReason": "Deprecation marker form is a long-lived precedent; per-family active-variant identification needs verification (luhtech-enums v2 is the active one, not the unversioned stub — substrate inverted naive assumption)."
+        }
+      ],
+      "tags": [
+        "schema-first",
+        "tooling",
+        "portfolio",
+        "T4",
+        "L11",
+        "schema-map",
+        "domain",
+        "luhtech-schema"
+      ],
+      "externalLinks": [
+        {
+          "url": "https://schemas.luh.tech/_meta/schema-map.json",
+          "description": "Post-T4 schema-map: 99 schemas, byRegistry portfolio=42 ectropy-domain=57."
+        }
+      ]
     }
   ]
 }

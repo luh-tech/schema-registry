@@ -1,9 +1,9 @@
-"""Schema classification — T2. Non-invasive external taxonomy."""
+"""Schema classification — T2, extended T4 for multi-root support."""
 from __future__ import annotations
 import json, re
 from pathlib import Path
 
-LAYERS = ["vocabulary","governance","infrastructure","portfolio-ops","venture-ops","ip","meta","unclassified"]
+LAYERS = ["vocabulary","governance","infrastructure","portfolio-ops","venture-ops","ip","meta","domain","unclassified"]
 _SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+(?:[-+][\w.-]+)?$")
 
 _DIR_TO_LAYER = {
@@ -48,14 +48,29 @@ def _derive_layer(rel_parts):
         return _DIR_TO_LAYER.get(subdir, "unclassified"), subdir
     return "unclassified", "—"
 
-def classify(path, registry_root):
+def classify(path: Path, registry_root: Path, registry_label: str = "portfolio") -> dict:
+    """Classify a single schema file.
+
+    registry_label="portfolio" uses layered taxonomy from schemas/<subdir>/.
+    registry_label="ectropy-domain" classifies every entry as layer="domain"
+    with subdir = first path component (L11 domain directories).
+    """
     try: rel = path.relative_to(registry_root)
     except ValueError: rel = path
-    layer, subdir = _derive_layer(tuple(rel.parts))
+
+    if registry_label == "ectropy-domain":
+        rel_parts = tuple(rel.parts)
+        subdir = rel_parts[0] if len(rel_parts) > 1 else "(root)"
+        layer = "domain"
+    else:
+        rel_parts = tuple(rel.parts)
+        layer, subdir = _derive_layer(rel_parts)
+
     try:
         doc = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as e:
         return {"path": str(rel), "subdir": subdir, "layer": layer, "loadable": False, "loadError": str(e)}
+
     sid = doc.get("$id")
     refs = _collect_refs(doc)
     return {
