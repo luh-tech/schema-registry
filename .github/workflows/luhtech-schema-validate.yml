@@ -1,0 +1,38 @@
+# luhtech-schema validation workflow — T0 stub.
+# REPORT-ONLY mode. Enforcement (required status check) enabled at T8.
+
+name: luhtech-schema validate
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install luhtech-schema
+        run: pip install -e tools/luhtech-schema
+
+      - name: Print tool version
+        run: luhtech-schema --version
+
+      - name: Run unit tests
+        run: |
+          pip install pytest
+          pytest tools/luhtech-schema/tests -v
+
+      - name: Validate registry (report-only at T0)
+        # At T8 the trailing `|| true` comes off and this becomes a required gate.
+        run: luhtech-schema validate registry --registry-root . || true
