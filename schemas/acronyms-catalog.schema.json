@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/acronyms-catalog.schema.json",
+  "title": "LuhTech Canonical Glossary / Acronyms Catalog",
+  "description": "Schema governing the canonical LuhTech vocabulary served at https://schemas.luh.tech/acronyms-catalog.json. Encodes the shape established by canonical_glossary_v1.2 (2026-05-05) as the canonical structural contract for portfolio terminology.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["$schema", "streamUrl", "version", "lastUpdated", "author", "terms"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://schemas\\.luh\\.tech/.*\\.schema\\.json$"
+    },
+    "streamUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "Canonical stream URL — consumers reference THIS URL, never a file path. D9.",
+      "pattern": "^https://schemas\\.luh\\.tech/.*\\.json$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:[-+][\\w.-]+)?$",
+      "description": "Semver per D6."
+    },
+    "documentId": { "type": "string" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "lastUpdated": { "type": "string", "format": "date-time" },
+    "author": { "type": "string" },
+    "sourceMaterial": { "type": "string" },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "inScope":    { "type": "array", "items": { "type": "string" } },
+        "outOfScope": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "statusLegend": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "LOCKED":       { "type": "string" },
+        "PATENT-OWNED": { "type": "string" },
+        "DEPRECATED":   { "type": "string" }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title"],
+        "additionalProperties": false,
+        "properties": {
+          "id":        { "type": "string", "pattern": "^[A-Z][0-9]?$" },
+          "title":     { "type": "string" },
+          "notes":     { "type": "string" },
+          "ownership": {
+            "type": "string",
+            "enum": ["catalog-derived", "patent-owned", "catalog-derived-and-patent-overlap"]
+          }
+        }
+      }
+    },
+    "terms": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "term", "definition", "sourceStatus", "status", "section"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z§][A-Z0-9_§]*$",
+            "description": "UPPER_SNAKE_CASE canonical identifier. Leading § allowed for patent statute shorthand (§101, §112, etc). Unique across the catalog."
+          },
+          "term":         { "type": "string", "minLength": 1 },
+          "expansion":    { "type": ["string", "null"] },
+          "definition":   { "type": "string", "minLength": 1 },
+          "sourceStatus": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["LOCKED", "PATENT-OWNED", "DEPRECATED"]
+          },
+          "section":      { "type": "string", "pattern": "^[A-Z][0-9]?$" },
+          "sectionTitle": { "type": "string" },
+          "aliases":      { "type": "array", "items": { "type": "string" } },
+          "supersedes":   { "type": "array", "items": { "type": "string" } },
+          "supersededBy": { "type": "string" },
+          "notes":        { "type": "string" }
+        }
+      }
+    },
+    "_meta": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "termCount":        { "type": "integer", "minimum": 0 },
+        "sectionCount":     { "type": "integer", "minimum": 0 },
+        "deprecatedCount":  { "type": "integer", "minimum": 0 },
+        "patentOwnedCount": { "type": "integer", "minimum": 0 },
+        "lockedCount":      { "type": "integer", "minimum": 0 },
+        "generatedBy":      { "type": "string" },
+        "generatedAt":      { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}
