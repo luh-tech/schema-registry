@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/interfaces.schema.json",
   "title": "Feature Interfaces Schema",
   "description": "Schema for interfaces.json files that define MCP tool signatures, REST API endpoints, GraphQL resolvers, and middleware specifications for features. Used across all luh-tech ventures.",

@@ -1,10 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/cis/url-catalog.schema.json",
   "title": "LuhTech URL Catalog",
   "description": "Canonical catalog of all LuhTech domain registrations, Cloudflare account assignments, migration status, and per-venture URL endpoints.",
   "type": "object",
-  "required": ["version", "meta", "ventures"],
+  "required": [
+    "version",
+    "meta",
+    "ventures"
+  ],
   "additionalProperties": false,
   "properties": {
     "$schema": {
@@ -16,23 +21,51 @@
     },
     "meta": {
       "type": "object",
-      "required": ["lastUpdated", "sourceOfTruth", "totalDomains"],
+      "required": [
+        "lastUpdated",
+        "sourceOfTruth",
+        "totalDomains"
+      ],
       "additionalProperties": false,
       "properties": {
-        "lastUpdated": { "type": "string", "format": "date-time" },
-        "sourceOfTruth": { "type": "string" },
-        "schemaFirst": { "type": "boolean" },
-        "totalDomains": { "type": "integer", "minimum": 0 },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sourceOfTruth": {
+          "type": "string"
+        },
+        "schemaFirst": {
+          "type": "boolean"
+        },
+        "totalDomains": {
+          "type": "integer",
+          "minimum": 0
+        },
         "changelog": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["version", "date", "changes"],
+            "required": [
+              "version",
+              "date",
+              "changes"
+            ],
             "additionalProperties": false,
             "properties": {
-              "version": { "type": "string" },
-              "date": { "type": "string", "format": "date" },
-              "changes": { "type": "array", "items": { "type": "string" } }
+              "version": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "changes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
             }
           }
         },
@@ -86,44 +119,102 @@
   "definitions": {
     "Venture": {
       "type": "object",
-      "required": ["id", "name", "domains"],
+      "required": [
+        "id",
+        "name",
+        "domains"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string" },
-        "positioning": { "type": "string" },
-        "cloudflareAccountPre": { "type": ["string", "null"] },
-        "cloudflareAccountPost": { "type": ["string", "null"] },
-        "registrar": { "type": ["string", "null"] },
-        "registrarMigrationTarget": { "type": ["string", "null"] },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "positioning": {
+          "type": "string"
+        },
+        "cloudflareAccountPre": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "cloudflareAccountPost": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "registrar": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "registrarMigrationTarget": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "domains": {
           "type": "object",
-          "required": ["primary"],
+          "required": [
+            "primary"
+          ],
           "additionalProperties": true,
           "$comment": "TODO: tighten domains — primary, aliases, typoProtection, registrarByDomain, migrationStatus, migrationNotes observed; subdomainBrands, openCommunity also seen",
           "properties": {
-            "primary": { "type": "string" },
-            "aliases": { "type": "array", "items": { "type": "string" } },
-            "typoProtection": { "type": "array", "items": { "type": "string" } },
+            "primary": {
+              "type": "string"
+            },
+            "aliases": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "typoProtection": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
             "registrarByDomain": {
               "type": "object",
-              "additionalProperties": { "type": "string" }
+              "additionalProperties": {
+                "type": "string"
+              }
             },
-            "migrationStatus": { "type": "string" },
-            "migrationNotes": { "type": "string" }
+            "migrationStatus": {
+              "type": "string"
+            },
+            "migrationNotes": {
+              "type": "string"
+            }
           }
         },
         "urls": {
           "type": "object",
-          "additionalProperties": { "type": "string", "format": "uri" }
+          "additionalProperties": {
+            "type": "string",
+            "format": "uri"
+          }
         },
         "repositories": {
           "type": "object",
-          "additionalProperties": { "type": "string", "format": "uri" }
+          "additionalProperties": {
+            "type": "string",
+            "format": "uri"
+          }
         },
         "dashboards": {
           "type": "object",
-          "additionalProperties": { "type": "string" }
+          "additionalProperties": {
+            "type": "string"
+          }
         },
         "subdomains": {
           "type": "array",

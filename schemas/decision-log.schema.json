@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/decision-log.schema.json",
   "title": "Decision Log",
   "description": "Structured decision log for venture governance. Tracks key decisions with context, alternatives, rationale, and evidence.",

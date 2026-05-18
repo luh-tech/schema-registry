@@ -1,10 +1,17 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/patent/prior-art-entry.schema.json",
   "title": "Prior Art Entry",
   "description": "Single prior-art block. The prior-art library is a list of these. The library serves two purposes: (1) authoring drop-in prose blocks for the spec's Background section, and (2) maintaining a portfolio-wide ground-truth of what's been considered (defensive completeness for prosecution).",
   "type": "object",
-  "required": ["entryId", "citation", "type", "relevance", "status"],
+  "required": [
+    "entryId",
+    "citation",
+    "type",
+    "relevance",
+    "status"
+  ],
   "properties": {
     "entryId": {
       "type": "string",
@@ -28,10 +35,22 @@
         "inventor-prior-disclosure"
       ]
     },
-    "year": { "type": "integer" },
-    "authors": { "type": "array", "items": { "type": "string" } },
-    "venue": { "type": "string" },
-    "url": { "type": "string", "format": "uri" },
+    "year": {
+      "type": "integer"
+    },
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "venue": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
     "relevance": {
       "type": "string",
       "description": "Why this prior art matters to the portfolio. Specifically: what does it teach, and how does the present invention distinguish from it?"
@@ -42,7 +61,10 @@
     },
     "appliesToProvisionals": {
       "type": "array",
-      "items": { "type": "string", "pattern": "^P[0-9]+$" }
+      "items": {
+        "type": "string",
+        "pattern": "^P[0-9]+$"
+      }
     },
     "blockProse": {
       "type": "string",
@@ -54,19 +76,43 @@
     },
     "status": {
       "type": "string",
-      "enum": ["candidate", "evaluated", "cited", "rejected"],
+      "enum": [
+        "candidate",
+        "evaluated",
+        "cited",
+        "rejected"
+      ],
       "description": "candidate = found in research, not yet evaluated. evaluated = read and assessed, may or may not be cited. cited = appears in at least one spec. rejected = evaluated and intentionally not cited (with rationale)."
     },
     "rejectionRationale": {
       "type": "string"
     },
-    "addedDate": { "type": "string", "format": "date" },
-    "lastReviewedDate": { "type": "string", "format": "date" }
+    "addedDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "lastReviewedDate": {
+      "type": "string",
+      "format": "date"
+    }
   },
   "allOf": [
     {
-      "if": { "properties": { "status": { "const": "rejected" } }, "required": ["status"] },
-      "then": { "required": ["rejectionRationale"] }
+      "if": {
+        "properties": {
+          "status": {
+            "const": "rejected"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "rejectionRationale"
+        ]
+      }
     }
   ]
 }

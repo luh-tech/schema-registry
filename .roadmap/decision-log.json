@@ -181,6 +181,63 @@
           "description": "Schema governing the map."
         }
       ]
+    },
+    {
+      "decisionId": "d-2026-05-18-luhtech-schema-t3",
+      "timestamp": "2026-05-18T16:06:52Z",
+      "title": "luhtech-schema T3: migrate add-versions closes SH-2 (42/42 D6 compliance)",
+      "context": "T2 closed with schema-map showing 1/42 D6 compliance. T3 substrate confirmed 41 SH-2 schemas, all rule-3 (1.0.0 default) — zero v-suffix ambiguity. Substrate also found FU-RESOLVER-PROPAGATION-1 already resolved by T2 schema-map coverage; the T2 Phase 1 warning was a substrate-ordering artifact.",
+      "decision": "Ship migrate add-versions as the first mutating tool surface. Adds \"version\": \"1.0.0\" to all 41 SH-2 schemas atomically (dry-run default, --apply explicit, idempotent, atomic per-file write, order-preserving). Regenerate schema-map post-migration: d6Compliant flips 1/42 → 42/42. Close FU-RESOLVER-PROPAGATION-1 as resolved-without-code-change with substrate-ordering root cause documented.",
+      "rationale": "All 41 schemas fell under rule-3 (default 1.0.0) — no v-suffix in any $id or filename, so no per-schema version negotiation needed. The migrate harness is intentionally thin at T3 and designed to extend for T4 (xaas-to-snx) and T5 (urn-to-url) without architectural changes.",
+      "status": "approved",
+      "category": "tooling",
+      "impact": "high",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-05-18T16:06:52Z",
+      "consequences": {
+        "positive": [
+          "SH-2 CLOSED — 42/42 D6 compliance (42/42 D2 already). Registry fully D-rule compliant.",
+          "First mutating subcommand ships: luhtech-schema migrate add-versions.",
+          "Migrate framework discipline established: dry-run default, --apply explicit, idempotent, atomic per-file.",
+          "Tool version 0.2.0 → 0.3.0.",
+          "schema-map d6Compliant flips to 42/42; serves updated state at https://schemas.luh.tech/_meta/schema-map.json.",
+          "FU-RESOLVER-PROPAGATION-1 closed; substrate-ordering lesson documented."
+        ],
+        "negative": [
+          "41 schema files now carry version: 1.0.0 — any consumer that validates these schemas against a strict $schema ref will see the new field."
+        ],
+        "risks": [
+          "Version 1.0.0 for all schemas implies no prior history. This is correct (no semantic versioning was tracked pre-T3). Future schema changes should increment version per semver discipline."
+        ]
+      },
+      "alternatives": [
+        {
+          "option": "Hand-edit 41 schemas individually",
+          "rejectionReason": "Not atomic; no reusable harness."
+        },
+        {
+          "option": "Derive version from git history",
+          "rejectionReason": "Over-engineered for T3; all schemas start at 1.0.0 cleanly."
+        }
+      ],
+      "tags": [
+        "schema-first",
+        "tooling",
+        "portfolio",
+        "T3",
+        "SH-2",
+        "migrate",
+        "mutation",
+        "luhtech-schema"
+      ],
+      "externalLinks": [
+        {
+          "url": "https://schemas.luh.tech/_meta/schema-map.json",
+          "description": "Post-T3 schema-map: d6Compliant=42/42."
+        }
+      ]
     }
   ]
 }

@@ -2,13 +2,13 @@
   "$schema": "https://schemas.luh.tech/_meta/schema-map.schema.json",
   "streamUrl": "https://schemas.luh.tech/_meta/schema-map.json",
   "version": "1.0.0",
-  "generatedAt": "2026-05-18T15:16:14Z",
-  "generatedBy": "luhtech-schema map (v0.2.0)",
+  "generatedAt": "2026-05-18T16:05:30Z",
+  "generatedBy": "luhtech-schema map (v0.3.0)",
   "registry": "luh-tech/schema-registry",
   "schemaCount": 42,
   "meta": {
     "d2Compliant": 42,
-    "d6Compliant": 1,
+    "d6Compliant": 42,
     "byLayer": {
       "vocabulary": 4,
       "infrastructure": 8,
@@ -31,12 +31,12 @@
     {
       "$id": "https://schemas.luh.tech/_definitions/definitions.schema.json",
       "path": "schemas/_definitions/definitions.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "LuhTech Shared Definitions",
       "subdir": "_definitions",
       "layer": "vocabulary",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 7,
       "refs": [
         "#/definitions/address",
@@ -52,12 +52,12 @@
     {
       "$id": "https://schemas.luh.tech/_definitions/graph.schema.json",
       "path": "schemas/_definitions/graph.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "LuhTech Graph Definitions",
       "subdir": "_definitions",
       "layer": "vocabulary",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 7,
       "refs": [
         "#/definitions/edge",
@@ -73,12 +73,12 @@
     {
       "$id": "https://schemas.luh.tech/_enums/luhtech-enums.schema.json",
       "path": "schemas/_enums/luhtech-enums.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "LuhTech Shared Enumerations",
       "subdir": "_enums",
       "layer": "vocabulary",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 0,
       "refs": [],
       "loadable": true
@@ -99,12 +99,12 @@
     {
       "$id": "https://schemas.luh.tech/agent-prompt.schema.json",
       "path": "schemas/agent-prompt.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Agent Prompt",
       "subdir": "(root)",
       "layer": "infrastructure",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 10,
       "refs": [
         "#/definitions/agentPrompt",
@@ -123,12 +123,12 @@
     {
       "$id": "https://schemas.luh.tech/boundaries.schema.json",
       "path": "schemas/boundaries.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Venture Boundaries",
       "subdir": "(root)",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 3,
       "refs": [
         "#/definitions/forkSource",
@@ -140,12 +140,12 @@
     {
       "$id": "https://schemas.luh.tech/cis/assessment-sync-config.schema.json",
       "path": "schemas/cis/assessment-sync-config.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Strategic Assessment Sync Configuration",
       "subdir": "cis",
       "layer": "infrastructure",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 0,
       "refs": [],
       "loadable": true
@@ -153,12 +153,12 @@
     {
       "$id": "https://schemas.luh.tech/cis/cis-infra-changelog.schema.json",
       "path": "schemas/cis/cis-infra-changelog.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "CIS Infrastructure Changelog",
       "subdir": "cis",
       "layer": "infrastructure",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 1,
       "refs": [
         "#/definitions/ChangeEntry"
@@ -168,12 +168,12 @@
     {
       "$id": "https://schemas.luh.tech/cis/url-catalog.schema.json",
       "path": "schemas/cis/url-catalog.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "LuhTech URL Catalog",
       "subdir": "cis",
       "layer": "infrastructure",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 1,
       "refs": [
         "#/definitions/Venture"
@@ -183,12 +183,12 @@
     {
       "$id": "https://schemas.luh.tech/decision-log.schema.json",
       "path": "schemas/decision-log.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Decision Log",
       "subdir": "(root)",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 2,
       "refs": [
         "#/definitions/alternative",
@@ -199,12 +199,12 @@
     {
       "$id": "https://schemas.luh.tech/dependencies.schema.json",
       "path": "schemas/dependencies.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Venture Dependencies",
       "subdir": "(root)",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 16,
       "refs": [
         "#/definitions/dependency",
@@ -229,12 +229,12 @@
     {
       "$id": "https://schemas.luh.tech/evidence-session.schema.json",
       "path": "schemas/evidence-session.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Evidence Session",
       "subdir": "(root)",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 6,
       "refs": [
         "#/definitions/evidenceNode",
@@ -249,12 +249,12 @@
     {
       "$id": "https://schemas.luh.tech/feature.schema.json",
       "path": "schemas/feature.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Feature Specification Schema",
       "subdir": "(root)",
       "layer": "venture-ops",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 3,
       "refs": [
         "#/$defs/graphEdge",
@@ -266,12 +266,12 @@
     {
       "$id": "https://schemas.luh.tech/follow-up-register.schema.json",
       "path": "schemas/follow-up-register.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Follow-Up Register",
       "subdir": "(root)",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 1,
       "refs": [
         "#/definitions/FollowUpRecord"
@@ -281,12 +281,12 @@
     {
       "$id": "https://schemas.luh.tech/infrastructure-catalog.schema.json",
       "path": "schemas/infrastructure-catalog.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Infrastructure Catalog",
       "subdir": "(root)",
       "layer": "infrastructure",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 19,
       "refs": [
         "#/definitions/auditEntry",
@@ -314,12 +314,12 @@
     {
       "$id": "https://schemas.luh.tech/interfaces.schema.json",
       "path": "schemas/interfaces.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Feature Interfaces Schema",
       "subdir": "(root)",
       "layer": "infrastructure",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 8,
       "refs": [
         "#/$defs/dataType",
@@ -336,12 +336,12 @@
     {
       "$id": "https://schemas.luh.tech/metrics-pipeline.schema.json",
       "path": "schemas/metrics-pipeline.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Metrics Pipeline Schema",
       "subdir": "(root)",
       "layer": "portfolio-ops",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 5,
       "refs": [
         "#/$defs/failureHandler",
@@ -355,12 +355,12 @@
     {
       "$id": "https://schemas.luh.tech/patent/figure-sidecar.schema.json",
       "path": "schemas/patent/figure-sidecar.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Patent Figure Sidecar",
       "subdir": "patent",
       "layer": "ip",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 0,
       "refs": [],
       "loadable": true
@@ -368,12 +368,12 @@
     {
       "$id": "https://schemas.luh.tech/patent/glossary-entry.schema.json",
       "path": "schemas/patent/glossary-entry.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Glossary Entry",
       "subdir": "patent",
       "layer": "ip",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 0,
       "refs": [],
       "loadable": true
@@ -381,12 +381,12 @@
     {
       "$id": "https://schemas.luh.tech/patent/glossary.schema.json",
       "path": "schemas/patent/glossary.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Patent Glossary",
       "subdir": "patent",
       "layer": "ip",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 1,
       "refs": [
         "https://schemas.luh.tech/patent/glossary-entry.schema.json"
@@ -396,12 +396,12 @@
     {
       "$id": "https://schemas.luh.tech/patent/manifest.schema.json",
       "path": "schemas/patent/manifest.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Patent Manifest",
       "subdir": "patent",
       "layer": "ip",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 0,
       "refs": [],
       "loadable": true
@@ -409,12 +409,12 @@
     {
       "$id": "https://schemas.luh.tech/patent/portfolio.schema.json",
       "path": "schemas/patent/portfolio.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Patent Portfolio",
       "subdir": "patent",
       "layer": "ip",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 1,
       "refs": [
         "https://schemas.luh.tech/patent/provisional.schema.json"
@@ -424,12 +424,12 @@
     {
       "$id": "https://schemas.luh.tech/patent/prior-art-entry.schema.json",
       "path": "schemas/patent/prior-art-entry.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Prior Art Entry",
       "subdir": "patent",
       "layer": "ip",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 0,
       "refs": [],
       "loadable": true
@@ -437,12 +437,12 @@
     {
       "$id": "https://schemas.luh.tech/patent/provisional.schema.json",
       "path": "schemas/patent/provisional.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Patent Provisional Application",
       "subdir": "patent",
       "layer": "ip",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 0,
       "refs": [],
       "loadable": true
@@ -450,12 +450,12 @@
     {
       "$id": "https://schemas.luh.tech/pm/authority-level.schema.json",
       "path": "schemas/pm/authority-level.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Authority Level Schema",
       "subdir": "pm",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 4,
       "refs": [
         "#/definitions/authorityLevelName",
@@ -468,12 +468,12 @@
     {
       "$id": "https://schemas.luh.tech/pm/consequence.schema.json",
       "path": "schemas/pm/consequence.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Consequence Schema",
       "subdir": "pm",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 5,
       "refs": [
         "#/definitions/consequenceCategory",
@@ -487,12 +487,12 @@
     {
       "$id": "https://schemas.luh.tech/pm/decision.schema.json",
       "path": "schemas/pm/decision.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "PM Decision Schema",
       "subdir": "pm",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 6,
       "refs": [
         "#/definitions/authorityLevelNumber",
@@ -507,12 +507,12 @@
     {
       "$id": "https://schemas.luh.tech/pm/inspection.schema.json",
       "path": "schemas/pm/inspection.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Inspection Schema",
       "subdir": "pm",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 4,
       "refs": [
         "#/definitions/graphMetadata",
@@ -525,12 +525,12 @@
     {
       "$id": "https://schemas.luh.tech/pm/participant.schema.json",
       "path": "schemas/pm/participant.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Participant Schema",
       "subdir": "pm",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 4,
       "refs": [
         "#/definitions/graphMetadata",
@@ -543,12 +543,12 @@
     {
       "$id": "https://schemas.luh.tech/pm/schedule-proposal.schema.json",
       "path": "schemas/pm/schedule-proposal.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Schedule Proposal Schema",
       "subdir": "pm",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 4,
       "refs": [
         "#/definitions/changeType",
@@ -561,12 +561,12 @@
     {
       "$id": "https://schemas.luh.tech/pm/voxel.schema.json",
       "path": "schemas/pm/voxel.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Voxel Schema",
       "subdir": "pm",
       "layer": "governance",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 4,
       "refs": [
         "#/definitions/coordinates",
@@ -579,12 +579,12 @@
     {
       "$id": "https://schemas.luh.tech/portfolio/brand.schema.json",
       "path": "schemas/portfolio/brand.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "LuhTech Portfolio Brand Configuration",
       "subdir": "portfolio",
       "layer": "portfolio-ops",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 21,
       "refs": [
         "#/definitions/assetReference",
@@ -614,12 +614,12 @@
     {
       "$id": "https://schemas.luh.tech/portfolio/dashboard.schema.json",
       "path": "schemas/portfolio/dashboard.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "LuhTech Dashboard Configuration Schema",
       "subdir": "portfolio",
       "layer": "portfolio-ops",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 5,
       "refs": [
         "#/definitions/dashboard",
@@ -633,12 +633,12 @@
     {
       "$id": "https://schemas.luh.tech/portfolio/ip-assets.schema.json",
       "path": "schemas/portfolio/ip-assets.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "LuhTech IP Assets Registry",
       "subdir": "portfolio",
       "layer": "portfolio-ops",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 3,
       "refs": [
         "#/definitions/ipAsset",
@@ -650,12 +650,12 @@
     {
       "$id": "https://schemas.luh.tech/portfolio/portfolio.schema.json",
       "path": "schemas/portfolio/portfolio.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "LuhTech Portfolio Schema",
       "subdir": "portfolio",
       "layer": "portfolio-ops",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 8,
       "refs": [
         "#/definitions/acceleratorThesis",
@@ -672,12 +672,12 @@
     {
       "$id": "https://schemas.luh.tech/portfolio/user-metrics.schema.json",
       "path": "schemas/portfolio/user-metrics.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "LuhTech User Metrics Schema",
       "subdir": "portfolio",
       "layer": "portfolio-ops",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 0,
       "refs": [],
       "loadable": true
@@ -685,12 +685,12 @@
     {
       "$id": "https://schemas.luh.tech/portfolio/workflow-registry.schema.json",
       "path": "schemas/portfolio/workflow-registry.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Portfolio Workflow Registry",
       "subdir": "portfolio",
       "layer": "portfolio-ops",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 6,
       "refs": [
         "#/definitions/deckType",
@@ -705,12 +705,12 @@
     {
       "$id": "https://schemas.luh.tech/roadmap-business.schema.json",
       "path": "schemas/roadmap-business.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Roadmap Business Schema v2.2",
       "subdir": "(root)",
       "layer": "venture-ops",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 6,
       "refs": [
         "#/$defs/computedValue",
@@ -725,12 +725,12 @@
     {
       "$id": "https://schemas.luh.tech/roadmap.schema.json",
       "path": "schemas/roadmap.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Venture Roadmap",
       "subdir": "(root)",
       "layer": "venture-ops",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 12,
       "refs": [
         "#/definitions/deliverable",
@@ -751,12 +751,12 @@
     {
       "$id": "https://schemas.luh.tech/tech-stack.schema.json",
       "path": "schemas/tech-stack.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Tech Stack",
       "subdir": "(root)",
       "layer": "infrastructure",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 19,
       "refs": [
         "#/definitions/architecturePattern",
@@ -784,12 +784,12 @@
     {
       "$id": "https://schemas.luh.tech/venture-summary.schema.json",
       "path": "schemas/venture-summary.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "Venture Summary",
       "subdir": "(root)",
       "layer": "venture-ops",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 21,
       "refs": [
         "#/definitions/askSlide",
@@ -819,12 +819,12 @@
     {
       "$id": "https://schemas.luh.tech/workflow-registry.schema.json",
       "path": "schemas/workflow-registry.schema.json",
-      "version": null,
+      "version": "1.0.0",
       "title": "GitHub Actions Workflow Registry Schema",
       "subdir": "(root)",
       "layer": "infrastructure",
       "d2Compliant": true,
-      "d6Compliant": false,
+      "d6Compliant": true,
       "refCount": 2,
       "refs": [
         "#/$defs/category",

@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/portfolio/brand.schema.json",
   "title": "LuhTech Portfolio Brand Configuration",
   "description": "Schema-first brand configuration for LuhTech portfolio ventures. Defines colors, typography, logos, and background assets for consistent branding across slide generation and marketing materials. References centralized enums from luhtech-enums.schema.v2.json.",

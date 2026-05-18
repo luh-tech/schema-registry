@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/pm/inspection.schema.json",
   "title": "Inspection Schema",
   "description": "Field inspection records that validate PM decisions and voxel completion. Supports regulatory inspections, quality checks, and safety audits.",

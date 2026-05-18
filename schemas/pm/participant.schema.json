@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/pm/participant.schema.json",
   "title": "Participant Schema",
   "description": "Project stakeholders who interact with PM decisions, voxels, and inspections. Includes roles, authority levels, and contact information.",

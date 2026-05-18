@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/agent-prompt.schema.json",
   "title": "Agent Prompt",
   "description": "Structured agent handoff and reference documentation for LuhTech ventures. Supports two modes: task-oriented prompts (with steps, success criteria, rollback plans) and reference documents (with patterns, anti-patterns, guidelines). Derived from Ectropy production agent-prompts: prisma-m3-completion.json and test-isolation-patterns.json.",

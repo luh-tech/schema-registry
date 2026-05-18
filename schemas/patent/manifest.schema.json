@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/patent/manifest.schema.json",
   "title": "Patent Manifest",
   "description": "Internal-only sidecar to a provisional. Records the decision log, source inventory, paragraph-to-source map, and changelog. Never filed at USPTO. One per provisional version.",
@@ -14,7 +15,7 @@
     "documentId": {
       "type": "string",
       "pattern": "^LUHTECH-[A-Z0-9-]+$",
-      "description": "Stable manifest ID (e.g., 'LUHTECH-CTA-001PV1' for P1). The umbrella token in the ID is preserved across umbrella renames \u2014 the document ID is part of the document control system, not the marketing name."
+      "description": "Stable manifest ID (e.g., 'LUHTECH-CTA-001PV1' for P1). The umbrella token in the ID is preserved across umbrella renames — the document ID is part of the document control system, not the marketing name."
     },
     "provisionalNumber": {
       "type": "string",
@@ -33,9 +34,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "DRAFT \u2014 pending review",
-        "DRAFT \u2014 review in progress",
-        "LOCKED \u2014 filing-ready",
+        "DRAFT — pending review",
+        "DRAFT — review in progress",
+        "LOCKED — filing-ready",
         "FILED"
       ]
     },
@@ -122,7 +123,7 @@
           },
           "paragraphs": {
             "type": "string",
-            "description": "e.g., '[001]' or '[003]\u2013[009]'."
+            "description": "e.g., '[001]' or '[003]–[009]'."
           },
           "sources": {
             "type": "array",
@@ -252,7 +253,7 @@
     },
     "inventorExceptionTracking": {
       "type": "object",
-      "description": "\u00a7102(b)(1)(A) tracking specific to this provisional. Mirrors portfolio.priorArtAnchor for audit isolation.",
+      "description": "§102(b)(1)(A) tracking specific to this provisional. Mirrors portfolio.priorArtAnchor for audit isolation.",
       "properties": {
         "publications": {
           "type": "array",

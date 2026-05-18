@@ -27,13 +27,18 @@
       "id": "FU-RESOLVER-PROPAGATION-1",
       "title": "Resolve cosmetic jsonschema deprecation warning for decision-log DEC validation",
       "priority": "P3",
-      "status": "open",
+      "status": "closed",
       "opened": "2026-05-18T15:23:44Z",
       "openedDuring": "luhtech-schema T2 Phase 1 (2026-05-18)",
       "scope": "Step 17 of T2 Phase 1: DEC log validation passes but triggers jsonschema network auto-fetch deprecation warning. Root cause: decision-log.schema.v2 $refs luhtech-enums; the Draft7Validator may not propagate the local registry through to internal sub-validator $ref resolution. Audit referencing.Registry propagation in validate.py; confirm luhtech-enums $id coverage in schema-map; consider explicit pre-resolution walk.",
       "blockedBy": [],
       "blocks": [],
-      "coordination": "Likely folds into T3 substrate prep — fixing propagation lets T3 instance validations run clean. Cosmetic only; validation passes."
+      "coordination": "Likely folds into T3 substrate prep — fixing propagation lets T3 instance validations run clean. Cosmetic only; validation passes.",
+      "resolution": {
+        "closedDate": "2026-05-18",
+        "closedDuring": "luhtech-schema T3 Phase 1 (2026-05-18)",
+        "summary": "Resolved without code change. Root cause was substrate-ordering during T2 Phase 1: schema-map.json had not yet been generated when DEC log validation ran in Step 17, so the local registry was empty and luhtech-enums $refs fell through to jsonschema network auto-fetch. T2 landed the schema-map; T3 substrate Step 7 reproduced validation under post-T2 registry and observed zero warnings. Lesson: regenerate indices BEFORE running dependent validations."
+      }
     }
   ],
   "indexes": {
@@ -47,7 +52,9 @@
     },
     "byStatus": {
       "open": [
-        "FU-CATALOG-STREAM-MIGRATION-1",
+        "FU-CATALOG-STREAM-MIGRATION-1"
+      ],
+      "closed": [
         "FU-RESOLVER-PROPAGATION-1"
       ]
     },

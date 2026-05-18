@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/portfolio/portfolio.schema.json",
   "title": "LuhTech Portfolio Schema",
   "description": "Holdings-level schema capturing the complete LuhTech venture portfolio structure, strategic narrative, cross-venture relationships, IP assets, and key relationships.",

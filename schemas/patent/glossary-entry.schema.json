@@ -1,17 +1,26 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/patent/glossary-entry.schema.json",
   "title": "Glossary Entry",
   "description": "Single canonical term definition. Used in patent glossaries and reusable in marketing/legal glossaries with the same shape. The glossary builder consumes a list of these and renders them into sectioned tables.",
   "type": "object",
-  "required": ["term", "definition", "status", "source"],
+  "required": [
+    "term",
+    "definition",
+    "status",
+    "source"
+  ],
   "properties": {
     "term": {
       "type": "string",
       "description": "The term as it appears in the glossary heading column (e.g., 'SBPA', 'ProvenanceField', 'voxel_id')."
     },
     "expansion": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "Acronym expansion if applicable. Use null (not empty string) when the term is not an acronym; the renderer prints '—' for null."
     },
     "definition": {
@@ -21,7 +30,12 @@
     },
     "status": {
       "type": "string",
-      "enum": ["LOCKED", "PATENT-OWNED", "PENDING", "DEPRECATED"],
+      "enum": [
+        "LOCKED",
+        "PATENT-OWNED",
+        "PENDING",
+        "DEPRECATED"
+      ],
       "description": "LOCKED = definition fixed, used in filings as-is. PATENT-OWNED = defined here; upstream catalog defers to this glossary. PENDING = inventor approval required before use in any spec. DEPRECATED = historical; retained for cross-reference only."
     },
     "source": {
@@ -39,7 +53,10 @@
     },
     "appearsInProvisionals": {
       "type": "array",
-      "items": { "type": "string", "pattern": "^P[0-9]+$" },
+      "items": {
+        "type": "string",
+        "pattern": "^P[0-9]+$"
+      },
       "description": "Provisionals whose specs reference this term. Maintained by the spec builder; used to enforce cross-spec definition consistency."
     },
     "deprecatedBy": {
@@ -49,12 +66,38 @@
   },
   "allOf": [
     {
-      "if": { "properties": { "status": { "const": "DEPRECATED" } }, "required": ["status"] },
-      "then": { "required": ["deprecatedBy"] }
+      "if": {
+        "properties": {
+          "status": {
+            "const": "DEPRECATED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "deprecatedBy"
+        ]
+      }
     },
     {
-      "if": { "properties": { "status": { "const": "PATENT-OWNED" } }, "required": ["status"] },
-      "then": { "required": ["patentOwnedBy"] }
+      "if": {
+        "properties": {
+          "status": {
+            "const": "PATENT-OWNED"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "patentOwnedBy"
+        ]
+      }
     }
   ]
 }

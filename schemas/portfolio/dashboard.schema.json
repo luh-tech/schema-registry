@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/portfolio/dashboard.schema.json",
   "title": "LuhTech Dashboard Configuration Schema",
   "description": "Schema-first configuration for portfolio dashboards including Mermaid diagrams, metrics, and sync settings. All dashboard implementations must validate against this schema.",

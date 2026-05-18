@@ -1,5 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
   "$id": "https://schemas.luh.tech/pm/authority-level.schema.json",
   "title": "Authority Level Schema",
   "description": "Defines the 7-tier authority cascade for construction project decisions. Each level has specific budget limits, variance tolerances, and schedule authority.",
