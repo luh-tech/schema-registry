@@ -4,10 +4,10 @@
   "schemaVersion": "1.0.0",
   "version": "1.0.0",
   "ventureId": "schema-registry",
-  "lastUpdated": "2026-05-18T23:44:40Z",
+  "lastUpdated": "2026-05-19T00:01:09Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
-    "totalCount": 6
+    "totalCount": 7
   },
   "followUps": [
     {
@@ -100,6 +100,17 @@
       "scope": "Per D-T5-C (deferred from T5 arc): luhtech-enums.schema.v2.json ventureType enum includes SaaS, API, Platform, Hardware, Marketplace, Holding. Proposed 5-bucket consolidation: Platform | Hardware | Service | Marketplace | Holding — absorbs SaaS + API into Service (broader model covering SaaS, managed-services, professional-services). Requires: audit current usage across 8 venture roadmap.json files; draft migration mapping (SaaS→Service, API→Platform); file DEC with breaking-change semantics; schema change additive then deprecation pass.",
       "blockedBy": [],
       "blocks": []
+    },
+    {
+      "id": "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
+      "title": "Wire schemas.luh.tech/ectropy/* hosting to actually serve Ectropy schemas",
+      "priority": "P2",
+      "status": "open",
+      "opened": "2026-05-18",
+      "openedDuring": "T5.4-postmerge",
+      "scope": "T5 arc closed L11 SH-1 by migrating 57 Ectropy schemas from URN to URL $id form at https://schemas.luh.tech/ectropy/<path>. T5.4 verified the schemas are correct and the schema-map indexes them. However: curl https://schemas.luh.tech/ectropy/corsx/takt-wagon.schema.json returns 404. The luh-tech/schema-registry Pages deployment serves only this repo's schemas/ directory; the actual Ectropy schema files live in Ectropy-ai/schemas (separate repo). Every Ectropy $id URL is therefore unresolved at the HTTP layer. Consequence: D2 rationale (URL form resolves automatically in ajv and standard JSON Schema tools) is paper-only for L11 until hosting is wired. Decision options: (A) schema-registry Pages workflow ingests Ectropy-ai/schemas as a build step and serves under /ectropy/<path>; (B) Cloudflare routes schemas.luh.tech/ectropy/* to a separate Pages site backed by Ectropy-ai/schemas; (C) Ectropy gets its own subdomain — requires re-migrating all 57 $ids, breaks D-T5-A; (D) git submodule the Ectropy schemas into schema-registry. Substrate before DEC: inventory current consumers that fetch Ectropy schemas via HTTP (if zero, downgrade to P3). Tenth discipline-catch from T5 arc: URL-form migrations must include HTTPS resolve verification as a gate criterion, not just $id field shape and registry indexing.",
+      "blockedBy": [],
+      "blocks": []
     }
   ],
   "indexes": {
@@ -107,7 +118,8 @@
       "open": [
         "FU-CATALOG-STREAM-MIGRATION-1",
         "FU-V1-TO-V3-DEPRECATE-1",
-        "FU-VENTURE-TYPE-ENUM-REVIEW-1"
+        "FU-VENTURE-TYPE-ENUM-REVIEW-1",
+        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1"
       ],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
@@ -119,7 +131,8 @@
       "P2": [
         "FU-CATALOG-STREAM-MIGRATION-1",
         "FU-ECTROPY-XAAS-MIGRATION-1",
-        "FU-V1-TO-V3-DEPRECATE-1"
+        "FU-V1-TO-V3-DEPRECATE-1",
+        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1"
       ],
       "P3": [
         "FU-RESOLVER-PROPAGATION-1",
