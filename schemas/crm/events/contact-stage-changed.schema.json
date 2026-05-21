@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/contact-stage-changed.schema.json",
+  "title": "Contact Stage Changed",
+  "description": "Emitted when a contact's pipeline stage changes (any of the 4 pipelines). Carries both previous and new stage for diff-based downstream handlers.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contactId",
+    "pipeline",
+    "fromStage",
+    "toStage",
+    "changedAt"
+  ],
+  "properties": {
+    "contactId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "pipeline": {
+      "$ref": "https://schemas.luh.tech/crm/pipeline-type.schema.json"
+    },
+    "fromStage": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "toStage": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "changedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "changedBy": {
+      "type": "string",
+      "description": "Operator email or 'system' for automation"
+    },
+    "reason": {
+      "type": "string",
+      "maxLength": 500
+    }
+  },
+  "additionalProperties": false
+}

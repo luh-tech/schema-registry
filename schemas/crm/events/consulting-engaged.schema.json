@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/consulting-engaged.schema.json",
+  "title": "Consulting Engagement Started",
+  "description": "Emitted when a consulting contract is signed and delivery work begins.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contactId",
+    "engagedAt",
+    "contractValueUSD"
+  ],
+  "properties": {
+    "contactId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "Twenty CRM Person UUID"
+    },
+    "engagedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "contractValueUSD": {
+      "type": "number",
+      "minimum": 0
+    },
+    "deliveryStartDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "expectedDeliveryEndDate": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "additionalProperties": false
+}

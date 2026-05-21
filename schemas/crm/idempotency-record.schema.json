@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/idempotency-record.schema.json",
+  "title": "CRM Idempotency Record",
+  "description": "Idempotency record per d-2026-05-20-crm-idempotency-policy. Postgres-backed at table crm_event_idempotency. 7-day window from processedAt. Duplicate delivery returns 202 with duplicate:true and firstProcessedAt.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "eventId",
+    "eventType",
+    "processedAt",
+    "outcome"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "CloudEvents envelope id"
+    },
+    "eventType": {
+      "type": "string",
+      "pattern": "^tech\\.luh\\.crm\\.[a-z]+(\\.[a-z]+)*\\.v\\d+$"
+    },
+    "processedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "accepted",
+        "dead_lettered",
+        "rejected"
+      ]
+    },
+    "handlerVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "responseHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of original response body for duplicate-detection diagnostics"
+    }
+  },
+  "additionalProperties": false
+}

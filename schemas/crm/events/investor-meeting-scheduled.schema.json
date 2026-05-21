@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/investor-meeting-scheduled.schema.json",
+  "title": "Investor Meeting Scheduled",
+  "description": "Emitted when an investor schedules a meeting via Calendly. Strong IQL signal (+3pt).",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contactId",
+    "meetingAt",
+    "scheduledAt"
+  ],
+  "properties": {
+    "contactId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "Twenty CRM Person UUID"
+    },
+    "meetingAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scheduledAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "calendlyEventUri": {
+      "type": "string",
+      "format": "uri"
+    },
+    "meetingType": {
+      "type": "string",
+      "enum": [
+        "intro-call",
+        "deck-walkthrough",
+        "diligence",
+        "follow-up"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/tenant-id.schema.json",
+  "title": "CRM Tenant ID",
+  "description": "Tenant ID pattern union per d-2026-05-20-crm-tenant-isolation-model. Demo: demo-{slug}-{8hex}. Trial: trial-{uuid}. Paid: {slug} (DNS-safe). Used in Twenty CRM custom fields and downstream provisioning.",
+  "version": "1.0.0",
+  "oneOf": [
+    {
+      "type": "string",
+      "pattern": "^demo-[a-z0-9]+(-[a-z0-9]+)*-[0-9a-f]{8}$",
+      "description": "Demo tenant: demo-{company-slug}-{8-char-uuid-prefix}"
+    },
+    {
+      "type": "string",
+      "pattern": "^trial-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "Trial tenant: trial-{full-uuid}"
+    },
+    {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "minLength": 2,
+      "maxLength": 63,
+      "description": "Paid tenant: DNS-safe slug"
+    }
+  ]
+}

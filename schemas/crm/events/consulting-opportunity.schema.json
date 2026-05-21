@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/consulting-opportunity.schema.json",
+  "title": "Consulting Opportunity",
+  "description": "Emitted when a consulting opportunity is identified for tracking in the Consulting pipeline.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contactId",
+    "identifiedAt",
+    "estimatedValueUSD"
+  ],
+  "properties": {
+    "contactId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "Twenty CRM Person UUID"
+    },
+    "identifiedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "estimatedValueUSD": {
+      "type": "number",
+      "minimum": 0
+    },
+    "scope": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "expectedStartDate": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/pipeline-type.schema.json",
+  "title": "CRM Pipeline Type",
+  "description": "Closed enum of the four CRM pipelines per d-2026-05-20-crm-4-pipeline-model. Used as CloudEvents extension attribute 'pipelinetype' in event-envelope. Adding a fifth pipeline requires DEC amendment + schema bump.",
+  "version": "1.0.0",
+  "type": "string",
+  "enum": [
+    "customer",
+    "investor",
+    "partner",
+    "consulting"
+  ]
+}

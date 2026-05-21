@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/customer-paid.schema.json",
+  "title": "Customer Paid Conversion",
+  "description": "Emitted on successful Stripe checkout completing the paid conversion. Downstream: new paid tenant provisioning, trial archive (audit-preserved), Twenty CRM stage transition.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "tenantId",
+    "paidAt",
+    "paidTenantId",
+    "plan",
+    "stripeSessionId"
+  ],
+  "properties": {
+    "tenantId": {
+      "$ref": "https://schemas.luh.tech/crm/tenant-id.schema.json"
+    },
+    "paidAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "paidTenantId": {
+      "$ref": "https://schemas.luh.tech/crm/tenant-id.schema.json"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "starter",
+        "professional",
+        "enterprise"
+      ]
+    },
+    "stripeSessionId": {
+      "type": "string",
+      "pattern": "^cs_(test|live)_[a-zA-Z0-9]+$"
+    },
+    "annualValueUSD": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
+}

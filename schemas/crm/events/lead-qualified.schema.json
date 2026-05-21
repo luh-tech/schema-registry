@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/lead-qualified.schema.json",
+  "title": "Lead Qualified",
+  "description": "Emitted when a Lead transitions to 'qualified' stage in the Customer pipeline. Triggers downstream demo provisioning.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contactId",
+    "qualifiedAt",
+    "qualifiedBy"
+  ],
+  "properties": {
+    "contactId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "Twenty CRM Person UUID"
+    },
+    "qualifiedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "qualifiedBy": {
+      "type": "string",
+      "format": "email",
+      "description": "Sales operator email"
+    },
+    "qualificationNotes": {
+      "type": "string",
+      "maxLength": 2000
+    }
+  },
+  "additionalProperties": false
+}

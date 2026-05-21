@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/investor-committed.schema.json",
+  "title": "Investor Commitment",
+  "description": "Emitted on signed term sheet OR confirmed commitment. Triggers Twenty CRM stage transition to 'committed' and #investors Slack celebration.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contactId",
+    "committedAt",
+    "commitmentUSD"
+  ],
+  "properties": {
+    "contactId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "Twenty CRM Person UUID"
+    },
+    "committedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "commitmentUSD": {
+      "type": "number",
+      "minimum": 0
+    },
+    "termSheetUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "Signed term sheet PDF in dataroom"
+    },
+    "round": {
+      "type": "string",
+      "enum": [
+        "pre-seed",
+        "seed",
+        "series-a",
+        "series-b",
+        "growth"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

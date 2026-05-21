@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/contact-stage.schema.json",
+  "title": "CRM Contact Stage",
+  "description": "Per-pipeline contact stage enums per d-2026-05-20-crm-4-pipeline-model. Customer: 8 stages (lead -> qualified -> demo-active -> trial-started -> trial-active -> paid-converted -> expansion -> churned-or-renewed). Investor: 10 stages (discovery -> contacted -> deck-shared -> dataroom-access -> meeting-1 -> meeting-2 -> diligence -> term-sheet -> committed -> wired). Partner: 6 stages (identified -> contacted -> mou-discussion -> mou-signed -> active -> off). Consulting: 5 stages (opportunity -> proposal -> contracted -> delivery -> closed).",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "pipeline",
+    "stage"
+  ],
+  "properties": {
+    "pipeline": {
+      "$ref": "https://schemas.luh.tech/crm/pipeline-type.schema.json"
+    },
+    "stage": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "pipeline": {
+            "const": "customer"
+          }
+        },
+        "required": [
+          "pipeline"
+        ]
+      },
+      "then": {
+        "properties": {
+          "stage": {
+            "enum": [
+              "lead",
+              "qualified",
+              "demo-active",
+              "trial-started",
+              "trial-active",
+              "paid-converted",
+              "expansion",
+              "churned-or-renewed"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pipeline": {
+            "const": "investor"
+          }
+        },
+        "required": [
+          "pipeline"
+        ]
+      },
+      "then": {
+        "properties": {
+          "stage": {
+            "enum": [
+              "discovery",
+              "contacted",
+              "deck-shared",
+              "dataroom-access",
+              "meeting-1",
+              "meeting-2",
+              "diligence",
+              "term-sheet",
+              "committed",
+              "wired"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pipeline": {
+            "const": "partner"
+          }
+        },
+        "required": [
+          "pipeline"
+        ]
+      },
+      "then": {
+        "properties": {
+          "stage": {
+            "enum": [
+              "identified",
+              "contacted",
+              "mou-discussion",
+              "mou-signed",
+              "active",
+              "off"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pipeline": {
+            "const": "consulting"
+          }
+        },
+        "required": [
+          "pipeline"
+        ]
+      },
+      "then": {
+        "properties": {
+          "stage": {
+            "enum": [
+              "opportunity",
+              "proposal",
+              "contracted",
+              "delivery",
+              "closed"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

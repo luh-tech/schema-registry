@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/pql-score.schema.json",
+  "title": "CRM PQL Score",
+  "description": "Product Qualified Lead score per d-2026-05-20-crm-pql-scoring-rubric. 8 weighted signals; threshold >=5 triggers #sales alert + Twenty CRM task. 30-day calibration review with target false-positive rate <=30%.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "tenantId",
+    "score",
+    "signals",
+    "qualified",
+    "computedAt"
+  ],
+  "properties": {
+    "tenantId": {
+      "$ref": "https://schemas.luh.tech/crm/tenant-id.schema.json"
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 12
+    },
+    "qualified": {
+      "type": "boolean",
+      "description": "score >= 5"
+    },
+    "signals": {
+      "type": "object",
+      "required": [
+        "account_created"
+      ],
+      "properties": {
+        "account_created": {
+          "type": "boolean",
+          "description": "Required; 0pt weight"
+        },
+        "first_decision_created": {
+          "type": "boolean",
+          "description": "+1pt"
+        },
+        "authority_cascade_triggered": {
+          "type": "boolean",
+          "description": "+1pt"
+        },
+        "seppa_query_submitted": {
+          "type": "boolean",
+          "description": "+1pt"
+        },
+        "bim_file_uploaded": {
+          "type": "boolean",
+          "description": "+2pt"
+        },
+        "teammate_invited": {
+          "type": "boolean",
+          "description": "+2pt"
+        },
+        "three_plus_sessions_in_7_days": {
+          "type": "boolean",
+          "description": "+2pt"
+        },
+        "demo_project_completed": {
+          "type": "boolean",
+          "description": "+3pt"
+        }
+      },
+      "additionalProperties": false
+    },
+    "computedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scoringEngineVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    }
+  },
+  "additionalProperties": false
+}

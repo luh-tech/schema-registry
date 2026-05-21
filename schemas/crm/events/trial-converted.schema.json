@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/trial-converted.schema.json",
+  "title": "Trial Converted from Demo",
+  "description": "Emitted when a demo user converts to a trial tenant (typically via self-serve signup).",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "tenantId",
+    "convertedAt",
+    "trialTenantId"
+  ],
+  "properties": {
+    "tenantId": {
+      "$ref": "https://schemas.luh.tech/crm/tenant-id.schema.json"
+    },
+    "convertedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "trialTenantId": {
+      "$ref": "https://schemas.luh.tech/crm/tenant-id.schema.json"
+    },
+    "convertedFromDemo": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "additionalProperties": false
+}
