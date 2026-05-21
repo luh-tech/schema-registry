@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/architecture-roadmap.schema.v1.json",
+  "version": "1.0.0",
   "title": "LuhTech Architecture Roadmap v1",
   "description": "Technical architecture roadmap schema for LuhTech portfolio ventures. Defines services, infrastructure, deployment phases, and cross-links to business roadmap. v1.1.0 migrates shared patterns to centralized $ref definitions.",
   "type": "object",

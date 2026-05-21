@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/schema-refs.json",
+  "version": "1.12.0",
   "title": "LuhTech Schema Registry v1.12.0",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {

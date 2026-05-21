@@ -1,8 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/roadmap.schema.v3.2.json",
+  "version": "3.2.0",
   "title": "LuhTech Venture Roadmap v3.2",
-  "description": "JSON-first roadmap schema for LuhTech portfolio ventures. v3.2 adds required `scope` field to feature objects \u2014 scope classification for feature exposure and graph inclusion (product / infrastructure / enterprise-tool / standard). Security-first default when ambiguous: infrastructure. The existing free-form `category` field remains as topic/domain axis, unchanged. v3.1 added mission/vision/currentStage/overallProgress to the venture object (Transform Fabric Architecture v2.0.0, 2026-02-26). All other fields are a strict superset of v3.1.",
+  "description": "JSON-first roadmap schema for LuhTech portfolio ventures. v3.2 adds required `scope` field to feature objects — scope classification for feature exposure and graph inclusion (product / infrastructure / enterprise-tool / standard). Security-first default when ambiguous: infrastructure. The existing free-form `category` field remains as topic/domain axis, unchanged. v3.1 added mission/vision/currentStage/overallProgress to the venture object (Transform Fabric Architecture v2.0.0, 2026-02-26). All other fields are a strict superset of v3.1.",
   "type": "object",
   "required": [
     "$schema",
@@ -234,7 +235,7 @@
     },
     "ventureDetails": {
       "type": "object",
-      "description": "Venture classification, status, and business identity. v3.1 adds mission, vision, currentStage, and overallProgress \u2014 migrated from roadmap-business.json.",
+      "description": "Venture classification, status, and business identity. v3.1 adds mission, vision, currentStage, and overallProgress — migrated from roadmap-business.json.",
       "required": [
         "type",
         "architecture"
@@ -289,12 +290,12 @@
         "mission": {
           "type": "string",
           "minLength": 10,
-          "description": "Venture mission statement. NEW in v3.1 \u2014 migrated from roadmap-business.json. Canonical source of truth for all transforms."
+          "description": "Venture mission statement. NEW in v3.1 — migrated from roadmap-business.json. Canonical source of truth for all transforms."
         },
         "vision": {
           "type": "string",
           "minLength": 10,
-          "description": "Venture vision statement. NEW in v3.1 \u2014 migrated from roadmap-business.json. Canonical source of truth for all transforms."
+          "description": "Venture vision statement. NEW in v3.1 — migrated from roadmap-business.json. Canonical source of truth for all transforms."
         },
         "currentStage": {
           "type": "string",
@@ -315,13 +316,13 @@
             "active",
             "public"
           ],
-          "description": "Current venture stage. NEW in v3.1 \u2014 migrated from roadmap-business.json. Update when stage changes. Informs investor reports and portfolio dashboards."
+          "description": "Current venture stage. NEW in v3.1 — migrated from roadmap-business.json. Update when stage changes. Informs investor reports and portfolio dashboards."
         },
         "overallProgress": {
           "type": "integer",
           "minimum": 0,
           "maximum": 100,
-          "description": "Overall roadmap progress as a percentage (0\u2013100). NEW in v3.1 \u2014 migrated from roadmap-business.json. Updated by founder judgment each sprint."
+          "description": "Overall roadmap progress as a percentage (0–100). NEW in v3.1 — migrated from roadmap-business.json. Updated by founder judgment each sprint."
         }
       }
     },
@@ -1199,17 +1200,17 @@
         "MIGRATION: Added venture.vision (migrated from roadmap-business.json)",
         "MIGRATION: Added venture.currentStage (migrated from roadmap-business.json)",
         "MIGRATION: Added venture.overallProgress (migrated from roadmap-business.json)",
-        "Source: Transform Fabric Architecture v2.0.0 \u2014 business identity fields are team-visible, not financial",
-        "Strictly backward compatible with v3.0 \u2014 no fields removed"
+        "Source: Transform Fabric Architecture v2.0.0 — business identity fields are team-visible, not financial",
+        "Strictly backward compatible with v3.0 — no fields removed"
       ]
     },
     {
       "version": "3.0.0",
       "date": "2026-02-14",
       "changes": [
-        "Removed financials, team, competitive sections as required fields \u2014 live exclusively in roadmap-business.json",
+        "Removed financials, team, competitive sections as required fields — live exclusively in roadmap-business.json",
         "Preserved lightweight financials and team stubs for backward compatibility",
-        "Source: GAP 1 resolution \u2014 schema-v3-upstream-sync"
+        "Source: GAP 1 resolution — schema-v3-upstream-sync"
       ]
     },
     {

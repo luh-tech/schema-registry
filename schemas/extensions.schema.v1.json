@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/extensions.schema.v1.json",
+  "version": "1.0.0",
   "title": "LuhTech Venture Extensions v1",
   "description": "Venture-specific extensions with explicit sharing control. Each extension has a share flag determining visibility to Holdings aggregation.",
   "type": "object",

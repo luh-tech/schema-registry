@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/roadmap.schema.v3.4.json",
+  "version": "3.4.0",
   "title": "LuhTech Venture Roadmap v3.4",
   "description": "JSON-first roadmap schema for LuhTech portfolio ventures. v3.3 adds optional `provides: array[string]` and `lifecyclePhases: array[integer 0-7]` to feature objects, supporting the requires/provides matching infrastructure in business-tools (capabilities.json, challenges.json, lifecycle-phases.json). Neither field is required. v3.2 added required `scope` field. v3.1 added mission/vision/currentStage/overallProgress to the venture object. All other fields are a strict superset of v3.2.",
   "type": "object",
