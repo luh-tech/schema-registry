@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/pql-triggered.schema.json",
+  "title": "PQL Threshold Triggered",
+  "description": "Emitted when a tenant's PQL score crosses the qualifying threshold (>=5). Triggers #sales Slack alert + Twenty CRM follow-up task.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "tenantId",
+    "triggeredAt",
+    "score"
+  ],
+  "properties": {
+    "tenantId": {
+      "$ref": "https://schemas.luh.tech/crm/tenant-id.schema.json"
+    },
+    "triggeredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 12
+    },
+    "signalsTriggered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "Names of signals that were true at trigger time"
+    },
+    "pqlScoreRef": {
+      "type": "string",
+      "format": "uri",
+      "description": "URI to full PQL score record (see pql-score.schema.json)"
+    }
+  },
+  "additionalProperties": false
+}

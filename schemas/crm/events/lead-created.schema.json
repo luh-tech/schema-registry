@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/lead-created.schema.json",
+  "title": "Lead Created",
+  "description": "Emitted when a new Lead is created in Twenty CRM (Customer pipeline, stage: lead).",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contactId",
+    "email",
+    "source"
+  ],
+  "properties": {
+    "contactId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "Twenty CRM Person UUID"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "companyName": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "website-form",
+        "demo-request",
+        "self-serve",
+        "manual-entry",
+        "import"
+      ]
+    },
+    "utm": {
+      "type": "object",
+      "properties": {
+        "campaign": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "medium": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

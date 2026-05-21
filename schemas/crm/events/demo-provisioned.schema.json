@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/demo-provisioned.schema.json",
+  "title": "Demo Provisioned",
+  "description": "Emitted when a demo tenant is successfully provisioned for a qualified lead. Downstream: Resend welcome email, Twenty CRM stage transition, Slack #sales notification.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "tenantId",
+    "provisionedAt",
+    "demoUrl"
+  ],
+  "properties": {
+    "tenantId": {
+      "$ref": "https://schemas.luh.tech/crm/tenant-id.schema.json"
+    },
+    "provisionedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "demoUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "Tenant-scoped demo URL (e.g., demo-acme-1a2b3c4d.job.site)"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Demo tenant expiration (default: 30 days inactive)"
+    },
+    "preset": {
+      "type": "string",
+      "enum": [
+        "generic",
+        "gc-flow",
+        "owner-flow",
+        "architect-flow",
+        "super-flow"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

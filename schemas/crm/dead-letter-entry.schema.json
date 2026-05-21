@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/dead-letter-entry.schema.json",
+  "title": "CRM Dead-Letter Queue Entry",
+  "description": "Dead-letter record per d-2026-05-20-crm-dlq-contract. Postgres-backed at table crm_dead_letters. TTL 30 days from failedAt. 3-attempt replay cap before terminal_failure. n8n monitor alerts #ops at depth > 10.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "deadLetterId",
+    "failedAt",
+    "category",
+    "rawPayload",
+    "attemptCount"
+  ],
+  "properties": {
+    "deadLetterId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "eventId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "CloudEvents envelope id if envelope was parseable"
+    },
+    "eventType": {
+      "type": "string",
+      "description": "Best-effort event type; may be absent for unparseable payloads"
+    },
+    "failedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "signature_invalid",
+        "schema_validation",
+        "downstream_timeout",
+        "downstream_5xx",
+        "handler_exception",
+        "idempotency_conflict",
+        "crm_disabled",
+        "unparseable_json",
+        "unknown_event_type"
+      ]
+    },
+    "errorMessage": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "rawPayload": {
+      "type": "string",
+      "description": "Original request body, base64-encoded if non-UTF-8"
+    },
+    "attemptCount": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "lastAttemptAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "terminalFailure": {
+      "type": "boolean",
+      "default": false,
+      "description": "True after 3 unsuccessful replays"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
+      "description": "Mirrors canonical impactLevel enum (luhtech-enums.schema.json#/definitions/impactLevel). Inlined here to avoid cross-namespace $ref fragility; semantically equivalent."
+    }
+  },
+  "additionalProperties": false
+}

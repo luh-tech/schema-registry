@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/iql-score.schema.json",
+  "title": "CRM IQL Score",
+  "description": "Investor Qualified Lead score per d-2026-05-20-crm-iql-scoring-rubric. 6 weighted signals; threshold >=4 triggers #investors alert + Twenty CRM task. 90-day calibration window (matches investor cycle length).",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contactId",
+    "score",
+    "signals",
+    "qualified",
+    "computedAt"
+  ],
+  "properties": {
+    "contactId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "Twenty CRM Person UUID"
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 11
+    },
+    "qualified": {
+      "type": "boolean",
+      "description": "score >= 4"
+    },
+    "signals": {
+      "type": "object",
+      "properties": {
+        "deck_viewed_full_session": {
+          "type": "boolean",
+          "description": "+1pt (8+ of 12 slides)"
+        },
+        "pdf_downloaded": {
+          "type": "boolean",
+          "description": "+1pt"
+        },
+        "dataroom_accessed": {
+          "type": "boolean",
+          "description": "+2pt"
+        },
+        "specific_document_downloaded": {
+          "type": "boolean",
+          "description": "+2pt (financial model / cap table)"
+        },
+        "meeting_scheduled": {
+          "type": "boolean",
+          "description": "+3pt"
+        },
+        "intro_made_by_existing_investor": {
+          "type": "boolean",
+          "description": "+2pt"
+        }
+      },
+      "additionalProperties": false
+    },
+    "computedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scoringEngineVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    }
+  },
+  "additionalProperties": false
+}

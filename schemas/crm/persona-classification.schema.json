@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/persona-classification.schema.json",
+  "title": "CRM Persona Classification",
+  "description": "Closed vocabulary of contact personas per d-2026-05-20-crm-persona-classification. Default 'unclassified' applied to new Twenty CRM Person records pending qualification. Used by composeCrmUrl(), dashboard /contacts cards, and persona deck transformer.",
+  "version": "1.0.0",
+  "type": "string",
+  "enum": [
+    "unclassified",
+    "gc",
+    "owner",
+    "architect",
+    "super",
+    "sub",
+    "gov",
+    "investor",
+    "partner"
+  ],
+  "default": "unclassified"
+}

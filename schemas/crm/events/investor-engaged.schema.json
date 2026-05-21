@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/investor-engaged.schema.json",
+  "title": "Investor Engagement Activity",
+  "description": "Emitted when an investor performs a tracked activity (deck view, PDF download, dataroom access). Multiple activities aggregate into IQL score.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contactId",
+    "activity",
+    "activityAt"
+  ],
+  "properties": {
+    "contactId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "Twenty CRM Person UUID"
+    },
+    "activity": {
+      "type": "string",
+      "enum": [
+        "deck_viewed_full_session",
+        "pdf_downloaded",
+        "dataroom_accessed",
+        "specific_document_downloaded"
+      ]
+    },
+    "activityAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "documentId": {
+      "type": "string",
+      "description": "When activity targets a specific document (e.g., financial-model.xlsx)"
+    },
+    "sessionDurationSeconds": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "For deck/dataroom sessions"
+    },
+    "slidesViewed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "For deck view sessions"
+    }
+  },
+  "additionalProperties": false
+}

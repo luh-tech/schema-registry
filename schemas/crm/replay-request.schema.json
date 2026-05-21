@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/replay-request.schema.json",
+  "title": "CRM Dead-Letter Replay Request",
+  "description": "Admin-authenticated replay request body for POST /api/admin/crm/replay/:deadLetterId. Per d-2026-05-20-crm-dlq-contract. Audit-logged at every invocation.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "deadLetterId",
+    "requestedBy",
+    "reason"
+  ],
+  "properties": {
+    "deadLetterId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
+    "requestedBy": {
+      "type": "string",
+      "format": "email",
+      "description": "Admin operator email (Twenty CRM SSO)"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 500
+    },
+    "forceBypassIdempotency": {
+      "type": "boolean",
+      "default": false,
+      "description": "Use only for handler-exception category with verified fix; logs additional audit field"
+    }
+  },
+  "additionalProperties": false
+}

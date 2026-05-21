@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/iql-triggered.schema.json",
+  "title": "IQL Threshold Triggered",
+  "description": "Emitted when an investor contact's IQL score crosses the qualifying threshold (>=4). Triggers #investors Slack alert + Twenty CRM follow-up task on Investor pipeline.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contactId",
+    "triggeredAt",
+    "score"
+  ],
+  "properties": {
+    "contactId": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "Twenty CRM Person UUID"
+    },
+    "triggeredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 4,
+      "maximum": 11
+    },
+    "signalsTriggered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "iqlScoreRef": {
+      "type": "string",
+      "format": "uri",
+      "description": "URI to full IQL score record (see iql-score.schema.json)"
+    }
+  },
+  "additionalProperties": false
+}

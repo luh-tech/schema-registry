@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/events/churn-detected.schema.json",
+  "title": "Customer Churn Detected",
+  "description": "Emitted when churn-prediction signals exceed threshold OR cancellation event received. Downstream: #ops alert, Twenty CRM stage transition to churned-or-renewed, save-attempt automation.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "tenantId",
+    "detectedAt",
+    "trigger"
+  ],
+  "properties": {
+    "tenantId": {
+      "$ref": "https://schemas.luh.tech/crm/tenant-id.schema.json"
+    },
+    "detectedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "trigger": {
+      "type": "string",
+      "enum": [
+        "cancellation-requested",
+        "usage-decline-7d",
+        "usage-decline-30d",
+        "payment-failed-3x",
+        "support-escalation"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
+      "description": "Mirrors canonical impactLevel enum from luhtech-enums; inlined to avoid cross-namespace ref fragility"
+    }
+  },
+  "additionalProperties": false
+}

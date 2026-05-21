@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/event-envelope.schema.json",
+  "title": "CRM Event Envelope (CloudEvents 1.0)",
+  "description": "CloudEvents 1.0 envelope for CRM events per d-2026-05-20-crm-event-envelope-v1 and d-2026-05-20-crm-cloudevents-alignment. Required CloudEvents attributes (id, source, specversion, type, time) plus LuhTech extensions (pipelinetype, signature, sourceversion, clientip, useragent, correlation). Extension names lowercase alphanumeric per CloudEvents extension rules. 16 reverse-DNS event types enumerated.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "id",
+    "source",
+    "specversion",
+    "type",
+    "time",
+    "datacontenttype",
+    "dataschema",
+    "data",
+    "pipelinetype",
+    "signature",
+    "sourceversion"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "UUID v4; idempotency key"
+    },
+    "source": {
+      "type": "string",
+      "format": "uri",
+      "description": "URI identifying the producer (e.g., https://api.luh.tech/crm)"
+    },
+    "specversion": {
+      "const": "1.0"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "tech.luh.crm.lead.created.v1",
+        "tech.luh.crm.lead.qualified.v1",
+        "tech.luh.crm.contact.stage.changed.v1",
+        "tech.luh.crm.demo.provisioned.v1",
+        "tech.luh.crm.trial.converted.v1",
+        "tech.luh.crm.customer.paid.v1",
+        "tech.luh.crm.churn.detected.v1",
+        "tech.luh.crm.investor.engaged.v1",
+        "tech.luh.crm.investor.meeting.scheduled.v1",
+        "tech.luh.crm.investor.committed.v1",
+        "tech.luh.crm.partner.identified.v1",
+        "tech.luh.crm.partner.active.v1",
+        "tech.luh.crm.consulting.opportunity.v1",
+        "tech.luh.crm.consulting.engaged.v1",
+        "tech.luh.crm.pql.triggered.v1",
+        "tech.luh.crm.iql.triggered.v1"
+      ]
+    },
+    "time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "datacontenttype": {
+      "const": "application/json"
+    },
+    "dataschema": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://schemas\\.luh\\.tech/crm/events/[a-z][a-z0-9-]*\\.schema\\.json$",
+      "description": "URI pointing to the event-specific payload schema under schemas.luh.tech/crm/events/"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Optional CloudEvents subject (e.g., tenant ID for tenant-scoped events)"
+    },
+    "data": {
+      "type": "object",
+      "description": "Typed payload; shape conforms to schema at dataschema URL"
+    },
+    "pipelinetype": {
+      "$ref": "https://schemas.luh.tech/crm/pipeline-type.schema.json"
+    },
+    "signature": {
+      "$ref": "https://schemas.luh.tech/crm/webhook-signature.schema.json"
+    },
+    "sourceversion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Producer semver"
+    },
+    "clientip": {
+      "type": "string",
+      "anyOf": [
+        {
+          "format": "ipv4"
+        },
+        {
+          "format": "ipv6"
+        }
+      ]
+    },
+    "useragent": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "correlation": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "description": "Optional correlation id for tracing across multi-event flows"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/crm/webhook-signature.schema.json",
+  "title": "CRM Webhook Signature",
+  "description": "HMAC-SHA256 webhook signature format per the api-gateway signature middleware. Carried as CloudEvents 'signature' extension. Format: 'sha256=<64-hex-chars>'. Computed over the raw request body using the per-pipeline shared secret.",
+  "version": "1.0.0",
+  "type": "string",
+  "pattern": "^sha256=[0-9a-f]{64}$",
+  "minLength": 71,
+  "maxLength": 71
+}

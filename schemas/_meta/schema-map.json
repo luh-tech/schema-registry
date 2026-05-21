@@ -2,58 +2,35 @@
   "$schema": "https://schemas.luh.tech/_meta/schema-map.schema.json",
   "streamUrl": "https://schemas.luh.tech/_meta/schema-map.json",
   "version": "1.0.0",
-  "generatedAt": "2026-05-18T23:20:48Z",
+  "generatedAt": "2026-05-21T18:07:22Z",
   "generatedBy": "luhtech-schema map (v0.4.0)",
-  "registry": "luh-tech/schema-registry + ectropy-ai/schemas (L11, post-T5)",
-  "schemaCount": 99,
+  "registry": "luh-tech/schema-registry",
+  "schemaCount": 69,
   "meta": {
-    "d2Compliant": 99,
-    "d6Compliant": 45,
+    "d2Compliant": 69,
+    "d6Compliant": 69,
     "byLayer": {
       "vocabulary": 4,
       "infrastructure": 8,
       "governance": 12,
+      "unclassified": 27,
       "venture-ops": 4,
       "portfolio-ops": 7,
-      "ip": 7,
-      "domain": 57
+      "ip": 7
     },
     "bySubdir": {
       "_definitions": 2,
       "_enums": 1,
-      "(root)": 22,
+      "(root)": 16,
       "cis": 3,
+      "crm": 27,
       "patent": 7,
       "pm": 7,
-      "portfolio": 6,
-      "authority": 1,
-      "carbon": 2,
-      "closeout": 3,
-      "commissioning": 3,
-      "consequence": 2,
-      "contract": 3,
-      "corsx": 2,
-      "dashboard": 1,
-      "decision": 5,
-      "definitions": 1,
-      "efas": 1,
-      "eil": 4,
-      "foundation": 1,
-      "govsx": 2,
-      "inspection": 1,
-      "ipd": 3,
-      "matsx": 1,
-      "paysx": 1,
-      "ros-mro": 3,
-      "schedule": 2,
-      "seed": 2,
-      "usf": 2,
-      "voxel": 2,
-      "warranty": 3
+      "portfolio": 6
     },
     "byRegistry": {
-      "portfolio": 42,
-      "ectropy": 57
+      "portfolio": 69,
+      "ectropy": 0
     }
   },
   "schemas": [
@@ -207,6 +184,376 @@
       "refs": [
         "#/definitions/Venture"
       ],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/contact-stage.schema.json",
+      "path": "schemas/crm/contact-stage.schema.json",
+      "version": "1.0.0",
+      "title": "CRM Contact Stage",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 1,
+      "refs": [
+        "https://schemas.luh.tech/crm/pipeline-type.schema.json"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/dead-letter-entry.schema.json",
+      "path": "schemas/crm/dead-letter-entry.schema.json",
+      "version": "1.0.0",
+      "title": "CRM Dead-Letter Queue Entry",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/event-envelope.schema.json",
+      "path": "schemas/crm/event-envelope.schema.json",
+      "version": "1.0.0",
+      "title": "CRM Event Envelope (CloudEvents 1.0)",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 2,
+      "refs": [
+        "https://schemas.luh.tech/crm/pipeline-type.schema.json",
+        "https://schemas.luh.tech/crm/webhook-signature.schema.json"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/churn-detected.schema.json",
+      "path": "schemas/crm/events/churn-detected.schema.json",
+      "version": "1.0.0",
+      "title": "Customer Churn Detected",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 1,
+      "refs": [
+        "https://schemas.luh.tech/crm/tenant-id.schema.json"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/consulting-engaged.schema.json",
+      "path": "schemas/crm/events/consulting-engaged.schema.json",
+      "version": "1.0.0",
+      "title": "Consulting Engagement Started",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/consulting-opportunity.schema.json",
+      "path": "schemas/crm/events/consulting-opportunity.schema.json",
+      "version": "1.0.0",
+      "title": "Consulting Opportunity",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/contact-stage-changed.schema.json",
+      "path": "schemas/crm/events/contact-stage-changed.schema.json",
+      "version": "1.0.0",
+      "title": "Contact Stage Changed",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 1,
+      "refs": [
+        "https://schemas.luh.tech/crm/pipeline-type.schema.json"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/customer-paid.schema.json",
+      "path": "schemas/crm/events/customer-paid.schema.json",
+      "version": "1.0.0",
+      "title": "Customer Paid Conversion",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 1,
+      "refs": [
+        "https://schemas.luh.tech/crm/tenant-id.schema.json"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/demo-provisioned.schema.json",
+      "path": "schemas/crm/events/demo-provisioned.schema.json",
+      "version": "1.0.0",
+      "title": "Demo Provisioned",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 1,
+      "refs": [
+        "https://schemas.luh.tech/crm/tenant-id.schema.json"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/investor-committed.schema.json",
+      "path": "schemas/crm/events/investor-committed.schema.json",
+      "version": "1.0.0",
+      "title": "Investor Commitment",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/investor-engaged.schema.json",
+      "path": "schemas/crm/events/investor-engaged.schema.json",
+      "version": "1.0.0",
+      "title": "Investor Engagement Activity",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/investor-meeting-scheduled.schema.json",
+      "path": "schemas/crm/events/investor-meeting-scheduled.schema.json",
+      "version": "1.0.0",
+      "title": "Investor Meeting Scheduled",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/iql-triggered.schema.json",
+      "path": "schemas/crm/events/iql-triggered.schema.json",
+      "version": "1.0.0",
+      "title": "IQL Threshold Triggered",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/lead-created.schema.json",
+      "path": "schemas/crm/events/lead-created.schema.json",
+      "version": "1.0.0",
+      "title": "Lead Created",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/lead-qualified.schema.json",
+      "path": "schemas/crm/events/lead-qualified.schema.json",
+      "version": "1.0.0",
+      "title": "Lead Qualified",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/partner-active.schema.json",
+      "path": "schemas/crm/events/partner-active.schema.json",
+      "version": "1.0.0",
+      "title": "Partner Activated",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/partner-identified.schema.json",
+      "path": "schemas/crm/events/partner-identified.schema.json",
+      "version": "1.0.0",
+      "title": "Partner Identified",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/pql-triggered.schema.json",
+      "path": "schemas/crm/events/pql-triggered.schema.json",
+      "version": "1.0.0",
+      "title": "PQL Threshold Triggered",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 1,
+      "refs": [
+        "https://schemas.luh.tech/crm/tenant-id.schema.json"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/events/trial-converted.schema.json",
+      "path": "schemas/crm/events/trial-converted.schema.json",
+      "version": "1.0.0",
+      "title": "Trial Converted from Demo",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 1,
+      "refs": [
+        "https://schemas.luh.tech/crm/tenant-id.schema.json"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/idempotency-record.schema.json",
+      "path": "schemas/crm/idempotency-record.schema.json",
+      "version": "1.0.0",
+      "title": "CRM Idempotency Record",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/iql-score.schema.json",
+      "path": "schemas/crm/iql-score.schema.json",
+      "version": "1.0.0",
+      "title": "CRM IQL Score",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/persona-classification.schema.json",
+      "path": "schemas/crm/persona-classification.schema.json",
+      "version": "1.0.0",
+      "title": "CRM Persona Classification",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/pipeline-type.schema.json",
+      "path": "schemas/crm/pipeline-type.schema.json",
+      "version": "1.0.0",
+      "title": "CRM Pipeline Type",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/pql-score.schema.json",
+      "path": "schemas/crm/pql-score.schema.json",
+      "version": "1.0.0",
+      "title": "CRM PQL Score",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 1,
+      "refs": [
+        "https://schemas.luh.tech/crm/tenant-id.schema.json"
+      ],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/replay-request.schema.json",
+      "path": "schemas/crm/replay-request.schema.json",
+      "version": "1.0.0",
+      "title": "CRM Dead-Letter Replay Request",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/tenant-id.schema.json",
+      "path": "schemas/crm/tenant-id.schema.json",
+      "version": "1.0.0",
+      "title": "CRM Tenant ID",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
+      "loadable": true
+    },
+    {
+      "$id": "https://schemas.luh.tech/crm/webhook-signature.schema.json",
+      "path": "schemas/crm/webhook-signature.schema.json",
+      "version": "1.0.0",
+      "title": "CRM Webhook Signature",
+      "subdir": "crm",
+      "layer": "unclassified",
+      "d2Compliant": true,
+      "d6Compliant": true,
+      "refCount": 0,
+      "refs": [],
       "loadable": true
     },
     {
@@ -858,983 +1205,6 @@
       "refs": [
         "#/$defs/category",
         "#/$defs/workflow"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/authority/authority-level.schema.json",
-      "path": "ectropy/authority/authority-level.schema.json",
-      "version": null,
-      "title": "Authority Level Schema",
-      "subdir": "authority",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 4,
-      "refs": [
-        "#/$defs/authorityLevel",
-        "#/$defs/escalationRule",
-        "#/$defs/graphMetadata",
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/carbon/carbon-offset.schema.json",
-      "path": "ectropy/carbon/carbon-offset.schema.json",
-      "version": null,
-      "title": "Carbon Offset",
-      "subdir": "carbon",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 2,
-      "refs": [
-        "#/definitions/CreditVerification",
-        "#/definitions/OffsetSupplier"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/carbon/epd-cache.schema.json",
-      "path": "ectropy/carbon/epd-cache.schema.json",
-      "version": null,
-      "title": "EPD Cache Entry",
-      "subdir": "carbon",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/definitions/GWPData"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/closeout/closeout.schema.json",
-      "path": "ectropy/closeout/closeout.schema.json",
-      "version": null,
-      "title": "Project Closeout Schema",
-      "subdir": "closeout",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/closeout/g704-certificate.schema.json",
-      "path": "ectropy/closeout/g704-certificate.schema.json",
-      "version": null,
-      "title": "G704 Certificate of Substantial Completion Schema",
-      "subdir": "closeout",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 2,
-      "refs": [
-        "#/$defs/signature",
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/closeout/punch-item.schema.json",
-      "path": "ectropy/closeout/punch-item.schema.json",
-      "version": null,
-      "title": "Punch Item Schema",
-      "subdir": "closeout",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/commissioning/commissioning-system.schema.json",
-      "path": "ectropy/commissioning/commissioning-system.schema.json",
-      "version": null,
-      "title": "Commissioning System Schema",
-      "subdir": "commissioning",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/commissioning/cx-issue.schema.json",
-      "path": "ectropy/commissioning/cx-issue.schema.json",
-      "version": null,
-      "title": "Commissioning Issue Schema",
-      "subdir": "commissioning",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/commissioning/functional-test.schema.json",
-      "path": "ectropy/commissioning/functional-test.schema.json",
-      "version": null,
-      "title": "Functional Performance Test Schema",
-      "subdir": "commissioning",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/consequence/consequence-v3.schema.json",
-      "path": "ectropy/consequence/consequence-v3.schema.json",
-      "version": null,
-      "title": "Consequence Schema",
-      "subdir": "consequence",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/consequence/consequence.schema.json",
-      "path": "ectropy/consequence/consequence.schema.json",
-      "version": null,
-      "title": "Consequence",
-      "subdir": "consequence",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 3,
-      "refs": [
-        "#/definitions/Evidence",
-        "#/definitions/Participant",
-        "#/definitions/SpatialReference"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/contract/contract-party.schema.json",
-      "path": "ectropy/contract/contract-party.schema.json",
-      "version": null,
-      "title": "Contract Party Schema",
-      "subdir": "contract",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/contract/contract-template.schema.json",
-      "path": "ectropy/contract/contract-template.schema.json",
-      "version": null,
-      "title": "Contract Template Schema",
-      "subdir": "contract",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 2,
-      "refs": [
-        "#/$defs/extractionRule",
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/contract/contract.schema.json",
-      "path": "ectropy/contract/contract.schema.json",
-      "version": null,
-      "title": "Contract Schema",
-      "subdir": "contract",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 12,
-      "refs": [
-        "#/$defs/authorityMapping",
-        "#/$defs/disputeResolution",
-        "#/$defs/financialTerms",
-        "#/$defs/governanceStructure",
-        "#/$defs/graphMetadata",
-        "#/$defs/insuranceRequirement",
-        "#/$defs/keyDates",
-        "#/$defs/meta",
-        "#/$defs/partyDetail",
-        "#/$defs/sourceDocument",
-        "#/$defs/timestamps",
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/corsx/takt-wagon.schema.json",
-      "path": "ectropy/corsx/takt-wagon.schema.json",
-      "version": null,
-      "title": "Takt Wagon",
-      "subdir": "corsx",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 0,
-      "refs": [],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/corsx/takt-zone.schema.json",
-      "path": "ectropy/corsx/takt-zone.schema.json",
-      "version": null,
-      "title": "Takt Zone",
-      "subdir": "corsx",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/definitions/ZoneGeometry"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/dashboard/dashboard-data-layer.schema.json",
-      "path": "ectropy/dashboard/dashboard-data-layer.schema.json",
-      "version": "1.0.0",
-      "title": "Dashboard Data Layer Schema",
-      "subdir": "dashboard",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": true,
-      "refCount": 2,
-      "refs": [
-        "#/definitions/DashboardDataConfig",
-        "#/definitions/DataSource"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/decision/decision-event.schema.json",
-      "path": "ectropy/decision/decision-event.schema.json",
-      "version": null,
-      "title": "Decision Event",
-      "subdir": "decision",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 13,
-      "refs": [
-        "#/definitions/Action",
-        "#/definitions/DecisionOutcome",
-        "#/definitions/DecisionTrigger",
-        "#/definitions/Engine1Output",
-        "#/definitions/Engine2Output",
-        "#/definitions/GraphMetadata",
-        "#/definitions/MediationDecision",
-        "#/definitions/MonitoringTrigger",
-        "#/definitions/Option",
-        "#/definitions/PatternSummary",
-        "#/definitions/ProjectedOutcome",
-        "#/definitions/RiskProfile",
-        "#/definitions/StateSnapshot"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/decision/decision.schema.json",
-      "path": "ectropy/decision/decision.schema.json",
-      "version": null,
-      "title": "Decision",
-      "subdir": "decision",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 6,
-      "refs": [
-        "#/definitions/AuthorityChain",
-        "#/definitions/DecisionContext",
-        "#/definitions/DecisionRelationships",
-        "#/definitions/Evidence",
-        "#/definitions/Participant",
-        "#/definitions/SpatialReference"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/decision/pm-decision.schema.json",
-      "path": "ectropy/decision/pm-decision.schema.json",
-      "version": null,
-      "title": "PM Decision Schema",
-      "subdir": "decision",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 13,
-      "refs": [
-        "#/$defs/authorityLevel",
-        "#/$defs/budgetImpact",
-        "#/$defs/decisionContext",
-        "#/$defs/edge",
-        "#/$defs/evidence",
-        "#/$defs/graphMetadata",
-        "#/$defs/meta",
-        "#/$defs/participants",
-        "#/$defs/scheduleImpact",
-        "#/$defs/timestamps",
-        "#/$defs/urn",
-        "#/$defs/voxelAttachment",
-        "#/$defs/voxelContext"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/decision/sdi-snapshot.schema.json",
-      "path": "ectropy/decision/sdi-snapshot.schema.json",
-      "version": null,
-      "title": "SDI Snapshot",
-      "subdir": "decision",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 0,
-      "refs": [],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/decision/success-pattern.schema.json",
-      "path": "ectropy/decision/success-pattern.schema.json",
-      "version": null,
-      "title": "Success Pattern",
-      "subdir": "decision",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 0,
-      "refs": [],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/definitions/classification.schema.json",
-      "path": "ectropy/definitions/classification.schema.json",
-      "version": null,
-      "title": "Classification Definitions",
-      "subdir": "definitions",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 0,
-      "refs": [],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/deployment-metrics.schema.json",
-      "path": "ectropy/deployment-metrics.schema.json",
-      "version": "1.0.0",
-      "title": "Deployment Metrics Schema",
-      "subdir": "(root)",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": true,
-      "refCount": 5,
-      "refs": [
-        "#/definitions/deploymentEvent",
-        "#/definitions/deploymentStatistics",
-        "#/definitions/environmentMetrics",
-        "#/definitions/serviceDeployment",
-        "#/definitions/watchtowerStatus"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/efas/eigenmode-forecast.schema.json",
-      "path": "ectropy/efas/eigenmode-forecast.schema.json",
-      "version": null,
-      "title": "Eigenmode Forecast",
-      "subdir": "efas",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 0,
-      "refs": [],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/eil/assistant-conversation.schema.json",
-      "path": "ectropy/eil/assistant-conversation.schema.json",
-      "version": null,
-      "title": "Assistant Conversation Schema",
-      "subdir": "eil",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/definitions/AssistantMessage"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/eil/assistant-message.schema.json",
-      "path": "ectropy/eil/assistant-message.schema.json",
-      "version": null,
-      "title": "Assistant Message Schema",
-      "subdir": "eil",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 3,
-      "refs": [
-        "#/$defs/citation",
-        "#/$defs/toolCall",
-        "#/$defs/toolResult"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/eil/sms-conversation.schema.json",
-      "path": "ectropy/eil/sms-conversation.schema.json",
-      "version": null,
-      "title": "SMS Conversation Schema",
-      "subdir": "eil",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/definitions/SMSMessage"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/eil/sms-message.schema.json",
-      "path": "ectropy/eil/sms-message.schema.json",
-      "version": null,
-      "title": "SMS Message Schema",
-      "subdir": "eil",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 0,
-      "refs": [],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/feature.schema.json",
-      "path": "ectropy/feature.schema.json",
-      "version": null,
-      "title": "Feature Specification Schema",
-      "subdir": "(root)",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 3,
-      "refs": [
-        "#/$defs/graphEdge",
-        "#/$defs/milestone",
-        "#/$defs/scenario"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/foundation/sensor-plan.schema.json",
-      "path": "ectropy/foundation/sensor-plan.schema.json",
-      "version": null,
-      "title": "Sensor Deployment Plan",
-      "subdir": "foundation",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/definitions/DeploymentStrategy"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/govsx/authority-tier.schema.json",
-      "path": "ectropy/govsx/authority-tier.schema.json",
-      "version": null,
-      "title": "Authority Tier",
-      "subdir": "govsx",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 3,
-      "refs": [
-        "#/definitions/DecisionThresholds",
-        "#/definitions/DelegationRules",
-        "#/definitions/EscalationRules"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/govsx/compliance-charter.schema.json",
-      "path": "ectropy/govsx/compliance-charter.schema.json",
-      "version": null,
-      "title": "Compliance Charter",
-      "subdir": "govsx",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 6,
-      "refs": [
-        "#/definitions/CarbonCompliance",
-        "#/definitions/ChapterMetadata",
-        "#/definitions/ComplianceRequirements",
-        "#/definitions/QualityStandards",
-        "#/definitions/RegulatoryCompliance",
-        "#/definitions/SafetyCompliance"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/graph.schema.json",
-      "path": "ectropy/graph.schema.json",
-      "version": null,
-      "title": "Ectropy Roadmap Knowledge Graph",
-      "subdir": "(root)",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 5,
-      "refs": [
-        "#/definitions/Edge",
-        "#/definitions/EdgeType",
-        "#/definitions/GraphMetadata",
-        "#/definitions/Node",
-        "#/definitions/NodeType"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/inspection/inspection.schema.json",
-      "path": "ectropy/inspection/inspection.schema.json",
-      "version": null,
-      "title": "Inspection Schema",
-      "subdir": "inspection",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/interfaces.schema.json",
-      "path": "ectropy/interfaces.schema.json",
-      "version": null,
-      "title": "Feature Interfaces Schema",
-      "subdir": "(root)",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 8,
-      "refs": [
-        "#/$defs/dataType",
-        "#/$defs/eventDefinition",
-        "#/$defs/graphqlResolver",
-        "#/$defs/mcpTool",
-        "#/$defs/mcpToolCategory",
-        "#/$defs/middleware",
-        "#/$defs/parameterDef",
-        "#/$defs/restEndpoint"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/ipd/savings-distribution.schema.json",
-      "path": "ectropy/ipd/savings-distribution.schema.json",
-      "version": null,
-      "title": "IPD Savings Distribution Schema",
-      "subdir": "ipd",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/ipd/target-cost.schema.json",
-      "path": "ectropy/ipd/target-cost.schema.json",
-      "version": null,
-      "title": "IPD Target Cost Schema",
-      "subdir": "ipd",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 2,
-      "refs": [
-        "#/$defs/amendment",
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/ipd/voting-session.schema.json",
-      "path": "ectropy/ipd/voting-session.schema.json",
-      "version": null,
-      "title": "IPD Voting Session Schema",
-      "subdir": "ipd",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 2,
-      "refs": [
-        "#/$defs/urn",
-        "#/$defs/vote"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/matsx/material-supplier.schema.json",
-      "path": "ectropy/matsx/material-supplier.schema.json",
-      "version": null,
-      "title": "Material Supplier",
-      "subdir": "matsx",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 0,
-      "refs": [],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/metrics-pipeline.schema.json",
-      "path": "ectropy/metrics-pipeline.schema.json",
-      "version": "1.0.0",
-      "title": "Metrics Pipeline Schema",
-      "subdir": "(root)",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": true,
-      "refCount": 5,
-      "refs": [
-        "#/definitions/failureHandler",
-        "#/definitions/metricSource",
-        "#/definitions/metricsWorkflow",
-        "#/definitions/normalizationRules",
-        "#/definitions/reportingDestination"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/paysx/pay-application.schema.json",
-      "path": "ectropy/paysx/pay-application.schema.json",
-      "version": null,
-      "title": "Pay Application (AIA G702)",
-      "subdir": "paysx",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 2,
-      "refs": [
-        "#/definitions/G703LineItem",
-        "#/definitions/RetainageCalculation"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/ros-mro/coordination-view.schema.json",
-      "path": "ectropy/ros-mro/coordination-view.schema.json",
-      "version": null,
-      "title": "ROS MRO Coordination View Schema",
-      "subdir": "ros-mro",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 6,
-      "refs": [
-        "#/definitions/ActivityItem",
-        "#/definitions/CoordinationConfig",
-        "#/definitions/Point3D",
-        "#/definitions/ViewState",
-        "#/definitions/VoxelAggregation",
-        "#/definitions/VoxelData"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/ros-mro/voxel-filter.schema.json",
-      "path": "ectropy/ros-mro/voxel-filter.schema.json",
-      "version": null,
-      "title": "Voxel Filter Schema",
-      "subdir": "ros-mro",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 4,
-      "refs": [
-        "#/definitions/VoxelFilter",
-        "#/definitions/VoxelPagination",
-        "#/definitions/VoxelQueryParams",
-        "#/definitions/VoxelSort"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/ros-mro/voxel-stream.schema.json",
-      "path": "ectropy/ros-mro/voxel-stream.schema.json",
-      "version": null,
-      "title": "Voxel Stream Message Schema",
-      "subdir": "ros-mro",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 2,
-      "refs": [
-        "#/definitions/VoxelBatchUpdateMessage",
-        "#/definitions/VoxelUpdateMessage"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/schedule/schedule-proposal-v3.schema.json",
-      "path": "ectropy/schedule/schedule-proposal-v3.schema.json",
-      "version": null,
-      "title": "Schedule Proposal Schema",
-      "subdir": "schedule",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/schedule/schedule-proposal.schema.json",
-      "path": "ectropy/schedule/schedule-proposal.schema.json",
-      "version": null,
-      "title": "ScheduleProposal",
-      "subdir": "schedule",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/definitions/Participant"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/seed/seed-orchestrator.schema.json",
-      "path": "ectropy/seed/seed-orchestrator.schema.json",
-      "version": null,
-      "title": "Seed Orchestrator Configuration Schema",
-      "subdir": "seed",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 0,
-      "refs": [],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/seed/seed-validation.schema.json",
-      "path": "ectropy/seed/seed-validation.schema.json",
-      "version": null,
-      "title": "Seed Validation Criteria Schema",
-      "subdir": "seed",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 9,
-      "refs": [
-        "#/definitions/customQueryCriteria",
-        "#/definitions/dataIntegrityCriteria",
-        "#/definitions/foreignKeyCriteria",
-        "#/definitions/idempotencyCriteria",
-        "#/definitions/recordCountCriteria",
-        "#/definitions/referentialIntegrityCriteria",
-        "#/definitions/schemaValidationCriteria",
-        "#/definitions/tenantIsolationCriteria",
-        "#/definitions/uniquenessCriteria"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/usf/usf-profile.schema.json",
-      "path": "ectropy/usf/usf-profile.schema.json",
-      "version": null,
-      "title": "USF Profile Schema",
-      "subdir": "usf",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 5,
-      "refs": [
-        "#/$defs/graphMetadata",
-        "#/$defs/meta",
-        "#/$defs/timestamps",
-        "#/$defs/urn",
-        "#/$defs/usfSnapshot"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/usf/usf-work-packet.schema.json",
-      "path": "ectropy/usf/usf-work-packet.schema.json",
-      "version": null,
-      "title": "USF Work Packet Schema",
-      "subdir": "usf",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 6,
-      "refs": [
-        "#/$defs/attributionItem",
-        "#/$defs/graphMetadata",
-        "#/$defs/laborAllocationItem",
-        "#/$defs/meta",
-        "#/$defs/timestamps",
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/voxel/voxel-v3.schema.json",
-      "path": "ectropy/voxel/voxel-v3.schema.json",
-      "version": null,
-      "title": "Voxel Schema",
-      "subdir": "voxel",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 23,
-      "refs": [
-        "#/$defs/acknowledgment",
-        "#/$defs/attachedDecision",
-        "#/$defs/bounds",
-        "#/$defs/carbon",
-        "#/$defs/coordinates",
-        "#/$defs/cost",
-        "#/$defs/decisionSurface",
-        "#/$defs/dependencies",
-        "#/$defs/edge",
-        "#/$defs/graphMetadata",
-        "#/$defs/inspectionState",
-        "#/$defs/inspectionStatus",
-        "#/$defs/labor",
-        "#/$defs/location",
-        "#/$defs/material",
-        "#/$defs/meta",
-        "#/$defs/preApproval",
-        "#/$defs/schedule",
-        "#/$defs/timestamps",
-        "#/$defs/toleranceOverride",
-        "#/$defs/urn",
-        "#/$defs/voxelAlert",
-        "#/$defs/workStatus"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/voxel/voxel.schema.json",
-      "path": "ectropy/voxel/voxel.schema.json",
-      "version": null,
-      "title": "Voxel",
-      "subdir": "voxel",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 8,
-      "refs": [
-        "#/definitions/Acknowledgment",
-        "#/definitions/AttachedDecision",
-        "#/definitions/DecisionSurface",
-        "#/definitions/InspectionStatus",
-        "#/definitions/PreApproval",
-        "#/definitions/ToleranceOverride",
-        "#/definitions/VoxelAlert",
-        "#/definitions/WorkStatus"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/warranty/building-history.schema.json",
-      "path": "ectropy/warranty/building-history.schema.json",
-      "version": null,
-      "title": "Building History Schema",
-      "subdir": "warranty",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/warranty/warranty-claim.schema.json",
-      "path": "ectropy/warranty/warranty-claim.schema.json",
-      "version": null,
-      "title": "Warranty Claim Schema",
-      "subdir": "warranty",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/warranty/warranty.schema.json",
-      "path": "ectropy/warranty/warranty.schema.json",
-      "version": null,
-      "title": "Warranty Schema",
-      "subdir": "warranty",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 1,
-      "refs": [
-        "#/$defs/urn"
-      ],
-      "loadable": true
-    },
-    {
-      "$id": "https://schemas.luh.tech/ectropy/workflow-registry.schema.json",
-      "path": "ectropy/workflow-registry.schema.json",
-      "version": null,
-      "title": "GitHub Actions Workflow Registry Schema",
-      "subdir": "(root)",
-      "layer": "domain",
-      "d2Compliant": true,
-      "d6Compliant": false,
-      "refCount": 2,
-      "refs": [
-        "#/definitions/category",
-        "#/definitions/workflow"
       ],
       "loadable": true
     }
