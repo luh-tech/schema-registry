@@ -26,18 +26,27 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout schema-registry
         uses: actions/checkout@v4
+        with:
+          path: schema-registry
 
+      - name: Checkout ectropy-ai/schemas
+        uses: actions/checkout@v4
+        with:
+          repository: ectropy-ai/schemas
+          ref: main
+          path: ectropy-schemas
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Stage artifact (schemas/ contents + CNAME + .nojekyll at site root)
         run: |
-          mkdir -p _site
-          cp -r schemas/. _site/
-          cp CNAME _site/CNAME
-          cp .nojekyll _site/.nojekyll
+          mkdir -p _site _site/ectropy
+          cp -r schema-registry/schemas/. _site/
+          cp -r ectropy-schemas/. _site/ectropy/
+          cp schema-registry/CNAME _site/CNAME
+          cp schema-registry/.nojekyll _site/.nojekyll
           echo "--- staged artifact ---"
           ls -la _site/ | head -30
           echo "--- _site file count ---"
