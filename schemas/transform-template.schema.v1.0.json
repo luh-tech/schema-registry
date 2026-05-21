@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/transform-template.schema.v1.0.json",
+  "version": "1.0.0",
   "title": "LuhTech Transform Template Schema v1.0",
   "description": "Governs the format of luhtech-transform template JSON files. Transform templates define field mappings, derivation rules, and provenance configuration for producing output files from canonical source files.",
   "type": "object",
@@ -89,7 +90,7 @@
     },
     "mappings": {
       "type": "array",
-      "description": "Field mapping rules \u2014 direct pass-through, aliased, or derived",
+      "description": "Field mapping rules — direct pass-through, aliased, or derived",
       "items": {
         "type": "object",
         "oneOf": [

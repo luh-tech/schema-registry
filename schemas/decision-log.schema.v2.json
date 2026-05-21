@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/decision-log.schema.v2.json",
+  "version": "2.0.0",
   "title": "Decision Log v2",
   "description": "Enhanced structured decision log for venture governance. Tracks key decisions with context, alternatives, rationale, voting, evidence, and implementation status. Includes pre-computed indexes for efficient querying and audit trails. Derived from Ectropy production decision-log.json (261KB, 20+ decisions).",
   "type": "object",
@@ -42,7 +43,9 @@
         },
         "migratedFrom": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Previous file paths this document was migrated from"
         },
         "migrationDate": {
@@ -60,9 +63,16 @@
           "description": "Sync state between legacy and canonical paths",
           "additionalProperties": false,
           "properties": {
-            "v1Path":        { "type": "string" },
-            "lastSync":      { "type": "string", "format": "date-time" },
-            "syncDirection": { "type": "string" }
+            "v1Path": {
+              "type": "string"
+            },
+            "lastSync": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "syncDirection": {
+              "type": "string"
+            }
           }
         }
       }

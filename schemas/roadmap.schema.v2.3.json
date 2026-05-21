@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/roadmap.schema.v2.3.json",
+  "version": "2.3.0",
   "title": "LuhTech Roadmap Schema v2.3.0",
   "description": "Extended roadmap schema with portfolio dependency tracking, milestone classification, authority levels, and graph metadata. Additive extension of v2.2.0. Implements SILTANA 7-tier authority cascade and CPM relationship patterns.",
   "type": "object",

@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/roadmap.schema.v2.1.json",
+  "version": "2.1.0",
   "title": "LuhTech Roadmap Schema v2.1.0",
   "description": "Extended roadmap schema with features, releases, and version tracking. Additive extension of v2.0.0.",
   "type": "object",

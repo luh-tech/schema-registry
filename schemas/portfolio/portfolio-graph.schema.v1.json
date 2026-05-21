@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/portfolio/portfolio-graph.schema.v1.json",
+  "version": "1.0.0",
   "title": "LuhTech Portfolio Graph v1",
   "description": "Portfolio-wide graph structure for cross-venture relationships, dependency tracking, and entity linking. Aggregated from venture-level graph data.",
   "type": "object",

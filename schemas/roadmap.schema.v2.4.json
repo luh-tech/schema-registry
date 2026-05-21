@@ -1,8 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/roadmap.schema.v2.4.json",
+  "version": "2.4.0",
   "title": "LuhTech Venture Roadmap v2.4",
-  "description": "JSON-first roadmap schema for LuhTech portfolio ventures. v2.4.0 adds feature reference fields (featureRef, featureUrn, specVersion, dependsOnFeatures) enabling graph traversal from inline features[] to standalone FEATURE.json specifications. Strict superset of v2.3.0 \u2014 no breaking changes.",
+  "description": "JSON-first roadmap schema for LuhTech portfolio ventures. v2.4.0 adds feature reference fields (featureRef, featureUrn, specVersion, dependsOnFeatures) enabling graph traversal from inline features[] to standalone FEATURE.json specifications. Strict superset of v2.3.0 — no breaking changes.",
   "type": "object",
   "required": [
     "$schema",

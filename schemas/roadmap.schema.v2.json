@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/roadmap.schema.v2.json",
+  "version": "2.0.0",
   "title": "LuhTech Venture Roadmap v2",
   "description": "JSON-first roadmap schema for LuhTech portfolio ventures. Supports full venture metadata, quarterly planning, financials, team planning, presentation deck data, and competitive positioning. v2.4.0 adds 39+ missing fields from transformer/component audit.",
   "type": "object",
@@ -326,7 +327,7 @@
     },
     "pitch": {
       "type": "object",
-      "description": "Investor pitch content \u2014 fields may be strings (summary) or objects (structured)",
+      "description": "Investor pitch content — fields may be strings (summary) or objects (structured)",
       "required": [
         "oneLiner"
       ],
@@ -384,7 +385,7 @@
               }
             }
           ],
-          "description": "Pain point \u2014 string summary or structured object with headline/bullets/columns"
+          "description": "Pain point — string summary or structured object with headline/bullets/columns"
         },
         "solution": {
           "oneOf": [
@@ -403,7 +404,7 @@
               }
             }
           ],
-          "description": "Your approach \u2014 string summary or object with bullets"
+          "description": "Your approach — string summary or object with bullets"
         },
         "market": {
           "oneOf": [
@@ -434,7 +435,7 @@
               }
             }
           ],
-          "description": "TAM + growth rate \u2014 string summary or structured market data"
+          "description": "TAM + growth rate — string summary or structured market data"
         },
         "differentiator": {
           "type": "string",
