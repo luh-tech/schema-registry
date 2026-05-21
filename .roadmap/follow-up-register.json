@@ -4,10 +4,10 @@
   "schemaVersion": "1.0.0",
   "version": "1.0.0",
   "ventureId": "schema-registry",
-  "lastUpdated": "2026-05-21T02:00:00Z",
+  "lastUpdated": "2026-05-21T12:00:00Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
-    "totalCount": 8
+    "totalCount": 9
   },
   "followUps": [
     {
@@ -105,12 +105,19 @@
       "id": "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
       "title": "Wire schemas.luh.tech/ectropy/* hosting to actually serve Ectropy schemas",
       "priority": "P1",
-      "status": "open",
+      "status": "closed",
       "opened": "2026-05-18",
       "openedDuring": "T5.4-postmerge",
       "scope": "T5 arc closed L11 SH-1 by migrating 57 Ectropy schemas from URN to URL $id form at https://schemas.luh.tech/ectropy/<path>. T5.4 verified the schemas are correct and the schema-map indexes them. However: curl https://schemas.luh.tech/ectropy/corsx/takt-wagon.schema.json returns 404. The luh-tech/schema-registry Pages deployment serves only this repo's schemas/ directory; the actual Ectropy schema files live in Ectropy-ai/schemas (separate repo). Every Ectropy $id URL is therefore unresolved at the HTTP layer. Consequence: D2 rationale (URL form resolves automatically in ajv and standard JSON Schema tools) is paper-only for L11 until hosting is wired. Decision options: (A) schema-registry Pages workflow ingests Ectropy-ai/schemas as a build step and serves under /ectropy/<path>; (B) Cloudflare routes schemas.luh.tech/ectropy/* to a separate Pages site backed by Ectropy-ai/schemas; (C) Ectropy gets its own subdomain — requires re-migrating all 57 $ids, breaks D-T5-A; (D) git submodule the Ectropy schemas into schema-registry. Substrate before DEC: inventory current consumers that fetch Ectropy schemas via HTTP (if zero, downgrade to P3). Tenth discipline-catch from T5 arc: URL-form migrations must include HTTPS resolve verification as a gate criterion, not just $id field shape and registry indexing. [2026-05-20 audit gate CLOSED] Phase-B1 consumer audit (source: phase-b1-ectropy-http-fetch-consumer-audit) scanned 11 live repos across 6 file-type categories. Zero HTTP consumers found. The two TypeScript matches in apps/mcp-server/src/services/ are non-consuming $schema annotations on in-memory data records — JSON Schema canonical-identifier pattern with no fetch/axios/HTTP client invocation. FU gate criterion met: priority downgraded P2→P3. [2026-05-21 upgrade P3→P1] 24 active EB .roadmap/features/ instance files reference ectropy/feature.schema.json and ectropy/interfaces.schema.json via local vendored copies whose $id is https://schemas.luh.tech/ectropy/*. These URLs return 404 — hosting not wired. FU-EB-RELATIVE-SCHEMA-PATH-CLEANUP-1 (P1 in EB) cannot close until ectropy/* paths serve 200. The 'zero HTTP consumers' claim that justified P3 downgrade (2026-05-20 audit gate) is no longer accurate — 24 consumers exist; they consumed via local vendored copies, not direct HTTP. P3→P1 upgrade effective 2026-05-21.",
       "blockedBy": [],
-      "blocks": []
+      "blocks": [],
+      "resolution": {
+        "closedDate": "2026-05-21",
+        "closedDuring": "S-SCHEMA-HOSTING-ARC-2026-05-21",
+        "summary": "Option A implemented via SR#35 (d3d1486): deploy-pages.yml now ingests ectropy-ai/schemas and publishes under _site/ectropy/. Phase C probe confirmed: 49/52 index-listed schemas serve HTTP 200 at schemas.luh.tech/ectropy/*; schema-index.json serves 200; portfolio controls unchanged. 3 documented non-200s are phantom index entries (phone-agent-config, rag-context, siltana/robot) — files not present in ectropy-ai/schemas, tagged commercial/separate-repo in schema-index. Phase D confirmed ectropy/feature.schema.json and ectropy/interfaces.schema.json serve 200 (validated: ros-mro/interfaces.json retarget passed Draft 7). Hosting is live. Remaining EB retarget blockers (22 FEATURE files) are schema const constraint issues tracked under FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1, not hosting gaps.",
+        "commitSha": "d3d1486",
+        "prUrl": "https://github.com/luh-tech/schema-registry/pull/35"
+      }
     },
     {
       "id": "FU-SR-ROADMAP-BUSINESS-V2.1-ONEOF-DEFECT-1",
@@ -125,6 +132,20 @@
         "FU-EB-INSTANCE-CANONICAL-DRIFT-1"
       ],
       "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1",
+      "title": "Remove const $schema constraint in ectropy/feature.schema.json blocking URL-form retargets",
+      "priority": "P2",
+      "status": "open",
+      "opened": "2026-05-21",
+      "openedDuring": "S-SCHEMA-HOSTING-ARC-2026-05-21",
+      "scope": "ectropy/feature.schema.json at schemas.luh.tech has a const constraint on its $schema property: {\"type\": \"string\", \"const\": \"../../schemas/feature.schema.json\"}. This forces every FEATURE.json instance to declare $schema as the local relative path '../../schemas/feature.schema.json'. When Phase D attempted to retarget 21 FEATURE.json files to the canonical URL form (schemas.luh.tech/ectropy/feature.schema.json), Draft 7 validation failed with '$schema: ...feature.schema.json was expected at [$schema]' — the const constraint rejected the URL form. Fix: remove the $schema property constraint from ectropy/feature.schema.json (or broaden it to accept the URL form). This is a schema-authoring defect that prevents D2 compliance for all EB feature instances. 21 EB FEATURE.json files blocked. Detected 2026-05-21 Phase D via relative-schema-cleanup.py Catch #22.",
+      "blockedBy": [],
+      "blocks": [
+        "FU-EB-INSTANCE-CANONICAL-DRIFT-1"
+      ],
+      "trackingRepo": "luh-tech/schema-registry"
     }
   ],
   "indexes": {
@@ -133,15 +154,16 @@
         "FU-CATALOG-STREAM-MIGRATION-1",
         "FU-V1-TO-V3-DEPRECATE-1",
         "FU-VENTURE-TYPE-ENUM-REVIEW-1",
-        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
-        "FU-SR-ROADMAP-BUSINESS-V2.1-ONEOF-DEFECT-1"
+        "FU-SR-ROADMAP-BUSINESS-V2.1-ONEOF-DEFECT-1",
+        "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1"
       ],
       "in-progress": [],
       "blocked": [],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
         "FU-ECTROPY-XAAS-MIGRATION-1",
-        "FU-CATALOG-DAAS-INVESTIGATE-1"
+        "FU-CATALOG-DAAS-INVESTIGATE-1",
+        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1"
       ]
     },
     "byPriority": {
@@ -153,7 +175,8 @@
         "FU-CATALOG-STREAM-MIGRATION-1",
         "FU-ECTROPY-XAAS-MIGRATION-1",
         "FU-V1-TO-V3-DEPRECATE-1",
-        "FU-SR-ROADMAP-BUSINESS-V2.1-ONEOF-DEFECT-1"
+        "FU-SR-ROADMAP-BUSINESS-V2.1-ONEOF-DEFECT-1",
+        "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1"
       ],
       "P3": [
         "FU-RESOLVER-PROPAGATION-1",
