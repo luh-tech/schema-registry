@@ -4,7 +4,7 @@
   "schemaVersion": "1.0.0",
   "version": "1.0.0",
   "ventureId": "schema-registry",
-  "lastUpdated": "2026-05-19T00:01:09Z",
+  "lastUpdated": "2026-05-21T01:00:00Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
     "totalCount": 7
@@ -104,11 +104,11 @@
     {
       "id": "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
       "title": "Wire schemas.luh.tech/ectropy/* hosting to actually serve Ectropy schemas",
-      "priority": "P3",
+      "priority": "P1",
       "status": "open",
       "opened": "2026-05-18",
       "openedDuring": "T5.4-postmerge",
-      "scope": "T5 arc closed L11 SH-1 by migrating 57 Ectropy schemas from URN to URL $id form at https://schemas.luh.tech/ectropy/<path>. T5.4 verified the schemas are correct and the schema-map indexes them. However: curl https://schemas.luh.tech/ectropy/corsx/takt-wagon.schema.json returns 404. The luh-tech/schema-registry Pages deployment serves only this repo's schemas/ directory; the actual Ectropy schema files live in Ectropy-ai/schemas (separate repo). Every Ectropy $id URL is therefore unresolved at the HTTP layer. Consequence: D2 rationale (URL form resolves automatically in ajv and standard JSON Schema tools) is paper-only for L11 until hosting is wired. Decision options: (A) schema-registry Pages workflow ingests Ectropy-ai/schemas as a build step and serves under /ectropy/<path>; (B) Cloudflare routes schemas.luh.tech/ectropy/* to a separate Pages site backed by Ectropy-ai/schemas; (C) Ectropy gets its own subdomain — requires re-migrating all 57 $ids, breaks D-T5-A; (D) git submodule the Ectropy schemas into schema-registry. Substrate before DEC: inventory current consumers that fetch Ectropy schemas via HTTP (if zero, downgrade to P3). Tenth discipline-catch from T5 arc: URL-form migrations must include HTTPS resolve verification as a gate criterion, not just $id field shape and registry indexing. [2026-05-20 audit gate CLOSED] Phase-B1 consumer audit (source: phase-b1-ectropy-http-fetch-consumer-audit) scanned 11 live repos across 6 file-type categories. Zero HTTP consumers found. The two TypeScript matches in apps/mcp-server/src/services/ are non-consuming $schema annotations on in-memory data records — JSON Schema canonical-identifier pattern with no fetch/axios/HTTP client invocation. FU gate criterion met: priority downgraded P2→P3.",
+      "scope": "T5 arc closed L11 SH-1 by migrating 57 Ectropy schemas from URN to URL $id form at https://schemas.luh.tech/ectropy/<path>. T5.4 verified the schemas are correct and the schema-map indexes them. However: curl https://schemas.luh.tech/ectropy/corsx/takt-wagon.schema.json returns 404. The luh-tech/schema-registry Pages deployment serves only this repo's schemas/ directory; the actual Ectropy schema files live in Ectropy-ai/schemas (separate repo). Every Ectropy $id URL is therefore unresolved at the HTTP layer. Consequence: D2 rationale (URL form resolves automatically in ajv and standard JSON Schema tools) is paper-only for L11 until hosting is wired. Decision options: (A) schema-registry Pages workflow ingests Ectropy-ai/schemas as a build step and serves under /ectropy/<path>; (B) Cloudflare routes schemas.luh.tech/ectropy/* to a separate Pages site backed by Ectropy-ai/schemas; (C) Ectropy gets its own subdomain — requires re-migrating all 57 $ids, breaks D-T5-A; (D) git submodule the Ectropy schemas into schema-registry. Substrate before DEC: inventory current consumers that fetch Ectropy schemas via HTTP (if zero, downgrade to P3). Tenth discipline-catch from T5 arc: URL-form migrations must include HTTPS resolve verification as a gate criterion, not just $id field shape and registry indexing. [2026-05-20 audit gate CLOSED] Phase-B1 consumer audit (source: phase-b1-ectropy-http-fetch-consumer-audit) scanned 11 live repos across 6 file-type categories. Zero HTTP consumers found. The two TypeScript matches in apps/mcp-server/src/services/ are non-consuming $schema annotations on in-memory data records — JSON Schema canonical-identifier pattern with no fetch/axios/HTTP client invocation. FU gate criterion met: priority downgraded P2→P3. [2026-05-21 upgrade P3→P1] 24 active EB .roadmap/features/ instance files reference ectropy/feature.schema.json and ectropy/interfaces.schema.json via local vendored copies whose $id is https://schemas.luh.tech/ectropy/*. These URLs return 404 — hosting not wired. FU-EB-RELATIVE-SCHEMA-PATH-CLEANUP-1 (P1 in EB) cannot close until ectropy/* paths serve 200. The 'zero HTTP consumers' claim that justified P3 downgrade (2026-05-20 audit gate) is no longer accurate — 24 consumers exist; they consumed via local vendored copies, not direct HTTP. P3→P1 upgrade effective 2026-05-21.",
       "blockedBy": [],
       "blocks": []
     }
@@ -121,6 +121,8 @@
         "FU-VENTURE-TYPE-ENUM-REVIEW-1",
         "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1"
       ],
+      "in-progress": [],
+      "blocked": [],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
         "FU-ECTROPY-XAAS-MIGRATION-1",
@@ -128,11 +130,14 @@
       ]
     },
     "byPriority": {
+      "P0": [],
+      "P1": [
+        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1"
+      ],
       "P2": [
         "FU-CATALOG-STREAM-MIGRATION-1",
         "FU-ECTROPY-XAAS-MIGRATION-1",
-        "FU-V1-TO-V3-DEPRECATE-1",
-        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1"
+        "FU-V1-TO-V3-DEPRECATE-1"
       ],
       "P3": [
         "FU-RESOLVER-PROPAGATION-1",
