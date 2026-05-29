@@ -1,18 +1,28 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/schema-refs.json",
-  "version": "1.12.0",
+  "version": "1.13.0",
   "title": "LuhTech Schema Registry v1.12.0",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {
-    "version": "1.12.0",
-    "lastUpdated": "2026-05-15T00:00:00Z",
+    "version": "1.13.0",
+    "lastUpdated": "2026-05-29T00:00:00Z",
     "changelog": [
+      {
+        "version": "1.13.0",
+        "date": "2026-05-29",
+        "changes": [
+          "roadmap pointer: v3.3.0 -> v3.4.0 (active version; EB instance already authored to v3.4 fields)",
+          "roadmap-business pointer: v2.1.0 -> v2.3.0 (active version; EB instance schemaVersion 2.3.0)",
+          "Removed roadmap-business.schema.v3.0.draft.json (not deployed; extensions+serviceTiers parked; FU-ROADMAP-BUSINESS-V3-DRAFT-PROMOTION-1 closed won't-do)",
+          "marker:PR1-pointer-align-2026-05-29"
+        ]
+      },
       {
         "version": "1.12.0",
         "date": "2026-05-15",
         "changes": [
-          "cis/ namespace: NEW — 3 schemas for B-T operational config files",
+          "cis/ namespace: NEW \u2014 3 schemas for B-T operational config files",
           "cis/url-catalog.schema.json (v1.0.0): domain catalog, replaces luh.tech/schemas/url-catalog-v2.json",
           "cis/assessment-sync-config.schema.json (v1.0.0): strategic assessment sync to Notion",
           "cis/cis-infra-changelog.schema.json (v1.0.0): CIS infrastructure change audit ledger",
@@ -23,9 +33,9 @@
         "version": "1.11.0",
         "date": "2026-05-12",
         "changes": [
-          "roadmap schema: v3.3 → v3.4 (formalizes `serviceExchanges` and `primaryServiceExchange` on feature objects per DEC-SVX-001)",
+          "roadmap schema: v3.3 \u2192 v3.4 (formalizes `serviceExchanges` and `primaryServiceExchange` on feature objects per DEC-SVX-001)",
           "New canonical enum: `_enums/service-exchange.enum.json` (9 SNx members: GSx, CSx, PSx, HSx, RSx, ASx, ESx, MSx, ISx)",
-          "Deprecates `xaasServices` and `xaasServicePrimary` on feature objects — both still accepted in v3.4 with `deprecated: true` markers; removed in v4.0",
+          "Deprecates `xaasServices` and `xaasServicePrimary` on feature objects \u2014 both still accepted in v3.4 with `deprecated: true` markers; removed in v4.0",
           "Source: NAMING-SVCEXCHANGE-2026-05-04.json (Erik 2026-05-04 direction lock)",
           "Note: personaRelevance continues to ride on additionalProperties:true; not formalized in this revision"
         ]
@@ -34,7 +44,7 @@
         "version": "1.10.0",
         "date": "2026-05-11",
         "changes": [
-          "patent schema family: NEW namespace — 7 schemas under schemas/patent/ promoted from luh-tech/LuhTech-business",
+          "patent schema family: NEW namespace \u2014 7 schemas under schemas/patent/ promoted from luh-tech/LuhTech-business",
           "Schemas: figure-sidecar, glossary, glossary-entry, manifest, portfolio, prior-art-entry, provisional",
           "All declare $id https://schemas.luh.tech/patent/*.schema.json and $schema draft-07",
           "Closes C1 of B-T patent stabilization cycle"
@@ -44,8 +54,8 @@
         "version": "1.9.0",
         "date": "2026-05-11",
         "changes": [
-          "follow-up-register schema: NEW entry — https://schemas.luh.tech/follow-up-register.schema.json (promoted to canonical in PR #5)",
-          "decision-log schema: NEW entry — https://schemas.luh.tech/decision-log.schema.v2.json (v2 is portfolio standard; v1 retained for backward-compat only)",
+          "follow-up-register schema: NEW entry \u2014 https://schemas.luh.tech/follow-up-register.schema.json (promoted to canonical in PR #5)",
+          "decision-log schema: NEW entry \u2014 https://schemas.luh.tech/decision-log.schema.v2.json (v2 is portfolio standard; v1 retained for backward-compat only)",
           "Convention note: new entries use URL form for `id` field (matching canonical $id of hosted schema); existing URN-form entries are not retroactively changed"
         ]
       },
@@ -53,8 +63,8 @@
         "version": "1.8.0",
         "date": "2026-04-17",
         "changes": [
-          "roadmap schema: v3.2 → v3.3 (adds optional `provides: array[string]` and `lifecyclePhases: array[integer 0-7]` on feature objects)",
-          "Source: requires/provides matching infrastructure in business-tools (5bd5c4c3) — capabilities.json, challenges.json, lifecycle-phases.json",
+          "roadmap schema: v3.2 \u2192 v3.3 (adds optional `provides: array[string]` and `lifecyclePhases: array[integer 0-7]` on feature objects)",
+          "Source: requires/provides matching infrastructure in business-tools (5bd5c4c3) \u2014 capabilities.json, challenges.json, lifecycle-phases.json",
           "Note: xaasServices, xaasServicePrimary, personaRelevance continue to ride on additionalProperties:true and are intentionally NOT formalized in this revision; a future schema version may regularize."
         ]
       },
@@ -62,35 +72,35 @@
         "version": "1.7.0",
         "date": "2026-04-16",
         "changes": [
-          "roadmap schema: v3.1 → v3.2 (adds required `scope` field on feature objects — product/infrastructure/enterprise-tool/standard enum)",
-          "Source: ECTROPY-OPENCORE-STRATEGY-2026-04-16 Decision 1 — Phase A schema introduction for scope classification"
+          "roadmap schema: v3.1 \u2192 v3.2 (adds required `scope` field on feature objects \u2014 product/infrastructure/enterprise-tool/standard enum)",
+          "Source: ECTROPY-OPENCORE-STRATEGY-2026-04-16 Decision 1 \u2014 Phase A schema introduction for scope classification"
         ]
       },
       {
         "version": "1.6.0",
         "date": "2026-02-26",
         "changes": [
-          "roadmap schema: v2.4 → v3.1 (adds mission/vision/currentStage/overallProgress to venture block)",
-          "roadmap-business schema: v2.0 → v2.1 (removes mission/vision/currentStage/overallProgress)",
-          "venture-summary schema: v1.0 → v2.0 (adds required meta provenance block, DERIVED ARTIFACT warning)",
-          "transform-template schema: v1.0 (NEW) — governs transform template file format",
-          "Source: Transform Fabric Architecture Strategy v2.0.0 — 2026-02-26"
+          "roadmap schema: v2.4 \u2192 v3.1 (adds mission/vision/currentStage/overallProgress to venture block)",
+          "roadmap-business schema: v2.0 \u2192 v2.1 (removes mission/vision/currentStage/overallProgress)",
+          "venture-summary schema: v1.0 \u2192 v2.0 (adds required meta provenance block, DERIVED ARTIFACT warning)",
+          "transform-template schema: v1.0 (NEW) \u2014 governs transform template file format",
+          "Source: Transform Fabric Architecture Strategy v2.0.0 \u2014 2026-02-26"
         ]
       }
     ]
   },
   "schemas": {
     "roadmap": {
-      "id": "urn:luhtech:schema:roadmap:v3.3",
-      "file": "roadmap.schema.v3.3.json",
-      "version": "3.3.0",
-      "description": "Technical canonical source — team-visible roadmap data. v3.3 adds optional `provides` + `lifecyclePhases` on features (requires/provides matching infrastructure)."
+      "id": "urn:luhtech:schema:roadmap:v3.4",
+      "file": "roadmap.schema.v3.4.json",
+      "version": "3.4.0",
+      "description": "Technical canonical source \u2014 team-visible roadmap data. v3.4 formalizes serviceExchanges + primaryServiceExchange on feature objects (DEC-SVX-001); deprecates xaasServices/xaasServicePrimary (removed v4.0)."
     },
     "roadmap-business": {
-      "id": "urn:luhtech:schema:roadmap-business:v2.1",
-      "file": "roadmap-business.schema.v2.1.json",
-      "version": "2.1.0",
-      "description": "Business canonical source — founder/investor-only financial and strategic data"
+      "id": "urn:luhtech:schema:roadmap-business:v2.3",
+      "file": "roadmap-business.schema.v2.3.json",
+      "version": "2.3.0",
+      "description": "Business canonical source \u2014 founder/investor-only financial and strategic data. v2.3 ComputedValue across financial domains."
     },
     "venture-summary": {
       "id": "urn:luhtech:schema:venture-summary:v2.0",
@@ -108,7 +118,7 @@
       "id": "https://schemas.luh.tech/follow-up-register.schema.json",
       "file": "follow-up-register.schema.json",
       "version": "1.0.0",
-      "description": "Follow-up item tracking — open work, deferred actions, cross-repo coordination. Adopted portfolio-wide."
+      "description": "Follow-up item tracking \u2014 open work, deferred actions, cross-repo coordination. Adopted portfolio-wide."
     },
     "decision-log": {
       "id": "https://schemas.luh.tech/decision-log.schema.v2.json",
@@ -120,7 +130,7 @@
       "id": "https://schemas.luh.tech/patent/",
       "baseUrl": "https://schemas.luh.tech/patent/",
       "version": "1.0.0",
-      "description": "Patent portfolio infrastructure (SBPA family) — 7 schemas under patent/ namespace. Owned by LuhTech Holdings.",
+      "description": "Patent portfolio infrastructure (SBPA family) \u2014 7 schemas under patent/ namespace. Owned by LuhTech Holdings.",
       "schemas": {
         "figure-sidecar": {
           "id": "https://schemas.luh.tech/patent/figure-sidecar.schema.json",
@@ -163,19 +173,19 @@
       "id": "https://schemas.luh.tech/cis/url-catalog.schema.json",
       "file": "cis/url-catalog.schema.json",
       "version": "1.0.0",
-      "description": "LuhTech domain and URL catalog — per-venture Cloudflare account assignments, migration status, URL endpoints. Replaces luh.tech/schemas/url-catalog-v2.json."
+      "description": "LuhTech domain and URL catalog \u2014 per-venture Cloudflare account assignments, migration status, URL endpoints. Replaces luh.tech/schemas/url-catalog-v2.json."
     },
     "cis-assessment-sync-config": {
       "id": "https://schemas.luh.tech/cis/assessment-sync-config.schema.json",
       "file": "cis/assessment-sync-config.schema.json",
       "version": "1.0.0",
-      "description": "Strategic assessment dashboard sync configuration — n8n webhook config and Notion sync targets."
+      "description": "Strategic assessment dashboard sync configuration \u2014 n8n webhook config and Notion sync targets."
     },
     "cis-infra-changelog": {
       "id": "https://schemas.luh.tech/cis/cis-infra-changelog.schema.json",
       "file": "cis/cis-infra-changelog.schema.json",
       "version": "1.0.0",
-      "description": "CIS infrastructure changelog — structured audit ledger for CI, terraform, deploy, registry, and droplet changes."
+      "description": "CIS infrastructure changelog \u2014 structured audit ledger for CI, terraform, deploy, registry, and droplet changes."
     }
   }
 }
