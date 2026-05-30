@@ -56,7 +56,13 @@ def validate_path(target):
         doc, err = _load_json_from_path(p); display = str(p)
     if err: print(f"FAIL {display}: {err}"); return 1
     if not isinstance(doc, dict): print(f"FAIL {display}: top-level is not an object"); return 1
-    issues = _check_schema_doc(doc) if "$id" in doc else _check_instance_doc(doc)
+    # Discriminate schema-doc from instance by meta-schema presence, not $id.
+    # Rationale: instance data files (e.g. decision-log.json) legitimately carry
+    # $id for self-identification; routing them through _check_schema_doc falsely
+    # triggers D2's URL-form requirement. The canonical discriminator: a JSON
+    # Schema document declares $schema pointing at a meta-schema (json-schema.org).
+    _is_schema_doc = isinstance(doc.get("$schema"), str) and "json-schema.org" in doc["$schema"]
+    issues = _check_schema_doc(doc) if _is_schema_doc else _check_instance_doc(doc)
     if not issues: print(f"OK   {display}"); return 0
     print(f"FAIL {display}")
     for i in issues: print(f"     - {i}")
