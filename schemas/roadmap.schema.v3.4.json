@@ -15,7 +15,7 @@
     "$schema": {
       "type": "string",
       "description": "Schema identifier",
-      "const": "https://schemas.luh.tech/roadmap.schema.v3.3.json"
+      "const": "https://schemas.luh.tech/roadmap.schema.v3.4.json"
     },
     "schemaVersion": {
       "type": "string",
