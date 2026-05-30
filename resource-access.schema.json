@@ -1,0 +1,453 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/resource-access.schema.json",
+  "version": "1.0.0",
+  "title": "Resource Access Graph",
+  "description": "Portfolio access-linkage layer. Maps credentials, secret-store items, access methods, and host posture to the resources they reach. Foreign-keys into infrastructure-catalog (server.id, environment.id, secret.name, objectStorage.bucket) rather than duplicating inventory. The canonical home for 'which key/credential/method reaches which resource, by what route, with what posture' \u2014 answers the recurring key-mismatch by making access posture queryable, not rediscovered live.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "version",
+    "ventureId",
+    "lastUpdated",
+    "catalogRef",
+    "credentialStore",
+    "accessMethods",
+    "hostPosture",
+    "accessGrants"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://schemas.luh.tech/resource-access.schema.json"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "ventureId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "catalogRef": {
+      "type": "object",
+      "description": "FK target. The infrastructure-catalog instance this access graph links into. All resourceRef values resolve against this catalog.",
+      "additionalProperties": false,
+      "required": [
+        "schemaId",
+        "instancePath"
+      ],
+      "properties": {
+        "schemaId": {
+          "type": "string",
+          "const": "https://schemas.luh.tech/infrastructure-catalog.schema.json"
+        },
+        "instancePath": {
+          "type": "string",
+          "description": "Path to the governed catalog instance, e.g. .roadmap/infrastructure-catalog.json"
+        }
+      }
+    },
+    "credentialStore": {
+      "type": "object",
+      "description": "Secret-store identity and the item registry. Vault NAME and item IDS only \u2014 never values.",
+      "additionalProperties": false,
+      "required": [
+        "vault",
+        "items"
+      ],
+      "properties": {
+        "vault": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "activeVault",
+            "provider"
+          ],
+          "properties": {
+            "provider": {
+              "type": "string",
+              "enum": [
+                "bitwarden",
+                "vault",
+                "aws-secrets-manager",
+                "doppler",
+                "github-secrets"
+              ]
+            },
+            "activeVault": {
+              "type": "string",
+              "description": "Current canonical vault identity (name/login), e.g. luhtechnology.com"
+            },
+            "migratingTo": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Target vault identity if a migration is in progress, else null"
+            },
+            "doNotUse": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Vault identities that must never be used for secret ops (e.g. empty/legacy vaults)"
+            }
+          }
+        },
+        "items": {
+          "type": "array",
+          "description": "Secret-store item registry. UUID + role only. FK into catalog secret.name via secretRef.",
+          "items": {
+            "$ref": "#/definitions/credentialItem"
+          }
+        }
+      }
+    },
+    "accessMethods": {
+      "type": "array",
+      "description": "Canonical access methods by category. The typed vocabulary of HOW a resource class is reached.",
+      "items": {
+        "$ref": "#/definitions/accessMethod"
+      }
+    },
+    "hostPosture": {
+      "type": "array",
+      "description": "Per-host access posture. FK into catalog server.id. Answers the recurring key-mismatch: which keys reach which hosts, and whether the host is SSH-reachable, zero-ssh, or break-glass-only.",
+      "items": {
+        "$ref": "#/definitions/hostPosture"
+      }
+    },
+    "envRoutes": {
+      "type": "array",
+      "description": "Atomic env-change routing chains. The ordered FK path a value travels: credential item -> CI secret -> IaC template -> object-store target.",
+      "items": {
+        "$ref": "#/definitions/envRoute"
+      }
+    },
+    "accessGrants": {
+      "type": "array",
+      "description": "The access graph edges. Each grant links a credential item + access method to a target resource. The core FK table.",
+      "items": {
+        "$ref": "#/definitions/accessGrant"
+      }
+    },
+    "auditTrail": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/auditEntry"
+      }
+    }
+  },
+  "definitions": {
+    "credentialItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "itemId",
+        "role"
+      ],
+      "properties": {
+        "itemId": {
+          "type": "string",
+          "description": "BW item UUID (identifier only, never the value)."
+        },
+        "role": {
+          "type": "string",
+          "description": "What this credential is for, e.g. staging-tier2-jwt, spaces-staging, cis-db"
+        },
+        "secretRef": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "FK -> infrastructure-catalog secret.name, if this item backs a catalogued secret"
+        },
+        "field": {
+          "type": "string",
+          "enum": [
+            "password",
+            "username",
+            "both",
+            "totp",
+            "note"
+          ],
+          "description": "Which secret-store field holds the value(s)"
+        },
+        "rotation": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "policy": {
+              "type": "string",
+              "enum": [
+                "none",
+                "manual",
+                "quarterly",
+                "on-exposure",
+                "scheduled"
+              ]
+            },
+            "lastRotated": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date"
+            },
+            "trackedByFollowUp": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "FK -> follow-up-register id tracking rotation, if any"
+            }
+          }
+        },
+        "itemName": {
+          "type": "string",
+          "description": "BW item name (stable operator-facing label for the UUID)."
+        }
+      }
+    },
+    "accessMethod": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "category",
+        "mechanism"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^am-[a-z0-9-]+$",
+          "description": "Access method id, e.g. am-doctl, am-deploy-agent-hmac, am-boto3, am-ssh, am-do-console"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "cloud-api",
+            "object-storage",
+            "host-shell",
+            "service-webhook",
+            "secret-store",
+            "break-glass",
+            "database"
+          ],
+          "description": "Resource class this method addresses"
+        },
+        "mechanism": {
+          "type": "string",
+          "enum": [
+            "doctl",
+            "deploy-agent-hmac",
+            "boto3",
+            "ssh",
+            "do-console",
+            "password-reset",
+            "bw-cli",
+            "gh-api",
+            "terraform"
+          ],
+          "description": "Concrete tool/protocol"
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Hard rules, e.g. 'boto3 only - aws-cli and curl-sigv4 broken', 'never SSH - zero-ssh by design'"
+        },
+        "credentialMethodRef": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "FK -> credentialItem.itemId for the credential this method authenticates with, if any"
+        }
+      }
+    },
+    "hostPosture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "serverRef",
+        "posture"
+      ],
+      "properties": {
+        "serverRef": {
+          "type": "string",
+          "description": "FK -> infrastructure-catalog server.id"
+        },
+        "posture": {
+          "type": "string",
+          "enum": [
+            "zero-ssh",
+            "ssh-key-reachable",
+            "break-glass-only",
+            "key-mismatched"
+          ],
+          "description": "Canonical access posture. zero-ssh = ops via webhook only; key-mismatched = local keys do not match authorized_keys (the recurring failure class)"
+        },
+        "primaryAccessMethodRef": {
+          "type": "string",
+          "description": "FK -> accessMethod.id. The sanctioned route to operate this host (e.g. am-deploy-agent-hmac for zero-ssh hosts)"
+        },
+        "breakGlassMethodRef": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "FK -> accessMethod.id. The fallback for direct inspection (e.g. am-do-console)"
+        },
+        "reachableKeys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key NAMES known to reach this host (operator-facing, e.g. luhtech_enterprise, ectropy-production). Names only \u2014 never private key material or fingerprints. Empty for zero-ssh hosts."
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "envRoute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "chain"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^er-[a-z0-9-]+$"
+        },
+        "description": {
+          "type": "string"
+        },
+        "atomic": {
+          "type": "boolean",
+          "default": true,
+          "description": "If true, all chain stages must land together"
+        },
+        "chain": {
+          "type": "array",
+          "minItems": 2,
+          "description": "Ordered FK stages a value travels, source-first",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "stage",
+              "ref"
+            ],
+            "properties": {
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "credential-store",
+                  "ci-secret",
+                  "iac-template",
+                  "object-store",
+                  "host-env"
+                ]
+              },
+              "ref": {
+                "type": "string",
+                "description": "FK to the target at this stage: credentialItem.itemId | GH secret name (TF_VAR_*) | terraform template path | environment.objectStorage.bucket | server.id"
+              },
+              "ephemeral": {
+                "type": "boolean",
+                "description": "True if this stage is regenerated/overwritten (e.g. config-sync rewrites host-env; TF regenerates .env) - i.e. patching it alone does not persist"
+              }
+            }
+          }
+        }
+      }
+    },
+    "accessGrant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "resourceRef",
+        "resourceType",
+        "accessMethodRef"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^ag-[a-z0-9-]+$"
+        },
+        "resourceRef": {
+          "type": "string",
+          "description": "FK into infrastructure-catalog: server.id | environment.id | database.id | environment.objectStorage.bucket | externalService.id"
+        },
+        "resourceType": {
+          "type": "string",
+          "enum": [
+            "server",
+            "environment",
+            "database",
+            "object-store",
+            "external-service",
+            "cloud-account"
+          ],
+          "description": "Which catalog table resourceRef points into (disambiguates the FK)"
+        },
+        "accessMethodRef": {
+          "type": "string",
+          "description": "FK -> accessMethod.id used to reach this resource"
+        },
+        "credentialRef": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "FK -> credentialItem.itemId required for this grant, if any"
+        },
+        "hostPostureRef": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "FK -> hostPosture.serverRef when resourceType is server"
+        }
+      }
+    },
+    "auditEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "timestamp",
+        "version"
+      ],
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
