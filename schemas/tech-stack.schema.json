@@ -583,15 +583,16 @@
         "type": {
           "type": "string",
           "enum": [
-            "unit",
-            "integration",
+            "accessibility",
+            "component",
+            "contract",
             "e2e",
-            "visual",
+            "integration",
+            "mutation",
             "performance",
             "security",
-            "accessibility",
-            "contract",
-            "mutation"
+            "unit",
+            "visual"
           ]
         },
         "runner": {
