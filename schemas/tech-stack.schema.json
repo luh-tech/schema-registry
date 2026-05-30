@@ -620,23 +620,25 @@
         "name": {
           "type": "string",
           "enum": [
-            "monolith",
-            "microservices",
-            "serverless",
-            "event-driven",
-            "cqrs",
-            "hexagonal",
-            "clean-architecture",
-            "domain-driven",
-            "modular-monolith",
-            "jamstack",
-            "spa",
-            "ssr",
-            "ssg",
-            "hybrid-rendering",
             "api-first",
+            "api-gateway",
+            "clean-architecture",
+            "cqrs",
+            "domain-driven",
+            "event-driven",
             "graphql-federation",
-            "mcp-server"
+            "hexagonal",
+            "hybrid-rendering",
+            "jamstack",
+            "mcp-server",
+            "microservices",
+            "modular-monolith",
+            "monolith",
+            "serverless",
+            "spa",
+            "speckle-integration",
+            "ssg",
+            "ssr"
           ]
         },
         "description": {
@@ -653,11 +655,12 @@
         "scope": {
           "type": "string",
           "enum": [
-            "full-system",
-            "backend",
-            "frontend",
             "api",
-            "data-layer"
+            "backend",
+            "bim",
+            "data-layer",
+            "frontend",
+            "full-system"
           ]
         }
       }
