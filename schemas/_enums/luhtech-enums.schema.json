@@ -231,13 +231,14 @@
       "type": "string",
       "description": "Shared infrastructure resource type",
       "enum": [
-        "database",
         "api-gateway",
         "auth-service",
-        "storage",
         "cdn",
         "ci-cd",
-        "library"
+        "compute",
+        "database",
+        "library",
+        "storage"
       ]
     },
     "accessLevel": {
