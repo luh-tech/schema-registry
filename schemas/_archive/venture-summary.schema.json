@@ -1,4 +1,11 @@
 {
+  "x-deprecation": {
+    "deprecated": true,
+    "deprecatedDate": "2026-05-30",
+    "deprecationReason": "Derived artifact, never manually authored. Removed from canonical registry (schema-refs v1.14.0). Consumers migrating off per FU-VENTURE-SUMMARY-DOWNSTREAM-MIGRATION-1.",
+    "supersededBy": null,
+    "archivedFrom": "schemas/venture-summary.schema.json"
+  },
   "$schema": "http://json-schema.org/draft-07/schema#",
   "version": "1.0.0",
   "$id": "https://schemas.luh.tech/venture-summary.schema.json",
