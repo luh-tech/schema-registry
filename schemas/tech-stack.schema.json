@@ -346,32 +346,34 @@
         "type": {
           "type": "string",
           "enum": [
-            "relational",
             "document",
-            "key-value",
             "graph",
-            "time-series",
+            "key-value",
+            "object",
+            "relational",
             "search",
+            "time-series",
             "vector"
           ]
         },
         "engine": {
           "type": "string",
           "enum": [
-            "postgresql",
-            "mysql",
-            "sqlite",
-            "mongodb",
-            "redis",
-            "neo4j",
-            "elasticsearch",
-            "timescaledb",
             "cockroachdb",
-            "supabase",
-            "planetscale",
+            "elasticsearch",
+            "minio",
+            "mongodb",
+            "mysql",
+            "neo4j",
             "neon",
             "pinecone",
-            "qdrant"
+            "planetscale",
+            "postgresql",
+            "qdrant",
+            "redis",
+            "sqlite",
+            "supabase",
+            "timescaledb"
           ]
         },
         "version": {
@@ -478,19 +480,21 @@
         "category": {
           "type": "string",
           "enum": [
-            "package-manager",
+            "api-client",
             "build-tool",
             "bundler",
-            "linter",
-            "formatter",
-            "type-checker",
+            "containerization",
             "debugger",
-            "profiler",
-            "ide",
-            "version-control",
             "documentation",
-            "api-client",
-            "monorepo"
+            "formatter",
+            "git-hooks",
+            "ide",
+            "linter",
+            "monorepo",
+            "package-manager",
+            "profiler",
+            "type-checker",
+            "version-control"
           ]
         },
         "required": {
