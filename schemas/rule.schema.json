@@ -1,0 +1,218 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/rule.schema.json",
+  "title": "Rule",
+  "version": "1.0.0",
+  "description": "A governance rule as a first-class, versioned object. Replaces rules-as-prose-in-markdown. Two independent axes: lifecycleStatus is where the rule sits in the maturity pipeline (it can hold there); tier is which gate mode is firing at runtime (it changes on use/state). A rule carries gate actions for every tier it may occupy and traverses tiers via defined transitions. The schema holds logical state; git history holds the proof of how it got there (see refinementRecord).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "version",
+    "title",
+    "statement",
+    "lifecycleStatus",
+    "tierState",
+    "gateActions",
+    "transitions"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^RULE-[A-Z][A-Z0-9-]+[0-9]+$",
+      "description": "Stable identifier. Convention: RULE-<DOMAIN>-<TOPIC>-N. Matches the registry id-pattern style (cf. ^FU-..., ^d-...). Example: RULE-PIPELINE-PROJECTION-CONTRACT-1."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semver of the rule object. MAJOR: gate-action change that can break work. MINOR: added tier capability or relaxed transition. PATCH: clarification, no behavior change."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 4,
+      "description": "Short human label."
+    },
+    "statement": {
+      "type": "string",
+      "minLength": 10,
+      "description": "The rule itself, in one or two sentences. The prose that used to live in a markdown file now lives here as a field."
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Why the rule exists — often the failure that produced it. Optional but encouraged for rules lifted from working-model."
+    },
+    "lifecycleStatus": {
+      "type": "string",
+      "enum": ["working-model", "formalized", "deprecated", "reverted"],
+      "description": "AXIS 1 — maturity pipeline. Where the rule sits; it can hold here independent of tier. working-model: proven under load, not yet schema-bound enforcement. formalized: bound and enforced. deprecated: superseded, retained for trace. reverted: rolled back after proving wrong."
+    },
+    "tierState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["activeTier", "occupiableTiers", "terminalTier"],
+      "description": "AXIS 2 — runtime gate mode. Independent of lifecycleStatus. The tier changes based on use/state; it is not the rule's maturity.",
+      "properties": {
+        "activeTier": {
+          "$ref": "#/definitions/tier",
+          "description": "The tier whose gate action is firing right now."
+        },
+        "occupiableTiers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/definitions/tier" },
+          "description": "Every tier this rule is allowed to occupy."
+        },
+        "terminalTier": {
+          "$ref": "#/definitions/tier",
+          "description": "The highest-value tier this rule can ultimately reach. 'automated' is the highest state of value. A rule whose nature requires judgment declares terminalTier 'human-loop' — correct by design, not incomplete."
+        }
+      }
+    },
+    "gateActions": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What the rule does at each tier it can occupy. Every rule carries the full set for its occupiable tiers; activeTier selects which fires.",
+      "properties": {
+        "human-loop": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["gate", "authority"],
+          "description": "The SME-gated action. A legitimate, permanent terminal for judgment-based rules; improvable but may never automate.",
+          "properties": {
+            "gate": {
+              "type": "string",
+              "description": "What the human is asked to decide or approve."
+            },
+            "authority": {
+              "type": "string",
+              "description": "Who holds the gate. Example: 'Erik (L4)'."
+            },
+            "automationPath": {
+              "type": "string",
+              "description": "If a path to automate exists, name it. If none exists by nature, state that — so the terminal is a decision, not a gap."
+            }
+          }
+        },
+        "automated": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["predicate", "ciSurface", "onFail"],
+          "description": "The auto-execute action. Terminates as a real CI check — integrity is mechanical, no trust required.",
+          "properties": {
+            "predicate": {
+              "type": "string",
+              "description": "The condition checked, stated precisely enough to implement."
+            },
+            "ciSurface": {
+              "type": "string",
+              "description": "Where the check lives and runs — the repo-versioned, branch-delivered enforcement point."
+            },
+            "checkRef": {
+              "type": "string",
+              "description": "Optional pointer to the check implementation (path, job name, or script)."
+            },
+            "onFail": {
+              "type": "string",
+              "enum": ["block", "warn", "escalate"],
+              "description": "block: fail the build. warn: annotate, pass. escalate: route to human-loop tier."
+            }
+          }
+        },
+        "refine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["action"],
+          "description": "The refinement action, available at any tier. Refinement happens in a branch and lands via PR; the commit is the audit record.",
+          "properties": {
+            "action": {
+              "type": "string",
+              "description": "What refining this rule means in practice."
+            }
+          }
+        }
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "description": "What moves the rule between tiers. Each transition names from-tier, to-tier, and trigger.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to", "trigger"],
+        "properties": {
+          "from": { "$ref": "#/definitions/tier" },
+          "to": { "$ref": "#/definitions/tier" },
+          "trigger": {
+            "type": "string",
+            "description": "The condition that fires the transition."
+          }
+        }
+      }
+    },
+    "gatingBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Where the rule attaches to the branching flow. Rules may arrive after a branch is cut to gate that branch's CI in a single pass — so a branch tests both the work and the rule. Follows the associative-reference pattern (cf. relatedDecisions).",
+      "properties": {
+        "branchPattern": {
+          "type": "string",
+          "description": "Branch name pattern this rule gates. Example: 'chore/*', 'fix/*', '*'."
+        },
+        "gatedWork": {
+          "type": "string",
+          "description": "What work this rule gates. Example: 'any PR touching .roadmap/*.json'."
+        },
+        "ciSurface": {
+          "type": "string",
+          "description": "The CI surface the binding attaches to, if different from gateActions.automated.ciSurface."
+        }
+      }
+    },
+    "refinementRecord": {
+      "type": "array",
+      "description": "Version history. Reuses the resolution-object precedent (commitSha, prUrl) from follow-up-register. The schema holds logical state; each entry points at the commit that made the change, so git holds the proof. This is the rule's audit trail through the branching flow.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "commitSha", "date", "change"],
+        "properties": {
+          "version": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+          },
+          "commitSha": {
+            "type": "string",
+            "description": "Commit SHA that landed this version of the rule. Reuses follow-up-register resolution.commitSha naming."
+          },
+          "prUrl": {
+            "type": "string",
+            "description": "PR that landed the change. Reuses follow-up-register resolution.prUrl naming."
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Wall-clock date of the change (system time at authoring)."
+          },
+          "change": {
+            "type": "string",
+            "description": "What changed and why."
+          },
+          "fromTier": { "$ref": "#/definitions/tier" },
+          "toTier": { "$ref": "#/definitions/tier" }
+        }
+      }
+    },
+    "supersededBy": {
+      "type": "string",
+      "description": "Rule id that replaces this one, if any. Reuses decision-log supersededBy naming."
+    }
+  },
+  "definitions": {
+    "tier": {
+      "type": "string",
+      "enum": ["working-model", "human-loop", "automated"],
+      "description": "Runtime gate mode (AXIS 2). working-model: voluntary pre-enforcement mode. human-loop: SME-gated, judgment-based, legitimate terminal. automated: real CI check, mechanical enforcement, highest state of value."
+    }
+  }
+}
