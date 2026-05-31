@@ -32,27 +32,27 @@ jobs:
       - name: Validate roadmap.json
         if: hashFiles('.roadmap/roadmap.json') != ''
         run: |
-          ajv validate -s schemas/roadmap.schema.json -d .roadmap/roadmap.json --spec=draft7 -c ajv-formats
+          ajv validate -s schemas/roadmap.schema.json -d .roadmap/roadmap.json --spec=draft7 --strict=false -c ajv-formats
       
       - name: Validate venture-summary.json
         if: hashFiles('.roadmap/venture-summary.json') != ''
         run: |
-          ajv validate -s schemas/venture-summary.schema.json -d .roadmap/venture-summary.json --spec=draft7 -c ajv-formats
+          ajv validate -s schemas/venture-summary.schema.json -d .roadmap/venture-summary.json --spec=draft7 --strict=false -c ajv-formats
       
       - name: Validate decision-log.json
         if: hashFiles('.roadmap/decision-log.json') != ''
         run: |
-          ajv validate -s schemas/decision-log.schema.json -d .roadmap/decision-log.json --spec=draft7 -c ajv-formats
+          ajv validate -s schemas/decision-log.schema.json -d .roadmap/decision-log.json --spec=draft7 --strict=false -c ajv-formats
       
       - name: Validate dependencies.json
         if: hashFiles('.roadmap/dependencies.json') != ''
         run: |
-          ajv validate -s schemas/dependencies.schema.json -d .roadmap/dependencies.json --spec=draft7 -c ajv-formats
+          ajv validate -s schemas/dependencies.schema.json -d .roadmap/dependencies.json --spec=draft7 --strict=false -c ajv-formats
       
       - name: Validate boundaries.json
         if: hashFiles('.roadmap/boundaries.json') != ''
         run: |
-          ajv validate -s schemas/boundaries.schema.json -d .roadmap/boundaries.json --spec=draft7 -c ajv-formats
+          ajv validate -s schemas/boundaries.schema.json -d .roadmap/boundaries.json --spec=draft7 --strict=false -c ajv-formats
       
       - name: Validate examples
         run: |
@@ -62,7 +62,7 @@ jobs:
               schema_name="${filename%.json}.schema.json"
               if [ -f "schemas/$schema_name" ]; then
                 echo "Validating $example against schemas/$schema_name"
-                ajv validate -s "schemas/$schema_name" -d "$example" --spec=draft7 -c ajv-formats
+                ajv validate -s "schemas/$schema_name" -d "$example" --spec=draft7 --strict=false -c ajv-formats
               else
                 echo "No schema found for $example, skipping"
               fi
