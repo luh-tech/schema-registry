@@ -79,6 +79,7 @@ jobs:
           ROADMAP_DIR="venture/.roadmap"
           ENUM_SCHEMA="$SCHEMA_DIR/_enums/luhtech-enums.schema.json"
           ENUM_SCHEMA_V2="$SCHEMA_DIR/_enums/luhtech-enums.schema.v2.json"
+          SERVICE_EXCHANGE_ENUM="$SCHEMA_DIR/_enums/service-exchange.enum.json"
           DEFINITIONS_SCHEMA="$SCHEMA_DIR/_definitions/definitions.schema.json"
           
           PASSED=0
@@ -101,7 +102,7 @@ jobs:
           
           # roadmap.json (REQUIRED)
           if [ -f "$ROADMAP_DIR/roadmap.json" ]; then
-            if ajv validate -s "$SCHEMA_DIR/roadmap.schema.${{ inputs.schema-version }}.json" -d "$ROADMAP_DIR/roadmap.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
+            if ajv validate -s "$SCHEMA_DIR/roadmap.schema.${{ inputs.schema-version }}.json" -d "$ROADMAP_DIR/roadmap.json" -r "$ENUM_SCHEMA" -r "$SERVICE_EXCHANGE_ENUM" --spec=draft7 --strict=false -c ajv-formats; then
               echo "PASS roadmap.json"; PASSED=$((PASSED + 1))
             else
               echo "FAIL roadmap.json"; FAILED=$((FAILED + 1))
