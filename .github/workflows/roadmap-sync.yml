@@ -42,7 +42,7 @@ jobs:
       - name: Validate decision-log.json
         if: hashFiles('.roadmap/decision-log.json') != ''
         run: |
-          ajv validate -s schemas/decision-log.schema.json -d .roadmap/decision-log.json --spec=draft7 --strict=false -c ajv-formats
+          ajv validate -s schemas/decision-log.schema.v2.json -d .roadmap/decision-log.json -r schemas/_enums/luhtech-enums.schema.json -r schemas/_definitions/definitions.schema.json --spec=draft7 --strict=false -c ajv-formats
       
       - name: Validate dependencies.json
         if: hashFiles('.roadmap/dependencies.json') != ''
