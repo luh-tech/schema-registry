@@ -1,0 +1,212 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/deliverable.schema.json",
+  "title": "Deliverable",
+  "version": "1.0.0",
+  "description": "The DELIVERABLE contract — schema-bound work unit per DLP-STRATEGY. A deliverable is the canonical unit of work: declared scope, acceptance criteria, authority, lifecycle state, and audit trail. Replaces prose-in-markdown deliverable specs. Agent enters at S4-authored, transitions through S5-in-progress and S6-staged, terminates at S7-merged or S8-closed (or reverted). Instance files live at schemas/_instances/deliverables/.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "version",
+    "title",
+    "description",
+    "authority",
+    "lifecycleState",
+    "scope",
+    "outputs",
+    "validation",
+    "transitions"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^d-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$",
+      "description": "Stable identifier. Convention: d-YYYY-MM-DD-slug. Matches the pattern used in follow-up-register relatedDecisions and throughout the portfolio."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semver of the deliverable spec itself. MAJOR: scope or acceptance criteria change. MINOR: added output or refinement. PATCH: clarification, no behavior change."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 4,
+      "description": "Short human label."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 20,
+      "description": "What this deliverable accomplishes — 2-3 sentences capturing intent and substantive scope."
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["author", "approver", "revertAuthority"],
+      "description": "Governance authority block. Currently free-form strings; will reference authority-tier.enum.json (5-tier authorization model — strategy deferred) when that schema is promoted. Conventional values include 'Claude (chat), L1', 'Erik Luhtala (L4)', or descriptive role strings.",
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "Who authored the deliverable spec."
+        },
+        "approver": {
+          "type": "string",
+          "description": "Who holds approval authority at each gate (typically Erik L4 in current portfolio)."
+        },
+        "revertAuthority": {
+          "type": "string",
+          "description": "Who can revert or close the deliverable."
+        }
+      }
+    },
+    "lifecycleState": {
+      "type": "string",
+      "enum": ["S4-authored", "S5-in-progress", "S6-staged", "S7-merged", "S8-closed", "reverted"],
+      "description": "DLP-STRATEGY lifecycle state. S4 = spec authored, awaiting approval to begin. S5 = execution underway. S6 = work staged for merge. S7 = merged to main. S8 = closed (post-merge follow-ups complete). reverted = rolled back."
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo", "branch", "scopeFiles"],
+      "description": "Scope envelope. Branch and scopeFiles together define exactly what work this deliverable is authorized to touch.",
+      "properties": {
+        "repo": {
+          "type": "string",
+          "description": "Target repo, e.g. 'luh-tech/schema-registry'."
+        },
+        "branch": {
+          "type": "string",
+          "pattern": "^(feat|fix|chore|cleanup|docs|test|infra|spike)/[a-z0-9-]+-[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "description": "Feature branch name. Type prefix from commit-conventions; dated suffix YYYY-MM-DD. Memory rule #18."
+        },
+        "scopeFiles": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Files or globs this deliverable is authorized to touch. Enables F7 amendment-substrate-recheck rule to compute overlap with concurrent deliverables."
+        }
+      }
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Named outputs (OUT-N). Each must have acceptance criteria.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description", "acceptanceCriteria"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^OUT-[0-9]+$",
+            "description": "Identifier, e.g. OUT-1, OUT-2."
+          },
+          "description": {
+            "type": "string",
+            "description": "What this output produces."
+          },
+          "acceptanceCriteria": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" },
+            "description": "Concrete, verifiable criteria — each one a pass/fail check."
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preMerge"],
+      "description": "Validation steps. preMerge must all pass before merge gate; postMerge runs after to verify the landing.",
+      "properties": {
+        "preMerge": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "Pre-merge validation steps. Examples: 'ajv compile passes', 'refs rebuild --check exits 0', 'all OUT acceptance criteria met'."
+        },
+        "postMerge": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Post-merge verification steps. Examples: 'main shows X registered', 'consumer Y validates against new schema'."
+        }
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "description": "Lifecycle state changes. Reuses refinementRecord pattern from rule.schema.json — git holds the proof; schema holds logical state.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to", "date"],
+        "properties": {
+          "from": {
+            "type": "string",
+            "enum": ["", "S4-authored", "S5-in-progress", "S6-staged", "S7-merged", "S8-closed", "reverted"],
+            "description": "Prior lifecycle state. Empty string for initial S4-authored transition."
+          },
+          "to": {
+            "type": "string",
+            "enum": ["S4-authored", "S5-in-progress", "S6-staged", "S7-merged", "S8-closed", "reverted"]
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Wall-clock date of the transition (system time at authoring)."
+          },
+          "commitSha": {
+            "type": "string",
+            "description": "Commit SHA marking the transition. Reuses follow-up-register resolution.commitSha naming."
+          },
+          "prUrl": {
+            "type": "string",
+            "description": "PR URL marking the transition. Reuses follow-up-register resolution.prUrl naming."
+          },
+          "trigger": {
+            "type": "string",
+            "description": "What fired the transition (e.g., 'L4 approval', 'merge', 'acceptance criteria met')."
+          }
+        }
+      }
+    },
+    "parentDeliverable": {
+      "type": "string",
+      "pattern": "^d-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$",
+      "description": "Parent deliverable id if this is a child of a multi-deliverable arc."
+    },
+    "childDeliverables": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^d-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$"
+      },
+      "description": "Child deliverable ids. Inverse of parentDeliverable."
+    },
+    "relatedFollowUps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^FU-[A-Z][A-Z0-9-]*[A-Z0-9]-[0-9]+$"
+      },
+      "description": "Follow-up ids opened, closed, or referenced by this deliverable. Pattern matches follow-up-register canonical id form."
+    },
+    "spikeOutcome": {
+      "type": "string",
+      "enum": ["collapse-and-resume", "delete-and-fu", "delete-and-new-deliverable"],
+      "description": "Only present if this deliverable terminates as a SPIKE per memory rule #17. Names the terminal outcome."
+    },
+    "prUrl": {
+      "type": "string",
+      "description": "Link to the PR landing the deliverable."
+    },
+    "mergeCommitSha": {
+      "type": "string",
+      "description": "Squash-merge commit SHA on main. Populated on transition to S7-merged."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-form context not captured structurally. Rationale-class field — prose-inside-instance is the legitimate home for prose per the no-md-terminus principle."
+    }
+  }
+}
