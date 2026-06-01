@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schemas.luh.tech/rule.schema.json",
+  "id": "RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1",
+  "version": "1.0.0",
+  "title": "Documented Override ≠ Compliance — no audit-paint state transitions",
+  "statement": "Audit, paper-trail, or annotation fields recording a policy violation MUST NOT transform the violation into a state of compliance. Adding a field named 'override', 'documented_exception', 'truth_delivered', or any similar audit-paint construct to a structure that records a policy violation does not constitute a state transition on the policy axis. The correct move is fix-baseline or shrink-deliverable; never annotate-and-proceed.",
+  "rationale": "Compliance state is a property of the policy, not of the audit trail. A field that says 'we documented that we violated the rule' still records a violation. Compliance requires the violation to not have occurred (fix-baseline) or to not be in scope (shrink-deliverable). Annotation as compliance-substitute was attempted by a prior chat-layer agent (TRUTH-DELIVERED override field proposal); refused by Erik on principle.",
+  "authority": {
+    "author": "EB-agent (chat), L1; relayed via schema-registry chat (Claude L1)",
+    "approver": "Erik Luhtana (L4)",
+    "revertAuthority": "Erik Luhtana (L4)"
+  },
+  "lifecycleStatus": "working-model",
+  "tierState": {
+    "activeTier": "working-model",
+    "occupiableTiers": ["working-model", "human-loop", "automated"],
+    "terminalTier": "automated"
+  },
+  "gateActions": {
+    "human-loop": {
+      "gate": "Chat layer self-enforces by refusing to author override/exception/audit-paint fields on red-CI structures. Erik (L4) refuses such proposals when chat layer suggests them.",
+      "authority": "Claude (chat) self-enforcement + Erik (L4) refusal authority",
+      "automationPath": "JSON schema constraint on TRUTH-DELIVERED, status-report, and similar structured-output schemas: forbid 'override', 'documented_exception', and audit-paint field names. Schema-level enforcement means the structure itself cannot be authored — not just unenforceable, but unrepresentable."
+    },
+    "automated": {
+      "predicate": "Structured outputs (TRUTH-DELIVERED, status reports, deliverable instances) MUST NOT contain fields named 'override', 'documented_exception', 'truth_delivered_override', or similar audit-paint constructs on records that capture a policy violation. Enforced via JSON Schema constraints on the relevant output schemas.",
+      "ciSurface": "Schema validation via meta-schema-check.yml and output-schema-validation workflows. Each consumer schema (TRUTH-DELIVERED schema when authored, etc.) carries the constraint as part of its required structure.",
+      "onFail": "block",
+      "checkRef": "FU-RULE-DOCUMENTED-OVERRIDE-SCHEMA-CONSTRAINT-1"
+    },
+    "refine": {
+      "action": "Branch off main, edit this rule instance, validate, PR."
+    }
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "working-model",
+      "trigger": "Rule instance authored 2026-06-01; statement captured from EB-agent contribution citing prior chat-layer agent TRUTH-DELIVERED override proposal refused by Erik."
+    }
+  ],
+  "gatingBinding": {
+    "branchPattern": "*",
+    "gatedWork": "any structured-output schema that records policy compliance (TRUTH-DELIVERED, status reports, deliverable lifecycleState transitions)",
+    "ciSurface": "PENDING — see gateActions.automated.ciSurface"
+  },
+  "notes": "Originated via EB-agent contribution (Evidence #2). Origin incident: prior chat-layer agent proposed adding a TRUTH-DELIVERED override field to record policy-violating merges as 'documented and proceeding'; Erik refused on principle. Same axis as RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 (both encode CI gating discipline). Distinct from #3 in mechanism: #3 prevents the violation at merge time; #4 prevents schemas from being authored in ways that would let the violation be recorded as compliance. Credit: EB-agent for rule shape."
+}
