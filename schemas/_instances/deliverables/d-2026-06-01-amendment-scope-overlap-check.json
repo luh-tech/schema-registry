@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/amendment-scope-overlap-check-2026-06-01",
@@ -87,10 +87,27 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "Workflow YAML valid, rule promoted via canonical mechanism, all validations clean; preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "6ef20ca10256d84e19a913ee2615daeea583c78a",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/72",
+      "trigger": "Squash merge to main via MERGE PR 72"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "6ef20ca10256d84e19a913ee2615daeea583c78a",
+      "trigger": "Post-merge: workflow active, rule promoted, scope-overlap-check passed on own PR, refs clean"
     }
   ],
   "relatedFollowUps": [
     "FU-RULE-AMENDMENT-RECHECK-AUTOMATED-SURFACE-1"
   ],
-  "notes": "Third rule promotion in the foundation arc's FU block. Opens pipeline-discipline axis (CI-gating axis was closed by FU-D-2 + FU-D-3 pair). Approach (a) per Erik direction: schema-registry CI workflow. Approach (b) eb-agent MCP dependency-report tool was the alternative; deferred. Workflow design: read modified deliverable instance scopeFiles, compute intersection with other in-flight deliverables' scopeFiles (S5-in-progress or S6-staged), fail check on non-empty intersection without resolution-sequencing declaration. Resolution keyword: 'resolution sequencing' or 'scope-overlap acknowledged' in modified instance notes. Self-tests on this PR: deck-sweep (only in-flight) has scopeFiles=['schemas/_instances/deliverables/d-2026-06-01-deck-sweep-sequencing.json'] \u2014 zero intersection with FU-D-4 scope."
+  "notes": "Third rule promotion in the foundation arc's FU block. Opens pipeline-discipline axis (CI-gating axis was closed by FU-D-2 + FU-D-3 pair). Approach (a) per Erik direction: schema-registry CI workflow. Approach (b) eb-agent MCP dependency-report tool was the alternative; deferred. Workflow design: read modified deliverable instance scopeFiles, compute intersection with other in-flight deliverables' scopeFiles (S5-in-progress or S6-staged), fail check on non-empty intersection without resolution-sequencing declaration. Resolution keyword: 'resolution sequencing' or 'scope-overlap acknowledged' in modified instance notes. Self-tests on this PR: deck-sweep (only in-flight) has scopeFiles=['schemas/_instances/deliverables/d-2026-06-01-deck-sweep-sequencing.json'] \u2014 zero intersection with FU-D-4 scope.",
+  "mergeCommitSha": "6ef20ca10256d84e19a913ee2615daeea583c78a",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/72"
 }
