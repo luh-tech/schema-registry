@@ -1,0 +1,68 @@
+name: PR Mergeability Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  check-mergeability:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check mergeStateStatus is not UNSTABLE
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -e
+          echo "Checking PR #${PR_NUMBER} mergeability state..."
+
+          # Retry loop — mergeStateStatus may be UNKNOWN on first read
+          # (GitHub computes mergeability asynchronously)
+          STATE="UNKNOWN"
+          for attempt in 1 2 3; do
+            STATE=$(gh pr view "${PR_NUMBER}" --repo "${REPO}" --json mergeStateStatus --jq '.mergeStateStatus')
+            echo "Attempt ${attempt}: mergeStateStatus = ${STATE}"
+            if [ "${STATE}" != "UNKNOWN" ]; then
+              break
+            fi
+            if [ "${attempt}" -lt 3 ]; then
+              echo "State is UNKNOWN; waiting 5s before retry..."
+              sleep 5
+            fi
+          done
+
+          # Check for override label (Erik L4 applies only)
+          HAS_OVERRIDE=$(gh pr view "${PR_NUMBER}" --repo "${REPO}" --json labels \
+            --jq '.labels[] | select(.name == "override-unstable-merge") | .name' | head -1)
+
+          if [ "${STATE}" = "UNSTABLE" ]; then
+            if [ -n "${HAS_OVERRIDE}" ]; then
+              echo "::warning::PR mergeStateStatus is UNSTABLE but override-unstable-merge label is applied. Proceeding with annotation."
+              echo "RULE: RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1"
+              echo "Override applied — verify substrate proves failure not introduced by PR before squash-merge."
+              exit 0
+            else
+              echo "::error::PR mergeStateStatus is UNSTABLE."
+              echo "Per RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1, UNSTABLE gates identically to FAILING."
+              echo "No silent bypass; no 'mergeable with context' interpretation."
+              echo ""
+              echo "Resolution paths:"
+              echo "  1. Fix-baseline: address failing checks on a separate PR or by reverting the offending main commit."
+              echo "  2. Override: if Erik (L4) determines the failure is not introduced by this PR AND fix-baseline is not viable, apply label 'override-unstable-merge'."
+              echo ""
+              echo "Rule: RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1"
+              exit 1
+            fi
+          fi
+
+          if [ "${STATE}" = "UNKNOWN" ]; then
+            echo "::warning::mergeStateStatus is UNKNOWN after 3 attempts. Allowing pass with annotation; recheck manually if concerned."
+            exit 0
+          fi
+
+          echo "mergeStateStatus = ${STATE}. Passing check."
