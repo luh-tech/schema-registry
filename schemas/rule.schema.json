@@ -2,8 +2,8 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/rule.schema.json",
   "title": "Rule",
-  "version": "1.1.2",
-  "description": "A governance rule as a first-class, versioned object. Replaces rules-as-prose-in-markdown. Two independent axes: lifecycleStatus is where the rule sits in the maturity pipeline (it can hold there); tier is which gate mode is firing at runtime (it changes on use/state, independent of lifecycleStatus). A rule carries gate actions for every tier it may occupy and traverses tiers via defined transitions. The schema holds logical state; git history holds the proof of how it got there (see refinementRecord). Rule instances live at schemas/_instances/rules/RULE-<DOMAIN>-<TOPIC>-N.json \u2014 canonical instance namespace established in d-2026-05-31-deliverable-schema-foundation.",
+  "version": "1.2.0",
+  "description": "A governance rule as a first-class, versioned object. Replaces rules-as-prose-in-markdown. Two independent axes: lifecycleStatus is where the rule sits in the maturity pipeline (it can hold there); tier is which gate mode is firing at runtime (it changes on use/state, independent of lifecycleStatus). A rule carries gate actions for every tier it may occupy and traverses tiers via defined transitions. The schema holds logical state; git history holds the proof of how it got there (see refinementRecord). Rule instances live at schemas/_instances/rules/RULE-<DOMAIN>-<TOPIC>-N.json \u2014 canonical instance namespace established in d-2026-05-31-deliverable-schema-foundation. This schema applies the forbidden-audit-paint-names constraint via allOf \u2014 instances MUST NOT contain field names matching the audit-paint pattern (see https://schemas.luh.tech/_definitions/forbidden-audit-paint-names.schema.json). Per RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -16,6 +16,11 @@
     "tierState",
     "gateActions",
     "transitions"
+  ],
+  "allOf": [
+    {
+      "$ref": "https://schemas.luh.tech/_definitions/forbidden-audit-paint-names.schema.json"
+    }
   ],
   "properties": {
     "$schema": {

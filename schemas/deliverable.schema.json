@@ -2,8 +2,8 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/deliverable.schema.json",
   "title": "Deliverable",
-  "version": "1.0.0",
-  "description": "The DELIVERABLE contract — schema-bound work unit per DLP-STRATEGY. A deliverable is the canonical unit of work: declared scope, acceptance criteria, authority, lifecycle state, and audit trail. Replaces prose-in-markdown deliverable specs. Agent enters at S4-authored, transitions through S5-in-progress and S6-staged, terminates at S7-merged or S8-closed (or reverted). Instance files live at schemas/_instances/deliverables/.",
+  "version": "1.1.0",
+  "description": "The DELIVERABLE contract \u2014 schema-bound work unit per DLP-STRATEGY. A deliverable is the canonical unit of work: declared scope, acceptance criteria, authority, lifecycle state, and audit trail. Replaces prose-in-markdown deliverable specs. Agent enters at S4-authored, transitions through S5-in-progress and S6-staged, terminates at S7-merged or S8-closed (or reverted). Instance files live at schemas/_instances/deliverables/. This schema applies the forbidden-audit-paint-names constraint via allOf \u2014 instances MUST NOT contain field names matching the audit-paint pattern. Per RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -17,6 +17,11 @@
     "outputs",
     "validation",
     "transitions"
+  ],
+  "allOf": [
+    {
+      "$ref": "https://schemas.luh.tech/_definitions/forbidden-audit-paint-names.schema.json"
+    }
   ],
   "properties": {
     "$schema": {
@@ -41,13 +46,17 @@
     "description": {
       "type": "string",
       "minLength": 20,
-      "description": "What this deliverable accomplishes — 2-3 sentences capturing intent and substantive scope."
+      "description": "What this deliverable accomplishes \u2014 2-3 sentences capturing intent and substantive scope."
     },
     "authority": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["author", "approver", "revertAuthority"],
-      "description": "Governance authority block. Currently free-form strings; will reference authority-tier.enum.json (5-tier authorization model — strategy deferred) when that schema is promoted. Conventional values include 'Claude (chat), L1', 'Erik Luhtala (L4)', or descriptive role strings.",
+      "required": [
+        "author",
+        "approver",
+        "revertAuthority"
+      ],
+      "description": "Governance authority block. Currently free-form strings; will reference authority-tier.enum.json (5-tier authorization model \u2014 strategy deferred) when that schema is promoted. Conventional values include 'Claude (chat), L1', 'Erik Luhtala (L4)', or descriptive role strings.",
       "properties": {
         "author": {
           "type": "string",
@@ -65,13 +74,24 @@
     },
     "lifecycleState": {
       "type": "string",
-      "enum": ["S4-authored", "S5-in-progress", "S6-staged", "S7-merged", "S8-closed", "reverted"],
+      "enum": [
+        "S4-authored",
+        "S5-in-progress",
+        "S6-staged",
+        "S7-merged",
+        "S8-closed",
+        "reverted"
+      ],
       "description": "DLP-STRATEGY lifecycle state. S4 = spec authored, awaiting approval to begin. S5 = execution underway. S6 = work staged for merge. S7 = merged to main. S8 = closed (post-merge follow-ups complete). reverted = rolled back."
     },
     "scope": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["repo", "branch", "scopeFiles"],
+      "required": [
+        "repo",
+        "branch",
+        "scopeFiles"
+      ],
       "description": "Scope envelope. Branch and scopeFiles together define exactly what work this deliverable is authorized to touch.",
       "properties": {
         "repo": {
@@ -85,7 +105,9 @@
         },
         "scopeFiles": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "minItems": 1,
           "description": "Files or globs this deliverable is authorized to touch. Enables F7 amendment-substrate-recheck rule to compute overlap with concurrent deliverables."
         }
@@ -98,7 +120,11 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "description", "acceptanceCriteria"],
+        "required": [
+          "id",
+          "description",
+          "acceptanceCriteria"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -112,8 +138,10 @@
           "acceptanceCriteria": {
             "type": "array",
             "minItems": 1,
-            "items": { "type": "string" },
-            "description": "Concrete, verifiable criteria — each one a pass/fail check."
+            "items": {
+              "type": "string"
+            },
+            "description": "Concrete, verifiable criteria \u2014 each one a pass/fail check."
           }
         }
       }
@@ -121,38 +149,63 @@
     "validation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["preMerge"],
+      "required": [
+        "preMerge"
+      ],
       "description": "Validation steps. preMerge must all pass before merge gate; postMerge runs after to verify the landing.",
       "properties": {
         "preMerge": {
           "type": "array",
           "minItems": 1,
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Pre-merge validation steps. Examples: 'ajv compile passes', 'refs rebuild --check exits 0', 'all OUT acceptance criteria met'."
         },
         "postMerge": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Post-merge verification steps. Examples: 'main shows X registered', 'consumer Y validates against new schema'."
         }
       }
     },
     "transitions": {
       "type": "array",
-      "description": "Lifecycle state changes. Reuses refinementRecord pattern from rule.schema.json — git holds the proof; schema holds logical state.",
+      "description": "Lifecycle state changes. Reuses refinementRecord pattern from rule.schema.json \u2014 git holds the proof; schema holds logical state.",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["from", "to", "date"],
+        "required": [
+          "from",
+          "to",
+          "date"
+        ],
         "properties": {
           "from": {
             "type": "string",
-            "enum": ["", "S4-authored", "S5-in-progress", "S6-staged", "S7-merged", "S8-closed", "reverted"],
+            "enum": [
+              "",
+              "S4-authored",
+              "S5-in-progress",
+              "S6-staged",
+              "S7-merged",
+              "S8-closed",
+              "reverted"
+            ],
             "description": "Prior lifecycle state. Empty string for initial S4-authored transition."
           },
           "to": {
             "type": "string",
-            "enum": ["S4-authored", "S5-in-progress", "S6-staged", "S7-merged", "S8-closed", "reverted"]
+            "enum": [
+              "S4-authored",
+              "S5-in-progress",
+              "S6-staged",
+              "S7-merged",
+              "S8-closed",
+              "reverted"
+            ]
           },
           "date": {
             "type": "string",
@@ -197,7 +250,11 @@
     },
     "spikeOutcome": {
       "type": "string",
-      "enum": ["collapse-and-resume", "delete-and-fu", "delete-and-new-deliverable"],
+      "enum": [
+        "collapse-and-resume",
+        "delete-and-fu",
+        "delete-and-new-deliverable"
+      ],
       "description": "Only present if this deliverable terminates as a SPIKE per memory rule #17. Names the terminal outcome."
     },
     "prUrl": {
@@ -210,7 +267,7 @@
     },
     "notes": {
       "type": "string",
-      "description": "Free-form context not captured structurally. Rationale-class field — prose-inside-instance is the legitimate home for prose per the no-md-terminus principle."
+      "description": "Free-form context not captured structurally. Rationale-class field \u2014 prose-inside-instance is the legitimate home for prose per the no-md-terminus principle."
     }
   }
 }

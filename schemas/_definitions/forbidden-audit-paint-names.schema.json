@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/_definitions/forbidden-audit-paint-names.schema.json",
+  "title": "Forbidden Audit-Paint Property Names",
+  "version": "1.0.0",
+  "description": "Shared JSON Schema Draft 7 constraint that rejects audit-paint property names — fields whose names imply 'we documented this violation, so it is compliant.' Per RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1: audit/paper-trail fields recording a policy violation MUST NOT transform the violation into a state of compliance. This constraint makes the construct unrepresentable: any schema that references this definition via allOf will reject instances containing forbidden field names. Forbidden names include: override, documented_exception, truth_delivered_override, audit_override, policy_override, exception_override, and any compound forms ending in _audit_override or _override_documented.",
+  "type": "object",
+  "propertyNames": {
+    "not": {
+      "pattern": "^(override|documented_exception|truth_delivered_override|audit_override|policy_override|exception_override|.*_audit_override|.*_override_documented)$"
+    }
+  }
+}

@@ -34,6 +34,7 @@ jobs:
             echo "--- Validating $(basename $f) ---"
             if ! npx -y ajv-cli@5 validate \
               -s schemas/rule.schema.json \
+              -r schemas/_definitions/forbidden-audit-paint-names.schema.json \
               -d "$f" \
               --spec=draft7 --strict=false; then
               echo "FAIL: $f"
@@ -55,6 +56,7 @@ jobs:
             echo "--- Validating $(basename $f) ---"
             if ! npx -y ajv-cli@5 validate \
               -s schemas/deliverable.schema.json \
+              -r schemas/_definitions/forbidden-audit-paint-names.schema.json \
               -d "$f" \
               --spec=draft7 --strict=false; then
               echo "FAIL: $f"

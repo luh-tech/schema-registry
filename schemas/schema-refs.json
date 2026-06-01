@@ -3,9 +3,17 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {
-    "version": "1.19.0",
-    "lastUpdated": "2026-06-01T13:21:20Z",
+    "version": "1.20.0",
+    "lastUpdated": "2026-06-01T16:50:07Z",
     "changelog": [
+      {
+        "version": "1.20.0",
+        "date": "2026-06-01",
+        "changes": [
+          "Updated: deliverable v1.0.0 -> v1.1.0",
+          "Updated: rule v1.1.2 -> v1.2.0"
+        ]
+      },
       {
         "version": "1.19.0",
         "date": "2026-06-01",
@@ -224,7 +232,7 @@
     "deliverable": {
       "id": "https://schemas.luh.tech/deliverable.schema.json",
       "file": "deliverable.schema.json",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "The DELIVERABLE contract — schema-bound work unit per DLP-STRATEGY."
     },
     "dependencies": {
@@ -380,7 +388,7 @@
     "rule": {
       "id": "https://schemas.luh.tech/rule.schema.json",
       "file": "rule.schema.json",
-      "version": "1.1.2",
+      "version": "1.2.0",
       "description": "A governance rule as a first-class, versioned object."
     },
     "service-graph-equity-instrument": {
@@ -470,5 +478,5 @@
     }
   },
   "title": "LuhTech Schema Registry v1.12.0",
-  "version": "1.19.0"
+  "version": "1.20.0"
 }
