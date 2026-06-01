@@ -1,0 +1,79 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-02-canonical-schema-authoring-for-eb-drift",
+  "version": "1.0.0",
+  "title": "Wave 2: canonical schema authoring to absorb EB instance drift",
+  "description": "Surfaced from 32-FU enumeration in deck-sweep arc planning. The Ectropy-Business roadmap instances carry fields (e.g., timeline, other drift classes) that have no canonical schema declaration. This deliverable identifies the drift classes systematically, authors the canonical schema properties to absorb them, and lands as one or more schema-side patches. d-timeline-fix already cleared the timeline class; this deliverable covers the remaining 5/11 failing classes plus any drift classes surfaced by full FU enumeration.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/canonical-schema-authoring-eb-drift-2026-06-02",
+    "scopeFiles": [
+      "schemas/roadmap-business.schema.json",
+      "schemas/roadmap.schema.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Pre-work: enumerate remaining 5/11 failing roadmap-business.json instances post-d-timeline-fix. For each failure, identify drift class (description/type/required vs new field class). Output: drift-classification report on disk under /tmp/, not committed.",
+      "acceptanceCriteria": [
+        "All 5 failing instances identified by ajv-cli@5 run",
+        "Each failure classified by keyword (additionalProperties, required, type, pattern, enum, etc.) and field name",
+        "Classes counted; sibling-instance scan run to determine cross-venture incidence",
+        "Report posted to chat for clean/dirty/hybrid call before any schema authoring"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Author canonical schema additions per drift class. For each clean-union class, declare the property in canonical schema. For dirty-union classes, REFUSE-AND-SURFACE — Erik decides per-class (rescope vs oneOf vs require venture normalization).",
+      "acceptanceCriteria": [
+        "Per drift class: either property declared in canonical schema (with items shape derived from venture-side scan), or class surfaced for L4 decision",
+        "additionalProperties:false retained at root",
+        "ajv-cli@5 validates all formerly-failing instances post-change",
+        "ajv-cli@5 produces no new failures on previously-passing instances",
+        "Squash-merge to main"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Cut @v6 tag (or whatever next version is) on schema-registry main pointing at OUT-2 merge commit. Children pin updates land separately as child deliverables (parallel to d-timeline-fix child pattern).",
+      "acceptanceCriteria": [
+        "Tag exists, annotated, points at OUT-2 merge commit",
+        "Tag message references this deliverable id"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli@5 validates this DELIVERABLE.json instance against deliverable.schema.json v1.0.0",
+      "OUT-1 drift-classification report complete; clean/dirty/hybrid call made per class",
+      "OUT-2 schema changes pass meta-schema-check and refs-check",
+      "OUT-2 schema validates all formerly-failing instances"
+    ],
+    "postMerge": [
+      "Portfolio failing count: 5/11 -> N where N is determined by Erik's class-by-class disposition",
+      "@v6 tag visible on main",
+      "Child pin-update deliverables can be authored (parallel to d-timeline-fix pattern)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Wave 2 child spec authored alongside parent and siblings"
+    }
+  ],
+  "parentDeliverable": "d-2026-06-01-deck-sweep-sequencing",
+  "relatedFollowUps": [
+    "FU-VENTURE-DATA-SCHEMA-DRIFT-1",
+    "FU-EB-INSTANCE-CANONICAL-DRIFT-1"
+  ],
+  "notes": "Surfaced from 32-FU enumeration in deck-sweep arc planning. Pattern follows d-timeline-fix: pre-work shape analysis, then schema-side authoring, then version tag, then child pin-update deliverables for ventures. Child pin-update deliverables not yet specified; will be authored after OUT-2 lands and class disposition is known. May require multiple iterations if dirty-union classes need separate L4 decisions."
+}
