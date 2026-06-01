@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schemas.luh.tech/rule.schema.json",
+  "id": "RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1",
+  "version": "1.0.0",
+  "title": "L4 Override Requires Substrate Artifact at Time of Action",
+  "statement": "When L4 authority applies a conscious override of CI policy (e.g. override-unstable-merge label per RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1), the override MUST produce a substrate artifact at time of action — not post-hoc. Acceptable substrate artifact types: (1) DEC entry in decision log, (2) FU note in follow-up register, (3) TRUTH-DELIVERED schema instance per truth-delivered.schema.json with ciResult=red-overridden and ciFailure.overrideRationale populated. The artifact must be linked in the PR comment that applies the override label.",
+  "rationale": "PR #269 merge 2026-06-01 was a legitimate L4 conscious override of UNSTABLE CI per memory #15 (RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 carries the override mechanism). However, the override produced no contemporaneous substrate artifact. The override existed only as PR metadata (merge actor + commit), discoverable only by chat-layer agent investigating after the fact. Without a queryable governance record, the conscious nature of the override cannot be confirmed — a silent --admin bypass and a conscious L4 override look identical in git history. Memory #15 distinguishes between them; substrate must distinguish between them too.",
+  "authority": {
+    "author": "EB-agent (chat), L1; relayed and schematized by SR chat (Claude L1)",
+    "approver": "Erik Luhtana (L4)",
+    "revertAuthority": "Erik Luhtana (L4)"
+  },
+  "lifecycleStatus": "working-model",
+  "tierState": {
+    "activeTier": "working-model",
+    "occupiableTiers": ["working-model", "human-loop", "automated"],
+    "terminalTier": "automated"
+  },
+  "gateActions": {
+    "human-loop": {
+      "gate": "Before applying override-unstable-merge label, L4 (Erik) authors substrate artifact (DEC, FU, or TRUTH-DELIVERED instance) and posts artifact link as PR comment. Override label applied only after artifact link is published. Manual sequencing: artifact first, then label.",
+      "authority": "Erik (L4) per memory #15 conscious-override discipline",
+      "automationPath": "Extension to .github/workflows/pr-mergeability-check.yml (FU-D-2 mechanism): when override-unstable-merge label is detected, workflow additionally requires a PR comment containing a substrate artifact link. Link target validation: URL pointing to (a) a DEC entry, (b) a follow-up-register FU entry, or (c) a schemas/_instances/truth-delivered/ instance file. No artifact link present → workflow fails → merge blocked. Coupling with pr-mergeability-check (rather than standalone workflow) makes the dependency mechanical. Promotion path: working-model -> human-loop when manual sequencing is the active gate -> automated when workflow extension lands."
+    },
+    "automated": {
+      "predicate": "Extended pr-mergeability-check.yml workflow detects override-unstable-merge label and scans PR comments for substrate artifact link. Link format validated against known artifact paths (decision-log/, follow-up-register, schemas/_instances/truth-delivered/). Missing or invalid link fails the check; merge blocked.",
+      "ciSurface": ".github/workflows/pr-mergeability-check.yml — extension to FU-D-2 mechanism; override label detection plus artifact-link scan in same workflow",
+      "onFail": "block",
+      "checkRef": "FU-RULE-L4-OVERRIDE-ARTIFACT-WORKFLOW-EXTENSION-1 (to be filed when promotion deliverable is authored)"
+    },
+    "refine": {
+      "action": "Branch off main, edit this rule instance, validate against rule.schema.json, PR with rationale."
+    }
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "working-model",
+      "trigger": "Rule schematized from FU-RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 (EB register). Origin incident: PR #269 merge 2026-06-01 legitimate L4 override of UNSTABLE CI without contemporaneous substrate artifact. Entry-point promotion: working-model lifecycleStatus + working-model activeTier; terminalTier automated via pr-mergeability-check.yml extension."
+    }
+  ],
+  "notes": "Pairs with RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 (FU-D-2, automated tier active). That rule's override-unstable-merge label provides the override mechanism; THIS rule requires substrate-artifact-at-time-of-action to accompany the override. The two rules are mechanically coupled in the same workflow file (pr-mergeability-check.yml) — extension scope, not standalone workflow. Concrete substrate artifact option: truth-delivered.schema.json (FU-D-5c) — a TRUTH-DELIVERED instance with ciResult=red-overridden and ciFailure.overrideRationale populated is exactly the schema-bound record this rule requires. DEC entries and FU notes are acceptable alternatives but truth-delivered is the most structured. Cross-chat-relay origin: EB-agent filed FU on 2026-06-01 alignment prompt; SR chat schematizes per attribution pattern. EB-agent credited in authority.author."
+}
