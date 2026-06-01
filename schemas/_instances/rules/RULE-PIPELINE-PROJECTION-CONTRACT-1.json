@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schemas.luh.tech/rule.schema.json",
+  "id": "RULE-PIPELINE-PROJECTION-CONTRACT-1",
+  "version": "1.0.0",
+  "title": "Projection Contract — terminal reads, chat projects",
+  "statement": "Terminal reads files; chat receives projections only. No roadmap, CI, register, or tarball body content ever crosses into chat. Tarballs decode on disk, never in context. Counts and premises come from MCP queries or scripts, not from file dumps. Budget ≤12 words of premise per FU row.",
+  "rationale": "The chat layer is for strategy, dispatch authoring, and gate enforcement — not for holding substrate. Substrate stays on disk where it belongs. Oversized in-context tarballs (823KB decoding to ~1.1MB of context) were killing the agent's token budget. The fix is structural, not 'be careful.'",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtana (L4)",
+    "revertAuthority": "Erik Luhtana (L4)"
+  },
+  "lifecycleStatus": "working-model",
+  "tierState": {
+    "activeTier": "working-model",
+    "occupiableTiers": ["working-model", "human-loop", "automated"],
+    "terminalTier": "automated"
+  },
+  "gateActions": {
+    "human-loop": {
+      "gate": "Chat layer self-enforces by authoring dispatches with verbatim-transport patterns and refusing to request file body content. Erik also reviews dispatches for compliance.",
+      "authority": "Claude (chat) self-enforcement + Erik (L4) review",
+      "automationPath": "Dispatch-harness check that statically analyzes dispatches before send: rejects requests for file body content from terminal; verifies tarball-decode-on-disk patterns; tracked in FU-RULE-PROJECTION-AUTOMATED-SURFACE-1."
+    },
+    "automated": {
+      "predicate": "No file body content (>12-word excerpts from roadmap/CI/register/tarball files) appears in dispatch text. Tarball references are SHA + DRY-RUN plan + post-write verify line only.",
+      "ciSurface": "PENDING — open design problem. Check cannot live in chat layer; must live in dispatch tooling or agent harness. See FU-RULE-PROJECTION-AUTOMATED-SURFACE-1.",
+      "onFail": "block"
+    },
+    "refine": {
+      "action": "Branch off main, edit this rule instance, validate against rule.schema.json, PR with rationale. Refinement-record commit SHA captured."
+    }
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "working-model",
+      "trigger": "Rule instance authored 2026-06-01; statement captured from pipeline-quality session (N-1 of foundation arc)."
+    }
+  ],
+  "gatingBinding": {
+    "branchPattern": "*",
+    "gatedWork": "any dispatch authored in the schema-registry chat or any LuhTech portfolio chat",
+    "ciSurface": "PENDING — see FU-RULE-PROJECTION-AUTOMATED-SURFACE-1"
+  },
+  "notes": "Originated in the pipeline-quality session (Session N-1 of the foundation arc) when oversized in-context tarballs were degrading the chat agent's token budget. F5 dispatch-verbatim-transport fuses into this rule's automated tier — same problem stated twice; closed into FU-RULE-PROJECTION-AUTOMATED-SURFACE-1. First instance in the rule pipeline; tests the schema's working-model + deferred-automation pattern."
+}
