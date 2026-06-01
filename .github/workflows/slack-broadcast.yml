@@ -1,0 +1,96 @@
+name: Slack Agent Broadcast
+
+on:
+  pull_request:
+    types: [opened, closed, reopened]
+  push:
+    branches: [main]
+    paths:
+      - 'schemas/_instances/**'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  broadcast:
+    runs-on: ubuntu-latest
+    # Loop prevention: skip commits tagged [skip-broadcast]
+    if: ${{ !contains(github.event.head_commit.message, '[skip-broadcast]') }}
+    steps:
+      - name: Build broadcast payload
+        id: payload
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          ACTION: ${{ github.event.action }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_MERGED: ${{ github.event.pull_request.merged }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PUSH_REF: ${{ github.ref_name }}
+          PUSH_SHA: ${{ github.sha }}
+          PUSH_ACTOR: ${{ github.actor }}
+          PUSH_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          set -e
+
+          if [ "${EVENT_NAME}" = "pull_request" ]; then
+            if [ "${ACTION}" = "opened" ] || [ "${ACTION}" = "reopened" ]; then
+              EMOJI=":pencil:"
+              ACTION_TEXT="${ACTION}"
+            elif [ "${ACTION}" = "closed" ] && [ "${PR_MERGED}" = "true" ]; then
+              EMOJI=":white_check_mark:"
+              ACTION_TEXT="merged"
+            elif [ "${ACTION}" = "closed" ]; then
+              EMOJI=":x:"
+              ACTION_TEXT="closed without merge"
+            else
+              echo "Skipping unhandled PR action: ${ACTION}"
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+
+            TEXT="${EMOJI} *PR #${PR_NUMBER} ${ACTION_TEXT}* — \`${REPO}\`\n*Title:* ${PR_TITLE}\n*Author:* @${PR_AUTHOR}\n*Link:* ${PR_URL}"
+
+          elif [ "${EVENT_NAME}" = "push" ]; then
+            FIRST_LINE=$(echo "${PUSH_MESSAGE}" | head -1)
+            TEXT=":package: *Instance push to main* — \`${REPO}\`\n*Commit:* ${PUSH_SHA:0:7}\n*Author:* @${PUSH_ACTOR}\n*Message:* ${FIRST_LINE}"
+          else
+            echo "Unknown event: ${EVENT_NAME}; skipping"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Construct JSON payload — channel ID hardcoded to #luhtech-agents-comms
+          JSON=$(jq -cn \
+            --arg channel "C0B7EPFCA85" \
+            --arg text "${TEXT}" \
+            '{channel: $channel, text: $text, mrkdwn: true}')
+
+          echo "payload=${JSON}" >> "$GITHUB_OUTPUT"
+
+      - name: Post to Slack
+        if: steps.payload.outputs.skip != 'true'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          PAYLOAD: ${{ steps.payload.outputs.payload }}
+        run: |
+          set -e
+
+          # Per memory #9: token used only in Authorization header — never echoed
+          RESPONSE=$(curl -s -X POST https://slack.com/api/chat.postMessage \
+            -H "Authorization: Bearer ${SLACK_BOT_TOKEN}" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d "${PAYLOAD}")
+
+          OK=$(echo "${RESPONSE}" | jq -r '.ok')
+          if [ "${OK}" != "true" ]; then
+            ERROR=$(echo "${RESPONSE}" | jq -r '.error // "unknown"')
+            echo "::error::Slack API error: ${ERROR}"
+            exit 1
+          fi
+
+          MESSAGE_TS=$(echo "${RESPONSE}" | jq -r '.ts')
+          echo "Broadcast successful. ts: ${MESSAGE_TS}"
