@@ -9,7 +9,7 @@
     "approver": "Erik Luhtana (L4)",
     "revertAuthority": "Erik Luhtana (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/instance-validation-ci-2026-06-01",
@@ -84,11 +84,28 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "Workflow authored, YAML validated, self-test clean (13/13 instances pass including FU-D-1 spec); preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "bf6b789d0af329d3c3db028cc91aa68b12f5cfd4",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/63",
+      "trigger": "Squash merge to main via MERGE PR 63"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "bf6b789d0af329d3c3db028cc91aa68b12f5cfd4",
+      "trigger": "Post-merge: workflow on main, validate-instances passed on first run, refs rebuild --check exit 0"
     }
   ],
   "relatedFollowUps": [
     "FU-RULE-INSTANCE-VALIDATION-CI-1",
     "FU-DELIVERABLE-SCHEMA-INSTANCE-VALIDATION-CI-1"
   ],
-  "notes": "First deliverable in the post-foundation FU block. Substrate-validation-first gate (Step 2) ensures workflow lands against clean state \u2014 12/12 instances passed before workflow authoring proceeded. Foundation-strengthening: mechanical enforcement on every PR replaces ad-hoc ajv-cli calls inside dispatch files. Prerequisite for FU-D-2 (UNSTABLE merge blocker) and subsequent rule promotions."
+  "notes": "First deliverable in the post-foundation FU block. Substrate-validation-first gate (Step 2) ensures workflow lands against clean state \u2014 12/12 instances passed before workflow authoring proceeded. Foundation-strengthening: mechanical enforcement on every PR replaces ad-hoc ajv-cli calls inside dispatch files. Prerequisite for FU-D-2 (UNSTABLE merge blocker) and subsequent rule promotions.",
+  "mergeCommitSha": "bf6b789d0af329d3c3db028cc91aa68b12f5cfd4",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/63"
 }
