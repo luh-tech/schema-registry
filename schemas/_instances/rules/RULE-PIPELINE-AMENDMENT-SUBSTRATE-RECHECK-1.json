@@ -52,7 +52,7 @@
       "from": "human-loop",
       "to": "automated",
       "evidenceClass": "CI workflow .github/workflows/amendment-scope-overlap-check.yml implemented in d-2026-06-01-amendment-scope-overlap-check (FU-D-4). On PRs touching schemas/_instances/deliverables/*.json, workflow reads modified deliverable instance scopeFiles, computes intersection with other in-flight deliverables (S5-in-progress or S6-staged), fails check on non-empty intersection without resolution-sequencing declaration in notes field. Approach (a): schema-registry CI workflow per Erik direction 2026-06-01. Self-tested locally before merge.",
-      "trigger": "Rule promoted via canonical mechanism. Third rule promotion in FU block. Opens pipeline-discipline axis (CI-gating axis closed by FU-D-2 + FU-D-3)."
+      "trigger": "Rule promoted via canonical mechanism. Third rule promotion in FU block. Opens pipeline-discipline axis (CI-gating axis closed by FU-D-2 + FU-D-3). Merge SHA 6ef20ca, PR #72."
     }
   ],
   "gatingBinding": {
