@@ -1,0 +1,84 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-truth-delivered-schema-authoring",
+  "version": "1.0.0",
+  "title": "truth-delivered.schema.json Authoring — Greenfield",
+  "description": "Authors schemas/truth-delivered.schema.json as schema-bound closure record for deliverables. Per memory #19 no-md-terminus: closure records must be schema-bound, not prose-only. Fields per FU-TRUTH-DELIVERED-SCHEMA-1 body (EB register): deliverableId, deliveredAt, lifecycleState, closureStatus, authority block, outputs[] with mergeCommit/prNumber/ciResult/ciFailure, closureNotes, relatedFollowUps[], rulePipelineEvidence[], transitions[]. Applies forbidden-audit-paint-names constraint via allOf for parity with rule.schema.json + deliverable.schema.json. Greenfield authoring per substrate read part 2 (no pre-existing artifact in either repo).",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/truth-delivered-schema-2026-06-01",
+    "scopeFiles": [
+      "schemas/truth-delivered.schema.json",
+      "schemas/schema-refs.json",
+      "schemas/_instances/deliverables/d-2026-06-01-truth-delivered-schema-authoring.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "schemas/truth-delivered.schema.json v1.0.0 — schema-bound closure record.",
+      "acceptanceCriteria": [
+        "File exists at schemas/truth-delivered.schema.json",
+        "$id = https://schemas.luh.tech/truth-delivered.schema.json",
+        "Version 1.0.0",
+        "All EB FU body fields represented",
+        "closureStatus enum: closed-clean, closed-with-debt, reverted",
+        "Applies forbidden-audit-paint-names via allOf $ref",
+        "Positive test: minimal valid instance accepted",
+        "Negative test: instance with 'override' field rejected"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "schema-refs.json regenerated via luhtech-schema refs rebuild. New .schemas.truth-delivered entry; changelog appended.",
+      "acceptanceCriteria": [
+        ".schemas.truth-delivered.version = 1.0.0",
+        "meta.version bumped",
+        "refs rebuild --check exit 0"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Deliverable spec instance — S4 → S5 → S6 across dispatch; S7/S8 post-merge amendment.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "transitions reflect actual execution"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Substrate baseline (Step 1): no pre-existing truth-delivered artifact in either repo",
+      "Schema compiles as Draft 7 (with -r forbidden-audit-paint-names ref)",
+      "Positive test: minimal valid instance accepted",
+      "Negative test: 'override' field rejected via allOf",
+      "refs rebuild --check exit 0",
+      "Deliverable spec validates against deliverable.schema.json v1.1.0",
+      "All CI workflows green"
+    ],
+    "postMerge": [
+      "main shows schemas/truth-delivered.schema.json",
+      "schema-refs.json reflects new entry",
+      "EB-agent can now author TRUTH-DELIVERED instances for closure records",
+      "FU-WAVE-1-CLOSURE-RECORD-1 (EB, P3 blocked) unblocked"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Dispatch authored after FU-D-5b close (3e66e5a). Greenfield per substrate read part 2 confirmation."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-TRUTH-DELIVERED-SCHEMA-1"
+  ],
+  "notes": "Second cross-repo coordination deliverable in FU block. Closes one EB-side FU (FU-TRUTH-DELIVERED-SCHEMA-1). Direct close per Erik direction 2026-06-01 — no pre-merge EB-agent review. EB-agent can amend schema shape via subsequent PR if needed. v0 shape derives from EB FU body field list (substrate read part 1 R-2). Schema unblocks EB FU-WAVE-1-CLOSURE-RECORD-1 (P3 blocked) which needs this schema to land its Wave 1 closure record instance."
+}
