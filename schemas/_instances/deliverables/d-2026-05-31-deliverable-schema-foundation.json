@@ -1,0 +1,107 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-05-31-deliverable-schema-foundation",
+  "version": "1.0.0",
+  "title": "Deliverable Schema Foundation",
+  "description": "Schematizes the DELIVERABLE contract itself (memory rule #16 DLP-STRATEGY). Authors schemas/deliverable.schema.json, establishes schemas/_instances/deliverables/ as the canonical instance namespace, and backfills four retro instances (D-0 plus three 2026-05-30 deliverables) so the registry is comprehensive from day one.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S5-in-progress",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/deliverable-schema-foundation-2026-05-31",
+    "scopeFiles": [
+      "schemas/deliverable.schema.json",
+      "schemas/_instances/deliverables/**",
+      ".refsignore",
+      "schemas/schema-refs.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "schemas/deliverable.schema.json v1.0.0 — Draft 7 schema for the DELIVERABLE contract.",
+      "acceptanceCriteria": [
+        "File exists at schemas/deliverable.schema.json",
+        "Validates as Draft 7 via ajv-cli@5 compile --strict=false",
+        "Declares $schema, $id, title, version 1.0.0, description",
+        "Required fields: id, version, title, description, authority, lifecycleState, scope, outputs, validation, transitions"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "schemas/_instances/deliverables/d-2026-05-31-deliverable-schema-foundation.json — self-referential bootstrap instance.",
+      "acceptanceCriteria": [
+        "File exists at the canonical instance path",
+        "Validates against deliverable.schema.json via ajv-cli",
+        "Establishes schemas/_instances/deliverables/ namespace"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": ".refsignore updated to exclude _instances/** so refs rebuild does not index instance files as schemas.",
+      "acceptanceCriteria": [
+        ".refsignore contains _instances/** pattern",
+        "luhtech-schema refs rebuild --check exit 0 after instances added (proving exclusion works)",
+        "schema-refs.json does not gain instance entries"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "D-0 backfill: schemas/_instances/deliverables/d-2026-05-31-luhtech-schema-refs-rebuild.json with full lifecycle state populated from git history.",
+      "acceptanceCriteria": [
+        "Instance file exists for d-2026-05-31-luhtech-schema-refs-rebuild",
+        "lifecycleState is S8-closed",
+        "mergeCommitSha populated with 8076c2d",
+        "transitions array reflects merge from git history",
+        "Validates against deliverable.schema.json"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "Three 2026-05-30 retro instances populated with git history: schema-registry-eb-roadmap-cleanup, followup-register-full-conformance, eb-required-ci-debt-clearance.",
+      "acceptanceCriteria": [
+        "Three instance files exist under schemas/_instances/deliverables/",
+        "All three lifecycleState = S8-closed",
+        "All three validate against deliverable.schema.json",
+        "transitions arrays reflect each deliverable's merge history"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli@5 compile schemas/deliverable.schema.json --strict=false succeeds",
+      "ajv-cli@5 validate -s schemas/deliverable.schema.json -d schemas/_instances/deliverables/*.json succeeds for all instances",
+      "luhtech-schema refs rebuild --check exits 0 after instance files added",
+      "meta-schema-check.yml passes",
+      "refs-check.yml passes",
+      "All existing CI green"
+    ],
+    "postMerge": [
+      "main shows schemas/deliverable.schema.json present",
+      "main shows schemas/_instances/deliverables/ populated with instances",
+      "schema-refs.json on main contains deliverable entry",
+      "schema-refs.json on main does NOT contain entries for any _instances/* files",
+      "luhtech-schema refs rebuild --check exits 0 on main"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-05-31",
+      "trigger": "Dispatch authored by chat; L4 approval received via PROCEED STEP 2"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-05-31",
+      "trigger": "PROCEED STEP 3 issued; execution begun"
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "First instance of deliverable.schema.json. Self-referential bootstrap — this spec is an instance of the schema the deliverable authored. Establishes _instances/ namespace pattern reusable for D-3 rule instances at schemas/_instances/rules/."
+}
