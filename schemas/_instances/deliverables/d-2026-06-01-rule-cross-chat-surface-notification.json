@@ -1,0 +1,69 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-rule-cross-chat-surface-notification",
+  "version": "1.0.0",
+  "title": "Schematize RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1",
+  "description": "Authors schemas/_instances/rules/RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1.json from EB-agent-proposed rule (FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 in EB register, P2). Rule lands at maturity-ladder entry point: working-model lifecycleStatus + working-model activeTier; terminalTier automated with D-COMMS-1 as the eventual automation path. No promotion in this deliverable — rule enters the pipeline at the bottom rung; future deliverables (interim human-loop posting requirement, then D-COMMS-1 build) promote it through the cascade. Cross-chat-relay credit per attribution pattern proven in D-3.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/rule-cross-chat-surface-notification-2026-06-01",
+    "scopeFiles": [
+      "schemas/_instances/rules/RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1.json",
+      "schemas/_instances/deliverables/d-2026-06-01-rule-cross-chat-surface-notification.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "schemas/_instances/rules/RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1.json — rule instance at working-model entry point.",
+      "acceptanceCriteria": [
+        "Validates against rule.schema.json v1.2.0",
+        "lifecycleStatus = working-model",
+        "tierState.activeTier = working-model",
+        "tierState.terminalTier = automated",
+        "automationPath in gateActions.human-loop references D-COMMS-1",
+        "gateActions defined for human-loop, automated, refine tiers",
+        "authority.author credits EB-agent per cross-chat-relay attribution pattern",
+        "Origin incident captured in rationale + notes fields"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Prospective deliverable spec — S4 → S5 → S6 across dispatch; S7/S8 post-merge.",
+      "acceptanceCriteria": [
+        "Validates against deliverable.schema.json v1.1.0",
+        "transitions reflect actual execution"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Rule instance validates against rule.schema.json v1.2.0 with forbidden-audit-paint-names allOf",
+      "Deliverable spec validates against deliverable.schema.json v1.1.0",
+      "All CI workflows green (instance-validation, refs-check, pr-mergeability, amendment-scope-overlap)"
+    ],
+    "postMerge": [
+      "main shows new rule instance",
+      "Six rule instances now exist on main (5 prior + this one)",
+      "FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 closed"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Dispatch authored after FU-D-5d close (1a98770). Schematization of EB-agent-proposed rule per cross-chat-relay pattern."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1"
+  ],
+  "notes": "Third deliverable in the FU-D-5 second wave. Closes one EB-side FU (FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1). No promotion in this PR — rule enters pipeline at working-model. Future promotions (working-model -> human-loop -> automated) happen via subsequent deliverables, with the automated tier landing as part of D-COMMS-1 (sequence position 6). Pairs with RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 (same-repo coordination) — this extends to cross-repo cross-chat."
+}
