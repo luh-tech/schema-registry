@@ -3,13 +3,13 @@
   "id": "d-2026-06-01-rule-cross-chat-surface-notification",
   "version": "1.0.0",
   "title": "Schematize RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1",
-  "description": "Authors schemas/_instances/rules/RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1.json from EB-agent-proposed rule (FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 in EB register, P2). Rule lands at maturity-ladder entry point: working-model lifecycleStatus + working-model activeTier; terminalTier automated with D-COMMS-1 as the eventual automation path. No promotion in this deliverable — rule enters the pipeline at the bottom rung; future deliverables (interim human-loop posting requirement, then D-COMMS-1 build) promote it through the cascade. Cross-chat-relay credit per attribution pattern proven in D-3.",
+  "description": "Authors schemas/_instances/rules/RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1.json from EB-agent-proposed rule (FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 in EB register, P2). Rule lands at maturity-ladder entry point: working-model lifecycleStatus + working-model activeTier; terminalTier automated with D-COMMS-1 as the eventual automation path. No promotion in this deliverable \u2014 rule enters the pipeline at the bottom rung; future deliverables (interim human-loop posting requirement, then D-COMMS-1 build) promote it through the cascade. Cross-chat-relay credit per attribution pattern proven in D-3.",
   "authority": {
     "author": "Claude (SR chat), L1",
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S6-staged",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/rule-cross-chat-surface-notification-2026-06-01",
@@ -21,7 +21,7 @@
   "outputs": [
     {
       "id": "OUT-1",
-      "description": "schemas/_instances/rules/RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1.json — rule instance at working-model entry point.",
+      "description": "schemas/_instances/rules/RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1.json \u2014 rule instance at working-model entry point.",
       "acceptanceCriteria": [
         "Validates against rule.schema.json v1.2.0",
         "lifecycleStatus = working-model",
@@ -35,7 +35,7 @@
     },
     {
       "id": "OUT-2",
-      "description": "Prospective deliverable spec — S4 → S5 → S6 across dispatch; S7/S8 post-merge.",
+      "description": "Prospective deliverable spec \u2014 S4 \u2192 S5 \u2192 S6 across dispatch; S7/S8 post-merge.",
       "acceptanceCriteria": [
         "Validates against deliverable.schema.json v1.1.0",
         "transitions reflect actual execution"
@@ -60,10 +60,22 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Dispatch authored after FU-D-5d close (1a98770). Schematization of EB-agent-proposed rule per cross-chat-relay pattern."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "PROCEED STEP 2 issued; rule instance authored and validated (gateActions working-model key removed \u2014 schema only permits human-loop, automated, refine)"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "All validations clean; preparing PR"
     }
   ],
   "relatedFollowUps": [
     "FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1"
   ],
-  "notes": "Third deliverable in the FU-D-5 second wave. Closes one EB-side FU (FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1). No promotion in this PR — rule enters pipeline at working-model. Future promotions (working-model -> human-loop -> automated) happen via subsequent deliverables, with the automated tier landing as part of D-COMMS-1 (sequence position 6). Pairs with RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 (same-repo coordination) — this extends to cross-repo cross-chat."
+  "notes": "Third deliverable in the FU-D-5 second wave. Closes one EB-side FU (FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1). No promotion in this PR \u2014 rule enters pipeline at working-model. Future promotions (working-model -> human-loop -> automated) happen via subsequent deliverables, with the automated tier landing as part of D-COMMS-1 (sequence position 6). Pairs with RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 (same-repo coordination) \u2014 this extends to cross-repo cross-chat."
 }
