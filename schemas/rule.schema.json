@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/rule.schema.json",
   "title": "Rule",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A governance rule as a first-class, versioned object. Replaces rules-as-prose-in-markdown. Two independent axes: lifecycleStatus is where the rule sits in the maturity pipeline (it can hold there); tier is which gate mode is firing at runtime (it changes on use/state, independent of lifecycleStatus). A rule carries gate actions for every tier it may occupy and traverses tiers via defined transitions. The schema holds logical state; git history holds the proof of how it got there (see refinementRecord). Rule instances live at schemas/_instances/rules/RULE-<DOMAIN>-<TOPIC>-N.json \u2014 canonical instance namespace established in d-2026-05-31-deliverable-schema-foundation.",
   "type": "object",
   "additionalProperties": false,
@@ -323,6 +323,7 @@
     "ruleState": {
       "type": "string",
       "enum": [
+        "",
         "working-model",
         "human-loop",
         "automated",
@@ -330,7 +331,7 @@
         "deprecated",
         "reverted"
       ],
-      "description": "Combined state value for rule transitions \u2014 covers both tier axis (working-model, human-loop, automated) and lifecycleStatus axis (working-model, formalized, deprecated, reverted). Used in transitions.items so a single transitions array captures both tier promotions and lifecycle promotions."
+      "description": "Combined state value for rule transitions \u2014 covers both tier axis (working-model, human-loop, automated) and lifecycleStatus axis (working-model, formalized, deprecated, reverted). Empty string is used for the initial 'from nothing' transition (same convention as deliverable.schema.json)."
     }
   }
 }
