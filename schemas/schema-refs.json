@@ -3,9 +3,16 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {
-    "version": "1.21.0",
-    "lastUpdated": "2026-06-01T18:20:00Z",
+    "version": "1.22.0",
+    "lastUpdated": "2026-06-01T19:01:49Z",
     "changelog": [
+      {
+        "version": "1.22.0",
+        "date": "2026-06-01",
+        "changes": [
+          "Added: truth-delivered v1.0.0"
+        ]
+      },
       {
         "version": "1.21.0",
         "date": "2026-06-01",
@@ -440,6 +447,12 @@
       "version": "1.0.0",
       "description": "Governs the format of luhtech-transform template JSON files"
     },
+    "truth-delivered": {
+      "id": "https://schemas.luh.tech/truth-delivered.schema.json",
+      "file": "truth-delivered.schema.json",
+      "version": "1.0.0",
+      "description": "Schema-bound closure record for a completed deliverable."
+    },
     "workflow-registry": {
       "id": "https://schemas.luh.tech/workflow-registry.schema.json",
       "file": "workflow-registry.schema.json",
@@ -491,5 +504,5 @@
     }
   },
   "title": "LuhTech Schema Registry v1.12.0",
-  "version": "1.21.0"
+  "version": "1.22.0"
 }

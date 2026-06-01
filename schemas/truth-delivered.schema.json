@@ -1,0 +1,222 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "title": "Truth Delivered — Deliverable Closure Record",
+  "version": "1.0.0",
+  "description": "Schema-bound closure record for a completed deliverable. Captures what was actually delivered, with audit-traced links to merge commits, CI results, override records, and follow-up obligations. Per memory rule #19 (no-md-terminus), closure records must be schema-bound rather than prose-only. Per RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1, this schema applies the forbidden-audit-paint-names constraint via allOf — the schema authors a closure RECORD, it must not itself permit audit-paint field names. A TRUTH-DELIVERED instance is authored after a deliverable reaches S7-merged and references the merged commit + actual outcomes. Instances live at schemas/_instances/truth-delivered/<deliverableId>.json.",
+  "type": "object",
+  "required": [
+    "$schema",
+    "deliverableId",
+    "deliveredAt",
+    "lifecycleState",
+    "closureStatus",
+    "authority",
+    "outputs",
+    "transitions"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "$ref": "https://schemas.luh.tech/_definitions/forbidden-audit-paint-names.schema.json"
+    }
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://schemas.luh.tech/truth-delivered.schema.json",
+      "description": "Canonical schema URL. Must match exactly for instance to validate."
+    },
+    "deliverableId": {
+      "type": "string",
+      "pattern": "^d-\\d{4}-\\d{2}-\\d{2}-[a-z0-9-]+$",
+      "description": "FK to deliverable.schema.json instance id. Same pattern: d-YYYY-MM-DD-slug."
+    },
+    "deliveredAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of delivery (S7-merged transition). RFC 3339 / ISO 8601."
+    },
+    "lifecycleState": {
+      "type": "string",
+      "enum": ["S7-merged", "S8-closed", "reverted"],
+      "description": "Lifecycle state at time of TRUTH-DELIVERED authoring. Restricted to terminal states (a truth-delivered record is only meaningful after merge or revert)."
+    },
+    "closureStatus": {
+      "type": "string",
+      "enum": ["closed-clean", "closed-with-debt", "reverted"],
+      "description": "closed-clean: all acceptance criteria met, no override, no carry-over debt. closed-with-debt: merged but with known issues captured in closureNotes.debt. reverted: deliverable was rolled back; closureNotes.revertReason required."
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["author", "approver"],
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "Who authored the deliverable. Matches deliverable.schema.json authority.author."
+        },
+        "approver": {
+          "type": "string",
+          "description": "Who approved (typically L4). Matches deliverable.schema.json authority.approver."
+        },
+        "revertAuthority": {
+          "type": "string",
+          "description": "Who has authority to revert. Typically same as approver."
+        }
+      },
+      "description": "Authority block matching deliverable.schema.json shape for cross-schema consistency."
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["mergeCommit", "prNumber", "ciResult"],
+        "properties": {
+          "outputId": {
+            "type": "string",
+            "description": "FK to deliverable.schema.json outputs[].id (e.g. OUT-1, OUT-2)."
+          },
+          "mergeCommit": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{7,40}$",
+            "description": "Git SHA of merge commit. Short or full SHA accepted."
+          },
+          "prNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "GitHub PR number."
+          },
+          "prUrl": {
+            "type": "string",
+            "description": "Full URL to the merged PR."
+          },
+          "mergeActor": {
+            "type": "string",
+            "description": "GitHub username of the user who clicked merge. Distinct from authority.approver (governance) — this is operational."
+          },
+          "ciResult": {
+            "type": "string",
+            "enum": ["green", "red-overridden", "skipped"],
+            "description": "green: all required checks passed. red-overridden: CI was UNSTABLE/FAILING and merged via override label — ciFailure block required. skipped: no required checks ran."
+          },
+          "ciFailure": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Required when ciResult is red-overridden. Captures which checks failed and why override was applied.",
+            "required": ["failingChecks", "overrideRationale"],
+            "properties": {
+              "failingChecks": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                },
+                "description": "Names of CI checks with conclusion FAILURE."
+              },
+              "overrideRationale": {
+                "type": "string",
+                "description": "Why override was applied. Cites substrate evidence that failure was not introduced by this PR."
+              },
+              "overrideLabel": {
+                "type": "string",
+                "description": "GitHub label that authorized the override (e.g. override-unstable-merge)."
+              }
+            }
+          }
+        }
+      },
+      "description": "Actual delivered outputs with audit-traced links to PRs, commits, and CI results."
+    },
+    "closureNotes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "description": "Plain-language summary of what was delivered."
+        },
+        "debt": {
+          "type": "string",
+          "description": "Known issues, deferred work, or technical debt accepted as part of merging. Required if closureStatus = closed-with-debt."
+        },
+        "overrideRecord": {
+          "type": "string",
+          "description": "If any rule was overridden during the deliverable (e.g. L4 conscious CI override per memory #15), describe the override and its substrate basis here."
+        },
+        "spikeOutcome": {
+          "type": "string",
+          "description": "If a SPIKE was entered during the deliverable (per memory #17), capture which terminal (COLLAPSE-AND-RESUME, DELETE-AND-FU, DELETE-AND-NEW-DELIVERABLE) was reached."
+        },
+        "revertReason": {
+          "type": "string",
+          "description": "Required if lifecycleState = reverted. Why the merge was rolled back."
+        }
+      },
+      "description": "Free-form prose context that does not fit into structured fields. Per memory #19 — prose-inside-instance is the legitimate home for prose."
+    },
+    "relatedFollowUps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^FU-[A-Z][A-Z0-9-]*$"
+      },
+      "description": "FU IDs closed by this delivery, or newly filed as carryover. Cross-repo FU IDs are valid (e.g. EB-side FUs that SR delivery unblocks)."
+    },
+    "rulePipelineEvidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ruleId", "evidenceClass"],
+        "properties": {
+          "ruleId": {
+            "type": "string",
+            "pattern": "^RULE-[A-Z][A-Z0-9-]*$",
+            "description": "FK to rule.schema.json instance id."
+          },
+          "evidenceClass": {
+            "type": "string",
+            "description": "What evidence this delivery provides for the rule. Matches rule.schema.json transitions[].evidenceClass field."
+          },
+          "transitionTriggered": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "from": {"type": "string"},
+              "to": {"type": "string"}
+            },
+            "description": "If this delivery triggered a rule lifecycleStatus or tier transition, capture it."
+          }
+        }
+      },
+      "description": "Cross-chat relay payload: when a deliverable provides evidence that promotes a rule's maturity tier, this array carries the linkage."
+    },
+    "transitions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["timestamp", "actor"],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actor": {
+            "type": "string",
+            "description": "Who initiated the transition (chat agent, terminal agent, Erik L4)."
+          },
+          "event": {
+            "type": "string",
+            "description": "What transition occurred (e.g. authored, instance-validation-run, merged, closed)."
+          }
+        }
+      },
+      "description": "Audit trail of TRUTH-DELIVERED record itself (when it was authored, by whom, what events updated it)."
+    }
+  }
+}
