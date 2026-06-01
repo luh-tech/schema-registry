@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schemas.luh.tech/rule.schema.json",
+  "id": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+  "version": "1.0.0",
+  "title": "Amendment Substrate Recheck — scope-files overlap check",
+  "statement": "When amending an in-flight deliverable A, check whether deliverable A's scopeFiles overlap with any other deliverable on the same branch base. If overlap exists, the amendment dispatch MUST specify resolution sequencing (which deliverable's PR merges first, what the other's rebase strategy is) before AMEND lands.",
+  "rationale": "Amendments to in-flight deliverables can introduce silent conflicts with concurrent work on the same branch base. The overlap is computable from the deliverable spec's scopeFiles field, but the check was not part of any prior workflow until this rule.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtana (L4)",
+    "revertAuthority": "Erik Luhtana (L4)"
+  },
+  "lifecycleStatus": "working-model",
+  "tierState": {
+    "activeTier": "human-loop",
+    "occupiableTiers": ["working-model", "human-loop", "automated"],
+    "terminalTier": "automated"
+  },
+  "gateActions": {
+    "human-loop": {
+      "gate": "Chat layer reads other in-flight deliverable specs at amendment time, computes scopeFiles overlap, surfaces conflict and proposes sequencing in dispatch. Erik approves resolution sequencing.",
+      "authority": "Claude (chat) check + Erik (L4) sequencing approval",
+      "automationPath": "Scope-overlap check in eb-agent MCP (dependency-report tool) or schema-registry CI. Given deliverable A being amended, check intersection of A.scope.scopeFiles with B.scope.scopeFiles for every B with lifecycleState in {S5-in-progress, S6-staged} on the same base branch."
+    },
+    "automated": {
+      "predicate": "Given deliverable A being amended, no other deliverable B with lifecycleState in {S5-in-progress, S6-staged} on the same base branch has scopeFiles intersecting A.scopeFiles without explicit resolution sequencing declared.",
+      "ciSurface": "eb-agent MCP dependency-report query OR schema-registry CI workflow checking deliverable instances at schemas/_instances/deliverables/",
+      "onFail": "block",
+      "checkRef": "FU-RULE-AMENDMENT-RECHECK-AUTOMATED-SURFACE-1"
+    },
+    "refine": {
+      "action": "Branch off main, edit this rule instance, validate, PR. Refinement-record commit SHA captured."
+    }
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "working-model",
+      "trigger": "Rule instance authored 2026-06-01; statement captured from F7 prior session work."
+    },
+    {
+      "from": "working-model",
+      "to": "human-loop",
+      "evidenceClass": "PR #261 amendment conflict (2026-05-30) where E-B PR #261 was being amended while parent OUT-3 merge was blocked by overlapping CI debt; the overlap was discoverable at amendment time via scopeFiles inspection but was not checked. Rule statement formalized after the incident.",
+      "trigger": "Rule promoted from working-model to active human-loop enforcement once chat layer learned to check scopeFiles at amendment time."
+    }
+  ],
+  "gatingBinding": {
+    "branchPattern": "*",
+    "gatedWork": "any deliverable amendment (modification of an in-flight DELIVERABLE.json instance)",
+    "ciSurface": "PENDING per gateActions.automated.ciSurface"
+  },
+  "notes": "Originated from F7 prior session work. Real incident: E-B PR #261 amendment where scope_files overlap with concurrent work was discoverable but not checked. Companion to RULE-PIPELINE-PROJECTION-CONTRACT-1 — both are pipeline rules. Schema's scope.scopeFiles field exists specifically to enable this rule's automated tier."
+}
