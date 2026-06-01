@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/deprecation-header.schema.json",
+  "title": "Deprecation Header — Schema Lifecycle Marker",
+  "version": "1.0.0",
+  "description": "Schema-bound deprecation marker for portfolio schemas. Encodes a structured deprecation block that any schema can carry to declare its lifecycle state. Per memory #19 (no-md-terminus): schema lifecycle status must be schema-bound, not documented in a separate prose file. Per RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1 the schema applies the forbidden-audit-paint-names constraint via allOf. The deprecation block is the LEGITIMATE structural marker for a schema's lifecycle position — distinct from audit-paint patterns that try to document violations into compliance. Pilot integration: schemas/_archive/venture-summary.schema.json carries the inaugural deprecation header (d-2026-06-02-deprecation-header-convention). Convention: schemas carrying a deprecation block declare status as one of active|deprecated|retired; deprecated and retired schemas remain accessible at canonical URL for backward reference but are excluded from active CI gating. Schemas at active status may omit the block entirely.",
+  "type": "object",
+  "additionalProperties": true,
+  "allOf": [
+    {
+      "$ref": "https://schemas.luh.tech/_definitions/forbidden-audit-paint-names.schema.json"
+    }
+  ],
+  "properties": {
+    "deprecation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "deprecatedDate", "rationale"],
+      "description": "The deprecation marker block. When present, declares the schema's lifecycle position. When absent, schema is implicitly active.",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["active", "deprecated", "retired"],
+          "description": "active: in normal use. deprecated: still served at canonical URL but not for new instances. retired: served only for archaeology; new instances rejected."
+        },
+        "deprecatedDate": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO 8601 date when deprecation status was first set. Should match the changelog entry that recorded the archival or deprecation decision."
+        },
+        "supersededBy": {
+          "type": ["string", "null"],
+          "description": "URL or schema $id of the canonical replacement, if one exists. Null when deprecation is terminal with no replacement."
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Why the schema was deprecated. Cites the decision record (DEC ID, FU ID, or changelog entry) that authorized the deprecation."
+        },
+        "archiveLocation": {
+          "type": "string",
+          "description": "Repo-relative path where the deprecated schema file lives. Typically schemas/_archive/<name>.schema.json after archival deliverables execute."
+        }
+      }
+    }
+  }
+}
