@@ -1,0 +1,84 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-amendment-scope-overlap-check",
+  "version": "1.0.0",
+  "title": "Amendment Scope-Overlap Check — promote RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 to automated",
+  "description": "Authors .github/workflows/amendment-scope-overlap-check.yml — GHA workflow that on PRs touching schemas/_instances/deliverables/*.json computes scopeFiles intersection between the modified deliverable instance and all other in-flight deliverable instances (lifecycleState in S5-in-progress or S6-staged). Fails check on non-empty intersection unless modified instance's notes field declares resolution sequencing. Promotes RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 from activeTier human-loop to activeTier automated. Approach (a): schema-registry CI workflow per Erik direction 2026-06-01. Self-contained. Opens the pipeline-discipline axis (distinct from CI-gating axis closed by FU-D-2 + FU-D-3). Closes FU-RULE-AMENDMENT-RECHECK-AUTOMATED-SURFACE-1.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/amendment-scope-overlap-check-2026-06-01",
+    "scopeFiles": [
+      ".github/workflows/amendment-scope-overlap-check.yml",
+      "schemas/_instances/rules/RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1.json",
+      "schemas/_instances/deliverables/d-2026-06-01-amendment-scope-overlap-check.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": ".github/workflows/amendment-scope-overlap-check.yml — GHA workflow computing scopeFiles intersection across in-flight deliverables.",
+      "acceptanceCriteria": [
+        "Workflow YAML valid",
+        "Triggers on PR events touching schemas/_instances/deliverables/*.json",
+        "Identifies modified deliverable instance files on the PR",
+        "Reads in-flight deliverables (lifecycleState in S5-in-progress, S6-staged)",
+        "Computes pairwise scopeFiles intersection",
+        "Fails check on non-empty intersection unless notes field declares resolution sequencing",
+        "Passes when no overlap or only one in-flight",
+        "Workflow passes on this PR (self-test: 1 pre-existing in-flight, no scopeFile overlap)"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 promoted via canonical mechanism: version 1.0.0 → 1.1.0; tierState.activeTier human-loop → automated; transition appended with evidenceClass citing the workflow.",
+      "acceptanceCriteria": [
+        "Rule instance version 1.1.0",
+        "tierState.activeTier = automated",
+        "New transition: from human-loop, to automated, evidenceClass populated",
+        "Validates against rule.schema.json v1.2.0"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Prospective deliverable spec — S4 → S5 → S6 across dispatch; S7/S8 post-merge amendment.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "transitions reflect actual execution"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Step 2 substrate logic verification passed: 1 in-flight (deck-sweep), no scopeFile overlap with FU-D-4 scope",
+      "Workflow YAML valid",
+      "Updated rule instance validates against rule.schema.json v1.2.0",
+      "Deliverable spec validates against deliverable.schema.json v1.1.0",
+      "instance-validation.yml, refs-check.yml, pr-mergeability-check.yml all green",
+      "amendment-scope-overlap-check.yml passes on this PR (self-test)"
+    ],
+    "postMerge": [
+      "main shows .github/workflows/amendment-scope-overlap-check.yml",
+      "Updated rule instance on main at tierState.activeTier = automated",
+      "Third rule promotion via canonical mechanism complete; pipeline-discipline axis opened",
+      "All CI passing on subsequent PRs"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Dispatch authored after FU-D-3 close (5a01c56). Third rule promotion. Approach (a): schema-registry CI workflow per Erik direction 2026-06-01. Substrate verification: 1 in-flight (deck-sweep), no overlap with FU-D-4 scope."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-RULE-AMENDMENT-RECHECK-AUTOMATED-SURFACE-1"
+  ],
+  "notes": "Third rule promotion in the foundation arc's FU block. Opens pipeline-discipline axis (CI-gating axis was closed by FU-D-2 + FU-D-3 pair). Approach (a) per Erik direction: schema-registry CI workflow. Approach (b) eb-agent MCP dependency-report tool was the alternative; deferred. Workflow design: read modified deliverable instance scopeFiles, compute intersection with other in-flight deliverables' scopeFiles (S5-in-progress or S6-staged), fail check on non-empty intersection without resolution-sequencing declaration. Resolution keyword: 'resolution sequencing' or 'scope-overlap acknowledged' in modified instance notes. Self-tests on this PR: deck-sweep (only in-flight) has scopeFiles=['schemas/_instances/deliverables/d-2026-06-01-deck-sweep-sequencing.json'] — zero intersection with FU-D-4 scope."
+}
