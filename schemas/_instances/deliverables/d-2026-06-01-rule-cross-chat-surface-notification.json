@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/rule-cross-chat-surface-notification-2026-06-01",
@@ -72,10 +72,27 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "All validations clean; preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "fbfa760c7175f597f2a91b85e1c6ec582229b3aa",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/80",
+      "trigger": "Squash merge to main via MERGE PR 80"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "fbfa760c7175f597f2a91b85e1c6ec582229b3aa",
+      "trigger": "Post-merge: 6 rule instances on main, refs clean. FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 closed."
     }
   ],
   "relatedFollowUps": [
     "FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1"
   ],
-  "notes": "Third deliverable in the FU-D-5 second wave. Closes one EB-side FU (FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1). No promotion in this PR \u2014 rule enters pipeline at working-model. Future promotions (working-model -> human-loop -> automated) happen via subsequent deliverables, with the automated tier landing as part of D-COMMS-1 (sequence position 6). Pairs with RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 (same-repo coordination) \u2014 this extends to cross-repo cross-chat."
+  "notes": "Third deliverable in the FU-D-5 second wave. Closes one EB-side FU (FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1). No promotion in this PR \u2014 rule enters pipeline at working-model. Future promotions (working-model -> human-loop -> automated) happen via subsequent deliverables, with the automated tier landing as part of D-COMMS-1 (sequence position 6). Pairs with RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 (same-repo coordination) \u2014 this extends to cross-repo cross-chat.",
+  "mergeCommitSha": "fbfa760c7175f597f2a91b85e1c6ec582229b3aa",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/80"
 }
