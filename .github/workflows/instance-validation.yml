@@ -1,0 +1,68 @@
+name: Instance Schema Validation
+
+on:
+  pull_request:
+    paths:
+      - 'schemas/_instances/**'
+      - 'schemas/rule.schema.json'
+      - 'schemas/deliverable.schema.json'
+      - '.github/workflows/instance-validation.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'schemas/_instances/**'
+      - 'schemas/rule.schema.json'
+      - 'schemas/deliverable.schema.json'
+
+jobs:
+  validate-instances:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate rule instances
+        run: |
+          set -e
+          FAIL=0
+          for f in schemas/_instances/rules/*.json; do
+            [ -e "$f" ] || continue
+            echo "--- Validating $(basename $f) ---"
+            if ! npx -y ajv-cli@5 validate \
+              -s schemas/rule.schema.json \
+              -d "$f" \
+              --spec=draft7 --strict=false; then
+              echo "FAIL: $f"
+              FAIL=$((FAIL + 1))
+            fi
+          done
+          if [ "$FAIL" -gt 0 ]; then
+            echo "Rule instance validation failed: $FAIL instance(s)"
+            exit 1
+          fi
+          echo "All rule instances valid"
+
+      - name: Validate deliverable instances
+        run: |
+          set -e
+          FAIL=0
+          for f in schemas/_instances/deliverables/*.json; do
+            [ -e "$f" ] || continue
+            echo "--- Validating $(basename $f) ---"
+            if ! npx -y ajv-cli@5 validate \
+              -s schemas/deliverable.schema.json \
+              -d "$f" \
+              --spec=draft7 --strict=false; then
+              echo "FAIL: $f"
+              FAIL=$((FAIL + 1))
+            fi
+          done
+          if [ "$FAIL" -gt 0 ]; then
+            echo "Deliverable instance validation failed: $FAIL instance(s)"
+            exit 1
+          fi
+          echo "All deliverable instances valid"
