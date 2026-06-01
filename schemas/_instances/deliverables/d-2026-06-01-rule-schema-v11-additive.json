@@ -9,7 +9,7 @@
     "approver": "Erik Luhtana (L4)",
     "revertAuthority": "Erik Luhtana (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/rule-schema-v11-additive-2026-06-01",
@@ -87,11 +87,28 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "All outputs complete (rule v1.1.0 authored, refs regenerated); preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "29e6f52829abdeb8d06f84979e1ace693fd3385b",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/59",
+      "trigger": "Squash merge to main via MERGE PR 59"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "29e6f52829abdeb8d06f84979e1ace693fd3385b",
+      "trigger": "Post-merge verification clean: rule v1.1.0 on main, .schemas.rule.version=1.1.0, refs rebuild --check exit 0"
     }
   ],
   "relatedFollowUps": [
     "FU-RULE-SCHEMA-EVIDENCECLASS-ENUM-1",
     "FU-RULE-SCHEMA-AUTHORITY-TIER-ENUM-1"
   ],
-  "notes": "Third deliverable in the rule-pipeline foundation arc, first authored prospectively as a schema-bound instance (D-0 and D-1 were retro-backfilled into the deliverable schema). Additive-only changes ensure backward compatibility with rule.schema.json v1.0.0 \u2014 no existing field constraints tightened, no fields removed. Authority block shape matches deliverable.schema.json exactly so the 5-tier auth enum promotion (when authored) updates both schemas in one PR. evidenceClass conditional requirement uses JSON Schema if/then to enforce only on promotion-direction transitions; downgrade transitions (formalized \u2192 working-model, formalized \u2192 reverted) do not require it. Dispatch named the deliverable id 'd-2026-06-01-rule-schema-v1.1-additive' and branch 'feat/rule-schema-v1.1-additive-2026-06-01'; both normalized to remove dots (v1.1 \u2192 v11) because deliverable.schema.json id and scope.branch patterns require [a-z0-9-]+ (same issue as followup-register instance in D-1)."
+  "notes": "Third deliverable in the rule-pipeline foundation arc, first authored prospectively as a schema-bound instance (D-0 and D-1 were retro-backfilled into the deliverable schema). Additive-only changes ensure backward compatibility with rule.schema.json v1.0.0 \u2014 no existing field constraints tightened, no fields removed. Authority block shape matches deliverable.schema.json exactly so the 5-tier auth enum promotion (when authored) updates both schemas in one PR. evidenceClass conditional requirement uses JSON Schema if/then to enforce only on promotion-direction transitions; downgrade transitions (formalized \u2192 working-model, formalized \u2192 reverted) do not require it. Dispatch named the deliverable id 'd-2026-06-01-rule-schema-v1.1-additive' and branch 'feat/rule-schema-v1.1-additive-2026-06-01'; both normalized to remove dots (v1.1 \u2192 v11) because deliverable.schema.json id and scope.branch patterns require [a-z0-9-]+ (same issue as followup-register instance in D-1).",
+  "mergeCommitSha": "29e6f52829abdeb8d06f84979e1ace693fd3385b",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/59"
 }
