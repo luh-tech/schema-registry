@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/resource-access-schema-placement-2026-06-01",
@@ -92,11 +92,28 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "Refs regenerated (resource-access v1.0.0 registered, 1.20.0 \u2192 1.21.0), idempotent; preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "bcbb13a498e0884e15222d1a1533dd21c0e4da40",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/74",
+      "trigger": "Squash merge to main via MERGE PR 74"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "bcbb13a498e0884e15222d1a1533dd21c0e4da40",
+      "trigger": "Post-merge: schema at canonical path, registry updated (v1.21.0), refs clean, EB PR #257 notified via comment (https://github.com/luh-tech/Ectropy-Business/pull/257#issuecomment-4595344415)"
     }
   ],
   "relatedFollowUps": [
     "FU-RESOURCE-ACCESS-SCHEMA-AUTHORING-1",
     "FU-LUHTECH-SCHEMA-REFS-RESOURCE-ACCESS-PLACEMENT-1"
   ],
-  "notes": "First cross-repo coordination deliverable in FU block. Closes one EB-side FU and one SR-side FU in a single PR. Substrate-verified scope: schema exists, validates instance cleanly, work is mechanical relocation. No FK revision needed \u2014 schema FK fields are documentary strings, not cross-schema validated. Post-merge SR comments on EB PR #257 enabling EB-agent to reactivate branch feat/resource-access-schema-2026-05-30."
+  "notes": "First cross-repo coordination deliverable in FU block. Closes one EB-side FU and one SR-side FU in a single PR. Substrate-verified scope: schema exists, validates instance cleanly, work is mechanical relocation. No FK revision needed \u2014 schema FK fields are documentary strings, not cross-schema validated. Post-merge SR comments on EB PR #257 enabling EB-agent to reactivate branch feat/resource-access-schema-2026-05-30.",
+  "mergeCommitSha": "bcbb13a498e0884e15222d1a1533dd21c0e4da40",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/74"
 }
