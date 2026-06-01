@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S6-staged",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/deprecation-header-convention-2026-06-01",
@@ -69,6 +69,18 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Amendment 2026-06-01: OUT-2 venture-summary path corrected for archival substrate shift; .md removed from scopeFiles per no-md-terminus; scope-overlap acknowledged declared for sibling d-2026-06-04."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "Spec amended; deprecation-header.schema.json authored; pilot integration applied to archived venture-summary"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "Refs regenerated (deprecation-header v1.0.0 registered, 1.22.0 \u2192 1.23.0); all validations clean; preparing PR"
     }
   ],
   "parentDeliverable": "d-2026-06-01-deck-sweep-sequencing",
