@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "$id": "https://schemas.luh.tech/_instances/deliverables/d-2026-06-01-roadmap-validate-venture-summary-optional",
+  "deliverableId": "d-2026-06-01-roadmap-validate-venture-summary-optional",
+  "title": "Wave 1 — Convert venture-summary.json from REQUIRED to OPTIONAL in roadmap-validate.yml; cut @v4 tag; update EB pin @v3 → @v4",
+  "venture": "luhtech-portfolio",
+  "schemaDomain": "schema-registry CI workflow / Ectropy-Business CI pin",
+  "stage": "S2-SPECIFIED",
+  "parentDeliverable": "d-2026-06-01-deck-sweep-sequencing",
+  "waveId": "WAVE-1",
+  "authoredBy": "claude-chat-L1",
+  "authoredDate": "2026-06-01",
+  "approver": "Erik Luhtala (L4-FOUNDER)",
+  "version": "1.0.0",
+  "footer": "Enterprise Excellence. Schema-First. No Shortcuts."
+}

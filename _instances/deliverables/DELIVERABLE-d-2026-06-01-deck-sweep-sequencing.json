@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "$id": "https://schemas.luh.tech/_instances/deliverables/d-2026-06-01-deck-sweep-sequencing",
+  "deliverableId": "d-2026-06-01-deck-sweep-sequencing",
+  "title": "Deck-sweep sequencing — FU cleanup arc toward MCP-accessible schema system + portfolio-wide D7 completion + ground-truth preservation foundation",
+  "venture": "luhtech-portfolio",
+  "schemaDomain": "portfolio governance / schema-registry infrastructure / FU register cleanup",
+  "stage": "S2-SPECIFIED",
+  "authoredBy": "claude-chat-L1",
+  "authoredDate": "2026-06-01",
+  "approver": "Erik Luhtala (L4-FOUNDER)",
+  "version": "1.0.0",
+  "footer": "Enterprise Excellence. Schema-First. No Shortcuts."
+}
