@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S5-in-progress",
+  "lifecycleState": "S6-staged",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/deliverable-schema-foundation-2026-05-31",
@@ -23,7 +23,7 @@
   "outputs": [
     {
       "id": "OUT-1",
-      "description": "schemas/deliverable.schema.json v1.0.0 — Draft 7 schema for the DELIVERABLE contract.",
+      "description": "schemas/deliverable.schema.json v1.0.0 \u2014 Draft 7 schema for the DELIVERABLE contract.",
       "acceptanceCriteria": [
         "File exists at schemas/deliverable.schema.json",
         "Validates as Draft 7 via ajv-cli@5 compile --strict=false",
@@ -33,7 +33,7 @@
     },
     {
       "id": "OUT-2",
-      "description": "schemas/_instances/deliverables/d-2026-05-31-deliverable-schema-foundation.json — self-referential bootstrap instance.",
+      "description": "schemas/_instances/deliverables/d-2026-05-31-deliverable-schema-foundation.json \u2014 self-referential bootstrap instance.",
       "acceptanceCriteria": [
         "File exists at the canonical instance path",
         "Validates against deliverable.schema.json via ajv-cli",
@@ -100,8 +100,14 @@
       "to": "S5-in-progress",
       "date": "2026-05-31",
       "trigger": "PROCEED STEP 3 issued; execution begun"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "All outputs complete; PR being prepared"
     }
   ],
   "relatedFollowUps": [],
-  "notes": "First instance of deliverable.schema.json. Self-referential bootstrap — this spec is an instance of the schema the deliverable authored. Establishes _instances/ namespace pattern reusable for D-3 rule instances at schemas/_instances/rules/."
+  "notes": "First instance of deliverable.schema.json. Self-referential bootstrap \u2014 this spec is an instance of the schema the deliverable authored. Establishes _instances/ namespace pattern reusable for D-3 rule instances at schemas/_instances/rules/."
 }
