@@ -1,0 +1,96 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-05-30-eb-required-ci-debt-clearance",
+  "version": "1.0.0",
+  "title": "EB-Required CI Debt Clearance",
+  "description": "Cleared CI infrastructure debt blocking Ectropy Business roadmap validation: luhtech-schema meta-schema discriminator fix (schema vs instance classification), roadmap-sync ajv --strict=false for all validate steps, service-exchange.enum.json registration via -r flag in roadmap-validate, and .gitignore log debris cleanup. These fixes were required for EB roadmap CI to run clean.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtana (L4)",
+    "revertAuthority": "Erik Luhtana (L4)"
+  },
+  "lifecycleState": "S8-closed",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "fix/roadmap-sync-ajv-strict-mode-2026-05-30",
+    "scopeFiles": [
+      "tools/luhtech-schema/src/luhtech_schema/validate.py",
+      ".github/workflows/roadmap-sync.yml",
+      ".github/workflows/roadmap-validate.yml",
+      ".gitignore"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "luhtech-schema validate.py meta-schema discriminator fix — classifies schema vs instance by meta-schema field rather than $id presence — PR #41.",
+      "acceptanceCriteria": [
+        "luhtech-schema validate correctly distinguishes schema files from instance files",
+        "FU-DECISION-LOG-DOLLAR-ID-DRIFT-1 partially addressed"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "roadmap-sync.yml --strict=false added to all ajv validate steps — PR #49. Resolves pre-existing Validate Roadmap Files failures.",
+      "acceptanceCriteria": [
+        "All ajv validate calls in roadmap-sync.yml carry --strict=false",
+        "Roadmap Sync CI green on main"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "service-exchange.enum.json registered via -r flag in roadmap-validate workflow — PR #51.",
+      "acceptanceCriteria": [
+        "roadmap-validate.yml passes -r for service-exchange.enum.json",
+        "roadmap.schema.v3.4 serviceExchanges enum validated correctly"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": ".gitignore with *.log entry to prevent log file debris — PR #50.",
+      "acceptanceCriteria": [
+        ".gitignore exists at repo root with *.log entry"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Each PR CI green individually",
+      "luhtech-schema validate correctly classifies after meta-schema fix"
+    ],
+    "postMerge": [
+      "Roadmap Sync CI green on main",
+      "EB roadmap validates clean end-to-end"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-05-30",
+      "trigger": "CI failures on EB roadmap validation identified; debt clearance arc dispatched"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-05-30",
+      "trigger": "Individual fix branches created across tooling and CI scope"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S7-merged",
+      "date": "2026-05-31",
+      "commitSha": "9dfbc3c1",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/51",
+      "trigger": "Final PR (#51 service-exchange enum) merged; all CI debt cleared"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-05-31",
+      "commitSha": "9dfbc3c1",
+      "trigger": "Post-merge: Roadmap Sync CI green; EB roadmap validates clean"
+    }
+  ],
+  "notes": "Multi-PR deliverable: fix/validate-path-instance-classification-2026-05-29 (#41, a4a80d1e), fix/roadmap-sync-ajv-strict-mode-2026-05-30 (#49, 8a689dd2), chore/gitignore-log-debris-2026-05-30 (#50, c512047e), fix/roadmap-validate-add-r-service-exchange-enum-2026-05-31 (#51, 9dfbc3c1). scope.branch reflects the representative PR branch for the CI strictness fix (#49). S6-staged omitted — multi-PR arc with no single staging event. Decision-log workflow schema fix (PR #53, 26e14ea3) is a related but separate fix filed as part of the broader Roadmap Sync failure; not included in this deliverable scope as it was identified after this arc closed."
+}

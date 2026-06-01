@@ -1,0 +1,99 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-05-30-schema-registry-eb-roadmap-cleanup",
+  "version": "1.0.0",
+  "title": "Schema Registry EB Roadmap Cleanup",
+  "description": "Batch of schema fixes discovered during Ectropy Business roadmap validation: roadmap v3.4 $schema const correction, pitch.problem oneOf regression fix, enum additions (compute, tech-stack, testingTool, architecturePattern), and venture-summary deprecation. All PRs merged 2026-05-30. Cleared the schema validation debt blocking EB roadmap CI.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtana (L4)",
+    "revertAuthority": "Erik Luhtana (L4)"
+  },
+  "lifecycleState": "S8-closed",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/deprecate-venture-summary-2026-05-30",
+    "scopeFiles": [
+      "schemas/roadmap.schema.v3.4.json",
+      "schemas/tech-stack.schema.json",
+      "schemas/_enums/luhtech-enums.schema.json",
+      "schemas/_archive/venture-summary.schema.json",
+      "schemas/_archive/venture-summary.schema.v2.0.json",
+      "schemas/schema-refs.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "roadmap.schema.v3.4.json $schema const corrected (was v3.3, should be v3.4) — PR #39.",
+      "acceptanceCriteria": [
+        "roadmap.schema.v3.4.json declares correct $schema const",
+        "meta-schema-check.yml passes"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "pitch.problem oneOf regression restored to v3.4 shape — PR #40.",
+      "acceptanceCriteria": [
+        "pitch.problem field validates correctly in v3.4 schema"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Enum additions: compute to sharedResourceType (#42), tech-stack values (#43), testingTool component (#44), architecturePattern api-gateway/speckle-integration/bim (#45).",
+      "acceptanceCriteria": [
+        "All four enum expansions land in their respective schema files",
+        "EB roadmap validates against updated schemas"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "venture-summary deprecated: removed from registry, archived at schemas/_archive/ — PR #47.",
+      "acceptanceCriteria": [
+        "venture-summary no longer in schema-refs.json",
+        "Files moved to schemas/_archive/",
+        "Consumers (dashboard-sync, dataroom-sync) on migration path per FU-VENTURE-SUMMARY-DOWNSTREAM-MIGRATION-1"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Each PR CI green individually",
+      "meta-schema-check passes after const fix"
+    ],
+    "postMerge": [
+      "EB roadmap validates against corrected schemas",
+      "venture-summary absent from schema-refs.json"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-05-29",
+      "trigger": "Schema drift identified during EB roadmap validation; batch fix dispatched"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-05-29",
+      "trigger": "Individual fix branches created (fix/roadmap-v3.4-schema-const-2026-05-29, fix/tech-stack-enum-additions-2026-05-29, etc.)"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S7-merged",
+      "date": "2026-05-30",
+      "commitSha": "0f4428f2",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/47",
+      "trigger": "Final PR (#47 venture-summary deprecation) merged; all batch fixes landed"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-05-30",
+      "commitSha": "0f4428f2",
+      "trigger": "Post-merge: EB roadmap CI green; schema-refs reflects deprecation"
+    }
+  ],
+  "notes": "Multi-PR deliverable spanning branches: fix/roadmap-v3.4-schema-const-2026-05-29 (#39, b5d692ac), fix/roadmap-v3.4-pitch-problem-regression-2026-05-29 (#40, cbdd953d), fix/shared-resource-type-enum-compute-2026-05-29 (#42, 6365cf69), fix/tech-stack-enum-additions-2026-05-29 (#43, 328dee97), fix/testing-type-enum-component-2026-05-29 (#44, 7d9530b2), fix/arch-pattern-enum-additions-2026-05-29 (#45, 29ab76c4), chore/deprecate-venture-summary-2026-05-30 (#47, 0f4428f2). scope.branch reflects the terminal PR branch. S6-staged omitted from transitions — multi-PR arc had no single staging event; PRs merged individually."
+}
