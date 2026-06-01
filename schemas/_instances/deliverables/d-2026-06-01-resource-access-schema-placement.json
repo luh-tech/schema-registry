@@ -1,0 +1,102 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-resource-access-schema-placement",
+  "version": "1.0.0",
+  "title": "Resource-Access Schema Relocation \u2014 move from repo root to schemas/ and register",
+  "description": "Moves resource-access.schema.json from SR repo root to schemas/resource-access.schema.json via git mv and registers it via luhtech-schema refs rebuild. Schema already exists at root (authored 2026-05-30, v1.0.0, 13617 bytes) and validates EB PR #257's .roadmap/resource-access.json instance cleanly per substrate read part 2 (2026-06-01). Work is move + register, not author from scratch. Closes two FUs in one PR: FU-RESOURCE-ACCESS-SCHEMA-AUTHORING-1 (EB register, P2, unblocks PR #257) and FU-LUHTECH-SCHEMA-REFS-RESOURCE-ACCESS-PLACEMENT-1 (SR register cleanup, P2). Cross-chat coordination: post-merge, SR comments on EB PR #257 with new schema id URL + SR merge SHA to enable EB to reactivate branch feat/resource-access-schema-2026-05-30.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S6-staged",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/resource-access-schema-placement-2026-06-01",
+    "scopeFiles": [
+      "resource-access.schema.json",
+      "schemas/resource-access.schema.json",
+      "schemas/schema-refs.json",
+      "schemas/_instances/deliverables/d-2026-06-01-resource-access-schema-placement.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "schemas/resource-access.schema.json created via git mv from repo root. Content byte-identical to prior root location.",
+      "acceptanceCriteria": [
+        "File exists at schemas/resource-access.schema.json",
+        "sha256 hash matches the pre-move root copy",
+        "$id field unchanged: https://schemas.luh.tech/resource-access.schema.json",
+        "Re-validates EB PR #257 instance: ajv-cli exit 0"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "resource-access.schema.json at repo root REMOVED. Single canonical location maintained.",
+      "acceptanceCriteria": [
+        "File does not exist at repo root",
+        "git history shows rename not delete+add"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "schema-refs.json regenerated via luhtech-schema refs rebuild. New .schemas.resource-access entry; changelog appended.",
+      "acceptanceCriteria": [
+        ".schemas.resource-access.version = 1.0.0",
+        "meta.version bumped (minor \u2014 new schema registered)",
+        "Changelog entry added",
+        "refs rebuild --check exit 0 (idempotent)"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Prospective deliverable spec \u2014 S4 \u2192 S5 \u2192 S6 across dispatch; S7/S8 in post-merge amendment.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "transitions reflect actual execution"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Substrate baseline (Step 1): root file exists at 13617 bytes, target path free, no registry entry",
+      "Schema validates EB PR #257 instance at new schemas/ path (ajv-cli exit 0)",
+      "git mv preserves rename history",
+      "Deliverable spec validates against deliverable.schema.json v1.1.0",
+      "refs rebuild --check exit 0",
+      "instance-validation.yml, refs-check.yml, pr-mergeability-check.yml, amendment-scope-overlap-check.yml all green"
+    ],
+    "postMerge": [
+      "main shows schemas/resource-access.schema.json",
+      "main does NOT show resource-access.schema.json at root",
+      "schema-refs.json on main includes .schemas.resource-access entry",
+      "SR chat posts comment on EB PR #257 with schema $id + SR merge SHA"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Dispatch authored after substrate reads part 1 + 2 verified scope as move + register, not author. Cross-repo coordination canvas published to EB-agent."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "PROCEED STEP 3 issued; git mv executed; sha256 verified identical; schema re-validated against EB PR #257 instance (exit 0) at new path"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "Refs regenerated (resource-access v1.0.0 registered, 1.20.0 \u2192 1.21.0), idempotent; preparing PR"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-RESOURCE-ACCESS-SCHEMA-AUTHORING-1",
+    "FU-LUHTECH-SCHEMA-REFS-RESOURCE-ACCESS-PLACEMENT-1"
+  ],
+  "notes": "First cross-repo coordination deliverable in FU block. Closes one EB-side FU and one SR-side FU in a single PR. Substrate-verified scope: schema exists, validates instance cleanly, work is mechanical relocation. No FK revision needed \u2014 schema FK fields are documentary strings, not cross-schema validated. Post-merge SR comments on EB PR #257 enabling EB-agent to reactivate branch feat/resource-access-schema-2026-05-30."
+}
