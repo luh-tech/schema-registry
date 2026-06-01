@@ -9,7 +9,7 @@
     "approver": "Erik Luhtana (L4)",
     "revertAuthority": "Erik Luhtana (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S6-staged",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/rule-schema-v11-additive-2026-06-01",
@@ -75,6 +75,18 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Dispatch authored after D-1 close; spec instance authored before any code change (prospective pattern)"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "PROCEED STEP 2 issued; execution begun with deliverable instance authoring"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "All outputs complete (rule v1.1.0 authored, refs regenerated); preparing PR"
     }
   ],
   "relatedFollowUps": [
