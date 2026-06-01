@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/documented-override-schema-constraint-2026-06-01",
@@ -118,10 +118,27 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "Constraint applied to rule v1.2.0 and deliverable v1.1.0; rule promoted to automated; refs regenerated; all 25 instances validated clean; preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "4134a50a9c01b30bf0781cc972b86ab361052571",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/70",
+      "trigger": "Squash merge to main via MERGE PR 70"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "4134a50a9c01b30bf0781cc972b86ab361052571",
+      "trigger": "Post-merge: schemas at new versions, rule promoted, constraint active, refs clean, instance-validation CI passes with -r flag"
     }
   ],
   "relatedFollowUps": [
     "FU-RULE-DOCUMENTED-OVERRIDE-SCHEMA-CONSTRAINT-1"
   ],
-  "notes": "Second rule promotion in the post-foundation FU block. Different mechanism from FU-D-2: schema-constraint (structural) rather than CI workflow (runtime). Demonstrates the rule schema's design allowing rule-specific automation surfaces \u2014 each rule's terminal tier mechanism is rule-specific, not one-size-fits-all. Completes the CI-gating axis pair (RULE-CI-UNSTABLE + RULE-CI-DOCUMENTED-OVERRIDE). Substrate gate scanned 24 instances (19 deliverables including EB session additions, 5 rules); zero violations."
+  "notes": "Second rule promotion in the post-foundation FU block. Different mechanism from FU-D-2: schema-constraint (structural) rather than CI workflow (runtime). Demonstrates the rule schema's design allowing rule-specific automation surfaces \u2014 each rule's terminal tier mechanism is rule-specific, not one-size-fits-all. Completes the CI-gating axis pair (RULE-CI-UNSTABLE + RULE-CI-DOCUMENTED-OVERRIDE). Substrate gate scanned 24 instances (19 deliverables including EB session additions, 5 rules); zero violations.",
+  "mergeCommitSha": "4134a50a9c01b30bf0781cc972b86ab361052571",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/70"
 }

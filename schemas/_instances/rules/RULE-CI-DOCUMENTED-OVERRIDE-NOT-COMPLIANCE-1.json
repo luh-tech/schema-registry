@@ -46,7 +46,7 @@
       "from": "working-model",
       "to": "automated",
       "evidenceClass": "Shared schema constraint authored at schemas/_definitions/forbidden-audit-paint-names.schema.json (FU-D-3, d-2026-06-01-documented-override-schema-constraint). Applied via allOf $ref in rule.schema.json v1.2.0 and deliverable.schema.json v1.1.0. Constraint rejects audit-paint property names (override, documented_exception, truth_delivered_override, audit_override, policy_override, exception_override, and compound forms) at validation time. Construct becomes structurally unrepresentable, not merely unenforceable. Verified by negative test: instance with 'override' field rejected by rule schema via allOf propagation.",
-      "trigger": "Rule promoted via canonical mechanism: schema constraint authored in FU-D-3 dispatch, validated by negative test, applied to both portfolio-governance schemas."
+      "trigger": "Rule promoted via canonical mechanism: schema constraint authored in FU-D-3 dispatch (feat/documented-override-schema-constraint-2026-06-01, merge SHA 4134a50, PR #70), validated by negative test, applied to both portfolio-governance schemas."
     }
   ],
   "gatingBinding": {
