@@ -7,3 +7,7 @@
 # CRM — schemas exist on disk but no live consumer (2026-05-31).
 # Re-evaluate when CRM goes live; remove this line to register.
 crm/**
+
+# Instance files — conform to schemas but are not themselves schemas.
+# Indexed separately if/when an instance registry is built.
+_instances/**
