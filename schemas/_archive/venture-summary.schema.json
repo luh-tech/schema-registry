@@ -6,6 +6,13 @@
     "supersededBy": null,
     "archivedFrom": "schemas/venture-summary.schema.json"
   },
+  "deprecation": {
+    "status": "deprecated",
+    "deprecatedDate": "2026-05-30",
+    "supersededBy": null,
+    "rationale": "Derived artifact, never manually authored. Removed from canonical registry (schema-refs v1.14.0, 2026-05-30). Consumers migrating off per FU-VENTURE-SUMMARY-DOWNSTREAM-MIGRATION-1. Schema remains accessible at canonical URL https://schemas.luh.tech/venture-summary.schema.json for backward reference. Formal deprecation marker applied per d-2026-06-02-deprecation-header-convention.",
+    "archiveLocation": "schemas/_archive/venture-summary.schema.json"
+  },
   "$schema": "http://json-schema.org/draft-07/schema#",
   "version": "1.0.0",
   "$id": "https://schemas.luh.tech/venture-summary.schema.json",
