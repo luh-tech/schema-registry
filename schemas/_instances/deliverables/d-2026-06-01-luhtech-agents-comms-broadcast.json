@@ -3,13 +3,13 @@
   "id": "d-2026-06-01-luhtech-agents-comms-broadcast",
   "version": "1.0.0",
   "title": "luhtech-agents-comms Slack Broadcast (SR Repo v1)",
-  "description": "Builds .github/workflows/slack-broadcast.yml in schema-registry repo. Workflow broadcasts SR PR open/merge events and pushes to schemas/_instances/** to #luhtech-agents-comms channel (ID C0B7EPFCA85). Uses SLACK_BOT_TOKEN GitHub org-level secret sourced from BW item slack-agent-comms-bot in active vault luhtechnology.com. SR-repo only in v1 per three-layer execution model — EB mirror is separate EB-chat deliverable. First broadcast test = this deliverable's own merge event. Establishes infrastructure that promotes RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 and RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 automation paths. Scope (b) per Erik direction 2026-06-01.",
+  "description": "Builds .github/workflows/slack-broadcast.yml in schema-registry repo. Workflow broadcasts SR PR open/merge events and pushes to schemas/_instances/** to #luhtech-agents-comms channel (ID C0B7EPFCA85). Uses SLACK_BOT_TOKEN GitHub org-level secret sourced from BW item slack-agent-comms-bot in active vault luhtechnology.com. SR-repo only in v1 per three-layer execution model \u2014 EB mirror is separate EB-chat deliverable. First broadcast test = this deliverable's own merge event. Establishes infrastructure that promotes RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 and RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 automation paths. Scope (b) per Erik direction 2026-06-01.",
   "authority": {
     "author": "Claude (SR chat), L1",
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S6-staged",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/luhtech-agents-comms-broadcast-2026-06-01",
@@ -21,7 +21,7 @@
   "outputs": [
     {
       "id": "OUT-1",
-      "description": ".github/workflows/slack-broadcast.yml — GHA workflow broadcasting SR PR open/merge events and pushes to schemas/_instances/** to #luhtech-agents-comms channel.",
+      "description": ".github/workflows/slack-broadcast.yml \u2014 GHA workflow broadcasting SR PR open/merge events and pushes to schemas/_instances/** to #luhtech-agents-comms channel.",
       "acceptanceCriteria": [
         "Workflow YAML valid",
         "Triggers on pull_request (opened, closed, reopened) and push to main with paths schemas/_instances/**",
@@ -35,14 +35,15 @@
       "id": "OUT-2",
       "description": "GitHub org-level secret SLACK_BOT_TOKEN set via gh secret set --org sourcing BW item slack-agent-comms-bot.",
       "acceptanceCriteria": [
-        "Secret set at org level (visible to all luh-tech repos)",
+        "Secret set at repo level (luh-tech/schema-registry) \u2014 org-level fallback per dispatch; admin:org scope absent from current token",
         "Secret value never echoed in chat or terminal (pipe-not-echo per memory #9)",
-        "Secret access confirmed by workflow run on this deliverable's PR"
+        "Secret access confirmed by workflow run on this deliverable's PR",
+        "EB mirror must set its own SLACK_BOT_TOKEN from same BW item when EB-chat authors workflow"
       ]
     },
     {
       "id": "OUT-3",
-      "description": "Prospective deliverable spec — S4 → S5 → S6 across dispatch; S7/S8 post-merge.",
+      "description": "Prospective deliverable spec \u2014 S4 \u2192 S5 \u2192 S6 across dispatch; S7/S8 post-merge.",
       "acceptanceCriteria": [
         "Validates against deliverable.schema.json v1.1.0",
         "transitions reflect actual execution"
@@ -88,8 +89,20 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Dispatch authored after FU-D-5f close (6d9970a). All manual prerequisites complete: channel exists, bot installed, BW item stored. BW sync run. Scope (b) per Erik direction."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "BW preflight clean (prefix xoxb-105); workflow authored; secret distributed at repo-level (org-level failed: admin:org scope absent; fallback per dispatch instructions)"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "All validations clean; preparing PR"
     }
   ],
   "relatedFollowUps": [],
-  "notes": "Portfolio infrastructure deliverable. Does not close an FU; builds the automation path that future deliverables will reference in evidenceClass to promote RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 and RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1. First end-to-end use of Slack bot infrastructure across LuhTech portfolio. EB mirror is separate EB-chat work per three-layer model — SR cannot reach into EB repo. Cross-chat-relay canvas at OUT-5 hands the pattern to EB-chat. Channel: C0B7EPFCA85 (#luhtech-agents-comms, private). Secret: SLACK_BOT_TOKEN at GitHub org level so EB workflow can reuse same secret. v1 scope (b) = PR events + schemas/_instances/** pushes. Loop prevention via [skip-broadcast] commit message marker."
+  "notes": "Portfolio infrastructure deliverable. Does not close an FU; builds the automation path that future deliverables will reference in evidenceClass to promote RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 and RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1. First end-to-end use of Slack bot infrastructure across LuhTech portfolio. EB mirror is separate EB-chat work per three-layer model \u2014 SR cannot reach into EB repo. Cross-chat-relay canvas at OUT-5 hands the pattern to EB-chat. Channel: C0B7EPFCA85 (#luhtech-agents-comms, private). Secret: SLACK_BOT_TOKEN at GitHub org level so EB workflow can reuse same secret. v1 scope (b) = PR events + schemas/_instances/** pushes. Loop prevention via [skip-broadcast] commit message marker."
 }
