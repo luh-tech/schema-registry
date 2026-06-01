@@ -2,14 +2,14 @@
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-01-documented-override-schema-constraint",
   "version": "1.0.0",
-  "title": "Documented-Override Schema Constraint — promote RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1 to automated",
+  "title": "Documented-Override Schema Constraint \u2014 promote RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1 to automated",
   "description": "Authors schemas/_definitions/forbidden-audit-paint-names.schema.json as a shared Draft 7 propertyNames constraint that rejects override/audit-paint field names. Applies the constraint via $ref to rule.schema.json and deliverable.schema.json. Promotes RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1 from working-model to automated via schema-constraint mechanism. Completes the CI-gating axis pair started by FU-D-2: where FU-D-2 added a runtime gate (CI workflow), this adds a structural gate (schema rejects the construct entirely). Closes FU-RULE-DOCUMENTED-OVERRIDE-SCHEMA-CONSTRAINT-1.",
   "authority": {
     "author": "Claude (chat), L1",
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S6-staged",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/documented-override-schema-constraint-2026-06-01",
@@ -25,7 +25,7 @@
   "outputs": [
     {
       "id": "OUT-1",
-      "description": "schemas/_definitions/forbidden-audit-paint-names.schema.json — shared Draft 7 constraint via propertyNames pattern rejecting audit-paint field names.",
+      "description": "schemas/_definitions/forbidden-audit-paint-names.schema.json \u2014 shared Draft 7 constraint via propertyNames pattern rejecting audit-paint field names.",
       "acceptanceCriteria": [
         "File exists at canonical path",
         "Valid Draft 7 schema",
@@ -35,9 +35,9 @@
     },
     {
       "id": "OUT-2",
-      "description": "schemas/rule.schema.json v1.1.2 → v1.2.0 — references the forbidden-audit-paint-names constraint via allOf composition.",
+      "description": "schemas/rule.schema.json v1.1.2 \u2192 v1.2.0 \u2014 references the forbidden-audit-paint-names constraint via allOf composition.",
       "acceptanceCriteria": [
-        "Version field is 1.2.0 (MINOR — added capability)",
+        "Version field is 1.2.0 (MINOR \u2014 added capability)",
         "Top-level allOf includes $ref to forbidden-audit-paint-names.schema.json",
         "Validates as Draft 7",
         "All 5 existing rule instances re-validate clean"
@@ -45,7 +45,7 @@
     },
     {
       "id": "OUT-3",
-      "description": "schemas/deliverable.schema.json v1.0.0 → v1.1.0 — same constraint applied.",
+      "description": "schemas/deliverable.schema.json v1.0.0 \u2192 v1.1.0 \u2014 same constraint applied.",
       "acceptanceCriteria": [
         "Version field is 1.1.0",
         "Top-level allOf includes $ref to forbidden-audit-paint-names.schema.json",
@@ -64,7 +64,7 @@
     },
     {
       "id": "OUT-5",
-      "description": "RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1 promoted via canonical mechanism: version 1.0.0 → 1.1.0, tierState.activeTier flipped working-model → automated, transition appended with evidenceClass.",
+      "description": "RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1 promoted via canonical mechanism: version 1.0.0 \u2192 1.1.0, tierState.activeTier flipped working-model \u2192 automated, transition appended with evidenceClass.",
       "acceptanceCriteria": [
         "Rule instance version is 1.1.0",
         "tierState.activeTier = automated",
@@ -74,7 +74,7 @@
     },
     {
       "id": "OUT-6",
-      "description": "Prospective deliverable spec — S4 → S5 → S6 across dispatch; S7/S8 post-merge amendment.",
+      "description": "Prospective deliverable spec \u2014 S4 \u2192 S5 \u2192 S6 across dispatch; S7/S8 post-merge amendment.",
       "acceptanceCriteria": [
         "Spec validates against deliverable.schema.json",
         "transitions reflect actual execution"
@@ -106,10 +106,22 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Dispatch authored after FU-D-2 close (6ae35c7); second rule promotion in FU block; completes CI-gating axis pair"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "PROCEED STEP 2 issued; substrate gate passed (24 instances, 0 violations); constraint authored and verified"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "Constraint applied to rule v1.2.0 and deliverable v1.1.0; rule promoted to automated; refs regenerated; all 25 instances validated clean; preparing PR"
     }
   ],
   "relatedFollowUps": [
     "FU-RULE-DOCUMENTED-OVERRIDE-SCHEMA-CONSTRAINT-1"
   ],
-  "notes": "Second rule promotion in the post-foundation FU block. Different mechanism from FU-D-2: schema-constraint (structural) rather than CI workflow (runtime). Demonstrates the rule schema's design allowing rule-specific automation surfaces — each rule's terminal tier mechanism is rule-specific, not one-size-fits-all. Completes the CI-gating axis pair (RULE-CI-UNSTABLE + RULE-CI-DOCUMENTED-OVERRIDE). Substrate gate scanned 24 instances (19 deliverables including EB session additions, 5 rules); zero violations."
+  "notes": "Second rule promotion in the post-foundation FU block. Different mechanism from FU-D-2: schema-constraint (structural) rather than CI workflow (runtime). Demonstrates the rule schema's design allowing rule-specific automation surfaces \u2014 each rule's terminal tier mechanism is rule-specific, not one-size-fits-all. Completes the CI-gating axis pair (RULE-CI-UNSTABLE + RULE-CI-DOCUMENTED-OVERRIDE). Substrate gate scanned 24 instances (19 deliverables including EB session additions, 5 rules); zero violations."
 }
