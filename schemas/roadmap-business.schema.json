@@ -758,6 +758,41 @@
       "type": "object",
       "description": "Venture-specific extensions beyond base schema",
       "additionalProperties": true
+    },
+    "timeline": {
+      "type": "array",
+      "description": "Venture milestone timeline — ordered list of key events with 3-state status tracking (actual / forecast / planned).",
+      "items": {
+        "type": "object",
+        "required": ["event", "date", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "event": {
+            "type": "string",
+            "description": "Milestone identifier.",
+            "enum": ["founded", "modelStart", "pilotSigned", "firstRevenue", "seedClose", "scaleStart"]
+          },
+          "date": {
+            "type": ["string", "null"],
+            "description": "Target or actual date (YYYY-MM-DD), or null when undetermined.",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "status": {
+            "type": "string",
+            "description": "State of this milestone.",
+            "enum": ["actual", "forecast", "planned"]
+          },
+          "phaseTransition": {
+            "type": "string",
+            "description": "Phase the venture enters at this milestone.",
+            "enum": ["Pre-Seed", "Post-Pilot", "Growth", "Scale"]
+          },
+          "note": {
+            "type": "string",
+            "description": "Free-text annotation."
+          }
+        }
+      }
     }
   },
   "required": [
