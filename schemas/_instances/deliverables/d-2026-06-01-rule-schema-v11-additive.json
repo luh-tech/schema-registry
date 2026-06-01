@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-rule-schema-v11-additive",
+  "version": "1.0.0",
+  "title": "rule.schema.json v1.1.0 \u2014 authority + evidenceClass + instanceLocation",
+  "description": "Extends rule.schema.json from v1.0.0 to v1.1.0 with three additive non-breaking changes: top-level authority block (required, matches deliverable.schema.json shape, seeds 5-tier auth model), evidenceClass on transitions (required where to is formalized or automated), and instanceLocation convention documented in schema description (rule instances live at schemas/_instances/rules/). First deliverable authored prospectively as a schema-bound instance from initiation.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtana (L4)",
+    "revertAuthority": "Erik Luhtana (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/rule-schema-v11-additive-2026-06-01",
+    "scopeFiles": [
+      "schemas/rule.schema.json",
+      "schemas/_instances/deliverables/d-2026-06-01-rule-schema-v1.1-additive.json",
+      "schemas/schema-refs.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "schemas/rule.schema.json v1.0.0 \u2192 v1.1.0 \u2014 additive changes: top-level authority block (required), evidenceClass on transitions (required where to is formalized/automated), instanceLocation convention in schema description.",
+      "acceptanceCriteria": [
+        "rule.schema.json version field is 1.1.0",
+        "Validates as Draft 7 via ajv-cli@5 compile --strict=false",
+        "authority block present in properties with author, approver, revertAuthority all required string fields",
+        "authority listed in top-level required array",
+        "transitions items now define evidenceClass property",
+        "transitions items have conditional requirement that evidenceClass is required when to is formalized or automated (via if/then)",
+        "Top-level description field updated to document instanceLocation convention"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "schemas/_instances/deliverables/d-2026-06-01-rule-schema-v1.1-additive.json \u2014 prospective deliverable instance authored at S4-authored, transitions through S5-in-progress and S6-staged across the dispatch execution.",
+      "acceptanceCriteria": [
+        "Instance file exists at canonical path",
+        "Validates against deliverable.schema.json",
+        "lifecycleState transitions reflect actual execution (S4 \u2192 S5 \u2192 S6 by PR open; S7 \u2192 S8 in post-merge amendment)"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "schema-refs.json regenerated \u2014 rule entry version 1.0.0 \u2192 1.1.0; auto-changelog entry; no other changes.",
+      "acceptanceCriteria": [
+        ".schemas.rule.version is 1.1.0 in schema-refs.json",
+        "meta.changelog has new entry with date and 'Updated: rule v1.0.0 -> v1.1.0' change",
+        "Zero changes to other registered entries",
+        "refs rebuild --check exit 0 after regeneration (idempotent)"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli@5 compile schemas/rule.schema.json --strict=false succeeds",
+      "deliverable instance validates against deliverable.schema.json",
+      "refs rebuild --check exit 0 after rule schema version bump and refs regeneration",
+      "meta-schema-check.yml passes",
+      "refs-check.yml passes",
+      "All existing CI green"
+    ],
+    "postMerge": [
+      "main shows schemas/rule.schema.json at version 1.1.0",
+      "main shows schema-refs.json .schemas.rule.version = 1.1.0",
+      "refs rebuild --check exit 0 on main",
+      "All CI passing"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Dispatch authored after D-1 close; spec instance authored before any code change (prospective pattern)"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-RULE-SCHEMA-EVIDENCECLASS-ENUM-1",
+    "FU-RULE-SCHEMA-AUTHORITY-TIER-ENUM-1"
+  ],
+  "notes": "Third deliverable in the rule-pipeline foundation arc, first authored prospectively as a schema-bound instance (D-0 and D-1 were retro-backfilled into the deliverable schema). Additive-only changes ensure backward compatibility with rule.schema.json v1.0.0 \u2014 no existing field constraints tightened, no fields removed. Authority block shape matches deliverable.schema.json exactly so the 5-tier auth enum promotion (when authored) updates both schemas in one PR. evidenceClass conditional requirement uses JSON Schema if/then to enforce only on promotion-direction transitions; downgrade transitions (formalized \u2192 working-model, formalized \u2192 reverted) do not require it. Dispatch named the deliverable id 'd-2026-06-01-rule-schema-v1.1-additive' and branch 'feat/rule-schema-v1.1-additive-2026-06-01'; both normalized to remove dots (v1.1 \u2192 v11) because deliverable.schema.json id and scope.branch patterns require [a-z0-9-]+ (same issue as followup-register instance in D-1)."
+}
