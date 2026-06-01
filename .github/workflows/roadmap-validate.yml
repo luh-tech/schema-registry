@@ -111,15 +111,13 @@ jobs:
             echo "::error::roadmap.json required"; FAILED=$((FAILED + 1))
           fi
           
-          # venture-summary.json (REQUIRED)
+          # venture-summary.json (OPTIONAL — D7 2026-05-17 deprecated as active flow file; schema retained)
           if [ -f "$ROADMAP_DIR/venture-summary.json" ]; then
             if ajv validate -s "$SCHEMA_DIR/venture-summary.schema.${{ inputs.venture-summary-version }}.json" -d "$ROADMAP_DIR/venture-summary.json" -r "$ENUM_SCHEMA" --spec=draft7 --strict=false -c ajv-formats; then
               echo "PASS venture-summary.json"; PASSED=$((PASSED + 1))
             else
               echo "FAIL venture-summary.json"; FAILED=$((FAILED + 1))
             fi
-          else
-            echo "::error::venture-summary.json required"; FAILED=$((FAILED + 1))
           fi
           
           # decision-log.json (OPTIONAL)
