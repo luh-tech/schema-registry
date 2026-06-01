@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/deliverable-schema-foundation-2026-05-31",
@@ -106,8 +106,25 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "All outputs complete; PR being prepared"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "b77cb9e5e7a5b96cccc1ad44553d31fd9815d380",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/57",
+      "trigger": "Squash merge to main via MERGE PR 57"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "b77cb9e5e7a5b96cccc1ad44553d31fd9815d380",
+      "trigger": "Post-merge verification clean: deliverable registered, 5 instances present, no _instances leakage, refs rebuild --check exit 0"
     }
   ],
   "relatedFollowUps": [],
-  "notes": "First instance of deliverable.schema.json. Self-referential bootstrap \u2014 this spec is an instance of the schema the deliverable authored. Establishes _instances/ namespace pattern reusable for D-3 rule instances at schemas/_instances/rules/."
+  "notes": "First instance of deliverable.schema.json. Self-referential bootstrap \u2014 this spec is an instance of the schema the deliverable authored. Establishes _instances/ namespace pattern reusable for D-3 rule instances at schemas/_instances/rules/.",
+  "mergeCommitSha": "b77cb9e5e7a5b96cccc1ad44553d31fd9815d380",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/57"
 }
