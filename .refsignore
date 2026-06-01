@@ -1,0 +1,9 @@
+# Schema refs exclusion list — patterns relative to schemas/
+# Matched files are excluded from schema-refs.json regeneration.
+# Glob patterns; ** = recursive match.
+# Authoring: L4 approval required for additions.
+# Format: <pattern>  # <reason> (<date>)
+
+# CRM — schemas exist on disk but no live consumer (2026-05-31).
+# Re-evaluate when CRM goes live; remove this line to register.
+crm/**
