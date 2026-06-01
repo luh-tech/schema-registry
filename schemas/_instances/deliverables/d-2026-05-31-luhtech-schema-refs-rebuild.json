@@ -1,0 +1,136 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-05-31-luhtech-schema-refs-rebuild",
+  "version": "1.0.0",
+  "title": "luhtech-schema refs rebuild generator + CI drift check (D-0)",
+  "description": "Built the luhtech-schema refs rebuild subcommand and validated by populating missing schema ref data (rule.schema.json, merged at a5a30ce 2026-05-31). Pure regeneration from disk truth with three documented compatibility bends: URN preservation, description preservation for canonical entries, .refsignore exclusion. CI drift check ensures refs stay in sync going forward.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S8-closed",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/luhtech-schema-refs-rebuild-2026-05-31",
+    "scopeFiles": [
+      "tools/luhtech-schema/src/luhtech_schema/refs.py",
+      "tools/luhtech-schema/src/luhtech_schema/cli.py",
+      ".refsignore",
+      "schemas/patent/_index.json",
+      "schemas/schema-refs.json",
+      ".github/workflows/refs-check.yml"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "refs.py generator module — pure regeneration from disk truth with .refsignore, URN preservation, description preservation, file path normalization, group metadata sidecars, local date for changelog.",
+      "acceptanceCriteria": [
+        "tools/luhtech-schema/src/luhtech_schema/refs.py exists",
+        "luhtech-schema refs rebuild and --check both functional",
+        "Idempotent (second rebuild produces no further changes)"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "cli.py refs subparser wired at parity with existing subcommands.",
+      "acceptanceCriteria": [
+        "luhtech-schema refs rebuild callable from CLI",
+        "luhtech-schema refs rebuild --check callable from CLI"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": ".refsignore exclusion list with crm/** initial entry.",
+      "acceptanceCriteria": [
+        ".refsignore at repo root",
+        "crm/** present excluding 27 CRM schemas"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "schemas/patent/_index.json sidecar carrying canonical patent group metadata.",
+      "acceptanceCriteria": [
+        "Sidecar file exists",
+        "Generator reads sidecar for group entry metadata"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "schema-refs.json regenerated with 34 additions (rule + 33 previously-unregistered canonical schemas).",
+      "acceptanceCriteria": [
+        "rule.schema.json registered as schemas.rule",
+        "33 previously-unregistered schemas registered (14 ROOT-LEVEL, 8 PORTFOLIO, 7 PM, 4 SERVICE-GRAPH)",
+        "Zero changes to previously-registered entries (URN ids and curated descriptions preserved)",
+        "CRM excluded via .refsignore"
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": ".github/workflows/refs-check.yml CI drift gate.",
+      "acceptanceCriteria": [
+        "Workflow exists and validates as YAML",
+        "Runs refs rebuild --check on PR; fails on drift",
+        "Passed on first run after merge"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "refs rebuild --check exits 1 with expected drift (34 additions, no regressions to previously-registered entries)",
+      "Regression check (jq -cS sort-normalized) confirmed zero value changes to previously-registered entries",
+      "Idempotency confirmed: second rebuild produces no changes",
+      "All existing CI green"
+    ],
+    "postMerge": [
+      "main shows schema-refs.json with rule.schema.json registered",
+      "refs rebuild --check exit 0 on main (clean state)",
+      "refs-check CI passed on first run"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-05-31",
+      "trigger": "Dispatch authored after substrate research (R-1 through R-10 in foundation report 2026-05-31-rule-pipeline-foundation-report.md)"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-05-31",
+      "trigger": "PROCEED STEP 1 issued; branch feat/luhtech-schema-refs-rebuild-2026-05-31 created"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-05-31",
+      "trigger": "PR #54 opened after PROCEED STEP 9"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-05-31",
+      "commitSha": "8076c2d",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/54",
+      "trigger": "MERGE PR 54 — squash merge, branch deleted"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-05-31",
+      "commitSha": "8076c2d",
+      "trigger": "Post-merge verification clean: rule registered, refs rebuild --check exit 0 on main, refs-check CI passed on first run"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-LUHTECH-SCHEMA-REFS-UNIT-TESTS-1",
+    "FU-LUHTECH-SCHEMA-REFS-RESOURCE-ACCESS-PLACEMENT-1",
+    "FU-SCHEMA-REGISTRY-STALE-HANDOFF-MD-CLEANUP-1",
+    "FU-LUHTECH-SCHEMA-CRM-SCOPE-REVIEW-1"
+  ],
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/54",
+  "mergeCommitSha": "8076c2d",
+  "notes": "First deliverable of the rule-pipeline foundation arc. Established mechanical refs registration for every subsequent schema landing. Three documented contract bends (URN preservation, description preservation, .refsignore exclusion) all principled and traceable to schema-refs v1.9.0 changelog or .refsignore content. Scope expanded mid-deliverable per memory #20 substrate-aligned enterprise-complete: from rule + bug fixes to comprehensive registry (34 additions) when scope categorization revealed hand-curated registry tracked only ~13% of disk reality."
+}

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-05-30-followup-register-full-conformance",
+  "version": "1.0.0",
+  "title": "Follow-Up Register Full Conformance (v1.0.0 → v1.1.0)",
+  "description": "Schema conformance audit of follow-up-register.schema.json culminating in v1.1.0: added relatedDecisions (array of d-YYYY-MM-DD-slug strings), meta.byStatus (integer count map), and meta.byPriority (integer count map). Formalizes existing patterns observed across 9 live FUs. Cross-repo authority: FU-FEATURE-DEC-INFRA-GRAPH-ARCHITECTURE (Ectropy-Business consumer).",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtana (L4)",
+    "revertAuthority": "Erik Luhtana (L4)"
+  },
+  "lifecycleState": "S8-closed",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/follow-up-register-additive-fields-2026-05-30",
+    "scopeFiles": [
+      "schemas/follow-up-register.schema.json",
+      "schemas/schema-refs.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "follow-up-register.schema.json v1.1.0 — adds relatedDecisions, meta.byStatus, meta.byPriority as optional fields (additive, non-breaking).",
+      "acceptanceCriteria": [
+        "Schema version bumped to 1.1.0",
+        "relatedDecisions field present: array of strings matching ^d-\\d{4}-\\d{2}-\\d{2}-[a-z0-9-]+$",
+        "meta.byStatus field present: integer counts per status enum",
+        "meta.byPriority field present: integer counts per priority enum",
+        "All existing valid FU register instances remain valid (additive only)",
+        "schema-refs.json pointer updated to reflect v1.1.0"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli validate existing .roadmap/follow-up-register.json instances pass",
+      "meta-schema-check.yml passes",
+      "CI green"
+    ],
+    "postMerge": [
+      "schema-refs.json shows follow-up-register at version 1.1.0",
+      "Ectropy-Business consumer validated against updated schema"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-05-30",
+      "trigger": "Schema conformance audit identified relatedDecisions pattern in 9 live FUs; decision to formalize"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-05-30",
+      "trigger": "Branch feat/follow-up-register-v1.1.0-additive-fields-2026-05-30 created (actual branch name contains version dots; scope.branch normalized for schema conformance)"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-05-30",
+      "trigger": "PR #48 opened"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-05-31",
+      "commitSha": "c81cc8e4",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/48",
+      "trigger": "PR #48 squash-merged to main"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-05-31",
+      "commitSha": "c81cc8e4",
+      "trigger": "Post-merge: schema-refs.json updated to v1.1.0; Ectropy-Business consumer validated"
+    }
+  ],
+  "notes": "Actual branch name was feat/follow-up-register-v1.1.0-additive-fields-2026-05-30 (PR #48). scope.branch normalized to feat/follow-up-register-additive-fields-2026-05-30 because the schema pattern [a-z0-9-]+ does not permit dots — the v1.1.0 version string in the original branch name contains dots. mergedAt was 2026-05-31 (UTC) though the work was completed 2026-05-30 local time."
+}
