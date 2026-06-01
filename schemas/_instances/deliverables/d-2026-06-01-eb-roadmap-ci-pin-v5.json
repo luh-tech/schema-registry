@@ -1,0 +1,58 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-eb-roadmap-ci-pin-v5",
+  "version": "1.0.0",
+  "title": "Ectropy-Business: bump roadmap-ci.yml pin to @v5",
+  "description": "Updates luh-tech/Ectropy-Business .github/workflows/roadmap-ci.yml pin from @v4 to @v5 so this venture's roadmap-business.json validates against the schema-registry's timeline-bearing schema. Child of d-2026-06-01-roadmap-business-schema-timeline-fix. Cannot proceed until parent's @v5 tag is cut.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "chore/roadmap-ci-pin-v5-2026-06-01",
+    "scopeFiles": [
+      ".github/workflows/roadmap-ci.yml"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Single-line pin change @v4 -> @v5 in roadmap-ci.yml; Roadmap CI green on this venture's main after merge.",
+      "acceptanceCriteria": [
+        "Pin reference changed from @v4 to @v5 in .github/workflows/roadmap-ci.yml",
+        "Roadmap CI green on the PR branch",
+        "ajv-cli validates this venture's .roadmap/roadmap-business.json against new schema (via @v5 reusable workflow)",
+        "Squash-merge to main",
+        "Post-merge: Roadmap CI green on main"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli@5 validates this DELIVERABLE.json instance against deliverable.schema.json v1.0.0",
+      "Parent deliverable d-2026-06-01-roadmap-business-schema-timeline-fix at S7-merged or later",
+      "@v5 tag exists on schema-registry main",
+      "Roadmap CI green on PR"
+    ],
+    "postMerge": [
+      "Roadmap CI green on luh-tech/Ectropy-Business main",
+      "Portfolio failing count decremented by 1"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Authored as child of d-2026-06-01-roadmap-business-schema-timeline-fix"
+    }
+  ],
+  "parentDeliverable": "d-2026-06-01-roadmap-business-schema-timeline-fix",
+  "relatedFollowUps": [
+    "FU-VENTURE-DATA-SCHEMA-DRIFT-1"
+  ],
+  "notes": "Parallelizable with sibling pin-update deliverables once parent's @v5 is cut. Single-file scope; surgical change."
+}
