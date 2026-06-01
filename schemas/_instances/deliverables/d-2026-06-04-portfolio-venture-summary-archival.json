@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-04-portfolio-venture-summary-archival",
+  "version": "1.0.0",
+  "title": "Wave 2: archive 7 satellite venture venture-summary.json instances",
+  "description": "Per D7 (2026-05-17) venture-summary.json was deprecated portfolio-wide; schema retained as canonical contract. EB instance was archived in PR #47. This deliverable archives the remaining 7 satellite ventures' venture-summary.json instances using the archive directory infrastructure from sibling Wave 2 deliverable. Each archival writes an archive-manifest entry per the archive-manifest.schema.json from sibling. No data loss — instances move to archive with full audit metadata.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/portfolio-venture-summary-archival-2026-06-04",
+    "scopeFiles": [
+      "schemas/_archive/venture-summary/**"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Pre-work: enumerate the 7 satellite ventures with active venture-summary.json instances. Confirm each is safe-to-archive (no live consumer reads). Erik confirmed safe in prior session; verify per-instance via grep across portfolio.",
+      "acceptanceCriteria": [
+        "7 satellite ventures identified (excluding EB already archived in PR #47)",
+        "Per-venture safe-to-archive grep confirms no live reads",
+        "Report posted to chat for confirmation before archival"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "For each of 7 ventures: move venture-summary.json to schemas/_archive/venture-summary/<venture>/ and add archive-manifest.json entry per archive-manifest.schema.json. Each move is one commit (7 commits total in single PR).",
+      "acceptanceCriteria": [
+        "7 venture-summary.json instances moved to archive",
+        "7 archive-manifest.json entries created",
+        "Each archive-manifest validates against archive-manifest.schema.json",
+        "refs rebuild --check exit 0 (archive in refsignore so no registry change)",
+        "Squash-merge to main"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli@5 validates this DELIVERABLE.json instance against deliverable.schema.json v1.0.0",
+      "Sibling d-2026-06-03 at S7-merged (archive infrastructure must exist)",
+      "Each archive-manifest validates against archive-manifest.schema.json",
+      "refs rebuild --check exit 0"
+    ],
+    "postMerge": [
+      "Schema-registry main has no active venture-summary.json instances outside _archive/",
+      "All 7 venture-summary moves auditable via archive-manifest entries"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Wave 2 child spec authored alongside parent and siblings"
+    }
+  ],
+  "parentDeliverable": "d-2026-06-01-deck-sweep-sequencing",
+  "notes": "Blocked-by d-2026-06-03 (needs archive infrastructure). 7 venture moves in one PR; one commit per venture for clean revert if needed. EB already archived in PR #47 (2026-05-17); not in this scope. Single-repo (schema-registry) since the venture-summary instances live there as snapshots, not in venture repos."
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-03-archive-directory-infrastructure",
+  "version": "1.0.0",
+  "title": "Wave 2: archive directory infrastructure for retired schemas/instances",
+  "description": "Establishes the archive directory pattern for retired schemas and instances. When a schema reaches status=retired (per deprecation-header convention from sibling Wave 2 deliverable), it moves to an archive location with audit metadata preserved. Defines the archive directory path convention, the archive-manifest schema (what archived items get tagged with), and the move-to-archive workflow. Does not retire any schemas in this deliverable; it builds the infrastructure.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/archive-directory-infrastructure-2026-06-03",
+    "scopeFiles": [
+      "schemas/_archive/.gitkeep",
+      "schemas/archive-manifest.schema.json",
+      ".refsignore"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Create schemas/_archive/ directory with .gitkeep; add to .refsignore so archived schemas don't trigger registry rebuild.",
+      "acceptanceCriteria": [
+        "schemas/_archive/.gitkeep exists",
+        ".refsignore includes _archive/** pattern",
+        "refs rebuild --check exit 0 after addition"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Author schemas/archive-manifest.schema.json defining what metadata an archived schema carries: archivedDate, archivedFrom (original path), retiredDeliverable (the d-* id that retired it), supersededBy (optional), retentionPolicy.",
+      "acceptanceCriteria": [
+        "archive-manifest.schema.json compiles as draft-07",
+        "$id is https://schemas.luh.tech/archive-manifest.schema.json",
+        "Required: archivedDate, archivedFrom, retiredDeliverable, retentionPolicy",
+        "meta-schema-check.yml passes"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli@5 validates this DELIVERABLE.json instance against deliverable.schema.json v1.0.0",
+      "archive-manifest.schema.json validates as draft-07",
+      ".refsignore syntactically valid (no broken patterns)",
+      "refs rebuild --check exit 0"
+    ],
+    "postMerge": [
+      "Archive directory present on main",
+      "Sibling Wave 2 deliverable d-2026-06-04 unblocked to move venture-summary instances"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Wave 2 child spec authored alongside parent and siblings"
+    }
+  ],
+  "parentDeliverable": "d-2026-06-01-deck-sweep-sequencing",
+  "notes": "Infrastructure-only; no schemas retired in this deliverable. Sibling d-2026-06-04 uses this infrastructure to archive 7 venture-summary instances. Single-repo scope; greenfield directory + schema."
+}

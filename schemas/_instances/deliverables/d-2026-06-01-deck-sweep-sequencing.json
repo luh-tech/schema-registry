@@ -1,0 +1,105 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-deck-sweep-sequencing",
+  "version": "1.0.0",
+  "title": "Deck-sweep arc: 5-wave portfolio cleanup sequencing",
+  "description": "Parent deliverable for a 5-wave portfolio sweep clearing CI debt, establishing deprecation infrastructure, and landing tooling subcommands. Wave 1 (roadmap-validate venture-summary optional) merged closed-with-debt; spike on roadmap-business.json baseline drift terminated COLLAPSE-AND-RESUME into d-timeline-fix family which closed 4/11 timeline-class failures. Wave 2 establishes ground-truth preservation foundation. Waves 3-5 deliver tooling, tangential cleanups, and long-tail drift batch.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S5-in-progress",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/d-deck-sweep-and-wave-2-family-2026-06-01",
+    "scopeFiles": [
+      "schemas/_instances/deliverables/d-2026-06-01-deck-sweep-sequencing.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Wave 1 — Unblock CI: roadmap-validate venture-summary optional (1 deliverable). Status: MERGED 2026-06-01 closed-with-debt.",
+      "acceptanceCriteria": [
+        "d-2026-06-01-roadmap-validate-venture-summary-optional reaches S7-merged",
+        "EB CI no longer fails on venture-summary check after pin bump to @v4"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Wave 2 — Ground-truth preservation foundation (4 deliverables): deprecation header convention, canonical schema authoring for EB drift, archive directory infrastructure, portfolio venture-summary archival.",
+      "acceptanceCriteria": [
+        "d-2026-06-02-deprecation-header-convention reaches S7-merged",
+        "d-2026-06-02-canonical-schema-authoring-for-eb-drift reaches S7-merged",
+        "d-2026-06-03-archive-directory-infrastructure reaches S7-merged",
+        "d-2026-06-04-portfolio-venture-summary-archival reaches S7-merged"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Wave 3 — luhtech-schema tooling subcommands + MCP-readiness (3 deliverables): deprecate subcommand, fu+validate-instance subcommands, mcp-serve.",
+      "acceptanceCriteria": [
+        "d-2026-06-05-luhtech-schema-deprecate-subcommand reaches S7-merged",
+        "d-2026-06-06-luhtech-schema-fu-validate-instance-subcommands reaches S7-merged",
+        "d-2026-06-07-luhtech-schema-mcp-serve reaches S7-merged"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Wave 4 — Tangential cleanup (3 deliverables, interleaved): CI workflow registry rename, CIS cost tools BW UUID, draft-2020-12 violations.",
+      "acceptanceCriteria": [
+        "3 tangential-cleanup deliverables authored and reach S7-merged"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "Wave 5 — Long-tail drift batch (1 deliverable): ground-truth-drift-batch covering ~24 unblocked parallelizable FUs, executed after Wave 2 deprecation convention is enforced.",
+      "acceptanceCriteria": [
+        "d-2026-06-08-ground-truth-drift-batch reaches S7-merged",
+        "FU-VENTURE-DATA-SCHEMA-DRIFT-1 residual classes (5/11 post-d-timeline-fix) addressed"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "All 13 child deliverables authored and validated against deliverable.schema.json v1.0.0",
+      "Each wave reaches S7-merged before next wave's first deliverable enters S5",
+      "Exceptions: Wave 1 spike (collapse-and-resume) and d-timeline-fix family are recorded as in-arc deviations, not arc deviations"
+    ],
+    "postMerge": [
+      "All 13 child deliverables at S8-closed",
+      "Portfolio CI debt cleared per per-deliverable acceptance criteria",
+      "luhtech-schema CLI at functional parity for deprecate/fu/validate-instance/mcp-serve"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Arc spec authored in prior session; instance landing today"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "Wave 1 already executed and merged closed-with-debt; d-timeline-fix family merged; Wave 2 starting"
+    }
+  ],
+  "childDeliverables": [
+    "d-2026-06-01-roadmap-validate-venture-summary-optional",
+    "d-2026-06-01-roadmap-business-schema-timeline-fix",
+    "d-2026-06-02-deprecation-header-convention",
+    "d-2026-06-02-canonical-schema-authoring-for-eb-drift",
+    "d-2026-06-03-archive-directory-infrastructure",
+    "d-2026-06-04-portfolio-venture-summary-archival"
+  ],
+  "relatedFollowUps": [
+    "FU-VENTURE-DATA-SCHEMA-DRIFT-1",
+    "FU-TRUTH-DELIVERED-SCHEMA-1",
+    "FU-WAVE-1-CLOSURE-RECORD-1",
+    "FU-RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1"
+  ],
+  "notes": "5-wave portfolio sweep. Wave 1 already merged closed-with-debt 2026-06-01. d-timeline-fix family (parent + 4 children) merged 2026-06-01 as collapse-and-resume terminal of spike-2026-06-01-roadmap-business-baseline-drift. Wave 2 starts now with 4 children authored at S4 alongside this parent. Waves 3-5 remain to be specified as child instances. Total deliverables under arc: ~13 (1 Wave 1 + 1 d-timeline-fix parent + 4 d-timeline-fix children + 4 Wave 2 + 3 Wave 3 + 3 Wave 4 + 1 Wave 5)."
+}

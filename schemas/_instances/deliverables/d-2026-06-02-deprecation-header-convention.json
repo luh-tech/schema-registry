@@ -1,0 +1,69 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-02-deprecation-header-convention",
+  "version": "1.0.0",
+  "title": "Wave 2: deprecation header convention (structural root)",
+  "description": "Establishes a machine-readable deprecation header convention for canonical schemas, so deprecation status is queryable from disk and CI can act on it. Structural root for Wave 2: the absence of this convention is the underlying cause that surfaced as Wave 1 (workflow validating against a schema with no deprecation signal). Defines the header shape, where it lives (top-level on each schema), and how downstream tools (luhtech-schema CLI, refs rebuild, CI workflows) read and act on it. Does not change any schema content; only adds the convention spec.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/deprecation-header-convention-2026-06-02",
+    "scopeFiles": [
+      "schemas/deprecation-header.schema.json",
+      "docs/deprecation-header-convention.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Author schemas/deprecation-header.schema.json defining the header shape (status enum: active | deprecated | retired; supersededBy; deprecatedDate; rationale; archiveLocation if retired). Header is referenced via $ref from canonical schemas in their root properties block.",
+      "acceptanceCriteria": [
+        "deprecation-header.schema.json validates as draft-07 schema",
+        "Header shape includes: status enum, supersededBy (optional), deprecatedDate (date format), rationale (string), archiveLocation (optional, used when status=retired)",
+        "Schema lands at schemas/deprecation-header.schema.json with proper $id (https://schemas.luh.tech/deprecation-header.schema.json)",
+        "refs rebuild --check exit 0 after schema lands"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Pilot integration on one canonical schema (venture-summary.schema.json) — add deprecation header at root with status=deprecated, supersededBy=null (no replacement), rationale citing D7 (2026-05-17). Proves the convention works end-to-end without changing any data.",
+      "acceptanceCriteria": [
+        "venture-summary.schema.json carries a deprecation header conforming to deprecation-header.schema.json",
+        "Header values: status=deprecated, deprecatedDate=2026-05-17, rationale references D7",
+        "venture-summary.schema.json still validates against its own meta-schema",
+        "meta-schema-check.yml passes"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli@5 validates this DELIVERABLE.json instance against deliverable.schema.json v1.0.0",
+      "deprecation-header.schema.json compiles via ajv-cli@5",
+      "venture-summary.schema.json post-header-add still validates as draft-07 schema",
+      "meta-schema-check.yml passes",
+      "refs-check.yml passes"
+    ],
+    "postMerge": [
+      "Header convention queryable: any schema's deprecation status readable via jq or python without bespoke parsing",
+      "Convention referenced by downstream FUs (FU-LUHTECH-SCHEMA-DEPRECATE-SUBCOMMAND ties to this)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Wave 2 structural-root spec authored alongside parent deck-sweep instance"
+    }
+  ],
+  "parentDeliverable": "d-2026-06-01-deck-sweep-sequencing",
+  "relatedFollowUps": [
+    "FU-SR-DEPRECATION-HEADER-CONVENTION-1"
+  ],
+  "notes": "Structural root for Wave 2. Wave 1's underlying cause (workflow lacked deprecation signal) gets cured by this convention. Once landed, Wave 2 siblings (canonical-schema-authoring, archive-directory, portfolio-venture-summary-archival) and Wave 3 tooling can act on the header. Single-repo scope; greenfield schema file."
+}
