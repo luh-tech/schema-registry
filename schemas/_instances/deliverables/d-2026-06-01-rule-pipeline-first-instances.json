@@ -9,7 +9,7 @@
     "approver": "Erik Luhtana (L4)",
     "revertAuthority": "Erik Luhtana (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/rule-pipeline-first-instances-2026-06-01",
@@ -125,6 +125,21 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "All five rule instances authored and validated; two schema patches applied (v1.1.1 notes field, v1.1.2 ruleState empty-string); refs verification clean; preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "07e43bda26f90957e418d2fbfae69ff7a13c293e",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/61",
+      "trigger": "Squash merge to main via MERGE PR 61"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "07e43bda26f90957e418d2fbfae69ff7a13c293e",
+      "trigger": "Post-merge verification clean: 5 rule instances on main, zero registry leakage, refs rebuild --check exit 0. Foundation arc 100% complete."
     }
   ],
   "parentDeliverable": "d-2026-05-31-deliverable-schema-foundation",
@@ -133,5 +148,7 @@
     "FU-RULE-SCHEMA-EVIDENCECLASS-ENUM-1",
     "FU-RULE-SCHEMA-AUTHORITY-TIER-ENUM-1"
   ],
-  "notes": "Fourth and final deliverable in the rule-pipeline foundation arc. After this lands: foundation 100% complete. Rule pipeline canonical, populated, and self-governing. Three instances (#3, #4, #5) credit EB-agent contribution via rationale and notes fields \u2014 proving the cross-chat relay pattern works for governance content."
+  "notes": "Fourth and final deliverable in the rule-pipeline foundation arc. After this lands: foundation 100% complete. Rule pipeline canonical, populated, and self-governing. Three instances (#3, #4, #5) credit EB-agent contribution via rationale and notes fields \u2014 proving the cross-chat relay pattern works for governance content.",
+  "mergeCommitSha": "07e43bda26f90957e418d2fbfae69ff7a13c293e",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/61"
 }
