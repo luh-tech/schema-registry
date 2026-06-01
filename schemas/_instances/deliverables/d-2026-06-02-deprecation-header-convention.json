@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/deprecation-header-convention-2026-06-01",
@@ -81,11 +81,28 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "Refs regenerated (deprecation-header v1.0.0 registered, 1.22.0 \u2192 1.23.0); all validations clean; preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "48dab10d8522747177f4b087cff1bbcd6d62106c",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/78",
+      "trigger": "Squash merge to main via MERGE PR 78"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "48dab10d8522747177f4b087cff1bbcd6d62106c",
+      "trigger": "Post-merge: deprecation-header.schema.json live, pilot on archived venture-summary applied, scope-overlap-check passed, refs registered"
     }
   ],
   "parentDeliverable": "d-2026-06-01-deck-sweep-sequencing",
   "relatedFollowUps": [
     "FU-SR-DEPRECATION-HEADER-CONVENTION-1"
   ],
-  "notes": "Structural root for Wave 2. Wave 1's underlying cause (workflow lacked deprecation signal) gets cured by this convention. Once landed, Wave 2 siblings (canonical-schema-authoring, archive-directory, portfolio-venture-summary-archival) and Wave 3 tooling can act on the header. Single-repo scope; greenfield schema file. | AMENDED 2026-06-01: OUT-2 path corrected schemas/venture-summary.schema.json -> schemas/_archive/venture-summary.schema.json (substrate shifted per v1.14.0 changelog 2026-05-30 archival). Branch corrected to feat/deprecation-header-convention-2026-06-01. Removed docs/deprecation-header-convention.md from scopeFiles per memory #19 no-md-terminus. scope-overlap acknowledged: schemas/_archive/venture-summary.schema.json covered by d-2026-06-04-portfolio-venture-summary-archival scopeFiles glob schemas/_archive/venture-summary/**. Resolution sequencing: additive header (this) vs directory curation (d-2026-06-04); either may merge first; second rebases off main. No conflict in either order."
+  "notes": "Structural root for Wave 2. Wave 1's underlying cause (workflow lacked deprecation signal) gets cured by this convention. Once landed, Wave 2 siblings (canonical-schema-authoring, archive-directory, portfolio-venture-summary-archival) and Wave 3 tooling can act on the header. Single-repo scope; greenfield schema file. | AMENDED 2026-06-01: OUT-2 path corrected schemas/venture-summary.schema.json -> schemas/_archive/venture-summary.schema.json (substrate shifted per v1.14.0 changelog 2026-05-30 archival). Branch corrected to feat/deprecation-header-convention-2026-06-01. Removed docs/deprecation-header-convention.md from scopeFiles per memory #19 no-md-terminus. scope-overlap acknowledged: schemas/_archive/venture-summary.schema.json covered by d-2026-06-04-portfolio-venture-summary-archival scopeFiles glob schemas/_archive/venture-summary/**. Resolution sequencing: additive header (this) vs directory curation (d-2026-06-04); either may merge first; second rebases off main. No conflict in either order.",
+  "mergeCommitSha": "48dab10d8522747177f4b087cff1bbcd6d62106c",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/78"
 }
