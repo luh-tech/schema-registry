@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schemas.luh.tech/rule.schema.json",
+  "id": "RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1",
+  "version": "1.0.0",
+  "title": "SPIKE Supersedes Novel Pattern — substrate-beyond-spec uses existing primitive",
+  "statement": "When a deliverable's execution surfaces substrate exceeding its declared scope, the chat-layer MUST use the SPIKE primitive (memory #17): branch off main, assess substrate, produce assessment (not a PR), terminate via one of three named outcomes — collapse-and-resume, delete-and-fu, or delete-and-new-deliverable. Authoring a novel pattern shape ('Wave 1.5', 'size A/B/C', 'sub-deliverable') as a substitute for SPIKE is forbidden. The three SPIKE terminals are the system's complete answer set for substrate-beyond-spec; nothing is missing.",
+  "rationale": "Novel pattern proliferation degrades the operating discipline by multiplying the primitives the chat layer must reason about. SPIKE was designed precisely for the substrate-beyond-spec case; its three terminals cover every legitimate outcome. When chat-layer agents invent 'Wave 1.5' or 'size A/B/C' sub-shapes, they are not solving a new problem — they are solving a known problem with a forgotten primitive. The correct correction is to use SPIKE, not to extend the pattern catalog.",
+  "authority": {
+    "author": "EB-agent (chat), L1; relayed via schema-registry chat (Claude L1)",
+    "approver": "Erik Luhtana (L4)",
+    "revertAuthority": "Erik Luhtana (L4)"
+  },
+  "lifecycleStatus": "formalized",
+  "tierState": {
+    "activeTier": "human-loop",
+    "occupiableTiers": ["working-model", "human-loop"],
+    "terminalTier": "human-loop"
+  },
+  "gateActions": {
+    "human-loop": {
+      "gate": "Chat layer recognizes substrate-beyond-spec at the moment of divergence (during dispatch authoring or mid-execution). Response: propose SPIKE with named terminal candidates, not novel pattern shape. Erik (L4) authorizes SPIKE branch; chat does not.",
+      "authority": "Claude (chat) recognition + Erik (L4) SPIKE authorization",
+      "automationPath": "null by nature — recognition of substrate-beyond-spec is judgment-class. The chat layer must reason about whether the current execution's substrate exceeds the spec's declared scope; no mechanical check substitutes for that reasoning. This rule's terminalTier is correctly human-loop, not stalled-en-route-to-automated."
+    },
+    "refine": {
+      "action": "Branch off main, edit this rule instance, validate, PR. Refinement primarily affects rationale + notes; statement itself is stable per memory #17."
+    }
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "working-model",
+      "trigger": "SPIKE primitive established in DLP-STRATEGY 2026-03-14 (memory #17); operated as working-model practice across multiple sessions before this instance authored."
+    },
+    {
+      "from": "working-model",
+      "to": "formalized",
+      "evidenceClass": "Memory rule #17 captures SPIKE primitive precisely (three named terminals: collapse-and-resume, delete-and-fu, delete-and-new-deliverable). Working-model proof: SPIKE used successfully across multiple foundation-arc sessions. Failure-mode proof: prior chat-layer agent invented 'Wave 1.5' and 'size A/B/C' sub-shapes when SPIKE already covered the case; failure was recognizable at proposal-time as not-using-SPIKE; rule formalized after that failure to make recognition mechanical for future agents.",
+      "trigger": "Rule promoted to formalized lifecycleStatus during d-2026-06-01-rule-pipeline-first-instances; backfilled transition since rule operated as formalized-in-practice before being schematized."
+    }
+  ],
+  "notes": "Originated via EB-agent contribution (Evidence #3). Origin incident: prior chat-layer agent invented 'Wave 1.5' and 'size A/B/C' sub-shapes when substrate exceeded spec; SPIKE already covered the case. Capstone instance for D-3: proves rule.schema.json's terminal-by-nature property — terminalTier: human-loop is a COMPLETE state for judgment rules, not a stalled climb. The schema's automationPath field declaring 'null by nature' explicitly captures the design decision. Without this instance, the schema's claim about human-loop-as-complete-terminal is unproven. Credit: EB-agent for rule shape."
+}
