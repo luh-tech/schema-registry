@@ -1,0 +1,148 @@
+name: Amendment Scope-Overlap Check
+
+on:
+  pull_request:
+    paths:
+      - 'schemas/_instances/deliverables/*.json'
+      - '.github/workflows/amendment-scope-overlap-check.yml'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  scope-overlap-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compute scopeFiles overlap
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -e
+          echo "Checking PR #${PR_NUMBER} for scopeFiles overlap..."
+
+          # Identify modified deliverable instance files on this PR
+          MODIFIED=$(gh pr diff "${PR_NUMBER}" --repo "${REPO}" --name-only \
+            | grep -E '^schemas/_instances/deliverables/d-.*\.json$' || true)
+
+          if [ -z "${MODIFIED}" ]; then
+            echo "No deliverable instance files modified on this PR. Passing."
+            exit 0
+          fi
+
+          echo "Modified deliverable instance files:"
+          echo "${MODIFIED}" | sed 's/^/  - /'
+          echo ""
+
+          # Write the overlap-check script and pipe modified files into it
+          cat > /tmp/scope-overlap-check.py << 'PYSCRIPT'
+          import json
+          import sys
+          from pathlib import Path
+
+          modified_files = [line.strip() for line in sys.stdin if line.strip()]
+          if not modified_files:
+              print("No modified deliverable instances. Pass.")
+              sys.exit(0)
+
+          dir_path = Path("schemas/_instances/deliverables")
+
+          # Load all in-flight deliverable instances
+          in_flight = {}
+          for p in dir_path.glob("*.json"):
+              try:
+                  data = json.loads(p.read_text())
+                  state = data.get("lifecycleState", "")
+                  if state in ("S5-in-progress", "S6-staged"):
+                      in_flight[str(p)] = {
+                          "id": data["id"],
+                          "branch": data["scope"]["branch"],
+                          "scopeFiles": set(data["scope"]["scopeFiles"]),
+                          "notes": data.get("notes", ""),
+                      }
+              except Exception as e:
+                  print(f"::warning::Could not parse {p}: {e}")
+                  continue
+
+          print(f"In-flight deliverables: {len(in_flight)}")
+          for info in in_flight.values():
+              print(f"  - {info['id']} ({info['branch']})")
+
+          if len(in_flight) < 2:
+              print("Fewer than 2 in-flight deliverables — no overlap possible. Passing.")
+              sys.exit(0)
+
+          # For each modified file, check for overlap with other in-flight instances
+          failures = []
+          warnings = []
+
+          for mfile in modified_files:
+              if mfile not in in_flight:
+                  # Modified file is not in-flight — skip overlap check
+                  try:
+                      data = json.loads(Path(mfile).read_text())
+                      state = data.get("lifecycleState", "unknown")
+                      print(f"::notice::{mfile} lifecycleState={state} (not in-flight). Overlap check skipped.")
+                  except Exception:
+                      print(f"::warning::Could not read {mfile}")
+                  continue
+
+              modified_info = in_flight[mfile]
+              modified_scope = modified_info["scopeFiles"]
+              modified_notes = modified_info["notes"].lower()
+              has_resolution = (
+                  "resolution sequencing" in modified_notes
+                  or "scope-overlap acknowledged" in modified_notes
+              )
+
+              for other_path, other_info in in_flight.items():
+                  if other_path == mfile:
+                      continue
+                  intersection = modified_scope & other_info["scopeFiles"]
+                  if intersection:
+                      msg = (
+                          f"{modified_info['id']} <-> {other_info['id']}: "
+                          f"{sorted(intersection)}"
+                      )
+                      if has_resolution:
+                          warnings.append(f"{msg} | resolution sequencing declared in notes")
+                      else:
+                          failures.append(f"{msg} | NO resolution sequencing in notes")
+
+          if warnings:
+              for w in warnings:
+                  print(f"::warning::Overlap acknowledged: {w}")
+
+          if failures:
+              print("::error::Scope-files overlap detected without resolution sequencing.")
+              for f_msg in failures:
+                  print(f"::error::  {f_msg}")
+              print("")
+              print("Per RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1:")
+              print("  When amending an in-flight deliverable, scopeFiles overlap with")
+              print("  another in-flight deliverable on the same base branch MUST be")
+              print("  acknowledged via resolution sequencing in the modified instance's")
+              print("  notes field.")
+              print("")
+              print("Resolution: add 'resolution sequencing' or 'scope-overlap acknowledged'")
+              print("  to the deliverable instance's notes field, explaining which")
+              print("  deliverable merges first and the other's rebase strategy.")
+              print("")
+              print("Rule: RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1")
+              sys.exit(1)
+
+          print("No unacknowledged scope overlaps detected. Passing.")
+          PYSCRIPT
+
+          echo "${MODIFIED}" | python3 /tmp/scope-overlap-check.py
