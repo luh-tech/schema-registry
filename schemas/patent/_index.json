@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Patent portfolio infrastructure (SBPA family) — 7 schemas under patent/ namespace. Owned by LuhTech Holdings.",
+  "id": "https://schemas.luh.tech/patent/",
+  "baseUrl": "https://schemas.luh.tech/patent/",
+  "version": "1.0.0"
+}
