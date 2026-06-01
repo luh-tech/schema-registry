@@ -1,0 +1,77 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-roadmap-business-schema-timeline-fix",
+  "version": "1.0.0",
+  "title": "roadmap-business: declare timeline property",
+  "description": "Adds the timeline property to roadmap-business.schema.json so 4 of 9 failing portfolio instances (EB + Qullqa + JobsiteControl + Viiva) validate. Originates from COLLAPSE-AND-RESUME terminal of spike-2026-06-01-roadmap-business-baseline-drift; spike confirmed data-drifted-from-schema (timeline added 2026-04-12 commit 262d3819, five days after schema locked additionalProperties:false on 2026-04-07). Parent of four child deliverables that pin each venture's roadmap-ci.yml to @v5.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/roadmap-business-timeline-property-2026-06-01",
+    "scopeFiles": [
+      "schemas/roadmap-business.schema.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Add timeline property to schemas/roadmap-business.schema.json with items shape that validates the timeline arrays present in all 4 affected ventures (EB + Qullqa + JobsiteControl + Viiva). Pre-work read required: derive union shape from 4 venture instances before authoring schema. If shape does not cleanly union, REFUSE-AND-SURFACE — Option B not viable as-spec'd.",
+      "acceptanceCriteria": [
+        "Pre-work shape analysis complete (clean / dirty / hybrid call surfaced before authoring)",
+        "timeline property declared with items shape matching union of observed shapes",
+        "additionalProperties:false retained at root",
+        "ajv-cli@5 validates roadmap-business.json instances of all 4 affected ventures against new schema",
+        "ajv-cli@5 produces no new failures on previously-passing 2/11 instances",
+        "ajv-cli@5 produces same or smaller failure surface on the 5 other-class failures",
+        "meta-schema-check.yml passes",
+        "refs-check.yml passes",
+        "Squash-merge to main"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Cut annotated @v5 tag on schema-registry main pointing at OUT-1 merge commit. Tag message references this deliverable id.",
+      "acceptanceCriteria": [
+        "@v5 tag exists, annotated",
+        "@v5 points at OUT-1 merge commit on main",
+        "Tag message contains 'd-2026-06-01-roadmap-business-schema-timeline-fix'"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli@5 validates this DELIVERABLE.json instance against deliverable.schema.json v1.0.0",
+      "Pre-work shape analysis complete and surfaced for L4 path call",
+      "OUT-1 schema change passes meta-schema-check and refs-check",
+      "OUT-1 schema validates all 4 affected venture instances"
+    ],
+    "postMerge": [
+      "@v5 tag visible on main",
+      "Four child deliverables unblocked (pin updates can proceed)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Authored from spike COLLAPSE-AND-RESUME terminal (489f1b9 deleted)"
+    }
+  ],
+  "childDeliverables": [
+    "d-2026-06-01-eb-roadmap-ci-pin-v5",
+    "d-2026-06-01-qullqa-roadmap-ci-pin-v5",
+    "d-2026-06-01-jobsitecontrol-roadmap-ci-pin-v5",
+    "d-2026-06-01-viiva-roadmap-ci-pin-v5"
+  ],
+  "relatedFollowUps": [
+    "FU-VENTURE-DATA-SCHEMA-DRIFT-1"
+  ],
+  "spikeOutcome": "collapse-and-resume",
+  "notes": "Parent of a 5-deliverable family. Single-repo scope per schema; cross-repo coordination via parentDeliverable / childDeliverables references. Pre-work shape analysis (Steps 9-12 of this dispatch) determines whether OUT-1 schema authoring is viable as Option B; DIRTY UNION surfaces back to chat for rescope. Closure of this deliverable family clears 4/11 timeline-class failures; remaining 5 failures (different drift classes) stay on FU-VENTURE-DATA-SCHEMA-DRIFT-1 for Wave 5."
+}
