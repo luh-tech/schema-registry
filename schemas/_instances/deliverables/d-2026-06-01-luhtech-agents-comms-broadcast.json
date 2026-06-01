@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/luhtech-agents-comms-broadcast-2026-06-01",
@@ -101,8 +101,25 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "All validations clean; preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "f6bee1b93ec0a64c5e1ccca16184409840bc1056",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/84",
+      "trigger": "Squash merge to main via MERGE PR 84"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "f6bee1b93ec0a64c5e1ccca16184409840bc1056",
+      "trigger": "Post-merge: workflow active on main, SLACK_BOT_TOKEN set at repo level, broadcast fired on PR-open and PR-merged events (both conclusion=success). First messages in #luhtech-agents-comms channel confirmed."
     }
   ],
   "relatedFollowUps": [],
-  "notes": "Portfolio infrastructure deliverable. Does not close an FU; builds the automation path that future deliverables will reference in evidenceClass to promote RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 and RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1. First end-to-end use of Slack bot infrastructure across LuhTech portfolio. EB mirror is separate EB-chat work per three-layer model \u2014 SR cannot reach into EB repo. Cross-chat-relay canvas at OUT-5 hands the pattern to EB-chat. Channel: C0B7EPFCA85 (#luhtech-agents-comms, private). Secret: SLACK_BOT_TOKEN at GitHub org level so EB workflow can reuse same secret. v1 scope (b) = PR events + schemas/_instances/** pushes. Loop prevention via [skip-broadcast] commit message marker."
+  "notes": "Portfolio infrastructure deliverable. Does not close an FU; builds the automation path that future deliverables will reference in evidenceClass to promote RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 and RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1. First end-to-end use of Slack bot infrastructure across LuhTech portfolio. EB mirror is separate EB-chat work per three-layer model \u2014 SR cannot reach into EB repo. Cross-chat-relay canvas at OUT-5 hands the pattern to EB-chat. Channel: C0B7EPFCA85 (#luhtech-agents-comms, private). Secret: SLACK_BOT_TOKEN at GitHub org level so EB workflow can reuse same secret. v1 scope (b) = PR events + schemas/_instances/** pushes. Loop prevention via [skip-broadcast] commit message marker.",
+  "mergeCommitSha": "f6bee1b93ec0a64c5e1ccca16184409840bc1056",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/84"
 }
