@@ -12,10 +12,12 @@
   "lifecycleState": "S4-authored",
   "scope": {
     "repo": "luh-tech/schema-registry",
-    "branch": "feat/deprecation-header-convention-2026-06-02",
+    "branch": "feat/deprecation-header-convention-2026-06-01",
     "scopeFiles": [
       "schemas/deprecation-header.schema.json",
-      "docs/deprecation-header-convention.md"
+      "schemas/_archive/venture-summary.schema.json",
+      "schemas/_instances/deliverables/d-2026-06-02-deprecation-header-convention.json",
+      "schemas/schema-refs.json"
     ]
   },
   "outputs": [
@@ -31,22 +33,24 @@
     },
     {
       "id": "OUT-2",
-      "description": "Pilot integration on one canonical schema (venture-summary.schema.json) — add deprecation header at root with status=deprecated, supersededBy=null (no replacement), rationale citing D7 (2026-05-17). Proves the convention works end-to-end without changing any data.",
+      "description": "Pilot integration: apply deprecation header to schemas/_archive/venture-summary.schema.json (path corrected via 2026-06-01 amendment \u2014 schema is at archive path per v1.14.0 changelog 2026-05-30 archival). Header: status=deprecated, deprecatedDate=2026-05-30, supersededBy=null (no direct replacement), rationale citing archival decision.",
       "acceptanceCriteria": [
-        "venture-summary.schema.json carries a deprecation header conforming to deprecation-header.schema.json",
-        "Header values: status=deprecated, deprecatedDate=2026-05-17, rationale references D7",
-        "venture-summary.schema.json still validates against its own meta-schema",
-        "meta-schema-check.yml passes"
+        "schemas/_archive/venture-summary.schema.json carries a deprecation header block",
+        "Header conforms to schemas/deprecation-header.schema.json (OUT-1)",
+        "schemas/_archive/venture-summary.schema.json still compiles as draft-07 post-header-add",
+        "meta-schema-check workflow passes"
       ]
     }
   ],
   "validation": {
     "preMerge": [
-      "ajv-cli@5 validates this DELIVERABLE.json instance against deliverable.schema.json v1.0.0",
-      "deprecation-header.schema.json compiles via ajv-cli@5",
-      "venture-summary.schema.json post-header-add still validates as draft-07 schema",
+      "ajv-cli@5 validates this DELIVERABLE.json instance against deliverable.schema.json v1.1.0",
+      "deprecation-header.schema.json compiles via ajv-cli@5 --strict=false",
+      "schemas/_archive/venture-summary.schema.json post-header-add still compiles as draft-07",
+      "deprecation block independently validates against deprecation-header.schema.json",
       "meta-schema-check.yml passes",
-      "refs-check.yml passes"
+      "refs-check.yml passes",
+      "amendment-scope-overlap-check passes (scope-overlap acknowledged in notes)"
     ],
     "postMerge": [
       "Header convention queryable: any schema's deprecation status readable via jq or python without bespoke parsing",
@@ -59,11 +63,17 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Wave 2 structural-root spec authored alongside parent deck-sweep instance"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Amendment 2026-06-01: OUT-2 venture-summary path corrected for archival substrate shift; .md removed from scopeFiles per no-md-terminus; scope-overlap acknowledged declared for sibling d-2026-06-04."
     }
   ],
   "parentDeliverable": "d-2026-06-01-deck-sweep-sequencing",
   "relatedFollowUps": [
     "FU-SR-DEPRECATION-HEADER-CONVENTION-1"
   ],
-  "notes": "Structural root for Wave 2. Wave 1's underlying cause (workflow lacked deprecation signal) gets cured by this convention. Once landed, Wave 2 siblings (canonical-schema-authoring, archive-directory, portfolio-venture-summary-archival) and Wave 3 tooling can act on the header. Single-repo scope; greenfield schema file."
+  "notes": "Structural root for Wave 2. Wave 1's underlying cause (workflow lacked deprecation signal) gets cured by this convention. Once landed, Wave 2 siblings (canonical-schema-authoring, archive-directory, portfolio-venture-summary-archival) and Wave 3 tooling can act on the header. Single-repo scope; greenfield schema file. | AMENDED 2026-06-01: OUT-2 path corrected schemas/venture-summary.schema.json -> schemas/_archive/venture-summary.schema.json (substrate shifted per v1.14.0 changelog 2026-05-30 archival). Branch corrected to feat/deprecation-header-convention-2026-06-01. Removed docs/deprecation-header-convention.md from scopeFiles per memory #19 no-md-terminus. scope-overlap acknowledged: schemas/_archive/venture-summary.schema.json covered by d-2026-06-04-portfolio-venture-summary-archival scopeFiles glob schemas/_archive/venture-summary/**. Resolution sequencing: additive header (this) vs directory curation (d-2026-06-04); either may merge first; second rebases off main. No conflict in either order."
 }
