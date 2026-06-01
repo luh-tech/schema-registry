@@ -1,0 +1,93 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-ci-unstable-merge-blocker",
+  "version": "1.0.0",
+  "title": "UNSTABLE Merge Blocker — promote RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 to automated",
+  "description": "Implements .github/workflows/pr-mergeability-check.yml — GHA workflow blocking PR merge when mergeStateStatus = UNSTABLE unless override-unstable-merge label is applied by Erik (L4). Promotes RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 from activeTier human-loop to activeTier automated. First rule promotion via canonical mechanism — proves the maturity ladder works as designed. Closes FU-RULE-CI-UNSTABLE-AUTOMATED-WORKFLOW-1 (P1). Closes the loop on PR #48 + PR #269 incident pattern.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtana (L4)",
+    "revertAuthority": "Erik Luhtana (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/ci-unstable-merge-blocker-2026-06-01",
+    "scopeFiles": [
+      ".github/workflows/pr-mergeability-check.yml",
+      "schemas/_instances/rules/RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1.json",
+      "schemas/_instances/deliverables/d-2026-06-01-ci-unstable-merge-blocker.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Substrate read report — mergeStateStatus timing behavior verified before workflow authoring.",
+      "acceptanceCriteria": [
+        "mergeStateStatus queryable via gh pr view on open PRs",
+        "Field values characterized: UNKNOWN (merged/async), CLEAN, UNSTABLE observed",
+        "Async transition UNSTABLE → CLEAN observed in Step 2 (~2s apart); retry loop confirmed required",
+        "Workflow design decision made: 3-attempt retry with 5s sleep"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": ".github/workflows/pr-mergeability-check.yml — blocks squash-merge when mergeStateStatus = UNSTABLE unless override-unstable-merge label present.",
+      "acceptanceCriteria": [
+        "Workflow YAML valid",
+        "Triggers on pull_request events (opened, synchronize, reopened, labeled, unlabeled)",
+        "Queries PR mergeStateStatus via gh pr view --json with 3-attempt retry loop",
+        "Fails check when mergeStateStatus = UNSTABLE and override-unstable-merge label absent",
+        "Passes with warning annotation when label present",
+        "Workflow passes on this PR (substrate is clean)"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 promoted from activeTier human-loop to activeTier automated. Canonical mechanism: append transition with evidenceClass populated; update tierState.activeTier; bump rule instance version.",
+      "acceptanceCriteria": [
+        "Rule instance validates against rule.schema.json v1.1.2",
+        "tierState.activeTier = automated",
+        "New transition appended: from human-loop, to automated, evidenceClass populated",
+        "Rule instance version bumped 1.0.0 → 1.1.0 (minor — capability advanced)"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Prospective deliverable spec — S4 → S5 → S6 across dispatch; S7/S8 post-merge amendment.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json",
+        "transitions reflect actual execution"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Step 2 substrate read confirmed mergeStateStatus queryable; async transition observed; retry loop design justified",
+      "Workflow YAML valid",
+      "Updated rule instance validates against rule.schema.json v1.1.2",
+      "Deliverable spec validates against deliverable.schema.json",
+      "instance-validation.yml passes (proves FU-D-1 working on real rule modification)",
+      "refs-check.yml passes",
+      "All existing CI green",
+      "New pr-mergeability-check workflow passes on this PR"
+    ],
+    "postMerge": [
+      "main shows .github/workflows/pr-mergeability-check.yml",
+      "Updated rule instance on main shows tierState.activeTier = automated",
+      "All CI passing"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Dispatch authored after FU-D-1 close (7b7df70). P1 priority. Closes PR #48 + #269 incident loop. First rule promotion via canonical mechanism."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-RULE-CI-UNSTABLE-AUTOMATED-WORKFLOW-1"
+  ],
+  "notes": "First rule promotion in the foundation arc's post-completion FU block. Promotes RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 via canonical mechanism: append transition, update tierState, bump rule instance version. The transition carries evidenceClass citing the workflow's own existence. Pattern proven here will be reused for subsequent rule promotions. Scope per rule's exact statement: UNSTABLE only; BLOCKED/DIRTY/BEHIND are out of scope for this deliverable. Step 2 substrate read confirmed mergeStateStatus async behavior — UNSTABLE→CLEAN transition observed within ~2s on PR #65; retry loop required."
+}
