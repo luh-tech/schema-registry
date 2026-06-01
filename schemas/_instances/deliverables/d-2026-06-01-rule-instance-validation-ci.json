@@ -1,0 +1,82 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-rule-instance-validation-ci",
+  "version": "1.0.0",
+  "title": "Instance Validation CI — mechanical enforcement of instance-schema conformance",
+  "description": "Adds .github/workflows/instance-validation.yml — CI workflow validating all instances under schemas/_instances/** against their declared schemas (rule.schema.json for rules; deliverable.schema.json for deliverables) on every PR. Drift fails the check; contributor must regenerate or fix instances before merge. Closes FU-RULE-INSTANCE-VALIDATION-CI-1 and FU-DELIVERABLE-SCHEMA-INSTANCE-VALIDATION-CI-1.",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtana (L4)",
+    "revertAuthority": "Erik Luhtana (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/instance-validation-ci-2026-06-01",
+    "scopeFiles": [
+      ".github/workflows/instance-validation.yml",
+      "schemas/_instances/deliverables/d-2026-06-01-rule-instance-validation-ci.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Substrate validation report — verifies all 12 existing instances (5 rules + 7 deliverables) validate against their schemas at deliverable initiation. Gate: failure means workflow does not land until instances are fixed.",
+      "acceptanceCriteria": [
+        "All 5 rule instances validate against rule.schema.json",
+        "All 7 deliverable instances validate against deliverable.schema.json",
+        "Zero pre-existing failures before workflow lands"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": ".github/workflows/instance-validation.yml — GHA workflow validating instances on every PR.",
+      "acceptanceCriteria": [
+        "Workflow YAML valid",
+        "Triggers on PRs touching schemas/_instances/**, schemas/rule.schema.json, schemas/deliverable.schema.json, or the workflow file",
+        "Validates rule instances against rule.schema.json via ajv-cli@5 --strict=false",
+        "Validates deliverable instances against deliverable.schema.json via ajv-cli@5 --strict=false",
+        "Fails on any instance validation failure (non-zero exit)",
+        "Workflow passes on this PR (since substrate is clean per OUT-1)"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "schemas/_instances/deliverables/d-2026-06-01-rule-instance-validation-ci.json — prospective deliverable spec; S4 → S5 → S6 across dispatch; S7 → S8 in post-merge amendment.",
+      "acceptanceCriteria": [
+        "Instance file exists at canonical path",
+        "Validates against deliverable.schema.json",
+        "transitions reflect actual execution"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "All 12 existing instances validate locally against their schemas (Step 2 gate passed: 0 of 12 failed)",
+      ".github/workflows/instance-validation.yml passes YAML syntax check",
+      "Deliverable spec instance validates against deliverable.schema.json",
+      "meta-schema-check.yml passes",
+      "refs-check.yml passes",
+      "instance-validation.yml passes on this PR (self-test)",
+      "All existing CI green"
+    ],
+    "postMerge": [
+      "main shows .github/workflows/instance-validation.yml",
+      "instance-validation workflow runs on subsequent PRs",
+      "All CI passing"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Dispatch authored after foundation arc closed (D-3 merge 07e43bd); first FU-block deliverable; structural prerequisite for FU-D-2 onward"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-RULE-INSTANCE-VALIDATION-CI-1",
+    "FU-DELIVERABLE-SCHEMA-INSTANCE-VALIDATION-CI-1"
+  ],
+  "notes": "First deliverable in the post-foundation FU block. Substrate-validation-first gate (Step 2) ensures workflow lands against clean state — 12/12 instances passed before workflow authoring proceeded. Foundation-strengthening: mechanical enforcement on every PR replaces ad-hoc ajv-cli calls inside dispatch files. Prerequisite for FU-D-2 (UNSTABLE merge blocker) and subsequent rule promotions."
+}
