@@ -2,14 +2,14 @@
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-01-ci-unstable-merge-blocker",
   "version": "1.0.0",
-  "title": "UNSTABLE Merge Blocker — promote RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 to automated",
-  "description": "Implements .github/workflows/pr-mergeability-check.yml — GHA workflow blocking PR merge when mergeStateStatus = UNSTABLE unless override-unstable-merge label is applied by Erik (L4). Promotes RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 from activeTier human-loop to activeTier automated. First rule promotion via canonical mechanism — proves the maturity ladder works as designed. Closes FU-RULE-CI-UNSTABLE-AUTOMATED-WORKFLOW-1 (P1). Closes the loop on PR #48 + PR #269 incident pattern.",
+  "title": "UNSTABLE Merge Blocker \u2014 promote RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 to automated",
+  "description": "Implements .github/workflows/pr-mergeability-check.yml \u2014 GHA workflow blocking PR merge when mergeStateStatus = UNSTABLE unless override-unstable-merge label is applied by Erik (L4). Promotes RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 from activeTier human-loop to activeTier automated. First rule promotion via canonical mechanism \u2014 proves the maturity ladder works as designed. Closes FU-RULE-CI-UNSTABLE-AUTOMATED-WORKFLOW-1 (P1). Closes the loop on PR #48 + PR #269 incident pattern.",
   "authority": {
     "author": "Claude (chat), L1",
     "approver": "Erik Luhtana (L4)",
     "revertAuthority": "Erik Luhtana (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S6-staged",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/ci-unstable-merge-blocker-2026-06-01",
@@ -22,17 +22,17 @@
   "outputs": [
     {
       "id": "OUT-1",
-      "description": "Substrate read report — mergeStateStatus timing behavior verified before workflow authoring.",
+      "description": "Substrate read report \u2014 mergeStateStatus timing behavior verified before workflow authoring.",
       "acceptanceCriteria": [
         "mergeStateStatus queryable via gh pr view on open PRs",
         "Field values characterized: UNKNOWN (merged/async), CLEAN, UNSTABLE observed",
-        "Async transition UNSTABLE → CLEAN observed in Step 2 (~2s apart); retry loop confirmed required",
+        "Async transition UNSTABLE \u2192 CLEAN observed in Step 2 (~2s apart); retry loop confirmed required",
         "Workflow design decision made: 3-attempt retry with 5s sleep"
       ]
     },
     {
       "id": "OUT-2",
-      "description": ".github/workflows/pr-mergeability-check.yml — blocks squash-merge when mergeStateStatus = UNSTABLE unless override-unstable-merge label present.",
+      "description": ".github/workflows/pr-mergeability-check.yml \u2014 blocks squash-merge when mergeStateStatus = UNSTABLE unless override-unstable-merge label present.",
       "acceptanceCriteria": [
         "Workflow YAML valid",
         "Triggers on pull_request events (opened, synchronize, reopened, labeled, unlabeled)",
@@ -49,12 +49,12 @@
         "Rule instance validates against rule.schema.json v1.1.2",
         "tierState.activeTier = automated",
         "New transition appended: from human-loop, to automated, evidenceClass populated",
-        "Rule instance version bumped 1.0.0 → 1.1.0 (minor — capability advanced)"
+        "Rule instance version bumped 1.0.0 \u2192 1.1.0 (minor \u2014 capability advanced)"
       ]
     },
     {
       "id": "OUT-4",
-      "description": "Prospective deliverable spec — S4 → S5 → S6 across dispatch; S7/S8 post-merge amendment.",
+      "description": "Prospective deliverable spec \u2014 S4 \u2192 S5 \u2192 S6 across dispatch; S7/S8 post-merge amendment.",
       "acceptanceCriteria": [
         "Spec validates against deliverable.schema.json",
         "transitions reflect actual execution"
@@ -84,10 +84,22 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Dispatch authored after FU-D-1 close (7b7df70). P1 priority. Closes PR #48 + #269 incident loop. First rule promotion via canonical mechanism."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "PROCEED STEP 2 issued; substrate read confirmed mergeStateStatus queryable and async; workflow + rule promotion authored"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "Workflow YAML valid, rule promotion validates against schema, 14/14 instances pass; preparing PR"
     }
   ],
   "relatedFollowUps": [
     "FU-RULE-CI-UNSTABLE-AUTOMATED-WORKFLOW-1"
   ],
-  "notes": "First rule promotion in the foundation arc's post-completion FU block. Promotes RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 via canonical mechanism: append transition, update tierState, bump rule instance version. The transition carries evidenceClass citing the workflow's own existence. Pattern proven here will be reused for subsequent rule promotions. Scope per rule's exact statement: UNSTABLE only; BLOCKED/DIRTY/BEHIND are out of scope for this deliverable. Step 2 substrate read confirmed mergeStateStatus async behavior — UNSTABLE→CLEAN transition observed within ~2s on PR #65; retry loop required."
+  "notes": "First rule promotion in the foundation arc's post-completion FU block. Promotes RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 via canonical mechanism: append transition, update tierState, bump rule instance version. The transition carries evidenceClass citing the workflow's own existence. Pattern proven here will be reused for subsequent rule promotions. Scope per rule's exact statement: UNSTABLE only; BLOCKED/DIRTY/BEHIND are out of scope for this deliverable. Step 2 substrate read confirmed mergeStateStatus async behavior \u2014 UNSTABLE\u2192CLEAN transition observed within ~2s on PR #65; retry loop required."
 }
