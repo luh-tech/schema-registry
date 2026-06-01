@@ -9,7 +9,7 @@
     "approver": "Erik Luhtana (L4)",
     "revertAuthority": "Erik Luhtana (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/ci-unstable-merge-blocker-2026-06-01",
@@ -96,10 +96,27 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "Workflow YAML valid, rule promotion validates against schema, 14/14 instances pass; preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "f0acca72689f21a67a3c780bee2bffd5972fdea2",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/67",
+      "trigger": "Squash merge to main via MERGE PR 67"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "f0acca72689f21a67a3c780bee2bffd5972fdea2",
+      "trigger": "Post-merge: workflow active, rule promoted on main, refs clean, check-mergeability passed on its own PR"
     }
   ],
   "relatedFollowUps": [
     "FU-RULE-CI-UNSTABLE-AUTOMATED-WORKFLOW-1"
   ],
-  "notes": "First rule promotion in the foundation arc's post-completion FU block. Promotes RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 via canonical mechanism: append transition, update tierState, bump rule instance version. The transition carries evidenceClass citing the workflow's own existence. Pattern proven here will be reused for subsequent rule promotions. Scope per rule's exact statement: UNSTABLE only; BLOCKED/DIRTY/BEHIND are out of scope for this deliverable. Step 2 substrate read confirmed mergeStateStatus async behavior \u2014 UNSTABLE\u2192CLEAN transition observed within ~2s on PR #65; retry loop required."
+  "notes": "First rule promotion in the foundation arc's post-completion FU block. Promotes RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 via canonical mechanism: append transition, update tierState, bump rule instance version. The transition carries evidenceClass citing the workflow's own existence. Pattern proven here will be reused for subsequent rule promotions. Scope per rule's exact statement: UNSTABLE only; BLOCKED/DIRTY/BEHIND are out of scope for this deliverable. Step 2 substrate read confirmed mergeStateStatus async behavior \u2014 UNSTABLE\u2192CLEAN transition observed within ~2s on PR #65; retry loop required.",
+  "mergeCommitSha": "f0acca72689f21a67a3c780bee2bffd5972fdea2",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/67"
 }
