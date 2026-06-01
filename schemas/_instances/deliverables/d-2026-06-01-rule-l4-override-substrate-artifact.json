@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/rule-l4-override-substrate-artifact-2026-06-01",
@@ -73,10 +73,27 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "All validations clean; preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "3fc02eefa0b7c5deaeaf4c1abb289e7b424eb8ab",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/82",
+      "trigger": "Squash merge to main via MERGE PR 82"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "3fc02eefa0b7c5deaeaf4c1abb289e7b424eb8ab",
+      "trigger": "Post-merge: 7 rule instances on main, refs clean. FU-RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 closed."
     }
   ],
   "relatedFollowUps": [
     "FU-RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1"
   ],
-  "notes": "Fourth deliverable in FU-D-5 second wave. Closes FU-RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 (EB register). Pairs with RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 \u2014 UNSTABLE rule provides override mechanism, this rule requires substrate artifact accompanying override. Future promotion deliverable builds the pr-mergeability-check.yml extension that promotes the rule to automated activeTier."
+  "notes": "Fourth deliverable in FU-D-5 second wave. Closes FU-RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 (EB register). Pairs with RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 \u2014 UNSTABLE rule provides override mechanism, this rule requires substrate artifact accompanying override. Future promotion deliverable builds the pr-mergeability-check.yml extension that promotes the rule to automated activeTier.",
+  "mergeCommitSha": "3fc02eefa0b7c5deaeaf4c1abb289e7b424eb8ab",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/82"
 }
