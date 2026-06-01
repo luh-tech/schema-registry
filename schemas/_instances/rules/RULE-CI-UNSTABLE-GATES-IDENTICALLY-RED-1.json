@@ -1,8 +1,8 @@
 {
   "$schema": "https://schemas.luh.tech/rule.schema.json",
   "id": "RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1",
-  "version": "1.0.0",
-  "title": "CI UNSTABLE Gates Identically to Red — no merge on UNSTABLE",
+  "version": "1.1.0",
+  "title": "CI UNSTABLE Gates Identically to Red \u2014 no merge on UNSTABLE",
   "statement": "GitHub Pull Request mergeStateStatus UNSTABLE MUST gate identically to FAILING. No squash-merge proceeds while mergeStateStatus = UNSTABLE absent explicit named-step approval AND substrate proof that the failure is not introduced by the PR. Even with proof, the correct move is fix-baseline (on a separate PR or by reverting the offending main commit), not merge-anyway.",
   "rationale": "UNSTABLE collapses to 'mergeable with context' in the GitHub UI, creating an attractive nuisance: the merge button is available and the failures 'look like someone else's problem.' Two incidents prove this is a pattern not a one-off: PR #48 (2026-04-XX) silently bypassed pre-existing CI; PR #269 (2026-05-30) repeated the same failure mode under different cover. The system's correct response is fix-baseline, not merge-anyway with audit annotation.",
   "authority": {
@@ -12,8 +12,12 @@
   },
   "lifecycleStatus": "working-model",
   "tierState": {
-    "activeTier": "human-loop",
-    "occupiableTiers": ["working-model", "human-loop", "automated"],
+    "activeTier": "automated",
+    "occupiableTiers": [
+      "working-model",
+      "human-loop",
+      "automated"
+    ],
     "terminalTier": "automated"
   },
   "gateActions": {
@@ -24,7 +28,7 @@
     },
     "automated": {
       "predicate": "A PR with mergeStateStatus = UNSTABLE cannot be squash-merged via gh pr merge unless the PR carries an explicit override label applied by Erik (L4).",
-      "ciSurface": "GitHub Actions workflow on PR — checks gh pr view mergeStateStatus before squash-merge.",
+      "ciSurface": "GitHub Actions workflow on PR \u2014 checks gh pr view mergeStateStatus before squash-merge.",
       "onFail": "block",
       "checkRef": "FU-RULE-CI-UNSTABLE-AUTOMATED-WORKFLOW-1"
     },
@@ -43,12 +47,18 @@
       "to": "human-loop",
       "evidenceClass": "Two incidents establish pattern, not one-off: PR #48 (2026-04-XX) silently bypassed pre-existing CI failures; PR #269 (2026-05-30) repeated the failure mode under different cover. Rule statement documented in memory #15 prose (REFUSE-AND-SURFACE) but never schematized until this instance.",
       "trigger": "Rule promoted from working-model to active human-loop enforcement after PR #269 repeat incident confirmed pattern."
+    },
+    {
+      "from": "human-loop",
+      "to": "automated",
+      "evidenceClass": "CI workflow .github/workflows/pr-mergeability-check.yml implemented in d-2026-06-01-ci-unstable-merge-blocker; blocks PR merge when mergeStateStatus = UNSTABLE unless Erik (L4) applies override-unstable-merge label. Workflow self-tests on its own PR before landing. Step 2 substrate read confirmed mergeStateStatus async behavior (UNSTABLE\u2192CLEAN transition observed ~2s apart); retry loop implemented.",
+      "trigger": "Rule promoted via canonical mechanism: workflow authored in FU-D-2 dispatch, validated by self-passing on this PR; tier flips on merge."
     }
   ],
   "gatingBinding": {
     "branchPattern": "*",
     "gatedWork": "any PR squash-merge across all LuhTech repositories",
-    "ciSurface": "PENDING — GitHub Actions workflow per gateActions.automated.ciSurface"
+    "ciSurface": "PENDING \u2014 GitHub Actions workflow per gateActions.automated.ciSurface"
   },
-  "notes": "Originated via EB-agent contribution (Evidence #1) relayed to schema-registry chat. Real incidents: PR #48 + PR #269 (repeat). Pairs with memory #15 REFUSE-AND-SURFACE (prose form of the same principle, now schematized). Same axis as RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1 — both encode CI gating discipline. Credit: EB-agent for the rule shape; Claude (schema-registry chat) for the instance authoring."
+  "notes": "Originated via EB-agent contribution (Evidence #1) relayed to schema-registry chat. Real incidents: PR #48 + PR #269 (repeat). Pairs with memory #15 REFUSE-AND-SURFACE (prose form of the same principle, now schematized). Same axis as RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1 \u2014 both encode CI gating discipline. Credit: EB-agent for the rule shape; Claude (schema-registry chat) for the instance authoring. | PROMOTED 2026-06-01: tierState.activeTier human-loop \u2192 automated via FU-D-2 (d-2026-06-01-ci-unstable-merge-blocker). First rule promotion in foundation arc's post-completion FU block. Proves the maturity ladder works as designed."
 }

@@ -1,0 +1,67 @@
+name: PR Mergeability Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: read
+  statuses: read
+
+jobs:
+  check-mergeability:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for failing required checks
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          SELF_JOB_NAME: "check-mergeability"
+        run: |
+          set -e
+          echo "Checking PR #${PR_NUMBER} for failing checks..."
+
+          ROLLUP_JSON=$(gh pr view "${PR_NUMBER}" --repo "${REPO}" --json statusCheckRollup)
+
+          echo "Status check rollup:"
+          echo "${ROLLUP_JSON}" | jq '.statusCheckRollup[] | {name: (.name // .context), status, conclusion}'
+
+          # Extract checks with conclusion FAILURE, excluding this workflow itself
+          FAILING=$(echo "${ROLLUP_JSON}" | jq -r --arg self "${SELF_JOB_NAME}" '
+            .statusCheckRollup[]
+            | select(.conclusion == "FAILURE")
+            | select((.name // .context // "") != $self)
+            | (.name // .context // "unknown")
+          ')
+
+          HAS_OVERRIDE=$(gh pr view "${PR_NUMBER}" --repo "${REPO}" --json labels \
+            --jq '.labels[] | select(.name == "override-unstable-merge") | .name' | head -1)
+
+          if [ -n "${FAILING}" ]; then
+            if [ -n "${HAS_OVERRIDE}" ]; then
+              echo "::warning::Failing checks present but override-unstable-merge label is applied. Proceeding with annotation."
+              echo "RULE: RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1"
+              echo "Failing checks:"
+              echo "${FAILING}" | sed 's/^/  - /'
+              echo "Override applied — verify substrate proves failures not introduced by PR before squash-merge."
+              exit 0
+            else
+              echo "::error::The following required checks have conclusion FAILURE:"
+              echo "${FAILING}" | sed 's/^/  - /'
+              echo ""
+              echo "Per RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1, UNSTABLE gates identically to FAILING."
+              echo "No silent --admin bypass; no 'mergeable with context' interpretation."
+              echo ""
+              echo "Resolution paths:"
+              echo "  1. Fix-baseline: address the failing checks on a separate PR or by reverting the offending main commit."
+              echo "  2. Override: if Erik (L4) determines failure is not introduced by this PR AND fix-baseline is not viable, apply label 'override-unstable-merge' to this PR."
+              echo ""
+              echo "Rule: https://schemas.luh.tech/_instances/rules/RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1.json"
+              exit 1
+            fi
+          fi
+
+          echo "No checks with conclusion FAILURE detected. Passing."
