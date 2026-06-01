@@ -2,14 +2,14 @@
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-01-rule-pipeline-first-instances",
   "version": "1.0.0",
-  "title": "First Five Rule Instances — foundation arc capstone",
-  "description": "Lands the first five rule instances at schemas/_instances/rules/ — populating the canonical governance pipeline established by rule.schema.json v1.1.0. Five instances exercise every axis of the schema: both lifecycleStatus values, all three runtime tiers in activeTier, both terminal targets in terminalTier, evidenceClass on the formalized rule's backfilled transition, gatingBinding on CI-axis rules, and cross-rule semantic relations. Closes the four-deliverable foundation arc (D-0 refs, D-1 deliverable schema, D-2 rule schema v1.1.0, D-3 instances).",
+  "title": "First Five Rule Instances \u2014 foundation arc capstone",
+  "description": "Lands the first five rule instances at schemas/_instances/rules/ \u2014 populating the canonical governance pipeline established by rule.schema.json v1.1.0. Five instances exercise every axis of the schema: both lifecycleStatus values, all three runtime tiers in activeTier, both terminal targets in terminalTier, evidenceClass on the formalized rule's backfilled transition, gatingBinding on CI-axis rules, and cross-rule semantic relations. Closes the four-deliverable foundation arc (D-0 refs, D-1 deliverable schema, D-2 rule schema v1.1.0, D-3 instances).",
   "authority": {
     "author": "Claude (chat), L1",
     "approver": "Erik Luhtana (L4)",
     "revertAuthority": "Erik Luhtana (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S6-staged",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/rule-pipeline-first-instances-2026-06-01",
@@ -21,7 +21,7 @@
   "outputs": [
     {
       "id": "OUT-1",
-      "description": "RULE-PIPELINE-PROJECTION-CONTRACT-1 — token/information discipline: no file body crosses dispatch→chat transport boundary. Source: pipeline-quality session (N-1 of foundation arc). lifecycleStatus working-model, terminalTier automated with ciSurface PENDING (F5 fusion FU).",
+      "description": "RULE-PIPELINE-PROJECTION-CONTRACT-1 \u2014 token/information discipline: no file body crosses dispatch\u2192chat transport boundary. Source: pipeline-quality session (N-1 of foundation arc). lifecycleStatus working-model, terminalTier automated with ciSurface PENDING (F5 fusion FU).",
       "acceptanceCriteria": [
         "File exists at schemas/_instances/rules/RULE-PIPELINE-PROJECTION-CONTRACT-1.json",
         "Validates against rule.schema.json v1.1.0",
@@ -32,17 +32,17 @@
     },
     {
       "id": "OUT-2",
-      "description": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 — at deliverable amendment time, check scope_files overlap against other deliverables on same base branch. Source: F7 prior session (PR #261 conflict). lifecycleStatus working-model, activeTier human-loop, terminalTier automated.",
+      "description": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 \u2014 at deliverable amendment time, check scope_files overlap against other deliverables on same base branch. Source: F7 prior session (PR #261 conflict). lifecycleStatus working-model, activeTier human-loop, terminalTier automated.",
       "acceptanceCriteria": [
         "File exists",
         "Validates against rule.schema.json v1.1.0",
         "activeTier human-loop, terminalTier automated",
-        "transitions array includes working-model → human-loop with evidenceClass citing PR #261"
+        "transitions array includes working-model \u2192 human-loop with evidenceClass citing PR #261"
       ]
     },
     {
       "id": "OUT-3",
-      "description": "RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 — CI mergeStateStatus UNSTABLE gates identically to red. Source: EB-agent #1 (PR #48 + #269 repeat incidents). lifecycleStatus working-model, activeTier human-loop, terminalTier automated.",
+      "description": "RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 \u2014 CI mergeStateStatus UNSTABLE gates identically to red. Source: EB-agent #1 (PR #48 + #269 repeat incidents). lifecycleStatus working-model, activeTier human-loop, terminalTier automated.",
       "acceptanceCriteria": [
         "File exists",
         "Validates against rule.schema.json v1.1.0",
@@ -52,7 +52,7 @@
     },
     {
       "id": "OUT-4",
-      "description": "RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1 — audit/paper-trail fields recording a policy violation do not transform the violation into compliance. Source: EB-agent #2 (TRUTH-DELIVERED override proposal refused). lifecycleStatus working-model, activeTier working-model, terminalTier automated via schema constraint.",
+      "description": "RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1 \u2014 audit/paper-trail fields recording a policy violation do not transform the violation into compliance. Source: EB-agent #2 (TRUTH-DELIVERED override proposal refused). lifecycleStatus working-model, activeTier working-model, terminalTier automated via schema constraint.",
       "acceptanceCriteria": [
         "File exists",
         "Validates against rule.schema.json v1.1.0",
@@ -62,7 +62,7 @@
     },
     {
       "id": "OUT-5",
-      "description": "RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1 — when execution surfaces substrate beyond declared scope, use SPIKE primitive (memory #17), not novel pattern authoring. Source: EB-agent #3. lifecycleStatus formalized (memory #17 precise), activeTier human-loop, terminalTier human-loop with automationPath null-by-nature. Proves schema's terminal-by-nature property.",
+      "description": "RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1 \u2014 when execution surfaces substrate beyond declared scope, use SPIKE primitive (memory #17), not novel pattern authoring. Source: EB-agent #3. lifecycleStatus formalized (memory #17 precise), activeTier human-loop, terminalTier human-loop with automationPath null-by-nature. Proves schema's terminal-by-nature property.",
       "acceptanceCriteria": [
         "File exists",
         "Validates against rule.schema.json v1.1.0",
@@ -70,12 +70,12 @@
         "terminalTier is human-loop",
         "gateActions.human-loop.automationPath explicitly declares null by nature",
         "No gateActions.automated block present",
-        "transitions include backfilled working-model → formalized with evidenceClass citing memory #17 and multi-session proof"
+        "transitions include backfilled working-model \u2192 formalized with evidenceClass citing memory #17 and multi-session proof"
       ]
     },
     {
       "id": "OUT-6",
-      "description": "Prospective deliverable spec at schemas/_instances/deliverables/d-2026-06-01-rule-pipeline-first-instances.json — S4 authored before any rule instance lands; S5/S6 across dispatch; S7/S8 post-merge amendment.",
+      "description": "Prospective deliverable spec at schemas/_instances/deliverables/d-2026-06-01-rule-pipeline-first-instances.json \u2014 S4 authored before any rule instance lands; S5/S6 across dispatch; S7/S8 post-merge amendment.",
       "acceptanceCriteria": [
         "Spec validates against deliverable.schema.json",
         "transitions array reflects actual execution"
@@ -83,7 +83,7 @@
     },
     {
       "id": "OUT-7",
-      "description": "refs rebuild --check exit 0 verification — proves _instances/** exclusion works for rules namespace (no schema-refs.json changes despite five new instance files added).",
+      "description": "refs rebuild --check exit 0 verification \u2014 proves _instances/** exclusion works for rules namespace (no schema-refs.json changes despite five new instance files added).",
       "acceptanceCriteria": [
         "refs rebuild --check exit 0 after all five rule instances land",
         "schema-refs.json unchanged",
@@ -113,6 +113,18 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Dispatch authored after D-2 close; rule.schema.json v1.1.0 live on main (8a24cfd); five instance candidates locked from prior session + EB-agent contribution"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "PROCEED STEP 2 issued; execution begun with rule instance authoring"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "All five rule instances authored and validated; two schema patches applied (v1.1.1 notes field, v1.1.2 ruleState empty-string); refs verification clean; preparing PR"
     }
   ],
   "parentDeliverable": "d-2026-05-31-deliverable-schema-foundation",
@@ -121,5 +133,5 @@
     "FU-RULE-SCHEMA-EVIDENCECLASS-ENUM-1",
     "FU-RULE-SCHEMA-AUTHORITY-TIER-ENUM-1"
   ],
-  "notes": "Fourth and final deliverable in the rule-pipeline foundation arc. After this lands: foundation 100% complete. Rule pipeline canonical, populated, and self-governing. Three instances (#3, #4, #5) credit EB-agent contribution via rationale and notes fields — proving the cross-chat relay pattern works for governance content."
+  "notes": "Fourth and final deliverable in the rule-pipeline foundation arc. After this lands: foundation 100% complete. Rule pipeline canonical, populated, and self-governing. Three instances (#3, #4, #5) credit EB-agent contribution via rationale and notes fields \u2014 proving the cross-chat relay pattern works for governance content."
 }
