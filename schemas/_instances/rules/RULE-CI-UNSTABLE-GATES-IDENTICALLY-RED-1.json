@@ -52,7 +52,8 @@
       "from": "human-loop",
       "to": "automated",
       "evidenceClass": "CI workflow .github/workflows/pr-mergeability-check.yml implemented in d-2026-06-01-ci-unstable-merge-blocker; blocks PR merge when mergeStateStatus = UNSTABLE unless Erik (L4) applies override-unstable-merge label. Workflow self-tests on its own PR before landing. Step 2 substrate read confirmed mergeStateStatus async behavior (UNSTABLE\u2192CLEAN transition observed ~2s apart); retry loop implemented.",
-      "trigger": "Rule promoted via canonical mechanism: workflow authored in FU-D-2 dispatch, validated by self-passing on this PR; tier flips on merge."
+      "trigger": "Rule promoted via canonical mechanism: workflow authored in FU-D-2 dispatch, validated by self-passing on this PR; tier flips on merge.",
+      "commitSha": "f0acca72689f21a67a3c780bee2bffd5972fdea2"
     }
   ],
   "gatingBinding": {
