@@ -1,0 +1,35 @@
+name: Schema Refs Drift Check
+
+on:
+  pull_request:
+    paths:
+      - 'schemas/**'
+      - '.refsignore'
+      - 'tools/luhtech-schema/**'
+      - '.github/workflows/refs-check.yml'
+      - 'schema-refs.json'
+  push:
+    branches: [main]
+    paths:
+      - 'schemas/**'
+      - 'schema-refs.json'
+
+jobs:
+  refs-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install luhtech-schema
+        working-directory: tools/luhtech-schema
+        run: pip install -e .
+
+      - name: Check schema-refs.json drift
+        run: |
+          luhtech-schema refs rebuild --check
+        # Exit 1 = drift detected; PR must regenerate schema-refs.json

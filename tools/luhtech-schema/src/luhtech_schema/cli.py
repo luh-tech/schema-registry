@@ -1,4 +1,4 @@
-"""luhtech-schema CLI dispatch. T4: validate, acronyms, classify, map, migrate."""
+"""luhtech-schema CLI dispatch. T4: validate, acronyms, classify, map, migrate, refs."""
 from __future__ import annotations
 import argparse, sys
 from luhtech_schema import __version__
@@ -7,6 +7,7 @@ from luhtech_schema.acronyms import check as acronyms_check, register as acronym
 from luhtech_schema.classify import classify_cmd
 from luhtech_schema.schema_map import map_cmd
 from luhtech_schema.migrate import migrate_cmd
+from luhtech_schema.refs import refs_rebuild_cmd
 
 def build_parser():
     p = argparse.ArgumentParser(prog="luhtech-schema", description="Schema-first validation substrate for LuhTech Holdings.")
@@ -23,6 +24,11 @@ def build_parser():
                     help="Path to ectropy-ai/schemas root for L11 inclusion.")
     mig = sp.add_parser("migrate"); mig_sp = mig.add_subparsers(dest="mig_command", required=True)
     av = mig_sp.add_parser("add-versions"); av.add_argument("--registry-root", default="."); av.add_argument("--apply", action="store_true")
+    rfp = sp.add_parser("refs", help="Schema reference registry operations")
+    rfs = rfp.add_subparsers(dest="refs_command", required=True)
+    rb = rfs.add_parser("rebuild", help="Regenerate schema-refs.json from disk; --check for drift detection only")
+    rb.add_argument("--check", action="store_true", help="Report drift without writing; exit 1 if drift detected")
+    rb.add_argument("--root", default=".", help="Repo root (default: cwd)")
     return p
 
 def main(argv=None):
@@ -35,6 +41,8 @@ def main(argv=None):
     if args.command == "classify": return classify_cmd(args.target, registry_root=args.registry_root)
     if args.command == "map": return map_cmd(registry_root=args.registry_root, include_ectropy_domain=args.include_ectropy_domain)
     if args.command == "migrate": return migrate_cmd(args.mig_command, registry_root=args.registry_root, apply=args.apply)
+    if args.command == "refs":
+        if args.refs_command == "rebuild": return refs_rebuild_cmd(check=args.check, registry_root=args.root)
     parser.print_help(); return 2
 
 if __name__ == "__main__": sys.exit(main())

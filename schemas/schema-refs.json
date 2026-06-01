@@ -3,7 +3,49 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {
+    "version": "1.16.0",
+    "lastUpdated": "2026-06-01T02:20:17Z",
     "changelog": [
+      {
+        "version": "1.16.0",
+        "date": "2026-05-31",
+        "changes": [
+          "Added: ComputedValue v1.0.0",
+          "Added: acronyms-catalog v1.0.0",
+          "Added: agent-prompt v1.0.0",
+          "Added: architecture-roadmap v1.0.0",
+          "Added: boundaries v1.0.0",
+          "Added: dependencies v1.0.0",
+          "Added: evidence-session v1.0.0",
+          "Added: extensions v1.0.0",
+          "Added: feature v1.0.0",
+          "Added: infrastructure-catalog v1.0.0",
+          "Added: interfaces v1.0.0",
+          "Added: metrics-pipeline v1.0.0",
+          "Added: pm-authority-level v1.0.0",
+          "Added: pm-consequence v1.0.0",
+          "Added: pm-decision v1.0.0",
+          "Added: pm-inspection v1.0.0",
+          "Added: pm-participant v1.0.0",
+          "Added: pm-schedule-proposal v1.0.0",
+          "Added: pm-voxel v1.0.0",
+          "Added: portfolio-brand v1.0.0",
+          "Added: portfolio-dashboard v1.0.0",
+          "Added: portfolio-extensions-matrix v1.0.0",
+          "Added: portfolio-graph v1.0.0",
+          "Added: portfolio-ip-assets v1.0.0",
+          "Added: portfolio-portfolio v1.0.0",
+          "Added: portfolio-user-metrics v1.0.0",
+          "Added: portfolio-workflow-registry v1.0.0",
+          "Added: rule v1.0.0",
+          "Added: service-graph-equity-instrument v1.0.0",
+          "Added: service-graph-service-graph v1.0.0",
+          "Added: service-graph-service-node v1.0.0",
+          "Added: service-graph-venture-edge v1.0.0",
+          "Added: tech-stack v1.0.0",
+          "Added: workflow-registry v1.0.0"
+        ]
+      },
       {
         "changes": [
           "follow-up-register schema: v1.0.0 -> v1.1.0 (additive, non-breaking)",
@@ -101,103 +143,305 @@
         "date": "2026-02-26",
         "version": "1.6.0"
       }
-    ],
-    "lastUpdated": "2026-05-30T00:00:00Z",
-    "version": "1.15.0"
+    ]
   },
   "schemas": {
+    "ComputedValue": {
+      "id": "https://schemas.luh.tech/ComputedValue.schema.v1.0.json",
+      "file": "ComputedValue.schema.v1.0.json",
+      "version": "1.0.0",
+      "description": "Standalone, importable JSON Schema definition for the ComputedValue pattern."
+    },
+    "acronyms-catalog": {
+      "id": "https://schemas.luh.tech/acronyms-catalog.schema.json",
+      "file": "acronyms-catalog.schema.json",
+      "version": "1.0.0",
+      "description": "Schema governing the canonical LuhTech vocabulary served at https://schemas.luh.tech/acronyms-catalog.json."
+    },
+    "agent-prompt": {
+      "id": "https://schemas.luh.tech/agent-prompt.schema.json",
+      "file": "agent-prompt.schema.json",
+      "version": "1.0.0",
+      "description": "Structured agent handoff and reference documentation for LuhTech ventures."
+    },
+    "architecture-roadmap": {
+      "id": "https://schemas.luh.tech/architecture-roadmap.schema.v1.json",
+      "file": "architecture-roadmap.schema.v1.json",
+      "version": "1.0.0",
+      "description": "Technical architecture roadmap schema for LuhTech portfolio ventures."
+    },
+    "boundaries": {
+      "id": "https://schemas.luh.tech/boundaries.schema.json",
+      "file": "boundaries.schema.json",
+      "version": "1.0.0",
+      "description": "Fork tracking and code boundary definitions for ventures that inherit from platform or parent ventures."
+    },
     "cis-assessment-sync-config": {
-      "description": "Strategic assessment dashboard sync configuration — n8n webhook config and Notion sync targets.",
-      "file": "cis/assessment-sync-config.schema.json",
       "id": "https://schemas.luh.tech/cis/assessment-sync-config.schema.json",
-      "version": "1.0.0"
+      "file": "cis/assessment-sync-config.schema.json",
+      "version": "1.0.0",
+      "description": "Strategic assessment dashboard sync configuration — n8n webhook config and Notion sync targets."
     },
     "cis-infra-changelog": {
-      "description": "CIS infrastructure changelog — structured audit ledger for CI, terraform, deploy, registry, and droplet changes.",
-      "file": "cis/cis-infra-changelog.schema.json",
       "id": "https://schemas.luh.tech/cis/cis-infra-changelog.schema.json",
-      "version": "1.0.0"
+      "file": "cis/cis-infra-changelog.schema.json",
+      "version": "1.0.0",
+      "description": "CIS infrastructure changelog — structured audit ledger for CI, terraform, deploy, registry, and droplet changes."
     },
     "cis-url-catalog": {
-      "description": "LuhTech domain and URL catalog — per-venture Cloudflare account assignments, migration status, URL endpoints. Replaces luh.tech/schemas/url-catalog-v2.json.",
-      "file": "cis/url-catalog.schema.json",
       "id": "https://schemas.luh.tech/cis/url-catalog.schema.json",
-      "version": "1.0.0"
+      "file": "cis/url-catalog.schema.json",
+      "version": "1.0.0",
+      "description": "LuhTech domain and URL catalog — per-venture Cloudflare account assignments, migration status, URL endpoints. Replaces luh.tech/schemas/url-catalog-v2.json."
     },
     "decision-log": {
-      "description": "Enhanced ADR with governance, voting, indexes, and implementation tracking. Portfolio-wide standard. v1 (decision-log.schema.json) retained for backward-compat only.",
-      "file": "decision-log.schema.v2.json",
       "id": "https://schemas.luh.tech/decision-log.schema.v2.json",
-      "version": "2.0.0"
+      "file": "decision-log.schema.v2.json",
+      "version": "2.0.0",
+      "description": "Enhanced ADR with governance, voting, indexes, and implementation tracking. Portfolio-wide standard. v1 (decision-log.schema.json) retained for backward-compat only."
+    },
+    "dependencies": {
+      "id": "https://schemas.luh.tech/dependencies.schema.json",
+      "file": "dependencies.schema.json",
+      "version": "1.0.0",
+      "description": "Cross-venture dependency tracking for portfolio-wide coordination and conflict detection."
+    },
+    "evidence-session": {
+      "id": "https://schemas.luh.tech/evidence-session.schema.json",
+      "file": "evidence-session.schema.json",
+      "version": "1.0.0",
+      "description": "Structured evidence and investigation tracking for LuhTech ventures."
+    },
+    "extensions": {
+      "id": "https://schemas.luh.tech/extensions.schema.v1.json",
+      "file": "extensions.schema.v1.json",
+      "version": "1.0.0",
+      "description": "Venture-specific extensions with explicit sharing control."
+    },
+    "feature": {
+      "id": "https://schemas.luh.tech/feature.schema.json",
+      "file": "feature.schema.json",
+      "version": "1.0.0",
+      "description": "Schema for FEATURE.json files that define feature specifications, milestones, deliverables, and business value tracking."
     },
     "follow-up-register": {
-      "description": "Follow-up item tracking — open work, deferred actions, cross-repo coordination. Adopted portfolio-wide.",
-      "file": "follow-up-register.schema.json",
       "id": "https://schemas.luh.tech/follow-up-register.schema.json",
-      "version": "1.1.0"
+      "file": "follow-up-register.schema.json",
+      "version": "1.1.0",
+      "description": "Follow-up item tracking — open work, deferred actions, cross-repo coordination. Adopted portfolio-wide."
+    },
+    "infrastructure-catalog": {
+      "id": "https://schemas.luh.tech/infrastructure-catalog.schema.json",
+      "file": "infrastructure-catalog.schema.json",
+      "version": "1.0.0",
+      "description": "Standardized infrastructure documentation for LuhTech ventures."
+    },
+    "interfaces": {
+      "id": "https://schemas.luh.tech/interfaces.schema.json",
+      "file": "interfaces.schema.json",
+      "version": "1.0.0",
+      "description": "Schema for interfaces.json files that define MCP tool signatures, REST API endpoints, GraphQL resolvers, and middleware specifications for features."
+    },
+    "metrics-pipeline": {
+      "id": "https://schemas.luh.tech/metrics-pipeline.schema.json",
+      "file": "metrics-pipeline.schema.json",
+      "version": "1.0.0",
+      "description": "Schema for robust metrics collection, failure handling, and multi-destination reporting following luh-tech enterprise patterns."
+    },
+    "pm-authority-level": {
+      "id": "https://schemas.luh.tech/pm/authority-level.schema.json",
+      "file": "pm/authority-level.schema.json",
+      "version": "1.0.0",
+      "description": "Defines the 7-tier authority cascade for construction project decisions."
+    },
+    "pm-consequence": {
+      "id": "https://schemas.luh.tech/pm/consequence.schema.json",
+      "file": "pm/consequence.schema.json",
+      "version": "1.0.0",
+      "description": "Tracks downstream effects of PM decisions including schedule delays, cost increases, safety risks, and other impacts."
+    },
+    "pm-decision": {
+      "id": "https://schemas.luh.tech/pm/decision.schema.json",
+      "file": "pm/decision.schema.json",
+      "version": "1.0.0",
+      "description": "Construction project decision with voxel attachment and 7-tier authority cascade."
+    },
+    "pm-inspection": {
+      "id": "https://schemas.luh.tech/pm/inspection.schema.json",
+      "file": "pm/inspection.schema.json",
+      "version": "1.0.0",
+      "description": "Field inspection records that validate PM decisions and voxel completion."
+    },
+    "pm-participant": {
+      "id": "https://schemas.luh.tech/pm/participant.schema.json",
+      "file": "pm/participant.schema.json",
+      "version": "1.0.0",
+      "description": "Project stakeholders who interact with PM decisions, voxels, and inspections."
+    },
+    "pm-schedule-proposal": {
+      "id": "https://schemas.luh.tech/pm/schedule-proposal.schema.json",
+      "file": "pm/schedule-proposal.schema.json",
+      "version": "1.0.0",
+      "description": "Modifications to the 10-day look-ahead schedule triggered by PM decisions."
+    },
+    "pm-voxel": {
+      "id": "https://schemas.luh.tech/pm/voxel.schema.json",
+      "file": "pm/voxel.schema.json",
+      "version": "1.0.0",
+      "description": "3D spatial container for PM decisions, labor tracking, materials, and carbon footprint."
+    },
+    "portfolio-brand": {
+      "id": "https://schemas.luh.tech/portfolio/brand.schema.json",
+      "file": "portfolio/brand.schema.json",
+      "version": "1.0.0",
+      "description": "Schema-first brand configuration for LuhTech portfolio ventures."
+    },
+    "portfolio-dashboard": {
+      "id": "https://schemas.luh.tech/portfolio/dashboard.schema.json",
+      "file": "portfolio/dashboard.schema.json",
+      "version": "1.0.0",
+      "description": "Schema-first configuration for portfolio dashboards including Mermaid diagrams, metrics, and sync settings."
+    },
+    "portfolio-extensions-matrix": {
+      "id": "https://schemas.luh.tech/portfolio/extensions-matrix.schema.v1.json",
+      "file": "portfolio/extensions-matrix.schema.v1.json",
+      "version": "1.0.0",
+      "description": "Portfolio-level tracking of which extensions each venture shares with Holdings."
+    },
+    "portfolio-graph": {
+      "id": "https://schemas.luh.tech/portfolio/portfolio-graph.schema.v1.json",
+      "file": "portfolio/portfolio-graph.schema.v1.json",
+      "version": "1.0.0",
+      "description": "Portfolio-wide graph structure for cross-venture relationships, dependency tracking, and entity linking."
+    },
+    "portfolio-ip-assets": {
+      "id": "https://schemas.luh.tech/portfolio/ip-assets.schema.json",
+      "file": "portfolio/ip-assets.schema.json",
+      "version": "1.0.0",
+      "description": "Comprehensive intellectual property tracking for all portfolio ventures including patents, trademarks, copyrights, and trade secrets."
+    },
+    "portfolio-portfolio": {
+      "id": "https://schemas.luh.tech/portfolio/portfolio.schema.json",
+      "file": "portfolio/portfolio.schema.json",
+      "version": "1.0.0",
+      "description": "Holdings-level schema capturing the complete LuhTech venture portfolio structure, strategic narrative, cross-venture relationships, IP assets, and key relationships."
+    },
+    "portfolio-user-metrics": {
+      "id": "https://schemas.luh.tech/portfolio/user-metrics.schema.json",
+      "file": "portfolio/user-metrics.schema.json",
+      "version": "1.0.0",
+      "description": "Schema-first definition for user funnel, engagement, and email metrics."
+    },
+    "portfolio-workflow-registry": {
+      "id": "https://schemas.luh.tech/portfolio/workflow-registry.schema.json",
+      "file": "portfolio/workflow-registry.schema.json",
+      "version": "1.0.0",
+      "description": "Canonical workflow definitions for portfolio-level operations."
+    },
+    "roadmap": {
+      "id": "urn:luhtech:schema:roadmap:v3.4",
+      "file": "roadmap.schema.v3.4.json",
+      "version": "3.4.0",
+      "description": "Technical canonical source — team-visible roadmap data. v3.4 formalizes serviceExchanges + primaryServiceExchange on feature objects (DEC-SVX-001); deprecates xaasServices/xaasServicePrimary (removed v4.0)."
+    },
+    "roadmap-business": {
+      "id": "urn:luhtech:schema:roadmap-business:v2.3",
+      "file": "roadmap-business.schema.v2.3.json",
+      "version": "2.3.0",
+      "description": "Business canonical source — founder/investor-only financial and strategic data. v2.3 ComputedValue across financial domains."
+    },
+    "rule": {
+      "id": "https://schemas.luh.tech/rule.schema.json",
+      "file": "rule.schema.json",
+      "version": "1.0.0",
+      "description": "A governance rule as a first-class, versioned object."
+    },
+    "service-graph-equity-instrument": {
+      "id": "https://schemas.luh.tech/service-graph/equity-instrument.schema.v1.0.json",
+      "file": "service-graph/equity-instrument.schema.v1.0.json",
+      "version": "1.0.0",
+      "description": "Governs equity allocation from SME or CoE founder contribution to a venture."
+    },
+    "service-graph-service-graph": {
+      "id": "https://schemas.luh.tech/service-graph/service-graph.schema.v1.0.json",
+      "file": "service-graph/service-graph.schema.v1.0.json",
+      "version": "1.0.0",
+      "description": "Portfolio-level graph container."
+    },
+    "service-graph-service-node": {
+      "id": "https://schemas.luh.tech/service-graph/service-node.schema.v1.0.json",
+      "file": "service-graph/service-node.schema.v1.0.json",
+      "version": "1.0.0",
+      "description": "Defines any resource controlled by the LuhTech Holdings shared pool — AI agents, CoE founder time, platform infrastructure, or shared tooling."
+    },
+    "service-graph-venture-edge": {
+      "id": "https://schemas.luh.tech/service-graph/venture-edge.schema.v1.0.json",
+      "file": "service-graph/venture-edge.schema.v1.0.json",
+      "version": "1.0.0",
+      "description": "Defines the draw relationship between a venture and a service node."
+    },
+    "tech-stack": {
+      "id": "https://schemas.luh.tech/tech-stack.schema.json",
+      "file": "tech-stack.schema.json",
+      "version": "1.0.0",
+      "description": "Technology stack documentation for LuhTech ventures."
+    },
+    "transform-template": {
+      "id": "urn:luhtech:schema:transform-template:v1.0",
+      "file": "transform-template.schema.v1.0.json",
+      "version": "1.0.0",
+      "description": "Governs the format of luhtech-transform template JSON files"
+    },
+    "workflow-registry": {
+      "id": "https://schemas.luh.tech/workflow-registry.schema.json",
+      "file": "workflow-registry.schema.json",
+      "version": "1.0.0",
+      "description": "Schema for documenting and categorizing GitHub Actions workflows following luh-tech schema-first patterns."
     },
     "patent": {
+      "id": "https://schemas.luh.tech/patent/",
       "baseUrl": "https://schemas.luh.tech/patent/",
       "description": "Patent portfolio infrastructure (SBPA family) — 7 schemas under patent/ namespace. Owned by LuhTech Holdings.",
-      "id": "https://schemas.luh.tech/patent/",
+      "version": "1.0.0",
       "schemas": {
         "figure-sidecar": {
-          "file": "patent/figure-sidecar.schema.json",
           "id": "https://schemas.luh.tech/patent/figure-sidecar.schema.json",
+          "file": "patent/figure-sidecar.schema.json",
           "version": "1.0.0"
         },
         "glossary": {
-          "file": "patent/glossary.schema.json",
           "id": "https://schemas.luh.tech/patent/glossary.schema.json",
+          "file": "patent/glossary.schema.json",
           "version": "1.0.0"
         },
         "glossary-entry": {
-          "file": "patent/glossary-entry.schema.json",
           "id": "https://schemas.luh.tech/patent/glossary-entry.schema.json",
+          "file": "patent/glossary-entry.schema.json",
           "version": "1.0.0"
         },
         "manifest": {
-          "file": "patent/manifest.schema.json",
           "id": "https://schemas.luh.tech/patent/manifest.schema.json",
+          "file": "patent/manifest.schema.json",
           "version": "1.0.0"
         },
         "portfolio": {
-          "file": "patent/portfolio.schema.json",
           "id": "https://schemas.luh.tech/patent/portfolio.schema.json",
+          "file": "patent/portfolio.schema.json",
           "version": "1.0.0"
         },
         "prior-art-entry": {
-          "file": "patent/prior-art-entry.schema.json",
           "id": "https://schemas.luh.tech/patent/prior-art-entry.schema.json",
+          "file": "patent/prior-art-entry.schema.json",
           "version": "1.0.0"
         },
         "provisional": {
-          "file": "patent/provisional.schema.json",
           "id": "https://schemas.luh.tech/patent/provisional.schema.json",
+          "file": "patent/provisional.schema.json",
           "version": "1.0.0"
         }
-      },
-      "version": "1.0.0"
-    },
-    "roadmap": {
-      "description": "Technical canonical source — team-visible roadmap data. v3.4 formalizes serviceExchanges + primaryServiceExchange on feature objects (DEC-SVX-001); deprecates xaasServices/xaasServicePrimary (removed v4.0).",
-      "file": "roadmap.schema.v3.4.json",
-      "id": "urn:luhtech:schema:roadmap:v3.4",
-      "version": "3.4.0"
-    },
-    "roadmap-business": {
-      "description": "Business canonical source — founder/investor-only financial and strategic data. v2.3 ComputedValue across financial domains.",
-      "file": "roadmap-business.schema.v2.3.json",
-      "id": "urn:luhtech:schema:roadmap-business:v2.3",
-      "version": "2.3.0"
-    },
-    "transform-template": {
-      "description": "Governs the format of luhtech-transform template JSON files",
-      "file": "transform-template.schema.v1.0.json",
-      "id": "urn:luhtech:schema:transform-template:v1.0",
-      "version": "1.0.0"
+      }
     }
   },
   "title": "LuhTech Schema Registry v1.12.0",
-  "version": "1.15.0"
+  "version": "1.16.0"
 }
