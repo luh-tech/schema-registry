@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S6-staged",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/truth-delivered-schema-2026-06-01",
@@ -87,10 +87,27 @@
       "to": "S6-staged",
       "date": "2026-06-01",
       "trigger": "Refs regenerated (truth-delivered v1.0.0 registered, 1.21.0 \u2192 1.22.0), idempotent; preparing PR"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "c2d400f7811ea0ee86c18978067c86bb57477bea",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/76",
+      "trigger": "Squash merge to main via MERGE PR 76"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "c2d400f7811ea0ee86c18978067c86bb57477bea",
+      "trigger": "Post-merge: schema at canonical path, registry updated (v1.22.0), refs clean. FU-TRUTH-DELIVERED-SCHEMA-1 closed. FU-WAVE-1-CLOSURE-RECORD-1 unblocked."
     }
   ],
   "relatedFollowUps": [
     "FU-TRUTH-DELIVERED-SCHEMA-1"
   ],
-  "notes": "Second cross-repo coordination deliverable in FU block. Closes one EB-side FU (FU-TRUTH-DELIVERED-SCHEMA-1). Direct close per Erik direction 2026-06-01 \u2014 no pre-merge EB-agent review. EB-agent can amend schema shape via subsequent PR if needed. v0 shape derives from EB FU body field list (substrate read part 1 R-2). Schema unblocks EB FU-WAVE-1-CLOSURE-RECORD-1 (P3 blocked) which needs this schema to land its Wave 1 closure record instance."
+  "notes": "Second cross-repo coordination deliverable in FU block. Closes one EB-side FU (FU-TRUTH-DELIVERED-SCHEMA-1). Direct close per Erik direction 2026-06-01 \u2014 no pre-merge EB-agent review. EB-agent can amend schema shape via subsequent PR if needed. v0 shape derives from EB FU body field list (substrate read part 1 R-2). Schema unblocks EB FU-WAVE-1-CLOSURE-RECORD-1 (P3 blocked) which needs this schema to land its Wave 1 closure record instance.",
+  "mergeCommitSha": "c2d400f7811ea0ee86c18978067c86bb57477bea",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/76"
 }
