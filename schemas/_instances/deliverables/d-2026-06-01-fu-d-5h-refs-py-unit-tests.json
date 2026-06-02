@@ -1,0 +1,78 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-fu-d-5h-refs-py-unit-tests",
+  "version": "1.0.0",
+  "title": "FU-D-5h — Unit tests for refs.py",
+  "description": "Establish unit test coverage for tools/luhtech-schema/src/luhtech_schema/refs.py (437 lines, 15 functions, currently zero coverage). Net-new tools/luhtech-schema/tests/test_refs.py file conforming to peer test conventions. Coverage target: all 15 functions exercised, edge cases for $ref resolution, schema discovery, description derivation, and refs.json rebuild idempotency. Closes FU-LUHTECH-SCHEMA-REFS-UNIT-TESTS-1.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "test/fu-d-5h-refs-py-unit-tests-2026-06-01",
+    "scopeFiles": [
+      "tools/luhtech-schema/tests/test_refs.py",
+      "schemas/_instances/deliverables/d-2026-06-01-fu-d-5h-refs-py-unit-tests.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Net-new tools/luhtech-schema/tests/test_refs.py file. 71 tests covering all 15 functions in src/luhtech_schema/refs.py. Conforms to peer test conventions: pytest fixtures, tmp_path/capsys for isolation, no real schemas/ touched.",
+      "acceptanceCriteria": [
+        "tools/luhtech-schema/tests/test_refs.py created with 71 tests covering all 15 functions",
+        "pytest tools/luhtech-schema/tests/test_refs.py exits 0 with all tests passing",
+        "Tests use tmp_path / capsys fixtures for isolation; no tests touch real schemas/ or schema-refs.json",
+        "Tests follow naming convention of peer files",
+        "Edge cases covered: missing $ref target, URN id preservation, truncated description derivation, refs rebuild idempotency, malformed JSON handling"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "refs.py refactor — not required. Pre-validated: existing refs.py shape supports all tests via tmp_path/capsys without refactor.",
+      "acceptanceCriteria": [
+        "refs.py is NOT touched — existing shape supports tests without refactor"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Deliverable instance lifecycle — spec lands at S4-authored, transitions through S5-in-progress → S6-staged → S7-merged → S8-closed across the dispatch.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "lifecycleState populated with S8-closed post-merge",
+        "mergeCommitSha populated with actual squash-merge SHA",
+        "transitions array captures full lifecycle path"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv validate of spec against deliverable.schema.json passes",
+      "pytest tools/luhtech-schema/tests/test_refs.py exits 0 (71/71 tests pass)",
+      "Full pytest suite (tools/luhtech-schema/tests/) exits 0 — no peer test regressions",
+      "instance-validation.yml passes on the PR",
+      "refs-check.yml passes",
+      "pr-mergeability-check.yml passes"
+    ],
+    "postMerge": [
+      "tools/luhtech-schema/tests/test_refs.py present on main",
+      "pytest tests/test_refs.py exits 0 on main",
+      "FU-LUHTECH-SCHEMA-REFS-UNIT-TESTS-1 closed in register"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Spec authored against verified substrate tarball (d-fu-5h-substrate-2026-06-01.tar.gz). Paths corrected per substrate research: test file at tools/luhtech-schema/tests/test_refs.py, refs.py at tools/luhtech-schema/src/luhtech_schema/refs.py. Test file pre-validated 71/71 pass, 99% coverage."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-LUHTECH-SCHEMA-REFS-UNIT-TESTS-1"
+  ],
+  "notes": "Second of three deliverables in the FU-D-5 cleanup batch. OUT-2 confirmed not required — pre-validated that refs.py shape supports all tests via tmp_path/capsys without refactor. Test file pre-validated against substrate tarball (which is the exact repo files): 71/71 pass, 99% line coverage on refs.py, 3 uncovered defensive guards at lines 154, 263, 285. Pytest invocation from tools/luhtech-schema/ directory."
+}
