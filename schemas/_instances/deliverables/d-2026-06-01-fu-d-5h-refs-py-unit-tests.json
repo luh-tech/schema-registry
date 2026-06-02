@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "test/fu-d-5h-refs-py-unit-tests-2026-06-01",
@@ -69,10 +69,39 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Spec authored against verified substrate tarball (d-fu-5h-substrate-2026-06-01.tar.gz). Paths corrected per substrate research: test file at tools/luhtech-schema/tests/test_refs.py, refs.py at tools/luhtech-schema/src/luhtech_schema/refs.py. Test file pre-validated 71/71 pass, 99% coverage."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "Dispatch execution begun: substrate tarball read, tests authored and pre-validated 71/71"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "Branch committed, PR opened, CI green (71 tests, 99% coverage, zero peer regressions)"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "55b87fdb1c4bd077901f276550b6a914e20afb86",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/88",
+      "trigger": "Squash merge to main via MERGE PR 88"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "55b87fdb1c4bd077901f276550b6a914e20afb86",
+      "trigger": "Post-merge: test_refs.py on main, pytest 71/71 passes, FU-LUHTECH-SCHEMA-REFS-UNIT-TESTS-1 closed"
     }
   ],
   "relatedFollowUps": [
     "FU-LUHTECH-SCHEMA-REFS-UNIT-TESTS-1"
   ],
-  "notes": "Second of three deliverables in the FU-D-5 cleanup batch. OUT-2 confirmed not required — pre-validated that refs.py shape supports all tests via tmp_path/capsys without refactor. Test file pre-validated against substrate tarball (which is the exact repo files): 71/71 pass, 99% line coverage on refs.py, 3 uncovered defensive guards at lines 154, 263, 285. Pytest invocation from tools/luhtech-schema/ directory."
+  "notes": "Second of three deliverables in the FU-D-5 cleanup batch. OUT-2 confirmed not required — pre-validated that refs.py shape supports all tests via tmp_path/capsys without refactor. Test file pre-validated against substrate tarball (which is the exact repo files): 71/71 pass, 99% line coverage on refs.py, 3 uncovered defensive guards at lines 154, 263, 285. Pytest invocation from tools/luhtech-schema/ directory.",
+  "mergeCommitSha": "55b87fdb1c4bd077901f276550b6a914e20afb86",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/88"
 }
