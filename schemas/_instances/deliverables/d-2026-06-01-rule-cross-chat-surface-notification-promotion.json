@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-rule-cross-chat-surface-notification-promotion",
+  "version": "1.0.0",
+  "title": "D-COMMS-2 — Promote RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 working-model -> automated",
+  "description": "Promote RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 tier from working-model to automated. D-COMMS-1 (merge SHA f6bee1b93ec0a64c5e1ccca16184409840bc1056, PR #84) is the evidenceClass: the slack-broadcast.yml GitHub Actions workflow auto-publishes PR open/merge events and FU register changes to the #luhtech-agents-comms Slack channel, which acts as the canonical discovery substrate the rule requires. Channel currently broadcasting six events from today's deliverables; bot live in channel; workflow self-evidencing. Promotion via canonical mechanism exercised three times today (FU-D-2, FU-D-3, FU-D-4): version bump 1.0.0 -> 1.1.0, append promotion transition with evidenceClass, flip tierState.activeTier to automated, append closure note to notes field.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/rule-cross-chat-surface-promotion-2026-06-01",
+    "scopeFiles": [
+      "schemas/_instances/rules/RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1.json",
+      "schemas/_instances/deliverables/d-2026-06-01-rule-cross-chat-surface-notification-promotion.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Promote RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 via canonical mechanism. Four edits on the rule instance: (a) version 1.0.0 -> 1.1.0; (b) tierState.activeTier 'working-model' -> 'automated'; (c) append working-model -> automated transition with evidenceClass citing D-COMMS-1; (d) append closure note to notes field with '| PROMOTED 2026-06-01:' separator. lifecycleStatus REMAINS working-model — promotion is on the tier axis only.",
+      "acceptanceCriteria": [
+        "version field changes from 1.0.0 to 1.1.0",
+        "tierState.activeTier changes from 'working-model' to 'automated'",
+        "tierState.terminalTier remains 'automated' (no change)",
+        "lifecycleStatus REMAINS 'working-model' (no change — tier axis promotion only)",
+        "transitions array length grows from 1 to 2",
+        "New transition has from='working-model', to='automated', evidenceClass citing D-COMMS-1 SHA f6bee1b9 + PR #84",
+        "notes field extended with '| PROMOTED 2026-06-01:' suffix matching prior-art pattern",
+        "Instance validates against rule.schema.json v1.2.0 (with allOf forbidden-audit-paint-names constraint)",
+        "No other rule instances modified",
+        "No source schemas modified"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Deliverable instance lifecycle — spec lands at S4-authored, transitions through S5-in-progress -> S6-staged -> S7-merged -> S8-closed across the dispatch.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "lifecycleState populated with S8-closed post-merge",
+        "mergeCommitSha populated with actual squash-merge SHA",
+        "transitions array captures full lifecycle path"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv validate of spec against deliverable.schema.json passes",
+      "ajv validate of edited rule instance against rule.schema.json v1.2.0 passes (with -r for allOf $ref)",
+      "instance-validation.yml passes on the PR",
+      "refs-check.yml passes",
+      "pr-mergeability-check.yml passes",
+      "amendment-scope-overlap-check.yml passes"
+    ],
+    "postMerge": [
+      "RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 on main shows version 1.1.0",
+      "RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 on main shows tierState.activeTier='automated'",
+      "Slack channel #luhtech-agents-comms broadcasts the merge PR event",
+      "Rules-at-automated count grows from 3 to 4"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Spec authored against verified substrate tarball (rule.schema.json v1.2.0 + RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 current state + two canonical promotion prior-arts FU-D-2 and FU-D-3 + allOf definition). Canonical promotion mechanism confirmed consistent across both priors. D-COMMS-1 evidenceClass cited with full SHA + PR number."
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "Fourth rule promotion in foundation arc's post-completion. Pattern fully canonical now (FU-D-2 CI-UNSTABLE, FU-D-3 DOCUMENTED-OVERRIDE, FU-D-4 PIPELINE-AMENDMENT-SUBSTRATE-RECHECK, this one). Pure data fix on a single rule instance — no source schema edits, no CI workflow authoring, no code changes. The CI substrate (slack-broadcast.yml + #luhtech-agents-comms channel) already exists on main from D-COMMS-1; this deliverable just records that the rule's automated tier is now operationally backed and flips the activeTier accordingly."
+}
