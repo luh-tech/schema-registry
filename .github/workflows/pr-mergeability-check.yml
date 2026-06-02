@@ -42,8 +42,48 @@ jobs:
 
           if [ -n "${FAILING}" ]; then
             if [ -n "${HAS_OVERRIDE}" ]; then
+              # RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 enforcement:
+              # When override-unstable-merge label is applied to a PR with failing checks,
+              # at least one PR comment MUST contain a substrate artifact link.
+              # Acceptable artifact link forms:
+              #   (a) decision-log.json reference: */decision-log.json* (DEC entry)
+              #   (b) follow-up-register.json reference: */follow-up-register.json* (FU entry)
+              #   (c) truth-delivered instance: schemas/_instances/truth-delivered/*.json
+
+              echo "Override label detected. Scanning PR comments for substrate artifact link..."
+
+              COMMENTS_JSON=$(gh pr view "${PR_NUMBER}" --repo "${REPO}" --json comments)
+
+              ARTIFACT_LINK=$(echo "${COMMENTS_JSON}" | jq -r '
+                .comments[].body
+                | scan("https?://[^[:space:])\"'\'']+")
+                | select(
+                    test("/decision-log\\.json") or
+                    test("/follow-up-register\\.json") or
+                    test("schemas/_instances/truth-delivered/[^/[:space:])\"'\'']+\\.json")
+                  )
+              ' | head -1)
+
+              if [ -z "${ARTIFACT_LINK}" ]; then
+                echo "::error::override-unstable-merge label applied without substrate artifact link in PR comments."
+                echo ""
+                echo "Per RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1:"
+                echo "  L4 conscious override MUST produce a substrate artifact at time of action."
+                echo "  Acceptable artifact types:"
+                echo "    (a) DEC entry — link to .roadmap/decision-log.json (anchor to specific DEC id)"
+                echo "    (b) FU note — link to .roadmap/follow-up-register.json (anchor to specific FU id)"
+                echo "    (c) TRUTH-DELIVERED instance — link to schemas/_instances/truth-delivered/<file>.json"
+                echo ""
+                echo "Resolution: post a PR comment containing the substrate artifact URL, then re-run this check."
+                echo ""
+                echo "Rule: https://schemas.luh.tech/_instances/rules/RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1.json"
+                exit 1
+              fi
+
               echo "::warning::Failing checks present but override-unstable-merge label is applied. Proceeding with annotation."
               echo "RULE: RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1"
+              echo "RULE: RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 — substrate artifact link present"
+              echo "Substrate artifact: ${ARTIFACT_LINK}"
               echo "Failing checks:"
               echo "${FAILING}" | sed 's/^/  - /'
               echo "Override applied — verify substrate proves failures not introduced by PR before squash-merge."
@@ -57,7 +97,7 @@ jobs:
               echo ""
               echo "Resolution paths:"
               echo "  1. Fix-baseline: address the failing checks on a separate PR or by reverting the offending main commit."
-              echo "  2. Override: if Erik (L4) determines failure is not introduced by this PR AND fix-baseline is not viable, apply label 'override-unstable-merge' to this PR."
+              echo "  2. Override: if Erik (L4) determines failure is not introduced by this PR AND fix-baseline is not viable, apply label 'override-unstable-merge' to this PR AND post a PR comment containing a substrate artifact link (DEC entry, FU note, or TRUTH-DELIVERED instance URL) per RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1."
               echo ""
               echo "Rule: https://schemas.luh.tech/_instances/rules/RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1.json"
               exit 1
