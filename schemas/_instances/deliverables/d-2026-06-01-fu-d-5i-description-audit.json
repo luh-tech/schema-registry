@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "chore/fu-d-5i-description-audit-2026-06-01",
@@ -74,10 +74,39 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Spec authored against verified substrate (schemas/schema-refs.json full content). Root cause of MISSING descriptions identified: _build_entry() field-set preservation on existing canonical entries that were initially registered without descriptions. Refinement approach: direct canonical edit, no source schema or code changes. Erik approved scope (11 entries)."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "Dispatch execution begun: 11 description edits applied to schemas/schema-refs.json"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "Branch committed, PR opened, refs rebuild --check passes (exit 0), CI green"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "b8956a190cf596412f22f652978908fc986e0bdb",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/90",
+      "trigger": "Squash merge to main via MERGE PR 90"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "b8956a190cf596412f22f652978908fc986e0bdb",
+      "trigger": "Post-merge: all 7 patent.* entries have description, 4 qualitative refinements visible, refs clean"
     }
   ],
   "relatedFollowUps": [
     "FU-LUHTECH-SCHEMA-REFS-DESCRIPTION-AUDIT-1"
   ],
-  "notes": "Final deliverable in the FU-D-5 cleanup batch (FU-D-5g mechanical + FU-D-5h refs.py tests precede). Substrate research traced the MISSING patent descriptions to _build_entry() field-set preservation behavior (refs.py lines 216-220), not to absent source schema descriptions. Source schemas all have rich descriptions, but those are oriented at schema consumers (developers authoring instance files), too detailed for registry navigation. Registry entries need one-line summaries that orient a portfolio scan. Eleven curated entries authored by SR chat against source schema titles + descriptions. Four entries also flagged (deprecation-header, truth-delivered, service-graph-service-graph, tech-stack) deferred — adequate per mechanical filters; aesthetic/generic-but-functional is not in scope for this audit."
+  "notes": "Final deliverable in the FU-D-5 cleanup batch (FU-D-5g mechanical + FU-D-5h refs.py tests precede). Substrate research traced the MISSING patent descriptions to _build_entry() field-set preservation behavior (refs.py lines 216-220), not to absent source schema descriptions. Source schemas all have rich descriptions, but those are oriented at schema consumers (developers authoring instance files), too detailed for registry navigation. Registry entries need one-line summaries that orient a portfolio scan. Eleven curated entries authored by SR chat against source schema titles + descriptions. Four entries also flagged (deprecation-header, truth-delivered, service-graph-service-graph, tech-stack) deferred — adequate per mechanical filters; aesthetic/generic-but-functional is not in scope for this audit.",
+  "mergeCommitSha": "b8956a190cf596412f22f652978908fc986e0bdb",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/90"
 }
