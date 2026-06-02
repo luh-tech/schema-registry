@@ -1,0 +1,105 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-02-l9-reconcile-sr",
+  "version": "1.0.0",
+  "title": "D-L9-RECONCILE \u2014 Bring SR L9 operational records current with rule pipeline arc",
+  "description": "Append schema-bound DEC entries and FU entries to bring SR's L9 operational records (.roadmap/decision-log.json and .roadmap/follow-up-register.json) current with the rule pipeline foundation arc (D-0..D-3), the FU block (FU-D-1..FU-D-5x), and D-COMMS-1/D-COMMS-2 cross-chat infrastructure. Per the canonical architecture topology, L9 operational records ARE schema-bound. The records have not been updated since 2026-05-18 (decision log) and 2026-05-21 (follow-up register), pre-dating substantial portfolio governance work. Hybrid coverage path (c): file DEC entries for rule promotion milestones (the enterprise-significant events), not individual deliverables; file FU entries for working-model rules pending automated promotion plus the future schema-bump candidate. Closure docs handle granular per-deliverable history. This deliverable establishes that L9 records ARE intended-canonical for the rule pipeline, not vestigial. Pattern reusable for every future rule promotion arc.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/l9-reconcile-sr-2026-06-02",
+    "scopeFiles": [
+      ".roadmap/decision-log.json",
+      ".roadmap/follow-up-register.json",
+      "schemas/_instances/deliverables/d-2026-06-02-l9-reconcile-sr.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Append 7 DEC entries to .roadmap/decision-log.json capturing rule pipeline foundation adoption + 5 rule lifecycle milestones (4 automated promotions + 1 terminal-by-design at human-loop) + 1 forward-pointing arc initiation. Each DEC conforms to decision-log.schema.v2.json #/definitions/decision with all 9 required fields plus tags, impactedDeliverables, evidence, externalLinks. category=tooling matches existing 6 DEC pattern; impact=high for substantive arc work; status=approved with approvedBy=[erik] and approvalDate. lastUpdated bumped to 2026-06-02 ISO 8601 timestamp. meta block totalDecisions advanced 6 -> 13 if present, otherwise no change to meta. decisions array length grows from 6 to 13.",
+      "acceptanceCriteria": [
+        "decisions array length increases from 6 to 13",
+        "Each new DEC has decisionId matching pattern ^d-\\d{4}-\\d{2}-\\d{2}-[a-z0-9-]+$",
+        "Each new DEC has all 9 required fields: decisionId, timestamp, title, context, decision, rationale, status, category, impact",
+        "Each new DEC has approvedBy: [erik] and approvalDate populated",
+        "Each new DEC has tags array including rule-promotion (where applicable) and the RULE-id",
+        "Each new DEC has impactedDeliverables array citing the relevant deliverable instance IDs from schemas/_instances/deliverables/",
+        "Each new DEC has evidence array citing rule instance paths and workflow file paths",
+        "Each new DEC has externalLinks array with PR URL and merge SHA",
+        "lastUpdated field bumped to 2026-06-02 ISO 8601 timestamp",
+        "meta.totalDecisions advanced from 6 to 13 if meta.totalDecisions exists currently",
+        "Instance validates against decision-log.schema.v2.json with -r for luhtech-enums.schema.json and definitions.schema.json",
+        "No existing decision entries modified",
+        "$schema field unchanged (https://schemas.luh.tech/decision-log.schema.v2.json)",
+        "version and ventureId fields unchanged"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Append 3 FU entries to .roadmap/follow-up-register.json: FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1 (P2 open, RULE-PIPELINE-PROJECTION-CONTRACT-1 pending automated tier), FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1 (P2 closed-on-arrival, instance-validation.yml landed in FU-D-1, evidence cited), FU-DECISION-LOG-SCHEMA-V2.1-RULE-PROMOTION-FIELDS-1 (P3 open, future-bump candidate for impactedRules + decisionType fields). meta.totalCount advances from 9 to 12. lastUpdated bumped to 2026-06-02. followUps array length grows from 9 to 12.",
+      "acceptanceCriteria": [
+        "followUps array length increases from 9 to 12",
+        "Each new FU has id matching pattern ^FU-[A-Z][A-Z0-9-]+-[0-9]+$",
+        "Each new FU has all required fields per follow-up-register.schema.json v1.0.0: id, title, priority, status, opened, openedDuring, scope, blockedBy, blocks",
+        "FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1 status=open, priority=P2, trackingRepo=luh-tech/schema-registry",
+        "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1 status=closed, priority=P2, with resolution field if schema permits",
+        "FU-DECISION-LOG-SCHEMA-V2.1-RULE-PROMOTION-FIELDS-1 status=open, priority=P3",
+        "meta.totalCount advanced from 9 to 12",
+        "lastUpdated field bumped to 2026-06-02 ISO 8601 timestamp",
+        "Instance validates against follow-up-register.schema.json v1.0.0",
+        "No existing FU entries modified",
+        "indexes.byStatus and indexes.byPriority refreshed to reflect new entries"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Deliverable instance lifecycle \u2014 spec lands at S4-authored, transitions through S5-in-progress -> S6-staged -> S7-merged -> S8-closed across the dispatch. Per canonical promotion pattern proven across FU-D-2/3/4 and D-COMMS-2.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "lifecycleState populated with S8-closed post-merge",
+        "mergeCommitSha populated with actual squash-merge SHA",
+        "transitions array captures full S4->S5->S6->S7->S8 lifecycle"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv validate of decision-log.json against decision-log.schema.v2.json passes (with -r for luhtech-enums.schema.json and definitions.schema.json)",
+      "ajv validate of follow-up-register.json against follow-up-register.schema.json passes",
+      "ajv validate of this deliverable spec against deliverable.schema.json v1.1.0 passes (with -r for forbidden-audit-paint-names allOf)",
+      "roadmap-sync.yml passes on the PR (validates both .roadmap/ files)",
+      "instance-validation.yml passes (no rule or deliverable schema instance changes outside this spec file)",
+      "refs-check.yml passes (no schemas/ directory changes)",
+      "meta-schema-check.yml passes (no *.schema*.json changes)",
+      "pr-mergeability-check.yml passes",
+      "amendment-scope-overlap-check.yml passes (scopeFiles disjoint from D-2 which targets .github/workflows/pr-mergeability-check.yml)",
+      "slack-broadcast.yml fires on PR open and merge"
+    ],
+    "postMerge": [
+      "main shows .roadmap/decision-log.json with 13 decisions",
+      "main shows .roadmap/follow-up-register.json with 12 followUps",
+      "Slack channel #luhtech-agents-comms broadcasts the merge PR event",
+      "L9 operational records on SR are now current with foundation arc + FU block + D-COMMS-1/2"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-02",
+      "trigger": "Spec authored against verified substrate tarball (rule.schema.json v1.2.0, deliverable.schema.json v1.1.0, decision-log.schema.v2.json v2.0.0, RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 promotion deliverable as canonical shape reference). Sandbox pre-validation passed on all 4 substrate instances. L9 record uploads (decision-log.json + follow-up-register.json) confirmed canonical per Erik 2026-06-02. Hybrid path (c) coverage scope confirmed: rule-promotion DECs + working-model rule FUs."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1",
+    "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1",
+    "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1"
+  ],
+  "notes": "First deliverable in the L4-OVERRIDE-SUBSTRATE-ARTIFACT 3-deliverable Tier B arc (per 2026-06-02 SR-chat strategic planning). Parallel-mergeable with D-2 (d-2026-06-02-pr-mergeability-substrate-artifact-extension) per Erik direction \u2014 scopeFiles disjoint (L9 records vs CI workflow). D-3 (rule promotion) waits for D-2 merge SHA as evidenceClass. Pattern reusable for every future rule promotion arc: L9-reconcile + workflow-extension + rule-promotion is the canonical 3-deliverable shape. The L9-reconcile output establishes that .roadmap/decision-log.json and .roadmap/follow-up-register.json ARE the substrate-bound surface for rule pipeline governance milestones, not optional documentation."
+}
