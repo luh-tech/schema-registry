@@ -1,0 +1,116 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-02-follow-up-register-substrate-cleanup",
+  "version": "1.0.0",
+  "title": "D-1-CLEANUP — Comprehensive substrate cleanup of SR follow-up-register pre-flight to L9 reconcile",
+  "description": "Pre-existing schema drift in luh-tech/schema-registry/.roadmap/follow-up-register.json surfaced across two consecutive substrate-recheck cycles during D-1 L9 reconcile dispatch execution: (1) 6 FU entries with opened field in ISO 8601 date-time format while schema declares format: date; (2) 1 FU id with dot character while schema id pattern permits only [A-Z0-9-] in the middle segment. Per memory #17 spike-supersedes-novel-pattern: each substrate-recheck surfacing additional drift reveals that substrate-cleanup is one work-unit, not many — D-1a's narrower scope is superseded. This deliverable supersedes d-2026-06-02-follow-up-register-opened-format-normalization (D-1a, S4-authored, never merged) as a single atomic substrate-cleanup deliverable. Comprehensive scope: all surfaced violations fixed in one transaction, full register ajv re-validation built into execution to surface any further pre-existing violations before PR open. After this lands, follow-up-register.json passes canonical ajv invocation (--strict=false -c ajv-formats) with zero violations, enabling D-1 L9 reconcile to resume from Step 1 against fully clean main.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "fix/follow-up-register-substrate-cleanup-2026-06-02",
+    "scopeFiles": [
+      ".roadmap/follow-up-register.json",
+      "schemas/_instances/deliverables/d-2026-06-02-follow-up-register-substrate-cleanup.json",
+      "schemas/_instances/deliverables/d-2026-06-02-follow-up-register-opened-format-normalization.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Fix 1 of 2 (opened format): Truncate the opened field of 6 pre-existing FU entries from ISO 8601 date-time to date-only format (YYYY-MM-DD). Mechanical: keep first 10 characters. Affected: FU-CATALOG-STREAM-MIGRATION-1, FU-RESOLVER-PROPAGATION-1, FU-ECTROPY-XAAS-MIGRATION-1, FU-V1-TO-V3-DEPRECATE-1, FU-CATALOG-DAAS-INVESTIGATE-1, FU-VENTURE-TYPE-ENUM-REVIEW-1. All truncate to 2026-05-18.",
+      "acceptanceCriteria": [
+        "6 specified FU opened fields truncated to YYYY-MM-DD format",
+        "All 6 truncated values are 2026-05-18 (chat-side sandbox verified)",
+        "3 already-conforming FUs unchanged: FU-ECTROPY-SCHEMA-HOSTING-WIRE-1 (2026-05-18), FU-SR-ROADMAP-BUSINESS-V2.1-ONEOF-DEFECT-1 (2026-05-21, but see OUT-2 — this id gets renamed), FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1 (2026-05-21)",
+        "All other fields on all FU entries preserved exactly"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Fix 2 of 2 (id pattern): Rename one FU id from FU-SR-ROADMAP-BUSINESS-V2.1-ONEOF-DEFECT-1 to FU-SR-ROADMAP-BUSINESS-V2-1-ONEOF-DEFECT-1. Mechanical character substitution: replace dot with dash. Schema-version reference V2-1 preserved to maintain link to roadmap-business.schema.v2.1.json which carries the oneOf defect this FU tracks. All other fields preserved exactly.",
+      "acceptanceCriteria": [
+        "FU id renamed: dot replaced with dash",
+        "New id FU-SR-ROADMAP-BUSINESS-V2-1-ONEOF-DEFECT-1 matches schema id pattern",
+        "All other fields on the renamed FU preserved exactly",
+        "indexes regenerated reflecting new id in same byStatus/byPriority positions as old id",
+        "Cross-repo coordination: EB register references this old id in FU-EB-INSTANCE-CANONICAL-DRIFT-1's blockedBy or blocks chain (verified existence, not modified — EB owns EB substrate)"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Full-register ajv re-validation executed AFTER both fixes applied and BEFORE PR open. Confirms zero remaining pre-existing schema violations. If any third violation surfaces, dispatch STOPS and reports — does not auto-correct, does not proceed.",
+      "acceptanceCriteria": [
+        "Full ajv validation invocation: npx ajv-cli@5.0.0 validate -s schemas/follow-up-register.schema.json -r schemas/_enums/luhtech-enums.schema.json -d .roadmap/follow-up-register.json --spec=draft7 --strict=false -c ajv-formats",
+        "Validation passes — zero errors reported",
+        "If validation fails, dispatch halts and reports verbatim — no further action without explicit Erik approval",
+        "lastUpdated bumped to 2026-06-02 ISO 8601 timestamp",
+        "followUps count unchanged at 9; meta.totalCount unchanged at 9"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Supersede record: this deliverable supersedes d-2026-06-02-follow-up-register-opened-format-normalization (D-1a). D-1a was S4-authored but never merged. D-1a's deliverable instance file is removed from schemas/_instances/deliverables/ as part of this PR. The supersede relationship is recorded in this deliverable's notes field and via removal of the D-1a instance file.",
+      "acceptanceCriteria": [
+        "D-1a instance file schemas/_instances/deliverables/d-2026-06-02-follow-up-register-opened-format-normalization.json does not exist on main after this deliverable merges (was never on main; this is a no-op safeguard in case it was committed during D-1a working-tree exploration)",
+        "This deliverable's notes field documents the supersede with reference to memory #17 spike-supersedes-novel-pattern semantics",
+        "transitions array of this deliverable captures the supersede authoring rationale"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "Deliverable instance lifecycle — spec lands at S4-authored, transitions through S5 -> S6 -> S7 -> S8 across dispatch.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "lifecycleState populated with S8-closed post-merge",
+        "mergeCommitSha + prUrl populated",
+        "transitions captures full lifecycle"
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "Cross-repo coordination: post Slack canvas to #luhtech-agents-comms naming the old/new id pair and the EB register reference (FU-EB-INSTANCE-CANONICAL-DRIFT-1). Per RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 automated tier, EB chat discovers via channel history at session start.",
+      "acceptanceCriteria": [
+        "Slack canvas posted to channel C0B7EPFCA85 post-merge",
+        "Canvas content includes: old id, new id, merge commit SHA, PR URL, EB-side FU id that references the renamed id, recommendation that EB chat updates EB register at their next session"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Python pre-flight: 6 truncations produce valid YYYY-MM-DD; 1 id rename matches schema pattern (chat-side sandbox 2026-06-02)",
+      "Full ajv validation of follow-up-register.json passes WITH canonical --strict=false -c ajv-formats invocation; zero errors",
+      "ajv validate of this deliverable spec against deliverable.schema.json v1.1.0 passes",
+      "roadmap-sync.yml passes on the PR",
+      "instance-validation.yml passes",
+      "refs-check.yml passes",
+      "meta-schema-check.yml passes",
+      "pr-mergeability-check.yml passes",
+      "amendment-scope-overlap-check.yml passes (D-1a instance NOT on main; no in-flight overlap)",
+      "slack-broadcast.yml fires on PR open and merge"
+    ],
+    "postMerge": [
+      "main shows .roadmap/follow-up-register.json with all 9 FUs conformant (6 date-only opened fields + 1 renamed id)",
+      "Full ajv validation passes on main",
+      "Slack canvas posted to #luhtech-agents-comms with old/new id pair + cross-repo coordination note",
+      "D-1 L9 reconcile can resume from Step 1 against fully clean main",
+      "D-1 dispatch already patched to author new FU opened fields as date-only (no further dispatch changes needed)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-02",
+      "trigger": "Spec authored after second substrate-recheck cycle during D-1a Step 2 ajv re-run surfaced FU id pattern violation in addition to the 6 opened-format violations D-1a was scoped to address. Per memory #17 spike-supersedes-novel-pattern: when substrate disagrees with planned scope across multiple recheck cycles, the spike supersedes and a broader-scope deliverable is authored. Per memory #20 enterprise-complete + fortune-500 atomic-canonical-substrate direction: substrate cleanup is one work-unit not many. D-1a (S4-authored, never merged) superseded by this deliverable. Chat sandbox confirmed all fixes mechanical and unambiguous; full re-validation step built into dispatch to surface any further pre-existing violations before PR open."
+    }
+  ],
+  "relatedFollowUps": [],
+  "parentDeliverable": "d-2026-06-02-l9-reconcile-sr",
+  "spikeOutcome": "delete-and-new-deliverable",
+  "notes": "Pre-flight to D-1 L9 reconcile (d-2026-06-02-l9-reconcile-sr). Supersedes d-2026-06-02-follow-up-register-opened-format-normalization (D-1a, S4-authored, never merged) per memory #17 spike-supersedes-novel-pattern: D-1a's scope was narrower than substrate cleanup required. spikeOutcome: delete-and-new-deliverable. Substrate-cleanup is one atomic work-unit per fortune-500 enterprise standards — pre-existing violations of multiple classes in the same canonical data source are fixed together in one PR with full re-validation, not serialized into many PRs each fixing one class. Discovery sequence preserved in transitions[].trigger and this notes field for audit. Cross-repo coordination via Slack canvas post-merge per RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 automated tier."
+}
