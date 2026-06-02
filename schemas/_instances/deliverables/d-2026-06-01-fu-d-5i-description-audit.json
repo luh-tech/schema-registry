@@ -1,0 +1,83 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-fu-d-5i-description-audit",
+  "version": "1.0.0",
+  "title": "FU-D-5i — schema-refs.json description audit and refinement",
+  "description": "Refine 11 entries in schemas/schema-refs.json: 7 patent.* entries currently missing description field (root cause: _build_entry() preserves field-set on existing canonical entries, so initial registration without descriptions persists), plus 4 qualitatively thin entries (transform-template no-period, resource-access too terse, rule too terse, deliverable truncated mid-sentence). Direct canonical edit — no source schema files modified, no code changes. _build_entry() then preserves the curated descriptions on subsequent rebuilds. Closes FU-LUHTECH-SCHEMA-REFS-DESCRIPTION-AUDIT-1.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/fu-d-5i-description-audit-2026-06-01",
+    "scopeFiles": [
+      "schemas/schema-refs.json",
+      "schemas/_instances/deliverables/d-2026-06-01-fu-d-5i-description-audit.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Add description field to 7 patent.* canonical entries in schemas/schema-refs.json: patent.portfolio, patent.provisional, patent.manifest, patent.figure-sidecar, patent.glossary, patent.glossary-entry, patent.prior-art-entry. Each description is a registry-purposed one-line summary (80-150 chars, terminating sentence), authored from substrate read of the source schema files (titles + descriptions + README context). NOT a copy of source description (those are consumer-oriented, too detailed for registry-level navigation).",
+      "acceptanceCriteria": [
+        "All 7 patent.* entries have description field after edit",
+        "Each description terminates with a period",
+        "Each description is 80-150 characters",
+        "Source schemas (schemas/patent/*.schema.json) unchanged — git diff --stat shows zero touches in schemas/patent/",
+        "Post-edit luhtech-schema refs rebuild --check passes (descriptions are canonical and disk-derived blocks regenerate consistently)"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Refine 4 qualitatively thin entries in schemas/schema-refs.json: transform-template (add trailing period, expand), resource-access (replace 'Portfolio access-linkage layer.' with substantive description), rule (replace terse summary with structural description), deliverable (replace truncation-from-first-sentence with full registry summary).",
+      "acceptanceCriteria": [
+        "transform-template description ends with period and describes pre/post transforms + validation + target bindings",
+        "resource-access description names credential/resource scope + consumer linkage",
+        "rule description captures schema-bound governance, tier states, and lineage from prose-in-markdown",
+        "deliverable description captures contract-as-schema-bound work unit with scope/acceptance/authority/lifecycle elements",
+        "All 4 edits are to schema-refs.json only; source schemas unchanged"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Deliverable instance lifecycle — spec lands at S4-authored, transitions through S5-in-progress → S6-staged → S7-merged → S8-closed across the dispatch.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "lifecycleState populated with S8-closed post-merge",
+        "mergeCommitSha populated with actual squash-merge SHA",
+        "transitions array captures full lifecycle path"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv validate of spec against deliverable.schema.json passes",
+      "schemas/schema-refs.json remains valid JSON (jq parses without error)",
+      "luhtech-schema refs rebuild --check passes (no drift introduced by description edits)",
+      "instance-validation.yml passes on the PR",
+      "refs-check.yml passes",
+      "pr-mergeability-check.yml passes"
+    ],
+    "postMerge": [
+      "All 7 patent.* entries on main have description field",
+      "transform-template description on main ends with period",
+      "resource-access, rule, deliverable descriptions on main are substantively refined",
+      "FU-LUHTECH-SCHEMA-REFS-DESCRIPTION-AUDIT-1 closed in register with closure note citing merge SHA"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Spec authored against verified substrate (schemas/schema-refs.json full content). Root cause of MISSING descriptions identified: _build_entry() field-set preservation on existing canonical entries that were initially registered without descriptions. Refinement approach: direct canonical edit, no source schema or code changes. Erik approved scope (11 entries)."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-LUHTECH-SCHEMA-REFS-DESCRIPTION-AUDIT-1"
+  ],
+  "notes": "Final deliverable in the FU-D-5 cleanup batch (FU-D-5g mechanical + FU-D-5h refs.py tests precede). Substrate research traced the MISSING patent descriptions to _build_entry() field-set preservation behavior (refs.py lines 216-220), not to absent source schema descriptions. Source schemas all have rich descriptions, but those are oriented at schema consumers (developers authoring instance files), too detailed for registry navigation. Registry entries need one-line summaries that orient a portfolio scan. Eleven curated entries authored by SR chat against source schema titles + descriptions. Four entries also flagged (deprecation-header, truth-delivered, service-graph-service-graph, tech-stack) deferred — adequate per mechanical filters; aesthetic/generic-but-functional is not in scope for this audit."
+}

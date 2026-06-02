@@ -254,7 +254,7 @@
       "id": "https://schemas.luh.tech/deliverable.schema.json",
       "file": "deliverable.schema.json",
       "version": "1.1.0",
-      "description": "The DELIVERABLE contract — schema-bound work unit per DLP-STRATEGY."
+      "description": "The DELIVERABLE contract — schema-bound unit of work. Declares scope, acceptance criteria, authority, lifecycle state, and audit trail. Replaces prose-in-markdown deliverable specs."
     },
     "dependencies": {
       "id": "https://schemas.luh.tech/dependencies.schema.json",
@@ -404,7 +404,7 @@
       "id": "https://schemas.luh.tech/resource-access.schema.json",
       "file": "resource-access.schema.json",
       "version": "1.0.0",
-      "description": "Portfolio access-linkage layer."
+      "description": "Canonical credential and resource-access record. Single home for resource -> vault item -> consumer linkage across LuhTech ventures."
     },
     "roadmap": {
       "id": "urn:luhtech:schema:roadmap:v3.4",
@@ -422,7 +422,7 @@
       "id": "https://schemas.luh.tech/rule.schema.json",
       "file": "rule.schema.json",
       "version": "1.2.0",
-      "description": "A governance rule as a first-class, versioned object."
+      "description": "Schema-bound governance rule. Captures activeTier and terminalTier of automation surface, refinement history, and authority. First-class versioned object replacing prose-in-markdown rule statements."
     },
     "service-graph-equity-instrument": {
       "id": "https://schemas.luh.tech/service-graph/equity-instrument.schema.v1.0.json",
@@ -458,7 +458,7 @@
       "id": "urn:luhtech:schema:transform-template:v1.0",
       "file": "transform-template.schema.v1.0.json",
       "version": "1.0.0",
-      "description": "Governs the format of luhtech-transform template JSON files"
+      "description": "Template definition for the luhtech-transform CLI. Declares pre/post transforms, validation steps, and target schema bindings."
     },
     "truth-delivered": {
       "id": "https://schemas.luh.tech/truth-delivered.schema.json",
@@ -481,37 +481,44 @@
         "figure-sidecar": {
           "id": "https://schemas.luh.tech/patent/figure-sidecar.schema.json",
           "file": "patent/figure-sidecar.schema.json",
-          "version": "1.0.0"
+          "version": "1.0.0",
+          "description": "Per-figure metadata sidecar. Source of truth for locked reference numerals and Brief Description caption text."
         },
         "glossary": {
           "id": "https://schemas.luh.tech/patent/glossary.schema.json",
           "file": "patent/glossary.schema.json",
-          "version": "1.0.0"
+          "version": "1.0.0",
+          "description": "Top-level glossary file. Single source of truth for terminology used across the patent portfolio."
         },
         "glossary-entry": {
           "id": "https://schemas.luh.tech/patent/glossary-entry.schema.json",
           "file": "patent/glossary-entry.schema.json",
-          "version": "1.0.0"
+          "version": "1.0.0",
+          "description": "Single canonical term definition. Reusable across patent, marketing, and legal glossaries."
         },
         "manifest": {
           "id": "https://schemas.luh.tech/patent/manifest.schema.json",
           "file": "patent/manifest.schema.json",
-          "version": "1.0.0"
+          "version": "1.0.0",
+          "description": "Per-provisional internal sidecar. Records decision log, source inventory, paragraph-to-source map, and changelog. Never filed at USPTO."
         },
         "portfolio": {
           "id": "https://schemas.luh.tech/patent/portfolio.schema.json",
           "file": "patent/portfolio.schema.json",
-          "version": "1.0.0"
+          "version": "1.0.0",
+          "description": "Top-level patent portfolio (umbrella + member provisionals). Single source of truth across all provisionals; derived dashboards regenerate from this file."
         },
         "prior-art-entry": {
           "id": "https://schemas.luh.tech/patent/prior-art-entry.schema.json",
           "file": "patent/prior-art-entry.schema.json",
-          "version": "1.0.0"
+          "version": "1.0.0",
+          "description": "Single prior-art reference with citation, type, relevance, and distinction-from-invention metadata."
         },
         "provisional": {
           "id": "https://schemas.luh.tech/patent/provisional.schema.json",
           "file": "patent/provisional.schema.json",
-          "version": "1.0.0"
+          "version": "1.0.0",
+          "description": "Single provisional patent application record. Tracks lifecycle from drafting through USPTO filing."
         }
       }
     }
