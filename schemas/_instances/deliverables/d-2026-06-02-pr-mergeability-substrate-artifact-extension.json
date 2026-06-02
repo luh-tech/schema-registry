@@ -1,0 +1,84 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-02-pr-mergeability-substrate-artifact-extension",
+  "version": "1.0.0",
+  "title": "D-PR-MERGEABILITY-EXT — Extend pr-mergeability-check.yml to require substrate artifact link on override",
+  "description": "Extend .github/workflows/pr-mergeability-check.yml to enforce RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1. When the override-unstable-merge label is detected on a PR with failing required checks, the workflow MUST additionally verify that at least one PR comment contains a substrate artifact link matching one of three acceptable forms: (a) decision-log.json anchor reference, (b) follow-up-register.json anchor reference, or (c) schemas/_instances/truth-delivered/ instance path. Missing or invalid artifact link fails the workflow and blocks merge. Implements the automated tier of RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 — extension is additive to the existing override mechanism (FU-D-2). Coupling in same workflow file makes the dependency mechanical: override label and artifact requirement enforced together in single pass. This is the workflow change that earns D-3 the evidenceClass for promoting RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 from working-model to automated.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/pr-mergeability-substrate-artifact-2026-06-02",
+    "scopeFiles": [
+      ".github/workflows/pr-mergeability-check.yml",
+      "schemas/_instances/deliverables/d-2026-06-02-pr-mergeability-substrate-artifact-extension.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Extend .github/workflows/pr-mergeability-check.yml additively. Current behavior (lines 43-65): when failing checks present + override-unstable-merge label present, workflow emits warning and exits 0; when failing checks present + label absent, workflow errors and exits 1. New behavior: when override-unstable-merge label is detected, workflow additionally fetches PR comments via gh pr view --json comments, scans comment bodies for substrate artifact URL pattern. Acceptable patterns: (a) URL containing /decision-log.json or /.roadmap/decision-log.json (DEC reference), (b) URL containing /follow-up-register.json (FU reference), (c) URL containing schemas/_instances/truth-delivered/ followed by .json (TRUTH-DELIVERED instance reference). If override label present and no comment matches any of the three patterns, workflow exits 1 with error citing RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 and pointing to acceptable artifact types. If override label present and a matching comment exists, workflow exits 0 with annotation citing the matching artifact link. Pre-existing non-override behavior unchanged — workflow still errors and blocks when failing checks present without label.",
+      "acceptanceCriteria": [
+        "Workflow YAML is syntactically valid (yamllint or yaml.safe_load passes)",
+        "Workflow triggers unchanged (pull_request types opened, synchronize, reopened, labeled, unlabeled)",
+        "Workflow permissions unchanged (contents: read, pull-requests: read, checks: read, statuses: read)",
+        "Existing failing-checks detection logic (lines 27-38) unchanged",
+        "Existing override-unstable-merge label detection (lines 40-41) unchanged",
+        "Existing no-failing-checks pass behavior (line 67) unchanged",
+        "Existing label-absent error behavior (lines 52-64) unchanged",
+        "New: when label present, workflow fetches PR comments via gh pr view --json comments",
+        "New: workflow scans comment bodies for one of three substrate artifact link patterns",
+        "New: when label present and no matching artifact link found, workflow exits 1 with error message citing RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1",
+        "New: when label present and matching artifact link found, workflow exits 0 with annotation citing the matched URL",
+        "New: error message includes URL https://schemas.luh.tech/_instances/rules/RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1.json",
+        "New: error message names all three acceptable substrate artifact types (DEC entry, FU note, TRUTH-DELIVERED instance)",
+        "Self-merge concern verified: this PR (which extends the workflow) is gated by the PRIOR version of the workflow — no failing checks on this PR, so override scenario does not fire; PR passes naturally"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Deliverable instance lifecycle — spec lands at S4-authored, transitions through S5-in-progress -> S6-staged -> S7-merged -> S8-closed across the dispatch.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "lifecycleState populated with S8-closed post-merge",
+        "mergeCommitSha populated with actual squash-merge SHA",
+        "transitions array captures full S4->S5->S6->S7->S8 lifecycle"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Workflow YAML syntactically valid (yaml.safe_load and yamllint pass)",
+      "Workflow renders as valid GitHub Actions workflow (gh workflow view passes after push)",
+      "ajv validate of this deliverable spec against deliverable.schema.json v1.1.0 passes",
+      "instance-validation.yml passes on the PR",
+      "refs-check.yml passes (no schemas/ directory changes)",
+      "meta-schema-check.yml passes (no *.schema*.json changes)",
+      "roadmap-sync.yml passes (no .roadmap/ changes)",
+      "pr-mergeability-check.yml passes (this PR has no failing checks; old workflow version applies)",
+      "amendment-scope-overlap-check.yml passes (scopeFiles disjoint from D-1)",
+      "slack-broadcast.yml fires on PR open and merge",
+      "Manual test in branch: simulated override scenario verified before PR open (artifact comment present and absent both produce correct workflow exit code)"
+    ],
+    "postMerge": [
+      "main shows updated .github/workflows/pr-mergeability-check.yml",
+      "New workflow behavior active on subsequent PRs carrying override-unstable-merge label",
+      "Slack channel #luhtech-agents-comms broadcasts the merge PR event",
+      "Merge SHA captured for use as D-3 (rule promotion) evidenceClass"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-02",
+      "trigger": "Spec authored against verified substrate tarball (pr-mergeability-check.yml current state confirmed: 67 lines, single-job, override label detection present, no comment scanning currently). RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 current state confirmed: lifecycleStatus=working-model, activeTier=working-model, terminalTier=automated. The rule's gateActions.human-loop.automationPath explicitly names this workflow extension as the promotion path. Three acceptable substrate artifact types confirmed from the rule's statement field: DEC entry, FU note, TRUTH-DELIVERED instance. Sandbox pre-validation passed on D-1 + D-2 specs."
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "Second deliverable in the L4-OVERRIDE-SUBSTRATE-ARTIFACT 3-deliverable Tier B arc. Parallel-mergeable with D-1 (d-2026-06-02-l9-reconcile-sr) per Erik direction — scopeFiles disjoint (CI workflow vs L9 records). D-3 (rule promotion) waits for THIS deliverable's merge SHA as evidenceClass. The extension is additive — old behavior preserved exactly when override label not applied. Self-merge concern (workflow gating its own change) handled: this PR has no failing checks, so the override scenario does not fire on this PR, and the new check only activates when the workflow is on main and a subsequent PR carries the override label. Pattern reusable for any future workflow extension that operates on PR comments + labels: same shape, same self-merge consideration. Truth-delivered.schema.json (FU-D-5c) is the most structured substrate artifact type per the rule's own notes field; DEC and FU references are simpler but acceptable for cases where the override does not warrant a structured closure record."
+}
