@@ -2,7 +2,7 @@
   "$schema": "https://schemas.luh.tech/decision-log.schema.v2.json",
   "version": "1.0.0",
   "ventureId": "luhtech",
-  "lastUpdated": "2026-05-18T23:44:40Z",
+  "lastUpdated": "2026-06-02T00:00:00Z",
   "meta": {
     "sourceOfTruth": ".roadmap/decision-log.json"
   },
@@ -340,6 +340,254 @@
         "D2",
         "luhtech-schema"
       ]
+    },
+    {
+      "decisionId": "d-2026-05-31-rule-pipeline-meta-layer-adoption",
+      "timestamp": "2026-05-31T00:00:00Z",
+      "title": "Adopt rule.schema.json and maturity ladder as canonical governance substrate",
+      "context": "Portfolio governance had no schema-bound representation. Rules existed as prose in markdown documents. Promotion mechanisms were tribal. Foundation arc D-0 through D-3 establishes the substrate: refs-rebuild tooling, deliverable.schema.json, rule.schema.json with two-axis maturity model (lifecycleStatus + tierState), and the first five rule instances populating the registry.",
+      "decision": "Adopt rule.schema.json (v1.0.0 -> v1.1.x -> v1.2.0) with lifecycleStatus axis (working-model -> formalized -> deprecated -> reverted) and tierState axis (working-model -> human-loop -> automated). Adopt deliverable.schema.json v1.0.0 -> v1.1.0 as DELIVERABLE-FIRST work unit contract. Establish schemas/_instances/ namespace. Land five rule instances exercising every axis of the schema. Future rules become mechanical: instance at schemas/_instances/rules/, conforms to rule.schema.json, lifecycleStatus working-model at entry, terminalTier per rule's nature.",
+      "rationale": "The strategic claim from LUHTECH-PLATFORM-SCHEMA-STRATEGY-AND-TOOLING-2026-05-17: schema-bound governance scales where prose-bound governance does not. A nine-venture portfolio cannot rely on prose patterns; conventions must be schema-validated, work units schema-bound, rules schema-instances. Foundation arc validates the claim at the meta-layer.",
+      "status": "approved",
+      "category": "governance",
+      "impact": "high",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-05-31T00:00:00Z",
+      "tags": [
+        "schema-first",
+        "governance",
+        "foundation",
+        "rule-pipeline",
+        "meta-layer"
+      ],
+      "impactedDeliverables": [
+        "d-2026-05-31-luhtech-schema-refs-rebuild",
+        "d-2026-05-31-deliverable-schema-foundation",
+        "d-2026-06-01-rule-schema-v1.1-additive",
+        "d-2026-06-01-rule-pipeline-first-instances"
+      ],
+      "evidence": [
+        "schemas/rule.schema.json",
+        "schemas/deliverable.schema.json",
+        "schemas/_instances/rules/",
+        "schemas/_instances/deliverables/",
+        "tools/luhtech-schema/"
+      ],
+      "externalLinks": [
+        {
+          "url": "https://github.com/luh-tech/schema-registry/pull/54",
+          "description": "D-0 luhtech-schema refs rebuild (8076c2d)"
+        },
+        {
+          "url": "https://github.com/luh-tech/schema-registry/pull/57",
+          "description": "D-1 deliverable.schema.json foundation (b77cb9e)"
+        },
+        {
+          "url": "https://github.com/luh-tech/schema-registry/pull/59",
+          "description": "D-2 rule.schema.json v1.1.0 additive (29e6f52)"
+        },
+        {
+          "url": "https://github.com/luh-tech/schema-registry/pull/61",
+          "description": "D-3 rule pipeline first instances (07e43bd)"
+        }
+      ]
+    },
+    {
+      "decisionId": "d-2026-06-01-rule-amendment-substrate-recheck-automated",
+      "timestamp": "2026-06-01T00:00:00Z",
+      "title": "Promote RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 working-model -> automated via FU-D-4",
+      "context": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 surfaced as F7 amendment-substrate-recheck rule in prior session (PR #261). Schematized in D-3 at lifecycleStatus working-model, tierState working-model. Working-model state proven sufficient evidence to promote tier to automated via amendment-scope-overlap-check workflow.",
+      "decision": "Land .github/workflows/amendment-scope-overlap-check.yml as the automated tier ciSurface. Workflow computes scopeFiles intersection across in-flight deliverable instances on the same base branch; fails PR when overlap detected without resolution sequencing in notes field. Promote rule via canonical mechanism: version 1.0.0 -> 1.1.0, tierState.activeTier working-model -> automated, append transition with evidenceClass citing FU-D-4 workflow merge.",
+      "rationale": "Same-branch scopeFiles overlap was a recurring source of in-flight conflict. Mechanical detection at PR time eliminates the tribal awareness requirement. Promotion via canonical mechanism (workflow lands then rule activeTier flips) proves the pipeline can promote its own rules.",
+      "status": "approved",
+      "category": "tooling",
+      "impact": "high",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-06-01T00:00:00Z",
+      "tags": [
+        "rule-promotion",
+        "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+        "schema-registry",
+        "ci-automation"
+      ],
+      "impactedDeliverables": [
+        "d-2026-06-01-fu-d-4-amendment-scope-overlap-workflow"
+      ],
+      "evidence": [
+        "schemas/_instances/rules/RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1.json",
+        ".github/workflows/amendment-scope-overlap-check.yml"
+      ],
+      "externalLinks": []
+    },
+    {
+      "decisionId": "d-2026-06-01-rule-ci-unstable-gates-automated",
+      "timestamp": "2026-06-01T00:00:00Z",
+      "title": "Promote RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 working-model -> automated via FU-D-2",
+      "context": "Rule schematized in D-3 from EB-agent contribution (PR #48 + PR #269 incident pattern: UNSTABLE CI silently bypassed via --admin merge, then ad-hoc legitimate override applied without artifact). Working-model state inadequate for the failure pattern; rule requires automated enforcement.",
+      "decision": "Land .github/workflows/pr-mergeability-check.yml as automated tier ciSurface. Workflow checks PR statusCheckRollup for any check with conclusion FAILURE. When failing checks present without override-unstable-merge label, workflow exits 1 with explicit error. When override-unstable-merge label applied, workflow emits annotation and exits 0 (no silent bypass; override is conscious). Promote rule via canonical mechanism.",
+      "rationale": "PR #48 + PR #269 pattern: UNSTABLE CI = identically FAILING per this rule. Silent --admin bypass was the failure mode. Mechanical workflow eliminates the silent path; override label makes the conscious choice substrate-visible. Pairs with RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 (forthcoming automated promotion) which adds the requirement that override produce contemporaneous substrate artifact.",
+      "status": "approved",
+      "category": "tooling",
+      "impact": "high",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-06-01T00:00:00Z",
+      "tags": [
+        "rule-promotion",
+        "RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1",
+        "schema-registry",
+        "ci-automation",
+        "merge-discipline"
+      ],
+      "impactedDeliverables": [
+        "d-2026-06-01-fu-d-2-pr-mergeability-check-workflow"
+      ],
+      "evidence": [
+        "schemas/_instances/rules/RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1.json",
+        ".github/workflows/pr-mergeability-check.yml"
+      ],
+      "externalLinks": []
+    },
+    {
+      "decisionId": "d-2026-06-01-rule-ci-documented-override-automated",
+      "timestamp": "2026-06-01T00:00:00Z",
+      "title": "Promote RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1 working-model -> automated via schema constraint",
+      "context": "Rule schematized in D-3 from EB-agent contribution. Documents the audit-paint anti-pattern: field names like auditTrail, auditLog, auditNotes appearing on outputs are documentation of override, not compliance with policy. Working-model state insufficient; rule requires mechanical rejection of audit-paint field names at schema validation time.",
+      "decision": "Land schemas/_definitions/forbidden-audit-paint-names.schema.json with propertyNames constraint blocking audit-paint field name patterns. Apply via allOf reference in rule.schema.json and deliverable.schema.json so every instance is validated against the constraint. Promote rule via canonical mechanism with evidenceClass citing the schema constraint as enforcement surface.",
+      "rationale": "Audit-paint pattern presents as compliance documentation but encodes non-compliance: the rule's existence is evidence that the constraint it documents was not enforced mechanically. Promoting to automated via schema constraint (propertyNames + allOf) eliminates the audit-paint vector entirely; no future instance can carry the field names.",
+      "status": "approved",
+      "category": "tooling",
+      "impact": "high",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-06-01T00:00:00Z",
+      "tags": [
+        "rule-promotion",
+        "RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1",
+        "schema-registry",
+        "schema-constraint",
+        "compliance"
+      ],
+      "impactedDeliverables": [
+        "d-2026-06-01-fu-d-3-forbidden-audit-paint-names-schema"
+      ],
+      "evidence": [
+        "schemas/_instances/rules/RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1.json",
+        "schemas/_definitions/forbidden-audit-paint-names.schema.json",
+        "schemas/rule.schema.json (allOf ref)",
+        "schemas/deliverable.schema.json (allOf ref)"
+      ],
+      "externalLinks": []
+    },
+    {
+      "decisionId": "d-2026-06-01-rule-spike-supersedes-terminal-human-loop",
+      "timestamp": "2026-06-01T00:00:00Z",
+      "title": "Affirm RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1 terminal-by-design at tierState human-loop",
+      "context": "Rule schematized in D-3 from EB-agent contribution (per memory rule #17). Spike-supersedes-novel-pattern is a judgment rule: when a spike substrate disagrees with a planned deliverable, the spike supersedes and the deliverable is re-authored against new substrate. The pattern requires human judgment about substrate adequacy; no mechanical predicate captures it.",
+      "decision": "Affirm terminalTier: human-loop with automationPath null by nature. This rule terminates at human-loop as a complete state, not a stalled climb toward automation. lifecycleStatus formalized (rule is bound and enforced in process); tierState human-loop both active and terminal. Capstone proof of the rule schema's two-axis design: human-loop terminal is a real state for judgment-class rules.",
+      "rationale": "Without this DEC, the schema's claim that human-loop is a complete terminal (not a gap) is unproven. The rule instance proves the property structurally. Naming it as a design state, not a debt item, prevents future arcs from accumulating automation-tier debt against unrealizable goals.",
+      "status": "approved",
+      "category": "governance",
+      "impact": "medium",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-06-01T00:00:00Z",
+      "tags": [
+        "rule-affirmation",
+        "RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1",
+        "schema-registry",
+        "judgment-rule",
+        "terminal-by-design"
+      ],
+      "impactedDeliverables": [
+        "d-2026-06-01-rule-pipeline-first-instances"
+      ],
+      "evidence": [
+        "schemas/_instances/rules/RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1.json"
+      ],
+      "externalLinks": []
+    },
+    {
+      "decisionId": "d-2026-06-01-rule-cross-chat-surface-automated",
+      "timestamp": "2026-06-01T20:07:08Z",
+      "title": "Promote RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 working-model -> automated via D-COMMS-2",
+      "context": "Rule schematized 2026-06-01 from EB-agent contribution (venture-summary archival HALT pattern). Working-model state required manual cross-chat posting. D-COMMS-1 built the discovery substrate: #luhtech-agents-comms Slack channel + slack-broadcast.yml workflow auto-publishing PR events and instance pushes across portfolio repos. D-COMMS-2 promotes the rule to automated tier with the workflow as evidenceClass.",
+      "decision": "Promote via canonical mechanism: rule version 1.0.0 -> 1.1.0, tierState.activeTier working-model -> automated, append transition with evidenceClass citing D-COMMS-1 merge SHA f6bee1b9 + PR #84. Slack channel is the canonical discoverable substrate artifact the rule requires; workflow is the publication mechanism.",
+      "rationale": "Cross-chat coordination requires mechanical discoverability. Manual posting drops events when chats are not active simultaneously. The broadcast workflow + channel history pattern decouples publish-time from discover-time. Pairs with RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 (same-repo coordination at PR time); this rule extends the same coordination principle to cross-repo cross-chat at session start.",
+      "status": "approved",
+      "category": "tooling",
+      "impact": "high",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-06-01T00:00:00Z",
+      "tags": [
+        "rule-promotion",
+        "RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1",
+        "schema-registry",
+        "cross-chat-coordination",
+        "slack-broadcast"
+      ],
+      "impactedDeliverables": [
+        "d-2026-06-01-rule-cross-chat-surface-notification",
+        "d-2026-06-01-rule-cross-chat-surface-notification-promotion"
+      ],
+      "evidence": [
+        "schemas/_instances/rules/RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1.json",
+        ".github/workflows/slack-broadcast.yml"
+      ],
+      "externalLinks": [
+        {
+          "url": "https://github.com/luh-tech/schema-registry/pull/84",
+          "description": "D-COMMS-1 slack-broadcast workflow (f6bee1b9)"
+        },
+        {
+          "url": "https://github.com/luh-tech/schema-registry/pull/92",
+          "description": "D-COMMS-2 rule promotion (11abc7bd)"
+        }
+      ]
+    },
+    {
+      "decisionId": "d-2026-06-02-l4-override-substrate-artifact-arc-initiation",
+      "timestamp": "2026-06-02T00:00:00Z",
+      "title": "Initiate L4-OVERRIDE-SUBSTRATE-ARTIFACT 3-deliverable arc",
+      "context": "RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 schematized 2026-06-01 from EB-agent contribution (PR #269 incident: legitimate L4 conscious override of UNSTABLE CI produced no contemporaneous substrate artifact). Rule lifecycleStatus working-model + tierState working-model since schematization. Documented automation path: extension to .github/workflows/pr-mergeability-check.yml requiring PR comment with substrate artifact link when override-unstable-merge label is present.",
+      "decision": "Execute 3-deliverable Tier B arc. D-1 (this DEC's enabling deliverable): l9-reconcile-sr brings .roadmap/decision-log.json and .roadmap/follow-up-register.json current with rule pipeline foundation arc + FU block + D-COMMS-1/2 via hybrid coverage path (rule-promotion DECs + working-model rule FUs + arc initiation DEC). D-2: pr-mergeability-substrate-artifact-extension extends pr-mergeability-check.yml to enforce substrate-artifact requirement on override. D-3: rule-l4-override-promotion promotes RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 working-model -> automated with D-2 merge SHA as evidenceClass. D-1 and D-2 are parallel-mergeable (scopeFiles disjoint); D-3 waits for D-2 merge SHA.",
+      "rationale": "L9 operational records had not been updated since 2026-05-18 (decision log) and 2026-05-21 (follow-up register), pre-dating substantial portfolio governance work. Per canonical architecture topology, L9 records ARE schema-bound substrate, not vestigial documentation. This arc establishes the pattern reusable for every future rule promotion: L9-reconcile + workflow-extension + rule-promotion. Rules-at-automated count grows from 4 to 5 on D-3 merge; foundation arc claim 'pipeline only proves itself by promoting its own rules' continues to validate.",
+      "status": "approved",
+      "category": "governance",
+      "impact": "high",
+      "approvedBy": [
+        "erik"
+      ],
+      "approvalDate": "2026-06-02T00:00:00Z",
+      "tags": [
+        "arc-initiation",
+        "RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1",
+        "schema-registry",
+        "rule-pipeline",
+        "l9-reconcile",
+        "pattern-establishing"
+      ],
+      "impactedDeliverables": [
+        "d-2026-06-02-l9-reconcile-sr",
+        "d-2026-06-02-pr-mergeability-substrate-artifact-extension",
+        "d-2026-06-02-rule-l4-override-promotion"
+      ],
+      "evidence": [
+        "schemas/_instances/rules/RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1.json",
+        ".github/workflows/pr-mergeability-check.yml",
+        ".roadmap/decision-log.json",
+        ".roadmap/follow-up-register.json"
+      ],
+      "externalLinks": []
     }
   ]
 }
