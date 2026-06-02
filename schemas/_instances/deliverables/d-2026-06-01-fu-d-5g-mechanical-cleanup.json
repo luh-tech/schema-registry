@@ -2,14 +2,14 @@
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-01-fu-d-5g-mechanical-cleanup",
   "version": "1.0.0",
-  "title": "FU-D-5g — Mechanical cleanup bundle (misspelling sweep + stale handoff MD + CRM scope review)",
-  "description": "Three mechanical FUs bundled into one scope-locked branch. OUT-1: misspelling sweep — 28 occurrences of 'Luhtana' corrected to 'Luhtala' across 14 instance authority blocks (7 deliverables + 7 rules). OUT-2: stale handoff MD removed from repo root (NEXT_AGENT_HANDOFF_DAG_INTEGRATION_2026-01-28.md). OUT-3: CRM scope review verdict captured — namespace remains in .refsignore pending CRM activation.",
+  "title": "FU-D-5g \u2014 Mechanical cleanup bundle (misspelling sweep + stale handoff MD + CRM scope review)",
+  "description": "Three mechanical FUs bundled into one scope-locked branch. OUT-1: misspelling sweep \u2014 28 occurrences of 'Luhtana' corrected to 'Luhtala' across 14 instance authority blocks (7 deliverables + 7 rules). OUT-2: stale handoff MD removed from repo root (NEXT_AGENT_HANDOFF_DAG_INTEGRATION_2026-01-28.md). OUT-3: CRM scope review verdict captured \u2014 namespace remains in .refsignore pending CRM activation.",
   "authority": {
     "author": "Claude (SR chat), L1",
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "chore/fu-d-5g-mechanical-cleanup-2026-06-01",
@@ -35,7 +35,7 @@
   "outputs": [
     {
       "id": "OUT-1",
-      "description": "Misspelling sweep — 'Luhtana' → 'Luhtala' across 14 instance files (7 deliverables + 7 rules). 28 occurrences corrected. Edits limited to authority block string values. Memory rule #22 enforced.",
+      "description": "Misspelling sweep \u2014 'Luhtana' \u2192 'Luhtala' across 14 instance files (7 deliverables + 7 rules). 28 occurrences corrected. Edits limited to authority block string values. Memory rule #22 enforced.",
       "acceptanceCriteria": [
         "All 28 occurrences of 'Luhtana' replaced with 'Luhtala' across the 14 instance files",
         "Post-edit git grep -in 'luhtana' returns NO_MATCHES",
@@ -46,7 +46,7 @@
     },
     {
       "id": "OUT-2",
-      "description": "Stale handoff MD removal — NEXT_AGENT_HANDOFF_DAG_INTEGRATION_2026-01-28.md removed from repo root via git rm. Closes FU-SCHEMA-REGISTRY-STALE-HANDOFF-MD-CLEANUP-1. No-md-terminus principle (memory #19) applied.",
+      "description": "Stale handoff MD removal \u2014 NEXT_AGENT_HANDOFF_DAG_INTEGRATION_2026-01-28.md removed from repo root via git rm. Closes FU-SCHEMA-REGISTRY-STALE-HANDOFF-MD-CLEANUP-1. No-md-terminus principle (memory #19) applied.",
       "acceptanceCriteria": [
         "File NEXT_AGENT_HANDOFF_DAG_INTEGRATION_2026-01-28.md removed from repo root",
         "git ls-files returns no result for that filename post-merge",
@@ -55,7 +55,7 @@
     },
     {
       "id": "OUT-3",
-      "description": "CRM scope review verdict — FU-LUHTECH-SCHEMA-CRM-SCOPE-REVIEW-1 closed with verdict: review-complete; CRM namespace remains in .refsignore pending CRM activation; re-evaluate when CRM goes live. FU register edit captured in appropriate register repo.",
+      "description": "CRM scope review verdict \u2014 FU-LUHTECH-SCHEMA-CRM-SCOPE-REVIEW-1 closed with verdict: review-complete; CRM namespace remains in .refsignore pending CRM activation; re-evaluate when CRM goes live. FU register edit captured in appropriate register repo.",
       "acceptanceCriteria": [
         "Verdict captured as notes update on FU-LUHTECH-SCHEMA-CRM-SCOPE-REVIEW-1",
         "FU status transitions to closed with closure note citing this deliverable's merge SHA",
@@ -64,7 +64,7 @@
     },
     {
       "id": "OUT-4",
-      "description": "Deliverable instance lifecycle — this spec transitions S4-authored → S5-in-progress → S6-staged → S7-merged → S8-closed across the dispatch lifecycle.",
+      "description": "Deliverable instance lifecycle \u2014 this spec transitions S4-authored \u2192 S5-in-progress \u2192 S6-staged \u2192 S7-merged \u2192 S8-closed across the dispatch lifecycle.",
       "acceptanceCriteria": [
         "Spec validates against deliverable.schema.json v1.1.0",
         "lifecycleState populated with S8-closed post-merge",
@@ -75,7 +75,7 @@
   ],
   "validation": {
     "preMerge": [
-      "instance-validation.yml passes — all 14 edited instances validate",
+      "instance-validation.yml passes \u2014 all 14 edited instances validate",
       "refs-check.yml passes",
       "pr-mergeability-check.yml passes",
       "No override label used"
@@ -93,11 +93,40 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Spec authored following substrate-read dispatch report (2026-06-01 14:47 PDT). Erik authorized dispatch. Three FUs bundled: misspelling sweep, stale MD removal, CRM scope review."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "Dispatch execution begun: misspelling sweep, MD removal, spec authored"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "Branch committed, PR opened, CI green"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "5790f5f74420134a205695494dc700b2db25b387",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/86",
+      "trigger": "Squash merge to main via MERGE PR 86"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "5790f5f74420134a205695494dc700b2db25b387",
+      "trigger": "Post-merge: git grep confirms NO authority-block Luhtana, stale MD gone, refs clean"
     }
   ],
   "relatedFollowUps": [
     "FU-SCHEMA-REGISTRY-STALE-HANDOFF-MD-CLEANUP-1",
     "FU-LUHTECH-SCHEMA-CRM-SCOPE-REVIEW-1"
   ],
-  "notes": "Three mechanical FUs bundled into one branch to minimize ceremony while remaining scope-locked. Misspelling sweep dominates the line count but is purely string-substitution within authority blocks. Stale MD removal is one git rm. CRM scope review is a verdict, not a code change. All three close in one PR. Substrate read confirmed 28 occurrences in 14 files at 14:47 PDT 2026-06-01; re-verified at Step 2 against current HEAD. Python str.replace used (macOS sed -i requires empty-string extension arg; platform-agnostic Python used instead per Step 3 deviation)."
+  "notes": "Three mechanical FUs bundled into one branch to minimize ceremony while remaining scope-locked. Misspelling sweep dominates the line count but is purely string-substitution within authority blocks. Stale MD removal is one git rm. CRM scope review is a verdict, not a code change. All three close in one PR. Substrate read confirmed 28 occurrences in 14 files at 14:47 PDT 2026-06-01; re-verified at Step 2 against current HEAD. Python str.replace used (macOS sed -i requires empty-string extension arg; platform-agnostic Python used instead per Step 3 deviation).",
+  "mergeCommitSha": "5790f5f74420134a205695494dc700b2db25b387",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/86"
 }
