@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "feat/pr-mergeability-substrate-artifact-2026-06-02",
@@ -77,8 +77,37 @@
       "to": "S4-authored",
       "date": "2026-06-02",
       "trigger": "Spec authored against verified substrate tarball (pr-mergeability-check.yml current state confirmed: 67 lines, single-job, override label detection present, no comment scanning currently). RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 current state confirmed: lifecycleStatus=working-model, activeTier=working-model, terminalTier=automated. The rule's gateActions.human-loop.automationPath explicitly names this workflow extension as the promotion path. Three acceptable substrate artifact types confirmed from the rule's statement field: DEC entry, FU note, TRUTH-DELIVERED instance. Sandbox pre-validation passed on D-1 + D-2 specs."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-02",
+      "trigger": "PROCEED STEP 2 issued; workflow extension applied"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-02",
+      "trigger": "Two commits authored; PR opened; CI green"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-02",
+      "commitSha": "8240f6a4e1009f0db83d18218c3c83aad16a3a15",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/98",
+      "trigger": "Squash merge to main"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-02",
+      "commitSha": "8240f6a4e1009f0db83d18218c3c83aad16a3a15",
+      "trigger": "Post-merge verification: extended workflow on main; new behavior active on future PRs carrying override-unstable-merge label; merge SHA captured for D-3 evidenceClass"
     }
   ],
   "relatedFollowUps": [],
-  "notes": "Second deliverable in the L4-OVERRIDE-SUBSTRATE-ARTIFACT 3-deliverable Tier B arc. Parallel-mergeable with D-1 (d-2026-06-02-l9-reconcile-sr) per Erik direction — scopeFiles disjoint (CI workflow vs L9 records). D-3 (rule promotion) waits for THIS deliverable's merge SHA as evidenceClass. The extension is additive — old behavior preserved exactly when override label not applied. Self-merge concern (workflow gating its own change) handled: this PR has no failing checks, so the override scenario does not fire on this PR, and the new check only activates when the workflow is on main and a subsequent PR carries the override label. Pattern reusable for any future workflow extension that operates on PR comments + labels: same shape, same self-merge consideration. Truth-delivered.schema.json (FU-D-5c) is the most structured substrate artifact type per the rule's own notes field; DEC and FU references are simpler but acceptable for cases where the override does not warrant a structured closure record."
+  "notes": "Second deliverable in the L4-OVERRIDE-SUBSTRATE-ARTIFACT 3-deliverable Tier B arc. Parallel-mergeable with D-1 (d-2026-06-02-l9-reconcile-sr) per Erik direction — scopeFiles disjoint (CI workflow vs L9 records). D-3 (rule promotion) waits for THIS deliverable's merge SHA as evidenceClass. The extension is additive — old behavior preserved exactly when override label not applied. Self-merge concern (workflow gating its own change) handled: this PR has no failing checks, so the override scenario does not fire on this PR, and the new check only activates when the workflow is on main and a subsequent PR carries the override label. Pattern reusable for any future workflow extension that operates on PR comments + labels: same shape, same self-merge consideration. Truth-delivered.schema.json (FU-D-5c) is the most structured substrate artifact type per the rule's own notes field; DEC and FU references are simpler but acceptable for cases where the override does not warrant a structured closure record.",
+  "mergeCommitSha": "8240f6a4e1009f0db83d18218c3c83aad16a3a15",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/98"
 }
