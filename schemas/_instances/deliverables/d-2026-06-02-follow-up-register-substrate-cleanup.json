@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "fix/follow-up-register-substrate-cleanup-2026-06-02",
@@ -107,10 +107,39 @@
       "to": "S4-authored",
       "date": "2026-06-02",
       "trigger": "Spec authored after second substrate-recheck cycle during D-1a Step 2 ajv re-run surfaced FU id pattern violation in addition to the 6 opened-format violations D-1a was scoped to address. Per memory #17 spike-supersedes-novel-pattern: when substrate disagrees with planned scope across multiple recheck cycles, the spike supersedes and a broader-scope deliverable is authored. Per memory #20 enterprise-complete + fortune-500 atomic-canonical-substrate direction: substrate cleanup is one work-unit not many. D-1a (S4-authored, never merged) superseded by this deliverable. Chat sandbox confirmed all fixes mechanical and unambiguous; full re-validation step built into dispatch to surface any further pre-existing violations before PR open."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-02",
+      "trigger": "PROCEED STEP 2 issued; atomic cleanup begun"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-02",
+      "trigger": "Both fixes applied; full ajv re-validation passed; PR opened; CI green"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-02",
+      "commitSha": "5667d29a5b1db25d80b62b7b9163f2c508bacda0",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/94",
+      "trigger": "Squash merge to main"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-02",
+      "commitSha": "5667d29a5b1db25d80b62b7b9163f2c508bacda0",
+      "trigger": "Post-merge verification: all 9 FUs id-pattern conformant + opened date-format conformant; ajv passes; D-1 unblocked to resume"
     }
   ],
   "relatedFollowUps": [],
   "parentDeliverable": "d-2026-06-02-l9-reconcile-sr",
   "spikeOutcome": "delete-and-new-deliverable",
-  "notes": "Pre-flight to D-1 L9 reconcile (d-2026-06-02-l9-reconcile-sr). Supersedes d-2026-06-02-follow-up-register-opened-format-normalization (D-1a, S4-authored, never merged) per memory #17 spike-supersedes-novel-pattern: D-1a's scope was narrower than substrate cleanup required. spikeOutcome: delete-and-new-deliverable. Substrate-cleanup is one atomic work-unit per fortune-500 enterprise standards — pre-existing violations of multiple classes in the same canonical data source are fixed together in one PR with full re-validation, not serialized into many PRs each fixing one class. Discovery sequence preserved in transitions[].trigger and this notes field for audit. Cross-repo coordination via Slack canvas post-merge per RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 automated tier."
+  "notes": "Pre-flight to D-1 L9 reconcile (d-2026-06-02-l9-reconcile-sr). Supersedes d-2026-06-02-follow-up-register-opened-format-normalization (D-1a, S4-authored, never merged) per memory #17 spike-supersedes-novel-pattern: D-1a's scope was narrower than substrate cleanup required. spikeOutcome: delete-and-new-deliverable. Substrate-cleanup is one atomic work-unit per fortune-500 enterprise standards — pre-existing violations of multiple classes in the same canonical data source are fixed together in one PR with full re-validation, not serialized into many PRs each fixing one class. Discovery sequence preserved in transitions[].trigger and this notes field for audit. Cross-repo coordination via Slack canvas post-merge per RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 automated tier.",
+  "mergeCommitSha": "5667d29a5b1db25d80b62b7b9163f2c508bacda0",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/94"
 }
