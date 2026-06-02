@@ -7,7 +7,7 @@
   "lastUpdated": "2026-06-02T00:00:00Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
-    "totalCount": 9
+    "totalCount": 12
   },
   "followUps": [
     {
@@ -146,6 +146,47 @@
         "FU-EB-INSTANCE-CANONICAL-DRIFT-1"
       ],
       "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1",
+      "title": "Promote RULE-PIPELINE-PROJECTION-CONTRACT-1 working-model -> automated via F5 fusion dispatch-verbatim-transport",
+      "priority": "P2",
+      "status": "open",
+      "opened": "2026-06-02",
+      "openedDuring": "L4-OVERRIDE-SUBSTRATE-ARTIFACT arc D-1 L9 reconcile (2026-06-02)",
+      "scope": "RULE-PIPELINE-PROJECTION-CONTRACT-1 sits at lifecycleStatus working-model + tierState.activeTier working-model with terminalTier automated. Rule statement requires dispatch-verbatim-transport from chat agent to terminal agent. Automation path documented in instance notes field as PENDING F5 fusion: needs scoping to determine where projection contract's automated tier lives (likely dispatch tooling or agent harness layer, not schema-registry workflow surface). Closes F5 dispatch-verbatim-transport into this FU when scope authoring is undertaken.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1",
+      "title": "CI workflow validating all rule and deliverable instances against their schemas on every PR",
+      "priority": "P2",
+      "status": "closed",
+      "opened": "2026-06-01",
+      "openedDuring": "Foundation arc closure 2026-06-01 (FU-D-1)",
+      "scope": "Promote the validate-on-merge pattern from 'we ran ajv-cli in the dispatch' to 'CI enforces it on every PR.' Landed as .github/workflows/instance-validation.yml. Workflow iterates over schemas/_instances/rules/*.json and schemas/_instances/deliverables/*.json, validates each against its schema (rule.schema.json or deliverable.schema.json) via ajv-cli with forbidden-audit-paint-names allOf ref loaded. Fires on PR + push to main on paths schemas/_instances/** + the two schemas.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry",
+      "resolution": {
+        "closedDate": "2026-06-01",
+        "closedDuring": "Foundation arc FU-D-1 (2026-06-01) — instance-validation.yml landed on main",
+        "summary": "Workflow .github/workflows/instance-validation.yml landed via FU-D-1 deliverable during foundation arc. Validates schemas/_instances/rules/*.json against rule.schema.json and schemas/_instances/deliverables/*.json against deliverable.schema.json with forbidden-audit-paint-names allOf $ref loaded via ajv-cli@5 -r flag. Fires on PR and push to main on paths schemas/_instances/** plus the two schemas. Registered for substrate completeness per L9 reconcile hybrid coverage path; closed-on-arrival, no follow-up action required."
+      }
+    },
+    {
+      "id": "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1",
+      "title": "Future bump of decision-log.schema to add rule-promotion semantic fields",
+      "priority": "P3",
+      "status": "open",
+      "opened": "2026-06-02",
+      "openedDuring": "L4-OVERRIDE-SUBSTRATE-ARTIFACT arc D-1 L9 reconcile (2026-06-02)",
+      "scope": "Current decision-log.schema.v2.json accommodates rule-promotion DECs via tags + impactedDeliverables + evidence fields (verified in this deliverable). Future bump candidates for stronger semantic typing: (a) impactedRules array field paralleling impactedDeliverables; (b) decisionType enum discriminator distinguishing rule-promotion / rule-affirmation / arc-initiation from general decisions; (c) ruleTransitionEvidence object linking DEC to specific rule transition entry. Bump is non-breaking (additive optional fields). Not blocking — current schema accommodates the work; bump improves queryability and structured semantics. Open for future arc scoping when decision-log schema evolution is planned.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
     }
   ],
   "indexes": {
@@ -155,13 +196,16 @@
         "FU-V1-TO-V3-DEPRECATE-1",
         "FU-VENTURE-TYPE-ENUM-REVIEW-1",
         "FU-SR-ROADMAP-BUSINESS-V2-1-ONEOF-DEFECT-1",
-        "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1"
+        "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1",
+        "FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1",
+        "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1"
       ],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
         "FU-ECTROPY-XAAS-MIGRATION-1",
         "FU-CATALOG-DAAS-INVESTIGATE-1",
-        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1"
+        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
+        "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1"
       ]
     },
     "byPriority": {
@@ -170,12 +214,15 @@
         "FU-ECTROPY-XAAS-MIGRATION-1",
         "FU-V1-TO-V3-DEPRECATE-1",
         "FU-SR-ROADMAP-BUSINESS-V2-1-ONEOF-DEFECT-1",
-        "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1"
+        "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1",
+        "FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1",
+        "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1"
       ],
       "P3": [
         "FU-RESOLVER-PROPAGATION-1",
         "FU-CATALOG-DAAS-INVESTIGATE-1",
-        "FU-VENTURE-TYPE-ENUM-REVIEW-1"
+        "FU-VENTURE-TYPE-ENUM-REVIEW-1",
+        "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1"
       ],
       "P1": [
         "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1"
