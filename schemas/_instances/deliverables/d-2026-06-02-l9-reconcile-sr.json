@@ -2,14 +2,14 @@
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-02-l9-reconcile-sr",
   "version": "1.0.0",
-  "title": "D-L9-RECONCILE \u2014 Bring SR L9 operational records current with rule pipeline arc",
+  "title": "D-L9-RECONCILE — Bring SR L9 operational records current with rule pipeline arc",
   "description": "Append schema-bound DEC entries and FU entries to bring SR's L9 operational records (.roadmap/decision-log.json and .roadmap/follow-up-register.json) current with the rule pipeline foundation arc (D-0..D-3), the FU block (FU-D-1..FU-D-5x), and D-COMMS-1/D-COMMS-2 cross-chat infrastructure. Per the canonical architecture topology, L9 operational records ARE schema-bound. The records have not been updated since 2026-05-18 (decision log) and 2026-05-21 (follow-up register), pre-dating substantial portfolio governance work. Hybrid coverage path (c): file DEC entries for rule promotion milestones (the enterprise-significant events), not individual deliverables; file FU entries for working-model rules pending automated promotion plus the future schema-bump candidate. Closure docs handle granular per-deliverable history. This deliverable establishes that L9 records ARE intended-canonical for the rule pipeline, not vestigial. Pattern reusable for every future rule promotion arc.",
   "authority": {
     "author": "Claude (SR chat), L1",
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "chore/l9-reconcile-sr-2026-06-02",
@@ -59,7 +59,7 @@
     },
     {
       "id": "OUT-3",
-      "description": "Deliverable instance lifecycle \u2014 spec lands at S4-authored, transitions through S5-in-progress -> S6-staged -> S7-merged -> S8-closed across the dispatch. Per canonical promotion pattern proven across FU-D-2/3/4 and D-COMMS-2.",
+      "description": "Deliverable instance lifecycle — spec lands at S4-authored, transitions through S5-in-progress -> S6-staged -> S7-merged -> S8-closed across the dispatch. Per canonical promotion pattern proven across FU-D-2/3/4 and D-COMMS-2.",
       "acceptanceCriteria": [
         "Spec validates against deliverable.schema.json v1.1.0",
         "lifecycleState populated with S8-closed post-merge",
@@ -94,6 +94,33 @@
       "to": "S4-authored",
       "date": "2026-06-02",
       "trigger": "Spec authored against verified substrate tarball (rule.schema.json v1.2.0, deliverable.schema.json v1.1.0, decision-log.schema.v2.json v2.0.0, RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 promotion deliverable as canonical shape reference). Sandbox pre-validation passed on all 4 substrate instances. L9 record uploads (decision-log.json + follow-up-register.json) confirmed canonical per Erik 2026-06-02. Hybrid path (c) coverage scope confirmed: rule-promotion DECs + working-model rule FUs."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-02",
+      "trigger": "PROCEED STEP 2 issued; DEC append begun"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-02",
+      "trigger": "Three commits authored; PR opened; CI green"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-02",
+      "commitSha": "be4a39144dcdbd96276430cc64e7e0ad5e53e7f6",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/96",
+      "trigger": "Squash merge to main"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-02",
+      "commitSha": "be4a39144dcdbd96276430cc64e7e0ad5e53e7f6",
+      "trigger": "Post-merge verification: L9 records on main current; decision-log=13 decisions; follow-up-register=12 followUps meta.totalCount=12; deliverable instance present on main"
     }
   ],
   "relatedFollowUps": [
@@ -101,5 +128,7 @@
     "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1",
     "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1"
   ],
-  "notes": "First deliverable in the L4-OVERRIDE-SUBSTRATE-ARTIFACT 3-deliverable Tier B arc (per 2026-06-02 SR-chat strategic planning). Parallel-mergeable with D-2 (d-2026-06-02-pr-mergeability-substrate-artifact-extension) per Erik direction \u2014 scopeFiles disjoint (L9 records vs CI workflow). D-3 (rule promotion) waits for D-2 merge SHA as evidenceClass. Pattern reusable for every future rule promotion arc: L9-reconcile + workflow-extension + rule-promotion is the canonical 3-deliverable shape. The L9-reconcile output establishes that .roadmap/decision-log.json and .roadmap/follow-up-register.json ARE the substrate-bound surface for rule pipeline governance milestones, not optional documentation."
+  "notes": "First deliverable in the L4-OVERRIDE-SUBSTRATE-ARTIFACT 3-deliverable Tier B arc (per 2026-06-02 SR-chat strategic planning). Parallel-mergeable with D-2 (d-2026-06-02-pr-mergeability-substrate-artifact-extension) per Erik direction — scopeFiles disjoint (L9 records vs CI workflow). D-3 (rule promotion) waits for D-2 merge SHA as evidenceClass. Pattern reusable for every future rule promotion arc: L9-reconcile + workflow-extension + rule-promotion is the canonical 3-deliverable shape. The L9-reconcile output establishes that .roadmap/decision-log.json and .roadmap/follow-up-register.json ARE the substrate-bound surface for rule pipeline governance milestones, not optional documentation.",
+  "mergeCommitSha": "be4a39144dcdbd96276430cc64e7e0ad5e53e7f6",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/96"
 }
