@@ -1,10 +1,10 @@
 {
   "$schema": "https://schemas.luh.tech/rule.schema.json",
   "id": "RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "title": "Cross-Chat Surface Notification",
   "statement": "When chat A acts on a surface that chat B has planned work against (visible in chat B's deliverable specs on chat B's repo), chat A's action MUST produce a substrate artifact discoverable by chat B. Same-repo same-branch overlap is covered by RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1; this rule extends to cross-repo, cross-chat coordination where neither chat owns the other's substrate.",
-  "rationale": "Cross-chat coordination failure mode surfaced 2026-06-01: SR chat archived venture-summary.schema.json during D-1 work while EB chat was authoring Wave 2 deliverable specs (d-2026-06-02-deprecation-header-convention, d-2026-06-04-portfolio-venture-summary-archival) against the active canonical path. EB had no signal until execution-time HALT \u2014 caught only because EB-agent surfaced the conflict in alignment prompt to SR. Without a notification surface, cross-chat acts produce silent invalidation of the other chat's planned work.",
+  "rationale": "Cross-chat coordination failure mode surfaced 2026-06-01: SR chat archived venture-summary.schema.json during D-1 work while EB chat was authoring Wave 2 deliverable specs (d-2026-06-02-deprecation-header-convention, d-2026-06-04-portfolio-venture-summary-archival) against the active canonical path. EB had no signal until execution-time HALT — caught only because EB-agent surfaced the conflict in alignment prompt to SR. Without a notification surface, cross-chat acts produce silent invalidation of the other chat's planned work.",
   "authority": {
     "author": "EB-agent (chat), L1; relayed and schematized by SR chat (Claude L1)",
     "approver": "Erik Luhtala (L4)",
@@ -12,7 +12,7 @@
   },
   "lifecycleStatus": "working-model",
   "tierState": {
-    "activeTier": "working-model",
+    "activeTier": "automated",
     "occupiableTiers": [
       "working-model",
       "human-loop",
@@ -40,7 +40,13 @@
       "from": "",
       "to": "working-model",
       "trigger": "Rule schematized from FU-RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 (EB register). Origin incident: 2026-06-01 venture-summary archival HALT discovered by EB-agent at execution time, not authoring time. Entry-point promotion: working-model lifecycleStatus + working-model activeTier; terminalTier automated via D-COMMS-1."
+    },
+    {
+      "from": "working-model",
+      "to": "automated",
+      "evidenceClass": "D-COMMS-1 (merge SHA f6bee1b93ec0a64c5e1ccca16184409840bc1056, PR #84) authored .github/workflows/slack-broadcast.yml on luh-tech/schema-registry main. Workflow fires on PR open/merge events and on schemas/_instances/** push events, publishing event metadata to #luhtech-agents-comms Slack channel (C0B7EPFCA85). Channel is now the canonical discoverable substrate artifact required by the rule. Six events broadcast since merge (today's D-FU-5g, D-FU-5h, D-FU-5i content + closure PRs, plus D-COMMS-1 self-broadcast). Bot luhtech-agent-comms-bot live in channel. Construct now operationally backed, not just specified.",
+      "trigger": "Rule promoted via canonical mechanism: CI workflow authored in D-COMMS-1 dispatch (feat/luhtech-agents-comms-broadcast-2026-06-01, merge SHA f6bee1b9, PR #84); workflow self-evidencing via its own broadcast on merge; tier flips on this deliverable's merge."
     }
   ],
-  "notes": "Pairs with RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 (same-branch overlap within single repo, automated via FU-D-4 amendment-scope-overlap-check workflow) \u2014 this rule extends the same coordination principle to cross-repo cross-chat. Where the paired rule queries deliverable instances in the same repo at PR time, this rule's automated tier (D-COMMS-1) queries the broadcast channel across all portfolio repos at session start. Cross-chat-relay origin: EB-agent surfaced the rule via FU filing on 2026-06-01 alignment prompt; SR chat schematized as instance per cross-chat-relay pattern proven in D-3 (3 of 5 rule instances credit EB-agent contribution). EB-agent credited in authority.author per canonical attribution shape."
+  "notes": "Pairs with RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 (same-branch overlap within single repo, automated via FU-D-4 amendment-scope-overlap-check workflow) — this rule extends the same coordination principle to cross-repo cross-chat. Where the paired rule queries deliverable instances in the same repo at PR time, this rule's automated tier (D-COMMS-1) queries the broadcast channel across all portfolio repos at session start. Cross-chat-relay origin: EB-agent surfaced the rule via FU filing on 2026-06-01 alignment prompt; SR chat schematized as instance per cross-chat-relay pattern proven in D-3 (3 of 5 rule instances credit EB-agent contribution). EB-agent credited in authority.author per canonical attribution shape. | PROMOTED 2026-06-01: tierState.activeTier working-model -> automated via D-COMMS-2 (d-2026-06-01-rule-cross-chat-surface-notification-promotion). Fourth rule promotion in foundation arc's post-completion FU block (after FU-D-2 CI-UNSTABLE, FU-D-3 DOCUMENTED-OVERRIDE, FU-D-4 PIPELINE-AMENDMENT-SUBSTRATE-RECHECK). Operationalizes the discovery-substrate principle for cross-repo cross-chat coordination."
 }
