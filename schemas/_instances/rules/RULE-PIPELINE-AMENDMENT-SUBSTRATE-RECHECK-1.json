@@ -7,8 +7,8 @@
   "rationale": "Amendments to in-flight deliverables can introduce silent conflicts with concurrent work on the same branch base. The overlap is computable from the deliverable spec's scopeFiles field, but the check was not part of any prior workflow until this rule.",
   "authority": {
     "author": "Claude (chat), L1",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleStatus": "working-model",
   "tierState": {

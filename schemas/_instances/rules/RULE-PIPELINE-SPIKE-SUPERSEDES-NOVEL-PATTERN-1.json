@@ -7,8 +7,8 @@
   "rationale": "Novel pattern proliferation degrades the operating discipline by multiplying the primitives the chat layer must reason about. SPIKE was designed precisely for the substrate-beyond-spec case; its three terminals cover every legitimate outcome. When chat-layer agents invent 'Wave 1.5' or 'size A/B/C' sub-shapes, they are not solving a new problem — they are solving a known problem with a forgotten primitive. The correct correction is to use SPIKE, not to extend the pattern catalog.",
   "authority": {
     "author": "EB-agent (chat), L1; relayed via schema-registry chat (Claude L1)",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleStatus": "formalized",
   "tierState": {

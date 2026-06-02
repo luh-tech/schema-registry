@@ -7,8 +7,8 @@
   "rationale": "Cross-chat coordination failure mode surfaced 2026-06-01: SR chat archived venture-summary.schema.json during D-1 work while EB chat was authoring Wave 2 deliverable specs (d-2026-06-02-deprecation-header-convention, d-2026-06-04-portfolio-venture-summary-archival) against the active canonical path. EB had no signal until execution-time HALT \u2014 caught only because EB-agent surfaced the conflict in alignment prompt to SR. Without a notification surface, cross-chat acts produce silent invalidation of the other chat's planned work.",
   "authority": {
     "author": "EB-agent (chat), L1; relayed and schematized by SR chat (Claude L1)",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleStatus": "working-model",
   "tierState": {

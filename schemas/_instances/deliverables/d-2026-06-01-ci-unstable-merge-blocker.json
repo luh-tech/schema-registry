@@ -6,8 +6,8 @@
   "description": "Implements .github/workflows/pr-mergeability-check.yml \u2014 GHA workflow blocking PR merge when mergeStateStatus = UNSTABLE unless override-unstable-merge label is applied by Erik (L4). Promotes RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 from activeTier human-loop to activeTier automated. First rule promotion via canonical mechanism \u2014 proves the maturity ladder works as designed. Closes FU-RULE-CI-UNSTABLE-AUTOMATED-WORKFLOW-1 (P1). Closes the loop on PR #48 + PR #269 incident pattern.",
   "authority": {
     "author": "Claude (chat), L1",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleState": "S8-closed",
   "scope": {

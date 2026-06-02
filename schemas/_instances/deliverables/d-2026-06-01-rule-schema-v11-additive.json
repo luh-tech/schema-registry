@@ -6,8 +6,8 @@
   "description": "Extends rule.schema.json from v1.0.0 to v1.1.0 with three additive non-breaking changes: top-level authority block (required, matches deliverable.schema.json shape, seeds 5-tier auth model), evidenceClass on transitions (required where to is formalized or automated), and instanceLocation convention documented in schema description (rule instances live at schemas/_instances/rules/). First deliverable authored prospectively as a schema-bound instance from initiation.",
   "authority": {
     "author": "Claude (chat), L1",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleState": "S8-closed",
   "scope": {

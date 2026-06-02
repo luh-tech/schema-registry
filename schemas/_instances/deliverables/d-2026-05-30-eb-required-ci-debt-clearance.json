@@ -6,8 +6,8 @@
   "description": "Cleared CI infrastructure debt blocking Ectropy Business roadmap validation: luhtech-schema meta-schema discriminator fix (schema vs instance classification), roadmap-sync ajv --strict=false for all validate steps, service-exchange.enum.json registration via -r flag in roadmap-validate, and .gitignore log debris cleanup. These fixes were required for EB roadmap CI to run clean.",
   "authority": {
     "author": "Claude (chat), L1",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleState": "S8-closed",
   "scope": {
