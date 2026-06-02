@@ -6,8 +6,8 @@
   "description": "Adds .github/workflows/instance-validation.yml \u2014 CI workflow validating all instances under schemas/_instances/** against their declared schemas (rule.schema.json for rules; deliverable.schema.json for deliverables) on every PR. Drift fails the check; contributor must regenerate or fix instances before merge. Closes FU-RULE-INSTANCE-VALIDATION-CI-1 and FU-DELIVERABLE-SCHEMA-INSTANCE-VALIDATION-CI-1.",
   "authority": {
     "author": "Claude (chat), L1",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleState": "S8-closed",
   "scope": {

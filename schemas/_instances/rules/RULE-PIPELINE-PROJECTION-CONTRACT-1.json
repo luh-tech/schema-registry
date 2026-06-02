@@ -7,8 +7,8 @@
   "rationale": "The chat layer is for strategy, dispatch authoring, and gate enforcement — not for holding substrate. Substrate stays on disk where it belongs. Oversized in-context tarballs (823KB decoding to ~1.1MB of context) were killing the agent's token budget. The fix is structural, not 'be careful.'",
   "authority": {
     "author": "Claude (chat), L1",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleStatus": "working-model",
   "tierState": {

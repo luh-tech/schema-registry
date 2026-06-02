@@ -6,8 +6,8 @@
   "description": "Lands the first five rule instances at schemas/_instances/rules/ \u2014 populating the canonical governance pipeline established by rule.schema.json v1.1.0. Five instances exercise every axis of the schema: both lifecycleStatus values, all three runtime tiers in activeTier, both terminal targets in terminalTier, evidenceClass on the formalized rule's backfilled transition, gatingBinding on CI-axis rules, and cross-rule semantic relations. Closes the four-deliverable foundation arc (D-0 refs, D-1 deliverable schema, D-2 rule schema v1.1.0, D-3 instances).",
   "authority": {
     "author": "Claude (chat), L1",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleState": "S8-closed",
   "scope": {

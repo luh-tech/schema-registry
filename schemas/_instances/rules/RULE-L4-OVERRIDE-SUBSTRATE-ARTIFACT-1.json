@@ -7,8 +7,8 @@
   "rationale": "PR #269 merge 2026-06-01 was a legitimate L4 conscious override of UNSTABLE CI per memory #15 (RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 carries the override mechanism). However, the override produced no contemporaneous substrate artifact. The override existed only as PR metadata (merge actor + commit), discoverable only by chat-layer agent investigating after the fact. Without a queryable governance record, the conscious nature of the override cannot be confirmed — a silent --admin bypass and a conscious L4 override look identical in git history. Memory #15 distinguishes between them; substrate must distinguish between them too.",
   "authority": {
     "author": "EB-agent (chat), L1; relayed and schematized by SR chat (Claude L1)",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleStatus": "working-model",
   "tierState": {

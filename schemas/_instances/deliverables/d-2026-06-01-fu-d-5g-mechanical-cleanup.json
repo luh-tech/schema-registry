@@ -1,0 +1,103 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-01-fu-d-5g-mechanical-cleanup",
+  "version": "1.0.0",
+  "title": "FU-D-5g — Mechanical cleanup bundle (misspelling sweep + stale handoff MD + CRM scope review)",
+  "description": "Three mechanical FUs bundled into one scope-locked branch. OUT-1: misspelling sweep — 28 occurrences of 'Luhtana' corrected to 'Luhtala' across 14 instance authority blocks (7 deliverables + 7 rules). OUT-2: stale handoff MD removed from repo root (NEXT_AGENT_HANDOFF_DAG_INTEGRATION_2026-01-28.md). OUT-3: CRM scope review verdict captured — namespace remains in .refsignore pending CRM activation.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/fu-d-5g-mechanical-cleanup-2026-06-01",
+    "scopeFiles": [
+      "schemas/_instances/deliverables/d-2026-05-30-eb-required-ci-debt-clearance.json",
+      "schemas/_instances/deliverables/d-2026-05-30-followup-register-full-conformance.json",
+      "schemas/_instances/deliverables/d-2026-05-30-schema-registry-eb-roadmap-cleanup.json",
+      "schemas/_instances/deliverables/d-2026-06-01-ci-unstable-merge-blocker.json",
+      "schemas/_instances/deliverables/d-2026-06-01-rule-instance-validation-ci.json",
+      "schemas/_instances/deliverables/d-2026-06-01-rule-pipeline-first-instances.json",
+      "schemas/_instances/deliverables/d-2026-06-01-rule-schema-v11-additive.json",
+      "schemas/_instances/rules/RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1.json",
+      "schemas/_instances/rules/RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1.json",
+      "schemas/_instances/rules/RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1.json",
+      "schemas/_instances/rules/RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1.json",
+      "schemas/_instances/rules/RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1.json",
+      "schemas/_instances/rules/RULE-PIPELINE-PROJECTION-CONTRACT-1.json",
+      "schemas/_instances/rules/RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1.json",
+      "NEXT_AGENT_HANDOFF_DAG_INTEGRATION_2026-01-28.md",
+      "schemas/_instances/deliverables/d-2026-06-01-fu-d-5g-mechanical-cleanup.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Misspelling sweep — 'Luhtana' → 'Luhtala' across 14 instance files (7 deliverables + 7 rules). 28 occurrences corrected. Edits limited to authority block string values. Memory rule #22 enforced.",
+      "acceptanceCriteria": [
+        "All 28 occurrences of 'Luhtana' replaced with 'Luhtala' across the 14 instance files",
+        "Post-edit git grep -in 'luhtana' returns NO_MATCHES",
+        "All 14 instances validate against their schemas after edit",
+        "instance-validation.yml passes on the PR",
+        "Edits limited to authority block string values; no structural JSON changes"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Stale handoff MD removal — NEXT_AGENT_HANDOFF_DAG_INTEGRATION_2026-01-28.md removed from repo root via git rm. Closes FU-SCHEMA-REGISTRY-STALE-HANDOFF-MD-CLEANUP-1. No-md-terminus principle (memory #19) applied.",
+      "acceptanceCriteria": [
+        "File NEXT_AGENT_HANDOFF_DAG_INTEGRATION_2026-01-28.md removed from repo root",
+        "git ls-files returns no result for that filename post-merge",
+        "refs-check.yml passes (file is not a schema; no impact on schema-refs.json)"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "CRM scope review verdict — FU-LUHTECH-SCHEMA-CRM-SCOPE-REVIEW-1 closed with verdict: review-complete; CRM namespace remains in .refsignore pending CRM activation; re-evaluate when CRM goes live. FU register edit captured in appropriate register repo.",
+      "acceptanceCriteria": [
+        "Verdict captured as notes update on FU-LUHTECH-SCHEMA-CRM-SCOPE-REVIEW-1",
+        "FU status transitions to closed with closure note citing this deliverable's merge SHA",
+        "No schema-registry repo files touched for this output"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Deliverable instance lifecycle — this spec transitions S4-authored → S5-in-progress → S6-staged → S7-merged → S8-closed across the dispatch lifecycle.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "lifecycleState populated with S8-closed post-merge",
+        "mergeCommitSha populated with actual squash-merge SHA",
+        "transitions array captures full lifecycle path"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "instance-validation.yml passes — all 14 edited instances validate",
+      "refs-check.yml passes",
+      "pr-mergeability-check.yml passes",
+      "No override label used"
+    ],
+    "postMerge": [
+      "git grep -in 'luhtana' on main returns NO_MATCHES",
+      "NEXT_AGENT_HANDOFF_DAG_INTEGRATION_2026-01-28.md absent from repo root",
+      "FU-SCHEMA-REGISTRY-STALE-HANDOFF-MD-CLEANUP-1 closed in register",
+      "FU-LUHTECH-SCHEMA-CRM-SCOPE-REVIEW-1 closed in register"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-01",
+      "trigger": "Spec authored following substrate-read dispatch report (2026-06-01 14:47 PDT). Erik authorized dispatch. Three FUs bundled: misspelling sweep, stale MD removal, CRM scope review."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-SCHEMA-REGISTRY-STALE-HANDOFF-MD-CLEANUP-1",
+    "FU-LUHTECH-SCHEMA-CRM-SCOPE-REVIEW-1"
+  ],
+  "notes": "Three mechanical FUs bundled into one branch to minimize ceremony while remaining scope-locked. Misspelling sweep dominates the line count but is purely string-substitution within authority blocks. Stale MD removal is one git rm. CRM scope review is a verdict, not a code change. All three close in one PR. Substrate read confirmed 28 occurrences in 14 files at 14:47 PDT 2026-06-01; re-verified at Step 2 against current HEAD. Python str.replace used (macOS sed -i requires empty-string extension arg; platform-agnostic Python used instead per Step 3 deviation)."
+}

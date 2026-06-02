@@ -7,8 +7,8 @@
   "rationale": "UNSTABLE collapses to 'mergeable with context' in the GitHub UI, creating an attractive nuisance: the merge button is available and the failures 'look like someone else's problem.' Two incidents prove this is a pattern not a one-off: PR #48 (2026-04-XX) silently bypassed pre-existing CI; PR #269 (2026-05-30) repeated the same failure mode under different cover. The system's correct response is fix-baseline, not merge-anyway with audit annotation.",
   "authority": {
     "author": "EB-agent (chat), L1; relayed via schema-registry chat (Claude L1)",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleStatus": "working-model",
   "tierState": {

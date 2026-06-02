@@ -6,8 +6,8 @@
   "description": "Schema conformance audit of follow-up-register.schema.json culminating in v1.1.0: added relatedDecisions (array of d-YYYY-MM-DD-slug strings), meta.byStatus (integer count map), and meta.byPriority (integer count map). Formalizes existing patterns observed across 9 live FUs. Cross-repo authority: FU-FEATURE-DEC-INFRA-GRAPH-ARCHITECTURE (Ectropy-Business consumer).",
   "authority": {
     "author": "Claude (chat), L1",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleState": "S8-closed",
   "scope": {

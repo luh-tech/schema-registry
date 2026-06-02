@@ -6,8 +6,8 @@
   "description": "Batch of schema fixes discovered during Ectropy Business roadmap validation: roadmap v3.4 $schema const correction, pitch.problem oneOf regression fix, enum additions (compute, tech-stack, testingTool, architecturePattern), and venture-summary deprecation. All PRs merged 2026-05-30. Cleared the schema validation debt blocking EB roadmap CI.",
   "authority": {
     "author": "Claude (chat), L1",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleState": "S8-closed",
   "scope": {

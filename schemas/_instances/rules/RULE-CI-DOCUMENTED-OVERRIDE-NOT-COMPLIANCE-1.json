@@ -7,8 +7,8 @@
   "rationale": "Compliance state is a property of the policy, not of the audit trail. A field that says 'we documented that we violated the rule' still records a violation. Compliance requires the violation to not have occurred (fix-baseline) or to not be in scope (shrink-deliverable). Annotation as compliance-substitute was attempted by a prior chat-layer agent (TRUTH-DELIVERED override field proposal); refused by Erik on principle.",
   "authority": {
     "author": "EB-agent (chat), L1; relayed via schema-registry chat (Claude L1)",
-    "approver": "Erik Luhtana (L4)",
-    "revertAuthority": "Erik Luhtana (L4)"
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
   },
   "lifecycleStatus": "working-model",
   "tierState": {
