@@ -4,7 +4,7 @@
   "schemaVersion": "1.0.0",
   "version": "1.0.0",
   "ventureId": "schema-registry",
-  "lastUpdated": "2026-05-21T12:00:00Z",
+  "lastUpdated": "2026-06-02T00:00:00Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
     "totalCount": 9
@@ -15,7 +15,7 @@
       "title": "Migrate downstream consumers of acronyms-catalog from file/name refs to D9 stream URL",
       "priority": "P2",
       "status": "open",
-      "opened": "2026-05-18T15:16:14Z",
+      "opened": "2026-05-18",
       "openedDuring": "luhtech-schema T1 substrate (2026-05-18)",
       "scope": "5 downstream consumers identified in T1 substrate Step 7: schema-registry/schemas/patent/glossary.schema.json — update $ref to https://schemas.luh.tech/acronyms-catalog.json; LuhTech-business/filings/glossary.md + glossary.yml — link to stream URL; LuhTech-business/docs/LUHTECH-PATENT-FOUNDATION-CORRECTIONS-2026-05-06.md — update reference; LuhTech-business/.roadmap/follow-up-register.json — close stale catalog-absence FU entries.",
       "blockedBy": [],
@@ -28,7 +28,7 @@
       "title": "Resolve cosmetic jsonschema deprecation warning for decision-log DEC validation",
       "priority": "P3",
       "status": "closed",
-      "opened": "2026-05-18T15:23:44Z",
+      "opened": "2026-05-18",
       "openedDuring": "luhtech-schema T2 Phase 1 (2026-05-18)",
       "scope": "Step 17 of T2 Phase 1: DEC log validation passes but triggers jsonschema network auto-fetch deprecation warning. Root cause: decision-log.schema.v2 $refs luhtech-enums; the Draft7Validator may not propagate the local registry through to internal sub-validator $ref resolution. Audit referencing.Registry propagation in validate.py; confirm luhtech-enums $id coverage in schema-map; consider explicit pre-resolution walk.",
       "blockedBy": [],
@@ -45,7 +45,7 @@
       "title": "Bundle XaaS→SNx migration into T5 — directory renames, URN segments, description strings",
       "priority": "P2",
       "status": "closed",
-      "opened": "2026-05-18T17:57:56Z",
+      "opened": "2026-05-18",
       "openedDuring": "luhtech-schema T4 (2026-05-18)",
       "scope": "T4 substrate confirmed XaaS terminology survives in three Ectropy-domain surfaces: (a) directory names caas/, gaas/, paas/, maas/ holding 6 schemas; (b) URN $id segments encoded into those path components; (c) description-string prose in usf/usf-work-packet, maas/material-supplier, schema-index.json. Bundle into T5 (urn-to-url) so directory rename + URN segment update + description polish land in one coherent mutation pass. Pre-T5: resolve SNx naming-form decision (csx/ vs corsx/ vs full noun); scan Ectropy product code for hard-coded caas/gaas/paas/maas imports that break on rename.",
       "blockedBy": [],
@@ -63,7 +63,7 @@
       "title": "Define deprecation policy + execute migrate v1-to-v3-deprecate for v-suffix families",
       "priority": "P2",
       "status": "open",
-      "opened": "2026-05-18T17:57:56Z",
+      "opened": "2026-05-18",
       "openedDuring": "luhtech-schema T4 (2026-05-18)",
       "scope": "T4 substrate Step 4 surfaced 5 multi-variant schema families: luhtech-enums (2 variants), decision-log (2), roadmap (10), roadmap-business (4 incl v3.0.draft), venture-summary (2). Step 5 showed v-suffix variants are not always old: luhtech-enums v2 IS the active one (6 live $refs from graph/brand/workflow-registry). Three policy decisions before execute: (1) deprecation marker form — boolean field, status enum, or _archived/ subdir; (2) per-family current-variant confirmation via $ref evidence; (3) $ref migration plan for consumers of variants to be deprecated.",
       "blockedBy": [],
@@ -75,7 +75,7 @@
       "title": "Remove unauthorized DaaS parenthetical from ectropy-ai/schemas/schema-index.json",
       "priority": "P3",
       "status": "closed",
-      "opened": "2026-05-18T17:57:56Z",
+      "opened": "2026-05-18",
       "openedDuring": "luhtech-schema T4 (2026-05-18)",
       "scope": "schema-index.json carries 'Decision Lifecycle (DaaS)' as a category name. Erik confirmed: DaaS was never approved — it is not in the canonical catalog section J. The Decision Lifecycle category itself is real (decision/ subdir, 5 schemas); only the (DaaS) parenthetical is wrong. Recommended fix: drop the parenthetical. Bundle into FU-ECTROPY-XAAS-MIGRATION-1 Ectropy editing pass at T5. Also audit VaaS, CaaS, PaaS, MaaS, RaaS/HaaS category name parentheticals for the same issue.",
       "blockedBy": [],
@@ -95,7 +95,7 @@
       "title": "Review ventureType enum — propose 5-bucket consolidation (Platform/Hardware/Service/Marketplace/Holding)",
       "priority": "P3",
       "status": "open",
-      "opened": "2026-05-18T23:44:40Z",
+      "opened": "2026-05-18",
       "openedDuring": "T5.4 (2026-05-18)",
       "scope": "Per D-T5-C (deferred from T5 arc): luhtech-enums.schema.v2.json ventureType enum includes SaaS, API, Platform, Hardware, Marketplace, Holding. Proposed 5-bucket consolidation: Platform | Hardware | Service | Marketplace | Holding — absorbs SaaS + API into Service (broader model covering SaaS, managed-services, professional-services). Requires: audit current usage across 8 venture roadmap.json files; draft migration mapping (SaaS→Service, API→Platform); file DEC with breaking-change semantics; schema change additive then deprecation pass.",
       "blockedBy": [],
@@ -120,7 +120,7 @@
       }
     },
     {
-      "id": "FU-SR-ROADMAP-BUSINESS-V2.1-ONEOF-DEFECT-1",
+      "id": "FU-SR-ROADMAP-BUSINESS-V2-1-ONEOF-DEFECT-1",
       "title": "Fix oneOf integer+number defect in roadmap-business.schema.v2.1.json",
       "priority": "P2",
       "status": "open",
@@ -154,11 +154,9 @@
         "FU-CATALOG-STREAM-MIGRATION-1",
         "FU-V1-TO-V3-DEPRECATE-1",
         "FU-VENTURE-TYPE-ENUM-REVIEW-1",
-        "FU-SR-ROADMAP-BUSINESS-V2.1-ONEOF-DEFECT-1",
+        "FU-SR-ROADMAP-BUSINESS-V2-1-ONEOF-DEFECT-1",
         "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1"
       ],
-      "in-progress": [],
-      "blocked": [],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
         "FU-ECTROPY-XAAS-MIGRATION-1",
@@ -167,21 +165,20 @@
       ]
     },
     "byPriority": {
-      "P0": [],
-      "P1": [
-        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1"
-      ],
       "P2": [
         "FU-CATALOG-STREAM-MIGRATION-1",
         "FU-ECTROPY-XAAS-MIGRATION-1",
         "FU-V1-TO-V3-DEPRECATE-1",
-        "FU-SR-ROADMAP-BUSINESS-V2.1-ONEOF-DEFECT-1",
+        "FU-SR-ROADMAP-BUSINESS-V2-1-ONEOF-DEFECT-1",
         "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1"
       ],
       "P3": [
         "FU-RESOLVER-PROPAGATION-1",
         "FU-CATALOG-DAAS-INVESTIGATE-1",
         "FU-VENTURE-TYPE-ENUM-REVIEW-1"
+      ],
+      "P1": [
+        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1"
       ]
     },
     "byBlockedBy": {}
