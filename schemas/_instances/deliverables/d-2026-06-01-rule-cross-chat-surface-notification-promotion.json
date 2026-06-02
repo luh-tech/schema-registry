@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "chore/rule-cross-chat-surface-promotion-2026-06-01",
@@ -68,8 +68,37 @@
       "to": "S4-authored",
       "date": "2026-06-01",
       "trigger": "Spec authored against verified substrate tarball (rule.schema.json v1.2.0 + RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 current state + two canonical promotion prior-arts FU-D-2 and FU-D-3 + allOf definition). Canonical promotion mechanism confirmed consistent across both priors. D-COMMS-1 evidenceClass cited with full SHA + PR number."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-01",
+      "trigger": "Dispatch execution begun: canonical promotion edits applied to rule instance"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-01",
+      "trigger": "Branch committed, PR opened, CI green (validate-instances + broadcast both pass)"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-01",
+      "commitSha": "11abc7bdfbada1d11b97f5b0cb977d829f47c6f6",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/92",
+      "trigger": "Squash merge to main via MERGE PR 92"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-01",
+      "commitSha": "11abc7bdfbada1d11b97f5b0cb977d829f47c6f6",
+      "trigger": "Post-merge: RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 at v1.1.0 automated; rules-at-automated count = 4"
     }
   ],
   "relatedFollowUps": [],
-  "notes": "Fourth rule promotion in foundation arc's post-completion. Pattern fully canonical now (FU-D-2 CI-UNSTABLE, FU-D-3 DOCUMENTED-OVERRIDE, FU-D-4 PIPELINE-AMENDMENT-SUBSTRATE-RECHECK, this one). Pure data fix on a single rule instance — no source schema edits, no CI workflow authoring, no code changes. The CI substrate (slack-broadcast.yml + #luhtech-agents-comms channel) already exists on main from D-COMMS-1; this deliverable just records that the rule's automated tier is now operationally backed and flips the activeTier accordingly."
+  "notes": "Fourth rule promotion in foundation arc's post-completion. Pattern fully canonical now (FU-D-2 CI-UNSTABLE, FU-D-3 DOCUMENTED-OVERRIDE, FU-D-4 PIPELINE-AMENDMENT-SUBSTRATE-RECHECK, this one). Pure data fix on a single rule instance — no source schema edits, no CI workflow authoring, no code changes. The CI substrate (slack-broadcast.yml + #luhtech-agents-comms channel) already exists on main from D-COMMS-1; this deliverable just records that the rule's automated tier is now operationally backed and flips the activeTier accordingly.",
+  "mergeCommitSha": "11abc7bdfbada1d11b97f5b0cb977d829f47c6f6",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/92"
 }
