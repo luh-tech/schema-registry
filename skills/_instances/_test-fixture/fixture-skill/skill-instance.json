@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schemas.luh.tech/skill.schema.json",
+  "$id": "urn:luhtech:skill:org:fixture-skill:1.0.0",
+  "name": "fixture-skill",
+  "description": "CI test fixture skill — not a behavioral skill. Exists to prove the schema, generator, validator, and CI workflows work end-to-end. Safe to delete once real behavioral skill instances land.",
+  "version": "1.0.0",
+  "category": "org",
+  "lifecycleStatus": "draft",
+  "triggerMode": "descriptive",
+  "triggerContext": [
+    {
+      "precondition": "This skill never fires in production. It exists only to exercise the generator and CI pipeline on a valid minimal instance.",
+      "exampleCues": [
+        "CI bootstrap only",
+        "Not consumed by Claude in runtime context"
+      ]
+    }
+  ],
+  "behavior": {
+    "summary": "No behavioral effect. This instance proves the skill pipeline plumbing is operational by being a minimal valid example that exercises every required schema field.",
+    "directives": [
+      {
+        "action": "Do nothing if encountered at runtime",
+        "rationale": "Fixture-only. Real skills live elsewhere in skills/_instances/."
+      }
+    ]
+  },
+  "authority": {
+    "author": "Claude L1 (SR-chat, 2026-06-03)",
+    "approver": "Erik Luhtala L4",
+    "revertAuthority": "Erik Luhtala L4"
+  },
+  "transitions": [
+    {
+      "from": null,
+      "to": "draft",
+      "trigger": "Authored as CI bootstrap fixture in D-SKILLS-META-LAYER-INITIATION-1",
+      "transitionedAt": "2026-06-03T00:00:00Z"
+    }
+  ]
+}
