@@ -1,0 +1,92 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-03-eb-agent-cat3b-drift-tools",
+  "version": "1.0.0",
+  "title": "Cat 3b — eb-agent drift tools (drift-liveness + drift-vpcpeering)",
+  "description": "Cat 3b completes the Cat 3 arc by adding the two SR-dependent drift tools deferred from Cat 3 partial. Both tools were blocked at Cat 3 partial authoring time on SR schema preconditions from canvas F0B7UB6BGR4 — Item A livenessProbe (resource-access.schema.json v1.1.0, merged SR PR #108 a2f8a79) and Item B vpcPeerings (infrastructure-catalog.schema.json v1.2.0, merged SR PR #106 98534ab). Both preconditions now landed on schema-registry main 7129734. Tool 1 — drift-liveness — reads credentialItem.livenessProbe.lastVerifiedResult across resource-access.json instances and surfaces credentials with auth-failed or network-failed results; not-tested is excluded from drift output by default (initial state per schema, not a drift signal). Tool 2 — drift-vpcpeering — reads catalog.vpcPeerings[] from infrastructure-catalog.json instances and surfaces peerings with status pending-elimination, ordered by createdAt where present. Both tools follow the Cat 3 partial pattern at agent/src/agent/tools/ with parallel tests at agent/tests/ and registration in agent/agent.yaml under tools.venture. Substrate read against EB main 83c06d4 (Cat 3 partial closed via PR #288) precedes scope authoring this round — scopeFiles paths verified against actual repo layout, not inferred. Tool surface delta: 29 → 31 on merge. Closes the Cat 3 arc started 2026-06-02 with the original 9-tool scope; ships as two waves (Cat 3 partial 7 tools + Cat 3b 2 tools) due to SR schema dependency. Same cross-repo execution shape applies — EB authors spec body (this artifact), SR lands instance, EB executes against anchored spec, SR closes with EB merge SHA and TRUTH-DELIVERED at S8 per pattern proven on Cat 3 partial closure PR #109 7129734.",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/eb-agent-cat3b-drift-tools-2026-06-03",
+    "scopeFiles": [
+      "agent/src/agent/tools/drift_liveness.py",
+      "agent/src/agent/tools/drift_vpcpeering.py",
+      "agent/tests/test_drift_liveness.py",
+      "agent/tests/test_drift_vpcpeering.py",
+      "agent/agent.yaml",
+      "AGENTS.md",
+      ".roadmap/follow-up-register.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Two new eb-agent drift tools + unit tests + agent.yaml registration + AGENTS.md update on luh-tech/Ectropy-Business. Single PR off feat/eb-agent-cat3b-drift-tools-2026-06-03 branch. Tool 1 — drift-liveness (~90 LoC) — reads credentialItem.livenessProbe.lastVerifiedResult across resource-access.json; surfaces credentials with lastVerifiedResult in {auth-failed, network-failed}; not-tested excluded by default per schema description (initial state, not drift); output includes credentialItem.itemId, itemName, role, lastVerifiedResult, lastVerifiedReachable, verifiedBy — no credential values, only identifiers per memory #9. Tool 2 — drift-vpcpeering (~80 LoC) — reads catalog.vpcPeerings[] across infrastructure-catalog.json; surfaces peerings with status=pending-elimination; output includes id, envA, envB, region, status, trackedByFollowUp, createdAt, notes. Both tools mirror Cat 3 partial scaffold (class-based Tool subclass with run() returning ToolResult, module exports TOOL = <Name>). Tests at agent/tests/ follow Cat 1+2+3 partial pattern — happy-path test (synthetic substrate with no drift, returns empty list) + drift-detected-path test (synthetic substrate with known drift, returns list containing that drift) + credential-leak assertion (no credential values in output for drift-liveness). agent.yaml registration adds drift_liveness and drift_vpcpeering to tools.venture (current venture block ends with coverage_deliverable_fks; append after). AGENTS.md updates the Cat 3 section header from 'Cat 3 partial' to 'Cat 3' once Cat 3b lands, and lists drift-liveness + drift-vpcpeering alongside the 7 Cat 3 partial tools.",
+      "acceptanceCriteria": [
+        "drift-liveness loadable via eb-agent CLI: eb-agent drift-liveness --help returns 0 with usage text",
+        "drift-vpcpeering loadable via eb-agent CLI: eb-agent drift-vpcpeering --help returns 0 with usage text",
+        "Both tools registered in agent/agent.yaml under tools.venture, appended after coverage_deliverable_fks entry",
+        "Both tools surface in MCP tool listing on rebuilt eb-agent binary",
+        "drift-liveness has happy-path test (no drift → empty list) and drift-detected test (auth-failed item → present in output)",
+        "drift-vpcpeering has happy-path test (no drift → empty list) and drift-detected test (pending-elimination peering → present in output)",
+        "drift-liveness output assertion: no credential values present (only itemId, itemName, role, livenessProbe fields)",
+        "eb-agent surface count grows 29 → 31 (verified by eb-agent --help)",
+        "AGENTS.md Cat 3 section updated to list both new tools and section header changed from 'Cat 3 partial' to 'Cat 3'",
+        "pytest passes for both new tests with zero failures, zero errors",
+        "PR CI green on Roadmap CI workflow (pre-existing baseline drift on follow-up-register.json meta.byPriority handled per RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 if still present)",
+        "No modifications outside the 7 files in scopeFiles"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Tracking FU filed in luh-tech/Ectropy-Business .roadmap/follow-up-register.json — FU-EB-AGENT-CAT3B-DRIFT-TOOLS-1 at priority P1, status open, trackingRepo luh-tech/Ectropy-Business. Title: 'eb-agent Cat 3b — drift-liveness + drift-vpcpeering (2 SR-dependent tools, completes Cat 3 arc)'. Closes when OUT-1 PR merges. Filed in same PR as OUT-1 (folded execution per Cat 3 partial pattern). Insertion after last open P1 entry per Cat 3 partial precedent. Version field stays frozen at 1.7.13 per observed pattern across recent commits. lastUpdated set to system time at write moment per memory #8.",
+      "acceptanceCriteria": [
+        "FU appears in eb-agent:query-followups with priority=P1, status=open",
+        "FU id matches FU-EB-AGENT-CAT3B-DRIFT-TOOLS-1 exactly",
+        "FU register meta.totalCount increments by 1 (net add this round — no pre-existing P2 entry expected; substrate read at S5 confirms before write)",
+        "FU register indexes.byStatus.open + indexes.byPriority.P1 updated",
+        "FU register version field stays at 1.7.13 (observed frozen pattern)",
+        "FU register lastUpdated set to system time of write (ISO 8601 UTC per memory #8)"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Spec body sandbox-validated against deliverable.schema.json v1.1.0 on schema-registry main 7129734 before EB execution begins",
+      "Branch name feat/eb-agent-cat3b-drift-tools-2026-06-03 matches canonical regex ^(feat|fix|chore|cleanup|docs|test|infra|spike)/[a-z0-9-]+-[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "scopeFiles paths verified by EB terminal substrate read against EB main 83c06d4 prior to scope authoring — no path inference",
+      "pytest agent/tests/test_drift_liveness.py and test_drift_vpcpeering.py both pass before commit",
+      "Scope lock verify at commit: git diff matches 7-entry scopeFiles list exactly",
+      "Tracking FU register write includes post-write verify block (ajv validate + count check + new FU presence check)",
+      "PR CI green or RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 conscious L4 override at merge"
+    ],
+    "postMerge": [
+      "EB main contains both drift tool files at agent/src/agent/tools/ + both test files at agent/tests/",
+      "agent.yaml tools.venture section contains drift_liveness and drift_vpcpeering",
+      "AGENTS.md Cat 3 section header reads 'Cat 3' (no longer 'Cat 3 partial')",
+      "FU-EB-AGENT-CAT3B-DRIFT-TOOLS-1 present in .roadmap/follow-up-register.json with priority=P1, status=open",
+      "EB merge SHA captured in SR deliverable instance transitions array via SR closure micro-PR",
+      "TRUTH-DELIVERED instance authored at schemas/_instances/truth-delivered/ on SR main per Cat 3 partial closure pattern PR #109"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-03",
+      "trigger": "Spec body authored by EB-chat 2026-06-03 against canonical deliverable.schema.json v1.1.0 shape per doctrine in canvas F0B85LNSTC4. Substrate read against EB main 83c06d4 + SR main 7129734 preceded scope authoring — no path inference, no shape inference. Both schema preconditions from canvas F0B7UB6BGR4 verified merged: Item A livenessProbe at resource-access.schema.json v1.1.0 (PR #108 a2f8a79), Item B vpcPeerings at infrastructure-catalog.schema.json v1.2.0 (PR #106 98534ab). Cat 3 partial closure verified at SR PR #109 7129734 — instance at S8-closed, TRUTH-DELIVERED authored. Authority block per Cat 3 pattern. Anchored against schema-registry main HEAD 7129734."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-AGENT-CAT3B-DRIFT-TOOLS-1",
+    "FU-EB-AGENT-CAT3-COVERAGE-DRIFT-TOOLS-1",
+    "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
+    "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
+  ],
+  "notes": "Completes the Cat 3 arc — originally scoped as 9 tools (7 SR-independent + 2 SR-dependent) at planning 2026-06-02. Shipped as two waves because two tools required SR schema extensions on canonical schemas served at schemas.luh.tech. Cat 3 partial (PR #288 83c06d4) delivered the 7 SR-independent tools 2026-06-03. Cat 3b (this deliverable) delivers the 2 SR-dependent tools — drift-liveness against credentialItem.livenessProbe (resource-access.schema.json v1.1.0) and drift-vpcpeering against catalog.vpcPeerings[] (infrastructure-catalog.schema.json v1.2.0). Cross-repo execution shape — proven end-to-end on Cat 3 partial — applies: EB authors spec body chat-side; SR-chat reshapes if needed (not expected this round since spec authored against canonical schema directly) and lands deliverable instance via micro-PR; EB terminal executes 2 tools + 2 tests + agent.yaml + AGENTS.md + tracking FU in single PR against anchored spec; SR re-opens instance at EB OUT-1 merge to transition S6→S7→S8 with EB merge SHA in transitions and authors TRUTH-DELIVERED at schemas/_instances/truth-delivered/. Coordination canvases for Cat 3 arc: F0B83PF9LD7 (EB Cat 3 request), F0B7VHT6KAP (SR Cat 3 ACK), F0B85LNSTC4 (SR Cat 3 reshape doctrine — canonical schema shape reference for EB future deliverables), F0B7VQHDV51 (SR Cat 3 instance merge ack), F0B8612NEF6 (EB Cat 3 amendment ask), F0B82DAB07L (SR Cat 3 amendment dispatch), F0B82Q4NGQ2 (SR Item A livenessProbe LANDED + Cat 3b unblock), F0B82R3E33L (EB Cat 3 partial MERGED + Cat 3b unblock ack), F0B7MGY2NCX (SR Cat 3 closure LANDED + first TRUTH-DELIVERED). Substrate read provenance: EB terminal verbatim report 2026-06-03 confirmed EB main 83c06d4 with 7 Cat 3 tool files present, agent.yaml venture section ends with coverage_deliverable_fks (Cat 3b appends after), AGENTS.md Cat 3 section header 'Cat 3 partial' to be updated to 'Cat 3' in OUT-1, SR main 7129734 with both schema preconditions live. Retention: permanent schema-bound governance record per memory rule no-md-terminus. Branch disposition: delete on merge per canonical branching flow. SPIKE primitive available if substrate exceeds spec mid-flight, but no SPIKE expected — both schema shapes verified pre-authoring. Future Cat-N pattern: Cat 4 (write tools) and Cat 5 (cross-venture queries) noted in chat session for future consideration; not committed in current arc."
+}
