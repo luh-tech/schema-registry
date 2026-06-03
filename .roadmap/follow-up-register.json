@@ -7,7 +7,7 @@
   "lastUpdated": "2026-06-02T00:00:00Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
-    "totalCount": 12
+    "totalCount": 15
   },
   "followUps": [
     {
@@ -193,12 +193,41 @@
       "title": "Extend infrastructure-catalog objectStorage.purpose enum with terraform-state",
       "priority": "P2",
       "status": "closed",
-      "filed": "2026-06-03",
-      "closedAt": "2026-06-03T01:17:21Z",
-      "closedBy": "erik-luh",
-      "closingDeliverable": "d-2026-06-03-sr-infrastructure-catalog-purpose-enum-extension",
+      "opened": "2026-06-03",
+      "openedDuring": "EB cross-chat handoff for d-2026-06-03-eb-catalog-objectstorage-hygiene downstream consumer (2026-06-02/03)",
+      "scope": "Additive backwards-compatible enum extension to infrastructure-catalog.schema.json objectStorage.purpose enum. Adds 'terraform-state' value to capture Terraform state backend buckets in env-prod.objectStorage. Driven by EB downstream consumer d-2026-06-03-eb-catalog-objectstorage-hygiene which required the new enum value to validate. Filed-and-closed in same PR per cross-chat governance pattern.",
+      "blockedBy": [],
+      "blocks": [],
       "trackingRepo": "luh-tech/schema-registry",
-      "note": "Additive enum extension. Driven by EB downstream consumer d-2026-06-03-eb-catalog-objectstorage-hygiene which required terraform-state purpose to capture TF state backend buckets in env-prod.objectStorage. Filed-and-closed in same PR per cross-chat governance pattern."
+      "resolution": {
+        "closedDate": "2026-06-03",
+        "closedDuring": "d-2026-06-03-sr-infrastructure-catalog-purpose-enum-extension (closed during D-EB-FU-FILE reshape per cross-chat coordination 2026-06-02)",
+        "summary": "Additive enum extension. Driven by EB downstream consumer d-2026-06-03-eb-catalog-objectstorage-hygiene which required terraform-state purpose to capture TF state backend buckets in env-prod.objectStorage. Filed-and-closed in same PR per cross-chat governance pattern. Closed by erik-luh. Reshaped to canonical follow-up-register.schema.json field set during D-EB-FU-FILE 2026-06-02 (filed->opened, closedAt->resolution.closedDate, closingDeliverable->resolution.closedDuring, closedBy+note->resolution.summary; added missing openedDuring, scope, blockedBy, blocks)."
+      }
+    },
+    {
+      "id": "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
+      "title": "Add credentialItem.livenessProbe field to resource-access.schema.json",
+      "priority": "P1",
+      "status": "open",
+      "opened": "2026-06-02",
+      "openedDuring": "EB cross-chat handoff canvas F0B7U37MSDC (2026-06-02 18:29 PDT) — GAP-EXTEND P1 surfaced from d-2026-06-02-prod-spaces-credentials-graph audit",
+      "scope": "Additive backwards-compatible extension to credentialItem definition in resource-access.schema.json. Adds livenessProbe block: lastVerifiedReachable (ISO-8601 timestamp), lastVerifiedResult (enum: success, auth-failed, network-failed, not-tested), verifiedBy (deliverable-id or operator). Substrate evidence: two BW credentials in luhtechnology.com vault (d3ef349b DO_SPACES_SECRET_ACCESS_KEY_PROD, 8adf7118 DO_BUCKET_ECTROPY_MIGRATE) are structurally complete but fail DO auth with InvalidAccessKeyId — current schema has no field to distinguish dead credentials from live ones in the access graph. EB's STEP 1-PRE-D bucket-access matrix data has no schema home and lives only in chat carry-forward. Proposed shape illustrative; SR refines as canonical authority on credentialItem evolution.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-CATALOG-VPC-PEERING-FIELD-1",
+      "title": "Add vpcPeerings[] top-level array to infrastructure-catalog.schema.json",
+      "priority": "P1",
+      "status": "open",
+      "opened": "2026-06-02",
+      "openedDuring": "EB cross-chat handoff canvas F0B7U37MSDC (2026-06-02 18:29 PDT) — GAP-EXTEND P1 surfaced from d-2026-06-02-prod-spaces-credentials-graph audit",
+      "scope": "Additive backwards-compatible extension adding vpcPeerings[] top-level array to infrastructure-catalog.schema.json. Each entry: id (string, e.g. 768a1eb6), envA (env-id ref), envB (env-id ref), status (enum: active, pending-elimination, eliminated), trackedByFollowUp (FU id). Substrate evidence: live peering 768a1eb6 (staging <-> production VPCs) flagged in operator memory for elimination; no canonical way to mark scheduled for elimination, track environment coupling, or detect drift on removal. Proposed shape illustrative; SR refines as canonical authority on infrastructure-catalog evolution.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
     }
   ],
   "indexes": {
@@ -210,14 +239,17 @@
         "FU-SR-ROADMAP-BUSINESS-V2-1-ONEOF-DEFECT-1",
         "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1",
         "FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1",
-        "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1"
+        "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1",
+        "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
+        "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
       ],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
         "FU-ECTROPY-XAAS-MIGRATION-1",
         "FU-CATALOG-DAAS-INVESTIGATE-1",
         "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
-        "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1"
+        "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1",
+        "FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1"
       ]
     },
     "byPriority": {
@@ -228,7 +260,8 @@
         "FU-SR-ROADMAP-BUSINESS-V2-1-ONEOF-DEFECT-1",
         "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1",
         "FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1",
-        "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1"
+        "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1",
+        "FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1"
       ],
       "P3": [
         "FU-RESOLVER-PROPAGATION-1",
@@ -237,7 +270,9 @@
         "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1"
       ],
       "P1": [
-        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1"
+        "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
+        "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
+        "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
       ]
     },
     "byBlockedBy": {}
