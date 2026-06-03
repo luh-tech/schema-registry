@@ -1,0 +1,297 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/skill.schema.json",
+  "title": "LuhTech Skill Instance",
+  "description": "Canonical schema for chat-side skill instances. Skills are the chat-behavior enforcement layer that pairs with rule instances (mechanical enforcement). JSON is canonical; SKILL.md is python-generated. Memory rule 19 (no-md-terminus) holds.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "$id",
+    "name",
+    "description",
+    "version",
+    "category",
+    "lifecycleStatus",
+    "triggerMode",
+    "triggerContext",
+    "behavior",
+    "authority",
+    "transitions"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri",
+      "const": "https://schemas.luh.tech/skill.schema.json",
+      "description": "Pin to canonical schema URL. Refused on mismatch by instance-validation CI."
+    },
+    "$id": {
+      "type": "string",
+      "pattern": "^urn:luhtech:skill:(org|dev-pipeline|comms|governance|infra|venture):[a-z][a-z0-9-]*:[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "URN form: urn:luhtech:skill:<category>:<skill-name>:<version>. Skill name is kebab-case, starts with lowercase letter."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "minLength": 3,
+      "maxLength": 64,
+      "description": "Short identifier matching folder name. Kebab-case. Must match the last path segment of $id (excluding version)."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 500,
+      "description": "Primary trigger string consumed by Claude's skill-routing layer. Combines what the skill does AND when to trigger. Per Anthropic skill-creator guidance: tend toward 'pushy' rather than passive to combat under-triggering."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semver. Bump rules: major = description/triggerContext/behavior/pairedRule/compatibility changes; minor = description text refinement, lifecycleStatus UP-promotion; patch = examples, word-tuning, typo fixes."
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "org",
+        "dev-pipeline",
+        "comms",
+        "governance",
+        "infra",
+        "venture"
+      ],
+      "description": "Domain category. org=cross-cutting holdings-level; dev-pipeline=code/deliverable/schema work; comms=cross-chat/channel; governance=rule/schema lifecycle; infra=credentials/deploy/ops; venture=per-venture specialization."
+    },
+    "lifecycleStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "working-model",
+        "formalized",
+        "deprecated"
+      ],
+      "description": "Maturity status. draft=authored, not in active use; working-model=loaded, fires on match; formalized=description optimized, evidence-backed; deprecated=superseded or retired."
+    },
+    "triggerMode": {
+      "type": "string",
+      "enum": [
+        "descriptive",
+        "pushy",
+        "eval-tuned"
+      ],
+      "description": "Description-string posture. descriptive=neutral statement of purpose; pushy=actively encourages triggering (Anthropic-recommended default to combat under-triggering); eval-tuned=optimized via run_loop.py against held-out test set."
+    },
+    "triggerContext": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["precondition", "exampleCues"],
+        "properties": {
+          "precondition": {
+            "type": "string",
+            "minLength": 10,
+            "description": "When the skill should fire — what state of the conversation triggers it."
+          },
+          "exampleCues": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" },
+            "description": "Example user phrases or conversational cues that should fire this skill."
+          }
+        }
+      },
+      "description": "Structured array of preconditions describing when the skill fires. Generator renders this into SKILL.md trigger section."
+    },
+    "behavior": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "directives"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 20,
+          "description": "One-paragraph summary of what the skill does when triggered."
+        },
+        "directives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["action", "rationale"],
+            "properties": {
+              "action": {
+                "type": "string",
+                "description": "What Claude must do."
+              },
+              "rationale": {
+                "type": "string",
+                "description": "Why — tied to memory rule, rule instance, or failure mode being prevented."
+              }
+            }
+          },
+          "description": "Ordered list of directives the skill enforces."
+        },
+        "antiPatterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["pattern", "instead"],
+            "properties": {
+              "pattern": { "type": "string", "description": "What Claude must NOT do." },
+              "instead": { "type": "string", "description": "What Claude does instead." }
+            }
+          },
+          "description": "Explicit negative patterns to avoid."
+        }
+      },
+      "description": "Structured body of skill behavior. Generator renders into SKILL.md instruction section."
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["author", "approver", "revertAuthority"],
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "Who authored this skill instance (free-form; matches deliverable + rule schema shape)."
+        },
+        "approver": {
+          "type": "string",
+          "description": "Who approved this skill instance (typically Erik L4)."
+        },
+        "revertAuthority": {
+          "type": "string",
+          "description": "Who can revert/deprecate this skill."
+        }
+      },
+      "description": "Governance authority for the skill object itself. Matches authority block shape from deliverable.schema.json and rule.schema.json."
+    },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to", "trigger"],
+        "properties": {
+          "from": {
+            "type": ["string", "null"],
+            "enum": ["draft", "working-model", "formalized", "deprecated", null]
+          },
+          "to": {
+            "type": "string",
+            "enum": ["draft", "working-model", "formalized", "deprecated"]
+          },
+          "trigger": {
+            "type": "string",
+            "description": "What event/evidence caused the transition."
+          },
+          "commitSha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{7,40}$",
+            "description": "Git commit SHA where the transition landed."
+          },
+          "prUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "evidenceClass": {
+            "type": "string",
+            "description": "Required on UP-promotions (to formalized). Cites the substrate that earned the promotion."
+          },
+          "transitionedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "if": {
+          "properties": {
+            "to": { "const": "formalized" }
+          }
+        },
+        "then": {
+          "required": ["evidenceClass"]
+        }
+      },
+      "description": "Audit trail of skill lifecycle transitions. UP-promotions to formalized require evidenceClass. Matches rule.schema.json transition shape."
+    },
+    "pairedRule": {
+      "type": "string",
+      "pattern": "^urn:luhtech:rule:[a-z0-9-]+:[a-z0-9-]+:[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Optional reference to a paired rule instance by $id. Lenient pairing — skills may exist without rule pairing. When populated, generator pulls rule cross-reference content into SKILL.md."
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requiredTools": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["claude-chat", "claude-code", "cowork", "api", "any"]
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "description": "Optional. Required tools, environment constraints, dependencies."
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scenario", "expectedBehavior"],
+        "properties": {
+          "scenario": { "type": "string", "description": "User prompt or conversational situation." },
+          "expectedBehavior": { "type": "string", "description": "What Claude should do." },
+          "antiExample": { "type": "string", "description": "Optional: what Claude should NOT do." }
+        }
+      },
+      "description": "Illustrative trigger scenarios. Renders into SKILL.md examples section."
+    },
+    "boundaryConditions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicit cases where the skill should NOT fire — out-of-scope conditions."
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "location"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["memory-rule", "rule-instance", "deliverable", "closure-doc", "external-doc", "script", "asset"]
+          },
+          "location": {
+            "type": "string",
+            "description": "Identifier, path, URI, or memory rule number."
+          },
+          "purpose": { "type": "string" }
+        }
+      },
+      "description": "Cross-references to memory rules, paired rule instances, supporting docs, bundled scripts, or assets."
+    },
+    "generationMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "generatorVersion": { "type": "string" },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "sourceJsonSha": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      },
+      "description": "Populated by luhtech-schema skill generate. Records what generated the paired SKILL.md and from which JSON SHA. CI uses sourceJsonSha to detect drift."
+    }
+  }
+}

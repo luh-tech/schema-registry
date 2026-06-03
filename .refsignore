@@ -11,3 +11,6 @@ crm/**
 # Instance files — conform to schemas but are not themselves schemas.
 # Indexed separately if/when an instance registry is built.
 _instances/**
+
+# Skill instances — JSON + generated MD, not schemas
+skills/_instances/**
