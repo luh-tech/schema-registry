@@ -3,9 +3,16 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {
-    "version": "1.24.0",
-    "lastUpdated": "2026-06-03T01:10:46Z",
+    "version": "1.25.0",
+    "lastUpdated": "2026-06-03T16:48:40Z",
     "changelog": [
+      {
+        "version": "1.25.0",
+        "date": "2026-06-03",
+        "changes": [
+          "Updated: infrastructure-catalog v1.1.0 -> v1.2.0"
+        ]
+      },
       {
         "version": "1.24.0",
         "date": "2026-06-02",
@@ -302,7 +309,7 @@
     "infrastructure-catalog": {
       "id": "https://schemas.luh.tech/infrastructure-catalog.schema.json",
       "file": "infrastructure-catalog.schema.json",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Standardized infrastructure documentation for LuhTech ventures."
     },
     "interfaces": {
@@ -531,5 +538,5 @@
     }
   },
   "title": "LuhTech Schema Registry v1.12.0",
-  "version": "1.24.0"
+  "version": "1.25.0"
 }
