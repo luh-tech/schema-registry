@@ -1,0 +1,112 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-03-sr-infrastructure-catalog-vpc-peerings",
+  "version": "1.0.0",
+  "title": "Item B — Extend infrastructure-catalog.schema.json with vpcPeerings[] under catalog",
+  "description": "Additive backwards-compatible extension to luh-tech/schema-registry/schemas/infrastructure-catalog.schema.json adding vpcPeerings[] as a new optional property at the catalog level. Schema version bumps 1.1.0 -> 1.2.0 per minor-bump-for-additive convention exercised in PR #102 (terraform-state enum extension). Resolves FU-SR-CATALOG-VPC-PEERING-FIELD-1 filed in SR register 2026-06-02 via D-EB-FU-FILE (PR #103). Substrate driver: live VPC peering 768a1eb6 (staging <-> production VPCs) is flagged in operator memory for elimination; current schema has no field to mark scheduled for elimination, track environment coupling, or detect drift when removed. Shape per chat-side sandbox decisions 2026-06-03: id pattern matches existing convention (vpc-peering-[a-z][a-z0-9-]*), envA/envB carry env-id pattern for FK validation, region required (DO peerings are region-scoped), doId separate field captures upstream DO resource id (mirrors server/database pattern). Optional createdAt + notes fields mirror existing environment.notes pattern. eliminationTargetDate skipped — trackedByFollowUp carries that schedule via the linked FU. Unblocks EB Cat 3b drift-vpcpeering tool (deferred from Cat 3 partial d-2026-06-03-eb-agent-cat3-coverage-drift-tools-partial OUT-1).",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/infrastructure-catalog-vpc-peerings-2026-06-03",
+    "scopeFiles": [
+      "schemas/infrastructure-catalog.schema.json",
+      "schemas/_instances/deliverables/d-2026-06-03-sr-infrastructure-catalog-vpc-peerings.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Schema extension on schemas/infrastructure-catalog.schema.json. Five edits applied atomically: (1) version field bumped 1.1.0 -> 1.2.0; (2) new property vpcPeerings added to catalog.properties as type: array with item schema below; (3) catalog.additionalProperties: false continues to enforce (no other property added); (4) vpcPeerings NOT added to catalog.required — optional field; (5) audit notes updated. Item schema: object, additionalProperties: false, required [id, envA, envB, region, status], properties: id (pattern ^vpc-peering-[a-z][a-z0-9-]*$), doId (string, upstream DO resource id), envA (pattern ^env-[a-z][a-z0-9-]*$, FK to environments[].id), envB (pattern ^env-[a-z][a-z0-9-]*$, FK to environments[].id), region (string, cloud region e.g. sfo3), status (enum: active, pending-elimination, eliminated), trackedByFollowUp (pattern ^FU-[A-Z][A-Z0-9-]+-[0-9]+$), createdAt (format: date), notes (string). Resolves FU-SR-CATALOG-VPC-PEERING-FIELD-1 (filed-and-closed in same PR per PR #102 precedent).",
+      "acceptanceCriteria": [
+        "schemas/infrastructure-catalog.schema.json version field is 1.2.0",
+        "schemas/infrastructure-catalog.schema.json properties.catalog.properties.vpcPeerings exists with type=array",
+        "vpcPeerings.items requires [id, envA, envB, region, status]",
+        "vpcPeerings.items.properties.id has pattern ^vpc-peering-[a-z][a-z0-9-]*$",
+        "vpcPeerings.items.properties.envA and envB have pattern ^env-[a-z][a-z0-9-]*$",
+        "vpcPeerings.items.properties.status has enum [active, pending-elimination, eliminated]",
+        "vpcPeerings.items.properties includes optional: doId, trackedByFollowUp, createdAt, notes",
+        "vpcPeerings.items.additionalProperties: false",
+        "Schema validates as draft-07 (ajv-cli@5.0.0 with --strict=false; meta-schema-check.yml passes)",
+        "catalog.required remains unchanged (vpcPeerings is optional)",
+        "catalog.additionalProperties remains false",
+        "Existing schema fields and structure preserved exactly outside the additions above",
+        "Empty existing instances (if any) continue to validate against bumped schema (backwards-compatible verified)"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "FU-SR-CATALOG-VPC-PEERING-FIELD-1 filed-and-closed in same PR per PR #102 precedent (the canonical pattern for schema extensions that resolve their own tracking FU). Edit to .roadmap/follow-up-register.json: locate FU-SR-CATALOG-VPC-PEERING-FIELD-1 at its current index, transition status open -> closed, add resolution block per follow-up-register.schema canonical shape (closedDate YYYY-MM-DD, closedDuring with deliverable id, summary documenting the resolution). meta.totalCount unchanged at 15. lastUpdated bumped.",
+      "acceptanceCriteria": [
+        "FU-SR-CATALOG-VPC-PEERING-FIELD-1 status transitions from open to closed",
+        "resolution.closedDate populated with 2026-06-03",
+        "resolution.closedDuring references d-2026-06-03-sr-infrastructure-catalog-vpc-peerings",
+        "resolution.summary documents the resolution path (schema extension landed, vpcPeerings shape now available)",
+        "All other FU fields preserved exactly",
+        "followUps array length remains 15 (no add/remove)",
+        "meta.totalCount remains 15",
+        "lastUpdated bumped to 2026-06-03 ISO 8601 timestamp",
+        "indexes regenerated (byStatus.closed grows by 1, byStatus.open shrinks by 1)",
+        "Full ajv validation against follow-up-register.schema.json passes with canonical --strict=false -c ajv-formats invocation"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Deliverable instance lifecycle — spec lands at S4-authored, transitions through S5-in-progress -> S6-staged -> S7-merged -> S8-closed across the dispatch.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "lifecycleState populated with S8-closed post-merge",
+        "mergeCommitSha + prUrl populated",
+        "transitions captures full lifecycle"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Post-merge cross-chat notification. SR-chat posts canvas to #luhtech-agents-comms naming the schema extension live + EB Cat 3b unblock + Item A status (still pending).",
+      "acceptanceCriteria": [
+        "Canvas posted to channel C0B7EPFCA85 post-merge",
+        "Canvas content includes merge SHA, PR URL, schema version (1.2.0), confirmation FU-SR-CATALOG-VPC-PEERING-FIELD-1 closed, EB Cat 3b drift-vpcpeering unblocked",
+        "Slack channel broadcasts the PR open and merge events per slack-broadcast.yml"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Schema sandbox-validated as draft-07 (Python jsonschema chat-side; ajv canonical CI-side)",
+      "Item shape pre-validated against three test instances (valid, missing-required, invalid-id-pattern) chat-side",
+      "ajv validate of infrastructure-catalog.schema.json passes meta-schema check with canonical --strict=false -c ajv-formats invocation",
+      "ajv validate of this deliverable spec against deliverable.schema.json v1.1.0 passes",
+      "ajv validate of follow-up-register.json after OUT-2 edits passes against follow-up-register.schema.json with canonical invocation",
+      "instance-validation.yml passes",
+      "refs-check.yml passes",
+      "meta-schema-check.yml passes (catches *.schema*.json changes — this PR touches the schema, expected to validate)",
+      "pr-mergeability-check.yml passes",
+      "roadmap-sync.yml passes on the PR (follow-up-register.json change)",
+      "amendment-scope-overlap-check.yml passes",
+      "slack-broadcast.yml fires on PR open and merge"
+    ],
+    "postMerge": [
+      "schema-registry main shows infrastructure-catalog.schema.json at version 1.2.0 with vpcPeerings property",
+      "main shows .roadmap/follow-up-register.json with FU-SR-CATALOG-VPC-PEERING-FIELD-1 closed",
+      "Full ajv validation passes on main",
+      "Slack canvas posted to #luhtech-agents-comms acknowledging schema extension live + EB Cat 3b unblock",
+      "EB Cat 3b drift-vpcpeering tool unblocked (EB-side; tracked separately)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-03",
+      "trigger": "Spec authored after substrate-read on SR main f4ab281 (post-Cat 3 instance landing PR #105). Three structural decisions confirmed: vpcPeerings lives at catalog level (sibling to environments) not per-environment — VPC peering is a relationship between two envs, not a property of either; canonical id pattern vpc-peering-[a-z][a-z0-9-]* matches existing schema convention; envA/envB carry env-id pattern for ajv-level FK validation. Region required; doId captures upstream DO id; createdAt + notes optional mirroring environment.notes shape; eliminationTargetDate skipped (FU carries schedule). Per Erik approval 2026-06-03 'this all looks correct'."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
+  ],
+  "notes": "Second cross-chat-driven SR work after D-EB-FU-FILE (PR #103) and D-SR-CAT3-INSTANCE (PR #105). Resolves FU-SR-CATALOG-VPC-PEERING-FIELD-1 (filed yesterday in SR register from EB cross-chat handoff canvas F0B7U37MSDC + work brief F0B7UB6BGR4). Schema version bump pattern: minor for additive backwards-compatible per PR #102 precedent (1.0.0 -> 1.1.0 for terraform-state enum, now 1.1.0 -> 1.2.0 for vpcPeerings). After this merges, Item A livenessProbe is the only remaining canvas F0B7UB6BGR4 deliverable; that resource-access.schema.json edit follows separately. After both Item A + B merge, EB Cat 3b unblocks (final 2 eb-agent tools, surface 29 -> 31). Filed-and-closed FU pattern from PR #102 is the canonical shape — the schema extension and its tracking FU resolve in the same atomic PR. Three downstream consumers: EB d-2026-06-XX-eb-catalog-vpc-peerings-instance (EB populates 768a1eb6 as pending-elimination linking staging+prod env ids), EB Cat 3b drift-vpcpeering tool, EB future agent tooling that checks for unexpected peerings."
+}
