@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "chore/rule-l4-override-promotion-2026-06-02",
@@ -78,8 +78,37 @@
       "to": "S4-authored",
       "date": "2026-06-02",
       "trigger": "Spec authored against verified D-2 merge state. D-2 (merge SHA 8240f6a4e1009f0db83d18218c3c83aad16a3a15, PR #98) extended .github/workflows/pr-mergeability-check.yml to enforce substrate-artifact-link requirement on override scenarios. Workflow live on main HEAD 56e21e4 with 107 lines confirmed. RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 promotion via canonical mechanism: same 4-edit shape exercised in D-COMMS-2 (PR #92) and three prior FU-block promotions. Sandbox pre-validation passed: promoted rule instance validates against rule.schema.json v1.2.0 with external $refs neutered."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-02",
+      "trigger": "PROCEED STEP 2 issued; four-edit canonical promotion applied"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-02",
+      "trigger": "Two commits authored; PR opened; CI green"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-02",
+      "commitSha": "9fea3e32f545426b0803a31cb8bca24dcf02528b",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/100",
+      "trigger": "Squash merge to main"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-02",
+      "commitSha": "9fea3e32f545426b0803a31cb8bca24dcf02528b",
+      "trigger": "Post-merge verification: RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 at version 1.1.0 with tierState.activeTier=automated; rules-at-automated count = 5; L4-OVERRIDE-SUBSTRATE-ARTIFACT arc complete"
     }
   ],
   "relatedFollowUps": [],
-  "notes": "Third and final deliverable in the L4-OVERRIDE-SUBSTRATE-ARTIFACT arc. D-1 (L9 reconcile) merged in PR #96. D-2 (workflow extension) merged in PR #98. This deliverable promotes the rule via canonical mechanism. Pattern complete: L9-reconcile + workflow-extension + rule-promotion is the canonical 3-deliverable shape for any future rule promotion arc. Rules-at-automated count grows 4 -> 5. The L4-OVERRIDE incident pattern from PR #269 (legitimate L4 conscious override of UNSTABLE CI without contemporaneous substrate artifact) is now mechanically prevented — override label without substrate-artifact-link in PR comments fails the pr-mergeability-check workflow. Pure data fix on a single rule instance — no source schema edits, no CI workflow authoring, no code changes. The CI substrate (extended pr-mergeability-check.yml) already exists on main from D-2; this deliverable just records that the rule's automated tier is now operationally backed and flips the activeTier accordingly. Cross-chat-relay origin: EB-agent contributed the rule via FU filing on 2026-06-01 alignment prompt; SR chat schematized and now promotes. Attribution preserved in rule instance authority.author block."
+  "notes": "Third and final deliverable in the L4-OVERRIDE-SUBSTRATE-ARTIFACT arc. D-1 (L9 reconcile) merged in PR #96. D-2 (workflow extension) merged in PR #98. This deliverable promotes the rule via canonical mechanism. Pattern complete: L9-reconcile + workflow-extension + rule-promotion is the canonical 3-deliverable shape for any future rule promotion arc. Rules-at-automated count grows 4 -> 5. The L4-OVERRIDE incident pattern from PR #269 (legitimate L4 conscious override of UNSTABLE CI without contemporaneous substrate artifact) is now mechanically prevented — override label without substrate-artifact-link in PR comments fails the pr-mergeability-check workflow. Pure data fix on a single rule instance — no source schema edits, no CI workflow authoring, no code changes. The CI substrate (extended pr-mergeability-check.yml) already exists on main from D-2; this deliverable just records that the rule's automated tier is now operationally backed and flips the activeTier accordingly. Cross-chat-relay origin: EB-agent contributed the rule via FU filing on 2026-06-01 alignment prompt; SR chat schematized and now promotes. Attribution preserved in rule instance authority.author block.",
+  "mergeCommitSha": "9fea3e32f545426b0803a31cb8bca24dcf02528b",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/100"
 }
