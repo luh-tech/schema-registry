@@ -1,0 +1,80 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-03-sr-fu-batch-file-three-meta-fus",
+  "version": "1.0.0",
+  "title": "SR FU register batch — file 3 meta-FUs (doctrine, EB-agent-access, TRUTH-DELIVERED governance)",
+  "description": "Files three meta-FUs surfaced as chat-memory-only candidates during the 2026-06-03 session and prior, captured here as canonical register entries per memory rule #20 (substrate-cleanup-as-you-go). All three are observation-class P2 or P3 entries — substrate-rich enough to file, not ready for execution. Filed-only deliverable; no closures, no schema changes, no workflow changes. Sets the substrate for separate execution deliverables to address each FU as cycles allow.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/sr-fu-batch-file-three-meta-fus-2026-06-03",
+    "scopeFiles": [
+      ".roadmap/follow-up-register.json",
+      "schemas/_instances/deliverables/d-2026-06-03-sr-fu-batch-file-three-meta-fus.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Three new FU entries appended to .roadmap/follow-up-register.json. Net: followUps 18 -> 21, meta.totalCount 18 -> 21. (1) FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1 (P2 open) — formalize F0B85LNSTC4 doctrine as working-model rule per rule.schema.json v1.2.0; three-times-proven this session via Cat 3 partial reshape arc, Cat 3b clean iteration, eb-infra-hygiene. (2) FU-SR-EB-AGENT-MCP-BROWSER-CHAT-ACCESS-1 (P2 open) — design path for SR-chat browser to call EB agent tools via MCP, or formalize cross-chat substrate-query pattern. (3) FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1 (P3 open) — consider canonical mechanism (rule or schema constraint) requiring TRUTH-DELIVERED at S8 closure for cross-repo deliverables. All three carry canonical FU schema: id pattern, title, priority, status=open, opened=2026-06-03, openedDuring (deliverable id), scope (substrate evidence), blockedBy=[], blocks=[], trackingRepo=luh-tech/schema-registry. lastUpdated bumped. Indexes regenerated.",
+      "acceptanceCriteria": [
+        "followUps array length: 18 -> 21",
+        "meta.totalCount: 18 -> 21",
+        "FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1 present, status=open, priority=P2",
+        "FU-SR-EB-AGENT-MCP-BROWSER-CHAT-ACCESS-1 present, status=open, priority=P2",
+        "FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1 present, status=open, priority=P3",
+        "lastUpdated bumped to 2026-06-03 ISO 8601 timestamp",
+        "indexes.byStatus.open length: 10 -> 13",
+        "indexes.byPriority.P2 length: 9 (8 pre-existing + 1 closed visible) -> 12 (verified by count)",
+        "All 21 followUps validate against follow-up-register.schema.json with canonical -r luhtech-enums.schema.json --strict=false -c ajv-formats invocation"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Deliverable instance lifecycle — spec lands at S4-authored, transitions through S5-in-progress -> S6-staged -> S7-merged -> S8-closed across the dispatch. Optional: TRUTH-DELIVERED at S8 (this is an SR-internal deliverable; TRUTH-DELIVERED pattern proven for cross-repo work but SR-internal scope is the question this deliverable's third FU explicitly asks).",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "lifecycleState populated with S8-closed post-merge",
+        "mergeCommitSha + prUrl populated",
+        "transitions captures full lifecycle"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Patched follow-up-register.json sandbox-validated chat-side via Python jsonschema",
+      "ajv validate of follow-up-register.json after edits passes with canonical -r luhtech-enums.schema.json --strict=false -c ajv-formats invocation",
+      "ajv validate of this deliverable spec against deliverable.schema.json v1.1.0 passes",
+      "instance-validation.yml passes",
+      "refs-check.yml passes (no schema file changes)",
+      "meta-schema-check.yml passes (no schema file changes)",
+      "pr-mergeability-check.yml passes",
+      "Validate Roadmap Files workflow passes on the PR",
+      "amendment-scope-overlap-check.yml passes"
+    ],
+    "postMerge": [
+      "schema-registry main shows .roadmap/follow-up-register.json with 21 followUps",
+      "All three new FUs queryable via eb-agent:query-followups",
+      "Full ajv validation passes on main"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-03",
+      "trigger": "Spec authored after substrate-read on SR main 1f8a81d (post-D-SR-EB-INFRA-HYGIENE-INSTANCE PR #114). FU register actual state read via uploaded follow-up-register.json: 18 followUps, 10 open (7 P2 + 3 P3), 8 closed, lastUpdated 2026-06-03T00:00:00Z. Three new FUs chat-composed against actual register state. Filed-only scope per Erik direction 2026-06-03 'capture the three unfiled FU and address the three highlighted ones indicated' — this deliverable files the three unfiled; separate deliverable addresses the three highlighted (FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1, FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1, FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1)."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1",
+    "FU-SR-EB-AGENT-MCP-BROWSER-CHAT-ACCESS-1",
+    "FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1"
+  ],
+  "notes": "Filed-only deliverable per memory #20 substrate-cleanup-as-you-go. Three meta-FUs surfaced as chat-memory-only candidates across the 2026-06-03 session (Cat 3 reshape -> Cat 3b clean -> eb-infra-hygiene three-times-proven F0B85LNSTC4 doctrine; EB agent surface growth 22 -> 31 without SR-chat browser access; TRUTH-DELIVERED authoring twice-proven without canonical mechanism). All three become first-class register entries here. Separate execution deliverables address each as cycles allow — these FUs explicitly do NOT execute their own scope; they are governance entries. Pairs with separate dispatch (next) addressing 3 ripe P2 FUs: FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1, FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1, FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1. Sequencing: PR A (this) lands first to clean substrate; PR B (next) consumes register state with 21 FUs as its starting point."
+}
