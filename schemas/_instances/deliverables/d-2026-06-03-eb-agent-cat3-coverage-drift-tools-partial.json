@@ -1,0 +1,111 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-03-eb-agent-cat3-coverage-drift-tools-partial",
+  "version": "1.0.0",
+  "title": "Cat 3 partial — eb-agent coverage + drift + dangling tools (7 SR-independent)",
+  "description": "First eb-agent expansion deliverable to land as a schema-bound instance in luh-tech/schema-registry per cross-repo execution shape established via canvases F0B83PF9LD7 (EB request) + F0B7VHT6KAP (SR ACK). EB-chat authored spec body; SR-chat lands the deliverable instance; EB terminal executes 7 SR-independent eb-agent tools against the anchored spec; SR transitions the instance through S5/S6/S7/S8 on EB PR merge. Cat 1 (PR #285) and Cat 2 (PR #287) shipped without schema-registry instances; this deliverable initiates the corrected pattern. Two further Cat 3 tools (drift-liveness, drift-vpcpeering) deferred to Cat 3b after SR Items A + B from canvas F0B7UB6BGR4 merge. Tool surface grows 22 -> 29 on OUT-1 merge; Cat 3b will grow 29 -> 31.",
+  "authority": {
+    "author": "Claude (EB-chat), L1; reshaped to canonical schema by Claude (SR-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/eb-agent-cat3-coverage-drift-2026-06-03",
+    "scopeFiles": [
+      "agent/eb_agent/tools/coverage_infrastructure.py",
+      "agent/eb_agent/tools/coverage_credentials.py",
+      "agent/eb_agent/tools/coverage_workflows.py",
+      "agent/eb_agent/tools/drift_rotation.py",
+      "agent/eb_agent/tools/dangling_credential_refs.py",
+      "agent/eb_agent/tools/dangling_resource_refs.py",
+      "agent/eb_agent/tools/coverage_deliverable_fks.py",
+      "agent/eb_agent/tests/test_coverage_infrastructure.py",
+      "agent/eb_agent/tests/test_coverage_credentials.py",
+      "agent/eb_agent/tests/test_coverage_workflows.py",
+      "agent/eb_agent/tests/test_drift_rotation.py",
+      "agent/eb_agent/tests/test_dangling_credential_refs.py",
+      "agent/eb_agent/tests/test_dangling_resource_refs.py",
+      "agent/eb_agent/tests/test_coverage_deliverable_fks.py",
+      "agent/eb_agent/cli.py",
+      "agent/eb_agent/mcp_server.py",
+      "agent/AGENTS.md",
+      ".roadmap/follow-up-register.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Seven new eb-agent tools + unit tests + CLI/MCP registration + AGENTS.md update on luh-tech/Ectropy-Business. Single PR off feat/eb-agent-cat3-coverage-drift-2026-06-03 branch. Tool-by-tool: (1) coverage-infrastructure — set-diff infrastructure-catalog.json buckets/servers/environments vs resource-access.json grants and host postures; two-sided gap surface. Est 150 LoC. (2) coverage-credentials — set-diff envRoute role tokens in resource-access.json vs credentialStore items by role; surfaces dangling tokens and orphaned items. Est 120 LoC. (3) coverage-workflows — cross-source workflow-registry.json vs filesystem .github/workflows/*.yml; surfaces registered-but-missing and present-but-unregistered workflows. First Cat 3 tool with filesystem dependency. Est 140 LoC. (4) drift-rotation — time math on credentialItem.rotation.lastRotated vs rotation.intervalDays; surfaces credentials past rotation policy. Est 80 LoC. (5) dangling-credentialRefs — FK existence check accessGrants[].credentialRef vs credentialStore[].itemId. Est 70 LoC. (6) dangling-resourceRefs — FK existence check accessGrants[].resourceRef vs infrastructure-catalog.json. Est 80 LoC. (7) coverage-deliverable-fks — cross-source architecture.json services[].deliverableId vs feature/deliverable index in roadmap.json. Est 150 LoC. Total impl ~790 LoC, total tests ~250 LoC.",
+      "acceptanceCriteria": [
+        "All 7 tools loadable via eb-agent CLI: eb-agent <tool-name> --help returns 0 with usage text",
+        "All 7 tools registered in MCP server surface; tool_search returns each by name",
+        "Each tool has at minimum one passing unit test exercising the happy path",
+        "Each tool has at minimum one passing unit test exercising the gap-detected path (returns non-empty gap list)",
+        "eb-agent surface count grows 22 -> 29 (verified by tool_search registry inspection)",
+        "AGENTS.md updated to document Cat 3 tools with one-line description each",
+        "pytest passes for all new tests with zero failures, zero errors",
+        "PR CI green on Roadmap CI workflow (pre-existing baseline drift acknowledged separately per RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1)",
+        "No modifications outside scopeFiles list"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Tracking FU filed in luh-tech/Ectropy-Business .roadmap/follow-up-register.json — FU-EB-AGENT-CAT3-COVERAGE-DRIFT-TOOLS-1 at priority P1, status open, trackingRepo luh-tech/Ectropy-Business. Title: 'eb-agent Cat 3 partial — coverage + drift + dangling tools (7 SR-independent)'. Closes when OUT-1 PR merges. Cat 3b creates separate FU after SR Items A + B merge. Filed via separate micro-PR or folded into OUT-1 PR at EB terminal preference; sequencing not blocking SR-side OUT-3.",
+      "acceptanceCriteria": [
+        "FU appears in eb-agent:query-followups with priority=P1, status=open",
+        "FU id matches FU-EB-AGENT-CAT3-COVERAGE-DRIFT-TOOLS-1 exactly",
+        "FU register meta.totalCount increments from 241 to 242 (current EB register state per 2026-06-02 22:00 UTC)",
+        "FU register passes ajv validation against follow-up-register.schema.json with canonical --strict=false -c ajv-formats invocation"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Deliverable instance landed at schemas/_instances/deliverables/d-2026-06-03-eb-agent-cat3-coverage-drift-tools-partial.json on luh-tech/schema-registry. Single-file micro-PR. Validates against deliverable.schema.json v1.1.0 with canonical ajv invocation. Transitions tracked: S4-authored -> S5-in-progress -> S6-staged -> S7-merged -> S8-closed. SR transitions S4 -> S6 on this PR merge; S7 on EB OUT-1 PR merge with EB merge SHA captured in transitions array; optionally TRUTH-DELIVERED instance authored at S8 per truth-delivered.schema.json convention.",
+      "acceptanceCriteria": [
+        "Instance lands at canonical path schemas/_instances/deliverables/d-2026-06-03-eb-agent-cat3-coverage-drift-tools-partial.json",
+        "ajv validates with --strict=false -c ajv-formats; zero errors",
+        "instance-validation.yml CI workflow passes on PR",
+        "Squash-merged to schema-registry main per canonical merge pattern",
+        "Slack channel C0B7EPFCA85 broadcasts the PR open and merge events per slack-broadcast.yml workflow",
+        "Post-merge: SR-chat posts ack canvas to channel with merge SHA + PR URL + field-mapping decisions documented"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Spec body sandbox-validated against deliverable.schema.json v1.1.0 by SR-chat after canonical-schema reshape (chat-side, 2026-06-03)",
+      "ajv validate of this instance against deliverable.schema.json with -r for forbidden-audit-paint-names allOf $ref passes; canonical --strict=false -c ajv-formats invocation; zero errors",
+      "Branch pattern matches schema regex ^(feat|fix|chore|cleanup|docs|test|infra|spike)/[a-z0-9-]+-[0-9]{4}-[0-9]{2}-[0-9]{2}$ — feat/eb-agent-cat3-coverage-drift-2026-06-03 verified",
+      "scopeFiles list disjoint from any in-flight SR deliverable (amendment-scope-overlap-check.yml passes)",
+      "instance-validation.yml passes",
+      "refs-check.yml passes (no schemas/ source schema changes; only instance namespace)",
+      "meta-schema-check.yml passes (no *.schema*.json file changes)",
+      "pr-mergeability-check.yml passes (no failing checks; no override-unstable-merge label scenario)",
+      "slack-broadcast.yml fires on PR open and merge"
+    ],
+    "postMerge": [
+      "schema-registry main contains the deliverable instance at canonical path",
+      "Slack channel #luhtech-agents-comms broadcasts the merge per RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 automated tier",
+      "SR-chat posts ack canvas to channel C0B7EPFCA85 with merge SHA + PR URL + field-mapping decisions for EB-chat reference",
+      "EB terminal executes OUT-1 + OUT-2 on luh-tech/Ectropy-Business against the anchored spec",
+      "On EB OUT-1 merge: SR-chat re-opens deliverable instance via micro-PR to transition S6-staged -> S7-merged -> S8-closed with EB merge SHA captured in transitions array",
+      "Optional: TRUTH-DELIVERED instance authored at schemas/_instances/truth-delivered/ at S8 closure"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-03",
+      "trigger": "Spec body authored by EB-chat 2026-06-03 morning; handed via direct file attachment with SHA256 2867b62a35246b420b156e12e82dd2c13a7739246f87f256d63945a931ee2cc5. SR-chat reshape applied to align with canonical deliverable.schema.json v1.1.0: deliverableId -> id, added required version + description, scope.scopeNote folded into description, per-output acceptance.criteria flattened to acceptanceCriteria, per-output validation folded into top-level validation, per-output toolsAdded + estLoC + repo + expectedPR folded into description text, context + downstream + retention folded into description and notes, branch suffixed with date to match canonical pattern regex. Zero information loss verified field-by-field. Sandbox ajv validation PASS post-reshape."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-AGENT-CAT3-COVERAGE-DRIFT-TOOLS-1",
+    "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
+    "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
+  ],
+  "notes": "First eb-agent expansion deliverable landing as schema-bound instance in luh-tech/schema-registry. Cat 1 (PR #285) and Cat 2 (PR #287) shipped without schema-registry instances; this deliverable initiates the corrected pattern. Cat 3b successor lands two further tools (drift-liveness, drift-vpcpeering, surface 29 -> 31) after SR Items A + B from canvas F0B7UB6BGR4 merge; successor follows same cross-repo execution shape — new tracking FU + new deliverable instance + EB execution PR + atomic closure. Coordination canvases: F0B83PF9LD7 (EB request), F0B7VHT6KAP (SR ACK). Source EB spec body SHA256: 2867b62a35246b420b156e12e82dd2c13a7739246f87f256d63945a931ee2cc5; reshape provenance recorded in transitions[0].trigger. Retention: permanent schema-bound governance record per memory rule no-md-terminus. Branch disposition: delete on merge per canonical branching flow. Spike branches (if any open mid-flight) never merged; deleted at terminal per RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1."
+}
