@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "$id": "https://schemas.luh.tech/infrastructure-catalog.schema.json",
   "title": "Infrastructure Catalog",
   "description": "Standardized infrastructure documentation for LuhTech ventures. Provides service registry, environment configuration, secrets management, workflow documentation, and deployment specifications. Derived from Ectropy production infrastructure (202KB, v2.12.0). Updated v1.1.0: Added portfolioWorkflowsRef for cross-repo workflow discovery.",
@@ -118,6 +118,66 @@
           "description": "Third-party service integrations",
           "items": {
             "$ref": "#/definitions/externalService"
+          }
+        },
+        "vpcPeerings": {
+          "type": "array",
+          "description": "VPC peering connections between environments. Each entry captures a cross-environment network link with status tracking for elimination workflows. Additive in v1.2.0.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "envA",
+              "envB",
+              "region",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^vpc-peering-[a-z][a-z0-9-]*$",
+                "description": "Canonical LuhTech peering id"
+              },
+              "doId": {
+                "type": "string",
+                "description": "DigitalOcean peering resource id (upstream)"
+              },
+              "envA": {
+                "type": "string",
+                "pattern": "^env-[a-z][a-z0-9-]*$",
+                "description": "FK to environments[].id"
+              },
+              "envB": {
+                "type": "string",
+                "pattern": "^env-[a-z][a-z0-9-]*$",
+                "description": "FK to environments[].id"
+              },
+              "region": {
+                "type": "string",
+                "description": "Cloud region (e.g. sfo3, nyc3)"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "pending-elimination",
+                  "eliminated"
+                ]
+              },
+              "trackedByFollowUp": {
+                "type": "string",
+                "pattern": "^FU-[A-Z][A-Z0-9-]+-[0-9]+$",
+                "description": "FU id tracking elimination or maintenance work"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date"
+              },
+              "notes": {
+                "type": "string"
+              }
+            }
           }
         }
       }
@@ -244,7 +304,7 @@
                   "ifc-extraction",
                   "terraform-state"
                 ],
-                "description": "Service or workload this bucket serves. Extensible — new purposes added as new services with storage needs arrive (BIM artifacts, voxel data, decision archives, SEPPA tool outputs, etc.). Schema enum gates valid values; CI lint MAY enforce uniqueness-per-purpose-per-env."
+                "description": "Service or workload this bucket serves. Extensible \u2014 new purposes added as new services with storage needs arrive (BIM artifacts, voxel data, decision archives, SEPPA tool outputs, etc.). Schema enum gates valid values; CI lint MAY enforce uniqueness-per-purpose-per-env."
               },
               "provider": {
                 "type": "string",

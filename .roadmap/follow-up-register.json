@@ -4,7 +4,7 @@
   "schemaVersion": "1.0.0",
   "version": "1.0.0",
   "ventureId": "schema-registry",
-  "lastUpdated": "2026-06-02T00:00:00Z",
+  "lastUpdated": "2026-06-03T00:00:00Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
     "totalCount": 15
@@ -221,13 +221,18 @@
       "id": "FU-SR-CATALOG-VPC-PEERING-FIELD-1",
       "title": "Add vpcPeerings[] top-level array to infrastructure-catalog.schema.json",
       "priority": "P1",
-      "status": "open",
+      "status": "closed",
       "opened": "2026-06-02",
       "openedDuring": "EB cross-chat handoff canvas F0B7U37MSDC (2026-06-02 18:29 PDT) — GAP-EXTEND P1 surfaced from d-2026-06-02-prod-spaces-credentials-graph audit",
       "scope": "Additive backwards-compatible extension adding vpcPeerings[] top-level array to infrastructure-catalog.schema.json. Each entry: id (string, e.g. 768a1eb6), envA (env-id ref), envB (env-id ref), status (enum: active, pending-elimination, eliminated), trackedByFollowUp (FU id). Substrate evidence: live peering 768a1eb6 (staging <-> production VPCs) flagged in operator memory for elimination; no canonical way to mark scheduled for elimination, track environment coupling, or detect drift on removal. Proposed shape illustrative; SR refines as canonical authority on infrastructure-catalog evolution.",
       "blockedBy": [],
       "blocks": [],
-      "trackingRepo": "luh-tech/schema-registry"
+      "trackingRepo": "luh-tech/schema-registry",
+      "resolution": {
+        "closedDate": "2026-06-03",
+        "closedDuring": "d-2026-06-03-sr-infrastructure-catalog-vpc-peerings",
+        "summary": "Schema extension landed: vpcPeerings[] property added to catalog under schemas/infrastructure-catalog.schema.json at version 1.2.0 (minor-bump-for-additive per PR #102 precedent). Item shape required [id, envA, envB, region, status]; optional [doId, trackedByFollowUp, createdAt, notes]. id pattern ^vpc-peering-[a-z][a-z0-9-]*$ matches existing schema convention; envA/envB carry env-id pattern for FK validation. Filed-and-closed in same PR per PR #102 precedent."
+      }
     }
   ],
   "indexes": {
@@ -240,8 +245,7 @@
         "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1",
         "FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1",
         "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1",
-        "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
-        "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
+        "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1"
       ],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
@@ -249,7 +253,8 @@
         "FU-CATALOG-DAAS-INVESTIGATE-1",
         "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
         "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1",
-        "FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1"
+        "FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1",
+        "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
       ]
     },
     "byPriority": {
