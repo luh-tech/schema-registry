@@ -4,10 +4,10 @@
   "schemaVersion": "1.0.0",
   "version": "1.0.0",
   "ventureId": "schema-registry",
-  "lastUpdated": "2026-06-03T00:00:00Z",
+  "lastUpdated": "2026-06-03T22:30:00Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
-    "totalCount": 18
+    "totalCount": 21
   },
   "followUps": [
     {
@@ -274,6 +274,42 @@
       "blockedBy": [],
       "blocks": [],
       "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1",
+      "title": "Formalize F0B85LNSTC4 canonical-schema authoring doctrine as working-model rule instance per rule.schema.json v1.2.0",
+      "priority": "P2",
+      "status": "open",
+      "opened": "2026-06-03",
+      "openedDuring": "post-Cat-3-arc + eb-infra-hygiene session 2026-06-03 (three iterations of cross-repo execution shape validated)",
+      "scope": "F0B85LNSTC4 doctrine (chat-side spec authoring against canonical SR schemas to eliminate reshape friction) is three-times-proven this session: Cat 3 partial reshape arc (PR #105 — 14-error reshape applied chat-side), Cat 3b clean iteration (PR #110 — first-try PASS sandbox validation, doctrine back-propagated), eb-infra-hygiene (PR #114 — third proof, third TRUTH-DELIVERED queued). Substrate-rich for rule pipeline entry. Author as working-model rule at schemas/_instances/rules/RULE-PIPELINE-CANONICAL-SCHEMA-AUTHORING-1.json per rule.schema.json v1.2.0. Tier shape: lifecycleStatus=working-model, activeTier=working-model, occupiableTiers=[working-model, human-loop], terminalTier=human-loop (judgment-class — chat-side authoring discipline cannot be mechanically forced, only enforced via sandbox-validate gate). gateActions.human-loop.gate: chat-side spec authoring MUST sandbox-validate against canonical SR schemas at authoring time, not at execution time. Pairs with skills-meta-layer (PR #113 ca4c856) — both are chat-side authoring discipline.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-EB-AGENT-MCP-BROWSER-CHAT-ACCESS-1",
+      "title": "Design path for SR-chat (browser) to call EB agent tools directly via MCP, or formalize cross-chat substrate-query pattern",
+      "priority": "P2",
+      "status": "open",
+      "opened": "2026-06-03",
+      "openedDuring": "Post-Cat-3b session observation 2026-06-03 (EB agent tools 22 -> 31 across Cat 1 + Cat 2 + Cat 3 partial + Cat 3b; SR-chat browser session has no direct access)",
+      "scope": "EB agent tool surface (29 -> 31 across Cat 3 arc this session) lives on EB filesystem as Python modules accessible via eb-agent MCP server. SR-chat (this browser session) cannot call these tools directly — only EB-chat terminal can. Cross-chat coordination via canvases is the proven workaround (validated across 10+ canvases this session for Cat 3 partial + Cat 3b + eb-infra-hygiene arcs). Three design options: (1) publish eb-agent MCP server to public URL (cis-services-1 candidate via deploy-agent HMAC per memory #28); (2) formalize cross-chat substrate-query canvas pattern as canonical when terminal access required; (3) periodic snapshot file uploads (EB-chat runs nightly, posts JSON to Slack canvas; SR-chat reads when needed). Substrate evidence: session 2026-06-03 demonstrated EB agent tools are valuable substrate for SR work — would have caught Cat 3 path-inference miss earlier if SR-chat could query EB filesystem directly via coverage-infrastructure tool. Not blocking current cross-repo execution shape; productivity multiplier when addressed.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1",
+      "title": "Consider canonical mechanism (rule or schema constraint) requiring TRUTH-DELIVERED instance at S8 closure for cross-repo deliverables",
+      "priority": "P3",
+      "status": "open",
+      "opened": "2026-06-03",
+      "openedDuring": "Post-Cat-3b session observation 2026-06-03 (TRUTH-DELIVERED authoring twice-proven: PR #109 + PR #111; third queued for eb-infra-hygiene closure)",
+      "scope": "TRUTH-DELIVERED instance authoring at S8 closure is now twice-proven (PR #109 Cat 3 partial closed-with-debt, PR #111 Cat 3b closed-clean) and third instance queued post-eb-infra-hygiene-EB-merge. Pattern works end-to-end but no canonical mechanism enforces it — relies on chat-side memory of the pattern. Two options: (1) author as governance rule (working-model -> human-loop) requiring chat-side checklist at S8 transition; (2) schema constraint on deliverable.schema.json requiring TRUTH-DELIVERED instance presence before transition to S8-closed validates. Option 2 is stronger (structurally unrepresentable if missing per memory #15 documented-override-not-compliance pattern). Defer until pattern proven on 5+ deliverables across multiple session-types to validate the constraint shape. Forward-looking, not blocking.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
     }
   ],
   "indexes": {
@@ -288,7 +324,10 @@
         "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1",
         "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1",
         "FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1",
-        "FU-SR-RESOURCE-ACCESS-AUDIT-PAINT-CONSTRAINT-FUTURE-1"
+        "FU-SR-RESOURCE-ACCESS-AUDIT-PAINT-CONSTRAINT-FUTURE-1",
+        "FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1",
+        "FU-SR-EB-AGENT-MCP-BROWSER-CHAT-ACCESS-1",
+        "FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1"
       ],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
@@ -312,14 +351,17 @@
         "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1",
         "FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1",
         "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1",
-        "FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1"
+        "FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1",
+        "FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1",
+        "FU-SR-EB-AGENT-MCP-BROWSER-CHAT-ACCESS-1"
       ],
       "P3": [
         "FU-RESOLVER-PROPAGATION-1",
         "FU-CATALOG-DAAS-INVESTIGATE-1",
         "FU-VENTURE-TYPE-ENUM-REVIEW-1",
         "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1",
-        "FU-SR-RESOURCE-ACCESS-AUDIT-PAINT-CONSTRAINT-FUTURE-1"
+        "FU-SR-RESOURCE-ACCESS-AUDIT-PAINT-CONSTRAINT-FUTURE-1",
+        "FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1"
       ],
       "P1": [
         "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
