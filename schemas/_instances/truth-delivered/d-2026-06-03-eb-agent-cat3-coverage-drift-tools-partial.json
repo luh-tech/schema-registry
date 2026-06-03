@@ -1,0 +1,77 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-03-eb-agent-cat3-coverage-drift-tools-partial",
+  "deliveredAt": "2026-06-03T17:11:00Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-with-debt",
+  "authority": {
+    "author": "Claude (EB-chat), L1; closure record authored by Claude (SR-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "83c06d41b3aff1fa0ebf7bda7a757c017d621530",
+      "prNumber": 288,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/288",
+      "mergeActor": "erik-luh",
+      "ciResult": "red-overridden",
+      "ciFailure": {
+        "failingChecks": [
+          "roadmap-sync (meta.byPriority additionalProperty validation)"
+        ],
+        "overrideRationale": "AJV baseline drift on follow-up-register.json meta.byPriority additionalProperty error pre-existed on EB main before PR #288 was authored. Same failing check fires identically on PRs not touching the affected file structure. Per RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 (formalized tier, instance at schemas/_instances/rules/RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1.json): when CI failure is substrate-pre-existing, identically-red across PRs, and not introduced by the work under merge, conscious L4 override is canonical — not bypass. Tracked separately for source remediation in EB register; not blocking this deliverable's substantive completion.",
+        "overrideLabel": "override-unstable-merge"
+      }
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "83c06d41b3aff1fa0ebf7bda7a757c017d621530",
+      "prNumber": 288,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/288",
+      "mergeActor": "erik-luh",
+      "ciResult": "red-overridden",
+      "ciFailure": {
+        "failingChecks": [
+          "roadmap-sync (meta.byPriority additionalProperty validation)"
+        ],
+        "overrideRationale": "Same substrate condition as OUT-1 — pre-existing AJV baseline drift on follow-up-register.json. OUT-2 (tracking FU file) and OUT-1 (tool authoring) were squash-merged together in PR #288; single CI run; single override decision applies to both outputs.",
+        "overrideLabel": "override-unstable-merge"
+      }
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Cat 3 partial delivered to EB main 7dd3875 -> 83c06d4. 7 eb-agent tools shipped at agent/src/agent/tools/ (coverage-infrastructure, coverage-credentials, coverage-workflows, drift-rotation, dangling-credentialRefs, dangling-resourceRefs, coverage-deliverable-fks). Tests at agent/tests/. Tool registration in agent/agent.yaml (single declarative surface for both CLI and MCP per EB pattern: __main__.py:build_registry() iterates yaml tools list; MCP server imports same registry). AGENTS.md at repo root updated. Tool surface grew 22 -> 29. Cat 3b (drift-liveness + drift-vpcpeering, surface 29 -> 31) unblocked at schema level on SR main a2f8a79 (both Item B PR #106 and Item A PR #108 merged this session).",
+    "debt": "Two debt items at closure: (1) AJV baseline drift on EB follow-up-register.json meta.byPriority additionalProperty error remains uncorrected on EB main; conscious L4 override applied at this PR's merge gate per RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1; source remediation tracked separately in EB register and not blocking this deliverable. (2) Pre-existing P2 planning-phase entry for FU-EB-AGENT-CAT3-COVERAGE-DRIFT-TOOLS-1 (filed 2026-06-02) was replaced in-place with canonical P1 dispatch entry; register totalCount unchanged at 241 (replacement, not addition). No data lost; the P2 planning entry's intent fully captured by the P1 dispatch entry. Substrate hygiene observation: future cross-repo deliverables should query the register before filing the tracking FU to detect and supersede planning-phase entries explicitly rather than silent in-place replacement.",
+    "overrideRecord": "L4 conscious override at merge gate for PR #288. Substrate basis: AJV failure on meta.byPriority pre-existed on EB main before PR #288 branch was cut; failing check is identically-red across any PR that touches follow-up-register.json under current schema state. Per RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 (formalized tier, automated CI surface via pr-mergeability-check.yml's override-unstable-merge label allowance with substrate-artifact requirement enforced per RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1, automated tier as of PR #100 2026-06-02). Override is documented compliance, not bypass.",
+    "spikeOutcome": "No SPIKE invoked during Cat 3 partial execution. Path-correction round-trip (Cat 3 anchored spec scopeFiles paths inferred from convention rather than read from substrate; EB Step 2 substrate-read surfaced the deviation; SR amended via PR #107 transition S4 -> S4) handled in-band per RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 — substrate verification of an anchored spec is in-scope amendment, not novel substrate requiring SPIKE."
+  },
+  "relatedFollowUps": [
+    "FU-EB-AGENT-CAT3-COVERAGE-DRIFT-TOOLS-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1",
+      "evidenceClass": "Cross-repo execution shape validated end-to-end across all five canonical stages: EB authors spec body (S4), SR reshapes + lands instance (S5 with reshape provenance recorded in transitions[0].trigger), SR amends on EB substrate read (S4 -> S4 transition for path corrections), EB executes against anchored spec (S6 -> S7), SR closes instance with EB merge SHA (S7 -> S8). Channel-of-record (#luhtech-agents-comms) carried six canvases through the arc: F0B83PF9LD7 (EB request), F0B7VHT6KAP (SR ACK), F0B85LNSTC4 (SR reshape decisions), F0B7VQHDV51 (SR initial merge ack), F0B8612NEF6 (EB amendment ask), F0B7M2DKAMD (SR amendment merge ack), F0B82R3E33L (EB closure ask, this deliverable's trigger).",
+      "transitionTriggered": {}
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "Path-correction round-trip applied in-band as amendment (PR #107 transition S4 -> S4) rather than triggering SPIKE — confirms the rule's distinction between in-scope substrate verification and novel substrate requiring SPIKE. EB Step 2 substrate-read against EB main 7dd3875 surfaced anchored scopeFiles paths did not exist on filesystem; SR amended scope.scopeFiles + appended transitions[] entry + amended notes; total file count 18 -> 17 from cli.py + mcp_server.py collapse to agent.yaml. Pattern validated for future cross-repo deliverables.",
+      "transitionTriggered": {}
+    },
+    {
+      "ruleId": "RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1",
+      "evidenceClass": "Pre-existing AJV baseline drift on EB follow-up-register.json meta.byPriority field was identically-red across EB PRs not touching the affected structure. Conscious L4 override applied at merge gate per the rule; not bypass. RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 (automated tier per PR #100 2026-06-02) requires substrate-artifact link on override-unstable-merge label — this TRUTH-DELIVERED instance IS that substrate artifact, satisfying the requirement schema-bound.",
+      "transitionTriggered": {}
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-03T17:11:00Z",
+      "actor": "Claude (SR-chat), L1",
+      "event": "TRUTH-DELIVERED instance authored from EB closure canvas F0B82R3E33L; captures OUT-1 + OUT-2 merge facts, AJV baseline override rationale, cross-repo execution shape proof, three rule pipeline evidence entries."
+    }
+  ]
+}
