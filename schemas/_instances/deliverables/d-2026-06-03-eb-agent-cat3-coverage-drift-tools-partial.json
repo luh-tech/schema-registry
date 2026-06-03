@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "feat/eb-agent-cat3-coverage-drift-2026-06-03",
@@ -105,6 +105,18 @@
       "to": "S4-authored",
       "date": "2026-06-03",
       "trigger": "Amendment per EB-chat canvas F0B8612NEF6 2026-06-03. EB terminal Step 2 substrate-read against EB main 7dd3875 verified that originally-anchored scopeFiles paths (agent/eb_agent/tools/, agent/eb_agent/tests/, agent/eb_agent/cli.py, agent/eb_agent/mcp_server.py, agent/AGENTS.md) do not exist on EB filesystem. Path-only deviation; surface count (22 -> 29), tool descriptions, acceptance criteria, branch name, and intent unchanged. Path corrections: agent/eb_agent/tools/*.py -> agent/src/agent/tools/*.py; agent/eb_agent/tests/test_*.py -> agent/tests/test_*.py; cli.py + mcp_server.py collapse to single agent/agent.yaml (EB pattern: __main__.py:build_registry() iterates yaml tools list, MCP server imports same registry); AGENTS.md moves from agent/AGENTS.md to repo root AGENTS.md. Net file count 18 -> 17. SPIKE not invoked — path correction is in-scope substrate verification per RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1, not novel substrate. Per Erik approval 2026-06-03."
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-03",
+      "trigger": "OUT-1 (7 eb-agent tools + tests + agent.yaml + AGENTS.md) and OUT-2 (FU-EB-AGENT-CAT3-COVERAGE-DRIFT-TOOLS-1 P1 open) squash-merged on luh-tech/Ectropy-Business via PR #288 by erik-luh. Tool surface 22 -> 29. EB main HEAD post-merge: 83c06d41b3aff1fa0ebf7bda7a757c017d621530. Substrate findings captured in TRUTH-DELIVERED closure record: pre-existing P2 entry with same FU id replaced with canonical P1 dispatch entry (register totalCount unchanged at 241, replacement not addition); AJV baseline drift carry-forward on meta.byPriority additionalProperty error pre-existed on EB main before PR #288, conscious L4 override at merge gate per RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1."
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-03",
+      "trigger": "TRUTH-DELIVERED instance authored at schemas/_instances/truth-delivered/d-2026-06-03-eb-agent-cat3-coverage-drift-tools-partial.json per truth-delivered.schema.json v1.0.0; cross-repo execution shape proven end-to-end across all five stages per EB closure canvas F0B82R3E33L. Pattern reusable for Cat 3b and future EB-execution-scope deliverables requiring schema-registry-bound substrate."
     }
   ],
   "relatedFollowUps": [
@@ -112,5 +124,7 @@
     "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
     "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
   ],
-  "notes": "First eb-agent expansion deliverable landing as schema-bound instance in luh-tech/schema-registry. Cat 1 (PR #285) and Cat 2 (PR #287) shipped without schema-registry instances; this deliverable initiates the corrected pattern. Cat 3b successor lands two further tools (drift-liveness, drift-vpcpeering, surface 29 -> 31) after SR Items A + B from canvas F0B7UB6BGR4 merge; successor follows same cross-repo execution shape — new tracking FU + new deliverable instance + EB execution PR + atomic closure. Coordination canvases: F0B83PF9LD7 (EB request), F0B7VHT6KAP (SR ACK). Source EB spec body SHA256: 2867b62a35246b420b156e12e82dd2c13a7739246f87f256d63945a931ee2cc5; reshape provenance recorded in transitions[0].trigger. Retention: permanent schema-bound governance record per memory rule no-md-terminus. Branch disposition: delete on merge per canonical branching flow. Spike branches (if any open mid-flight) never merged; deleted at terminal per RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1. AMENDMENT 2026-06-03 per canvas F0B8612NEF6: scopeFiles corrected after EB Step 2 substrate-read against EB main 7dd3875. Original spec authored without verifying repo structure (paths inferred from convention). Net file count 18 -> 17 due to cli.py + mcp_server.py collapse to single agent.yaml declarative surface. Path-only correction; surface count and intent unchanged. See transitions[1] for full provenance."
+  "notes": "First eb-agent expansion deliverable landing as schema-bound instance in luh-tech/schema-registry. Cat 1 (PR #285) and Cat 2 (PR #287) shipped without schema-registry instances; this deliverable initiates the corrected pattern. Cat 3b successor lands two further tools (drift-liveness, drift-vpcpeering, surface 29 -> 31) after SR Items A + B from canvas F0B7UB6BGR4 merge; successor follows same cross-repo execution shape — new tracking FU + new deliverable instance + EB execution PR + atomic closure. Coordination canvases: F0B83PF9LD7 (EB request), F0B7VHT6KAP (SR ACK). Source EB spec body SHA256: 2867b62a35246b420b156e12e82dd2c13a7739246f87f256d63945a931ee2cc5; reshape provenance recorded in transitions[0].trigger. Retention: permanent schema-bound governance record per memory rule no-md-terminus. Branch disposition: delete on merge per canonical branching flow. Spike branches (if any open mid-flight) never merged; deleted at terminal per RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1. AMENDMENT 2026-06-03 per canvas F0B8612NEF6: scopeFiles corrected after EB Step 2 substrate-read against EB main 7dd3875. Original spec authored without verifying repo structure (paths inferred from convention). Net file count 18 -> 17 due to cli.py + mcp_server.py collapse to single agent.yaml declarative surface. Path-only correction; surface count and intent unchanged. See transitions[1] for full provenance.",
+  "mergeCommitSha": "83c06d41b3aff1fa0ebf7bda7a757c017d621530",
+  "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/288"
 }
