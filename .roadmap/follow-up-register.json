@@ -7,7 +7,7 @@
   "lastUpdated": "2026-06-03T00:00:00Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
-    "totalCount": 15
+    "totalCount": 18
   },
   "followUps": [
     {
@@ -209,13 +209,18 @@
       "id": "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
       "title": "Add credentialItem.livenessProbe field to resource-access.schema.json",
       "priority": "P1",
-      "status": "open",
+      "status": "closed",
       "opened": "2026-06-02",
       "openedDuring": "EB cross-chat handoff canvas F0B7U37MSDC (2026-06-02 18:29 PDT) — GAP-EXTEND P1 surfaced from d-2026-06-02-prod-spaces-credentials-graph audit",
       "scope": "Additive backwards-compatible extension to credentialItem definition in resource-access.schema.json. Adds livenessProbe block: lastVerifiedReachable (ISO-8601 timestamp), lastVerifiedResult (enum: success, auth-failed, network-failed, not-tested), verifiedBy (deliverable-id or operator). Substrate evidence: two BW credentials in luhtechnology.com vault (d3ef349b DO_SPACES_SECRET_ACCESS_KEY_PROD, 8adf7118 DO_BUCKET_ECTROPY_MIGRATE) are structurally complete but fail DO auth with InvalidAccessKeyId — current schema has no field to distinguish dead credentials from live ones in the access graph. EB's STEP 1-PRE-D bucket-access matrix data has no schema home and lives only in chat carry-forward. Proposed shape illustrative; SR refines as canonical authority on credentialItem evolution.",
       "blockedBy": [],
       "blocks": [],
-      "trackingRepo": "luh-tech/schema-registry"
+      "trackingRepo": "luh-tech/schema-registry",
+      "resolution": {
+        "closedDate": "2026-06-03",
+        "closedDuring": "d-2026-06-03-sr-resource-access-credential-liveness-probe",
+        "summary": "Schema extension landed: livenessProbe optional nested object added under credentialItem definition in schemas/resource-access.schema.json at version 1.1.0 (minor-bump-for-additive per PR #102 + PR #106 precedent). Item shape required [lastVerifiedResult] with enum success/auth-failed/network-failed/not-tested; optional [lastVerifiedReachable date-time nullable, verifiedBy string nullable]. credentialItem.additionalProperties remains false, credentialItem.required remains [itemId, role]. Filed-and-closed in same PR per PR #102 + PR #106 precedent."
+      }
     },
     {
       "id": "FU-SR-CATALOG-VPC-PEERING-FIELD-1",
@@ -233,6 +238,42 @@
         "closedDuring": "d-2026-06-03-sr-infrastructure-catalog-vpc-peerings",
         "summary": "Schema extension landed: vpcPeerings[] property added to catalog under schemas/infrastructure-catalog.schema.json at version 1.2.0 (minor-bump-for-additive per PR #102 precedent). Item shape required [id, envA, envB, region, status]; optional [doId, trackedByFollowUp, createdAt, notes]. id pattern ^vpc-peering-[a-z][a-z0-9-]*$ matches existing schema convention; envA/envB carry env-id pattern for FK validation. Filed-and-closed in same PR per PR #102 precedent."
       }
+    },
+    {
+      "id": "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1",
+      "title": "Normalize ajv compile/validate invocations across SR workflows and dispatches to include -r for external $ref resolution",
+      "priority": "P2",
+      "status": "open",
+      "opened": "2026-06-03",
+      "openedDuring": "d-2026-06-03-sr-resource-access-credential-liveness-probe OUT-2",
+      "scope": "Substrate observation surfaced during PR #106 (Item B vpcPeerings) Step 2: ajv compile failed with 'can't resolve reference https://schemas.luh.tech/_enums/luhtech-enums.schema.json' because the dispatch's compile invocation omitted -r flag. Pre-existing pattern — workflow CI paths use different invocation that resolves refs correctly, but standalone ajv compile/validate from dispatches or local debug fail. Audit all ajv invocations across .github/workflows/*.yml + dispatch templates; normalize to canonical form including all required -r references. Likely affects meta-schema-check.yml, instance-validation.yml, refs-check.yml + any future standalone validation. PR #106 had to work around this mid-dispatch; this FU normalizes the pattern.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1",
+      "title": "Schema version bump dispatches must include schemas/schema-refs.json rebuild as 4th in-scope file by default",
+      "priority": "P2",
+      "status": "open",
+      "opened": "2026-06-03",
+      "openedDuring": "d-2026-06-03-sr-resource-access-credential-liveness-probe OUT-2",
+      "scope": "Substrate observation surfaced during PR #106 (Item B vpcPeerings): refs-check.yml CI failed because schema-refs.json still recorded infrastructure-catalog at v1.1.0 but disk was at v1.2.0. Mid-dispatch scope expansion required to add schemas/schema-refs.json as 4th file and run luhtech-schema refs rebuild. Pattern correction: any future schema version bump dispatch must include schema-refs.json rebuild as scope file from Step 0 (this dispatch Item A applied the lesson). Document the canonical schema-version-bump dispatch template that includes refs rebuild step. PR #102 first established this pattern (terraform-state enum bump); PR #106 missed it; this Item A dispatch applies it correctly; future dispatches should not repeat the omission.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-RESOURCE-ACCESS-AUDIT-PAINT-CONSTRAINT-FUTURE-1",
+      "title": "Consider whether resource-access.schema.json should adopt forbidden-audit-paint-names allOf constraint and rename auditTrail",
+      "priority": "P3",
+      "status": "open",
+      "opened": "2026-06-03",
+      "openedDuring": "d-2026-06-03-sr-resource-access-credential-liveness-probe OUT-2",
+      "scope": "Substrate observation surfaced during Item A substrate-read: rule.schema.json and truth-delivered.schema.json both enforce allOf forbidden-audit-paint-names constraint, but resource-access.schema.json does not — and declares 'auditTrail' as a legitimate root property. This is per-design for now (audit-paint constraint applies to governance schemas where audit-paint patterns are forbidden, not to access-graph schemas where audit trails are content). Defer decision until governance-vs-content schema boundary policy clarifies portfolio-wide. If resource-access ever adopts the constraint, the auditTrail field requires rename to a structured-changes block (similar to truth-delivered's transitions array). Not blocking any current work; forward-looking only.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
     }
   ],
   "indexes": {
@@ -245,7 +286,9 @@
         "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1",
         "FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1",
         "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1",
-        "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1"
+        "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1",
+        "FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1",
+        "FU-SR-RESOURCE-ACCESS-AUDIT-PAINT-CONSTRAINT-FUTURE-1"
       ],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
@@ -254,6 +297,7 @@
         "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
         "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1",
         "FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1",
+        "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
         "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
       ]
     },
@@ -266,13 +310,16 @@
         "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1",
         "FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1",
         "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1",
-        "FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1"
+        "FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1",
+        "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1",
+        "FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1"
       ],
       "P3": [
         "FU-RESOLVER-PROPAGATION-1",
         "FU-CATALOG-DAAS-INVESTIGATE-1",
         "FU-VENTURE-TYPE-ENUM-REVIEW-1",
-        "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1"
+        "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1",
+        "FU-SR-RESOURCE-ACCESS-AUDIT-PAINT-CONSTRAINT-FUTURE-1"
       ],
       "P1": [
         "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",

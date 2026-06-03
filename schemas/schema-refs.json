@@ -3,9 +3,16 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {
-    "version": "1.25.0",
-    "lastUpdated": "2026-06-03T16:48:40Z",
+    "version": "1.26.0",
+    "lastUpdated": "2026-06-03T17:20:14Z",
     "changelog": [
+      {
+        "version": "1.26.0",
+        "date": "2026-06-03",
+        "changes": [
+          "Updated: resource-access v1.0.0 -> v1.1.0"
+        ]
+      },
       {
         "version": "1.25.0",
         "date": "2026-06-03",
@@ -417,7 +424,7 @@
     "resource-access": {
       "id": "https://schemas.luh.tech/resource-access.schema.json",
       "file": "resource-access.schema.json",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "Canonical credential and resource-access record. Single home for resource -> vault item -> consumer linkage across LuhTech ventures."
     },
     "roadmap": {
@@ -538,5 +545,5 @@
     }
   },
   "title": "LuhTech Schema Registry v1.12.0",
-  "version": "1.25.0"
+  "version": "1.26.0"
 }
