@@ -1,9 +1,9 @@
 {
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-03-eb-infra-hygiene",
-  "version": "1.0.0",
-  "title": "EB infra substrate hygiene — close 5 gap classes + VPC peering capture",
-  "description": "Closes the five gap classes surfaced by Cat 3 coverage suite at 2026-06-03 substrate read: (1) cis-services-1 grant+posture FK targets absent from catalog; (2) ectropy-terraform-state bucket missing from env-prod.objectStorage; (3) ectropy-development-configs missing from env-dev.objectStorage; (4) two credentialStore items lack rotation policy; (5) credentialStore items lack livenessProbe. Also captures live VPC peering 768a1eb6 in catalog.vpcPeerings[] per memory #20 (enterprise-complete when v1.2.0 vpcPeerings landed today specifically to enable drift-vpcpeering). EB-only scope; no schema changes; both instances stay at current version with auditTrail entries appended.",
+  "version": "1.1.0",
+  "title": "EB infra substrate hygiene — close access-graph gaps + VPC peering capture",
+  "description": "Closes access-graph gap classes surfaced by Cat 3 coverage suite at 2026-06-03 substrate read. v1.0.0 misread 'catalogNotCovered' as 'absent from catalog' — substrate read showed those buckets present in catalog but lacking accessGrants. v1.1.0 amends to add accessGrants for all substrate-verified externally-accessible catalog resources: cis-services-1 (server entry + FK + grant chain), ectropy-terraform-state (boto3 with fleet-wide prod key), server-do-primary (doctl), db-ectropy-staging (doctl). Defers resources lacking verified access values to follow-ups. Also adds rotation/livenessProbe to credentialStore items and captures live VPC peering 768a1eb6.",
   "authority": {
     "author": "Claude (EB chat), L1",
     "approver": "Erik Luhtala (L4)",
@@ -21,58 +21,68 @@
   "outputs": [
     {
       "id": "OUT-1",
-      "description": "Add server entry server-cis-services-1 to env-cis.servers[] in infrastructure-catalog.json. Schema env-cis already exists in environments[]; this populates its servers[] (currently empty/absent). Server entry shape: id=server-cis-services-1, name=cis-services-1, provider=digitalocean, region=sfo3, ip=143.110.238.160, services=[]. Resolves the FK target for resource-access.json ag-cis-services-1.resourceRef and hostPosture[].serverRef. sshConfig deliberately omitted (host is zero-ssh per resource-access.json hostPosture; an sshConfig on the catalog entry would contradict the access graph). specs omitted — not in current substrate. services[] empty — CIS services live in architecture.json per memory #12 dual-home pattern.",
+      "description": "Add server-cis-services-1 entry to env-cis.servers[]. Server shape: id=server-cis-services-1, name=cis-services-1, provider=digitalocean, region=sfo3, ip=143.110.238.160 (doctl-verified 2026-05-23), services=[]. sshConfig deliberately omitted — host is zero-ssh per resource-access.json hostPosture. specs omitted — not in current substrate. Resolves the FK target for resource-access.json accessGrant + hostPosture.",
       "acceptanceCriteria": [
         "infrastructure-catalog.json env-cis.servers[] contains exactly one entry with id=server-cis-services-1",
-        "server entry ip=143.110.238.160 verbatim (doctl-verified 2026-05-23)",
+        "server entry ip=143.110.238.160 verbatim",
         "server entry provider=digitalocean, region=sfo3",
-        "ajv-cli validates infrastructure-catalog.json against schemas.luh.tech/infrastructure-catalog.schema.json v1.2.0 with exit 0"
+        "ajv-cli validates infrastructure-catalog.json against canonical schema v1.2.0 with exit 0"
       ]
     },
     {
       "id": "OUT-2",
-      "description": "Update resource-access.json to point ag-cis-services-1.resourceRef and hostPosture[0].serverRef from the bare hostname 'cis-services-1' to the canonical catalog id 'server-cis-services-1'. Closes the dangling-resourceRefs finding (coverage-infrastructure surfaced grantNotInCatalog + postureNotInCatalog at 2026-06-03 substrate read).",
+      "description": "Update resource-access.json FK refs to canonical catalog id. Changes: ag-cis-services-1.resourceRef from 'cis-services-1' to 'server-cis-services-1'; hostPosture[0].serverRef from 'cis-services-1' to 'server-cis-services-1'. Matches infrastructure-catalog.schema.json server.id pattern ^server-[a-z][a-z0-9-]*$. Closes dangling-resourceRefs finding.",
       "acceptanceCriteria": [
         "resource-access.json accessGrants[] entry with id=ag-cis-services-1 has resourceRef=server-cis-services-1",
         "resource-access.json hostPosture[] entry has serverRef=server-cis-services-1",
-        "eb-agent dangling-resourceRefs returns 0 dangling entries",
+        "eb-agent dangling-resourceRefs returns 0",
         "eb-agent coverage-infrastructure returns 0 grantNotInCatalog and 0 postureNotInCatalog"
       ]
     },
     {
       "id": "OUT-3",
-      "description": "Add objectStorage entry to env-prod.objectStorage[] for the Terraform state backend bucket. Entry shape: purpose=terraform-state, provider=do-spaces, region=sfo3, endpoint=https://sfo3.digitaloceanspaces.com, bucket=ectropy-terraform-state. Closes catalogNotCovered for ectropy-terraform-state and resolves FU-EB-CATALOG-TF-STATE-BUCKET-MISSING-1.",
+      "description": "Add accessGrant for ectropy-terraform-state bucket. Bucket already exists in env-prod.objectStorage[] (purpose=terraform-state). Grant shape: id=ag-bucket-5, resourceRef=ectropy-terraform-state, resourceType=object-store, accessMethodRef=am-boto3, credentialRef=f89b9344-3542-43ae-acbf-b3e7002d1904 (TF_DO_SPACES_PROD — per 2026-06-02 STEP 1-PRE-D fleet-wide bucket access matrix verbatim from resource-access.json auditTrail entry: production key reaches all seven ectropy-fleet buckets including terraform-state). Resolves FU-EB-CATALOG-TF-STATE-BUCKET-MISSING-1.",
       "acceptanceCriteria": [
-        "infrastructure-catalog.json env-prod.objectStorage[] contains an entry with bucket=ectropy-terraform-state, purpose=terraform-state",
-        "FU-EB-CATALOG-TF-STATE-BUCKET-MISSING-1 status transitions open -> closed in follow-up-register (scope of THIS deliverable is hygiene fills only; FU closure happens via separate micro-PR or is folded into this PR if scope allows — see notes)"
+        "resource-access.json accessGrants[] contains entry id=ag-bucket-5 with resourceRef=ectropy-terraform-state, resourceType=object-store, accessMethodRef=am-boto3, credentialRef=f89b9344-3542-43ae-acbf-b3e7002d1904",
+        "eb-agent coverage-infrastructure: ectropy-terraform-state no longer in catalogNotCovered"
       ]
     },
     {
       "id": "OUT-4",
-      "description": "Add objectStorage entry to env-dev.objectStorage[] for the development config-sync bucket. env-dev currently has no objectStorage field; this creates it with one entry. Entry shape: purpose=config-sync, provider=do-spaces, region=sfo3, endpoint=https://sfo3.digitaloceanspaces.com, bucket=ectropy-development-configs. Closes catalogNotCovered for ectropy-development-configs and resolves FU-EB-CATALOG-DEV-OBJECTSTORAGE-POPULATE-1.",
+      "description": "Add accessGrant for server-do-primary (env-prod primary droplet, DigitalOcean sfo3, ectropy-production). Grant shape: id=ag-server-do-primary, resourceRef=server-do-primary, resourceType=server, accessMethodRef=am-doctl, credentialRef=null (doctl uses DO_TOKEN, not a credentialItem in BW vault), hostPostureRef=null (no hostPosture entry for server-do-primary in substrate — separate FU to add if SSH/break-glass posture needs modeling).",
       "acceptanceCriteria": [
-        "infrastructure-catalog.json env-dev.objectStorage[] exists and contains exactly one entry with bucket=ectropy-development-configs, purpose=config-sync",
-        "FU-EB-CATALOG-DEV-OBJECTSTORAGE-POPULATE-1 status transitions open -> closed in follow-up-register (per OUT-3 scope note)"
+        "resource-access.json accessGrants[] contains entry id=ag-server-do-primary with resourceRef=server-do-primary, resourceType=server, accessMethodRef=am-doctl",
+        "credentialRef and hostPostureRef both null per substrate",
+        "eb-agent coverage-infrastructure: server-do-primary no longer in catalogNotCovered"
       ]
     },
     {
       "id": "OUT-5",
-      "description": "Add rotation block and livenessProbe block to both credentialStore.items[] entries in resource-access.json (TF_DO_SPACES_STAGING itemId 2cffb9fb-9123-4bb0-b244-b3e7000fe2af, TF_DO_SPACES_PROD itemId f89b9344-3542-43ae-acbf-b3e7002d1904). Rotation policy=on-exposure for both, lastRotated=null, trackedByFollowUp=null. livenessProbe for 2cffb9fb=not-tested with nulls (no probe evidence in substrate). livenessProbe for f89b9344=success with lastVerifiedReachable=2026-06-02T20:17:39Z and verifiedBy=d-2026-06-02-prod-spaces-credentials-graph (real probe data from STEP 1-PRE-D bucket access matrix that produced the 2026-06-02 OUT-1 commit, per resource-access.json auditTrail entry).",
+      "description": "Add rotation and livenessProbe blocks to both credentialStore items (TF_DO_SPACES_STAGING itemId 2cffb9fb-9123-4bb0-b244-b3e7000fe2af, TF_DO_SPACES_PROD itemId f89b9344-3542-43ae-acbf-b3e7002d1904). Rotation policy=on-exposure for both, lastRotated=null, trackedByFollowUp=null. livenessProbe for 2cffb9fb=not-tested with nulls (no probe evidence in substrate). livenessProbe for f89b9344=success with lastVerifiedReachable=2026-06-02T20:17:39Z and verifiedBy=d-2026-06-02-prod-spaces-credentials-graph (real probe data from STEP 1-PRE-D bucket access matrix that produced the 2026-06-02 OUT-1 commit, per resource-access.json auditTrail entry).",
       "acceptanceCriteria": [
         "credentialStore.items[] entry for 2cffb9fb has rotation.policy=on-exposure, rotation.lastRotated=null, rotation.trackedByFollowUp=null",
         "credentialStore.items[] entry for f89b9344 has rotation.policy=on-exposure, rotation.lastRotated=null, rotation.trackedByFollowUp=null",
         "credentialStore.items[] entry for 2cffb9fb has livenessProbe.lastVerifiedResult=not-tested, livenessProbe.lastVerifiedReachable=null, livenessProbe.verifiedBy=null",
         "credentialStore.items[] entry for f89b9344 has livenessProbe.lastVerifiedResult=success, livenessProbe.lastVerifiedReachable=2026-06-02T20:17:39Z, livenessProbe.verifiedBy=d-2026-06-02-prod-spaces-credentials-graph",
-        "eb-agent drift-rotation returns 0 noPolicy entries",
-        "eb-agent drift-liveness returns 0 drifted entries (success and not-tested are non-drift states)"
+        "eb-agent drift-rotation returns 0 noPolicy",
+        "eb-agent drift-liveness returns 0 drifted (success and not-tested are non-drift states)"
       ]
     },
     {
       "id": "OUT-6",
-      "description": "Capture live VPC peering 768a1eb6 in catalog.vpcPeerings[]. Field landed in schema v1.2.0 today (PR #106, SR main 98534ab) specifically to enable drift-vpcpeering. Entry shape: id=vpc-peering-768a1eb6, doId=768a1eb6, envA=env-staging, envB=env-prod, region=sfo3, status=pending-elimination, trackedByFollowUp=null (no existing FU tracks elimination — operator memory flags it; if an FU is needed, file separately under hygiene followup), notes=staging<->production VPC peering, flagged for elimination per multi-session memory.",
+      "description": "Add accessGrant for db-ectropy-staging (DigitalOcean Managed PostgreSQL, sfo3). Grant shape: id=ag-db-ectropy-staging, resourceRef=db-ectropy-staging, resourceType=database, accessMethodRef=am-doctl, credentialRef=null (doctl ops on managed DB use DO_TOKEN; data-plane connection uses DATABASE_URL connectionStringRef which is not in credentialStore scope), hostPostureRef=null. Covers DO API operations on the managed cluster (firewall, backup, restore, scale). Data-plane access via DATABASE_URL is application-internal and not modeled in the access graph.",
+      "acceptanceCriteria": [
+        "resource-access.json accessGrants[] contains entry id=ag-db-ectropy-staging with resourceRef=db-ectropy-staging, resourceType=database, accessMethodRef=am-doctl",
+        "credentialRef and hostPostureRef both null per substrate",
+        "eb-agent coverage-infrastructure: db-ectropy-staging no longer in catalogNotCovered"
+      ]
+    },
+    {
+      "id": "OUT-7",
+      "description": "Capture live VPC peering 768a1eb6 in catalog.vpcPeerings[]. Field landed in schema v1.2.0 today (SR PR #106, main 98534ab) specifically to enable drift-vpcpeering. Entry shape: id=vpc-peering-768a1eb6, doId=768a1eb6, envA=env-staging, envB=env-prod, region=sfo3, status=pending-elimination, notes=staging<->production VPC peering, flagged for elimination per multi-session memory. First real vpcPeerings[] instance data — transitions schema from 'extension only' to 'extension + first real data'.",
       "acceptanceCriteria": [
         "infrastructure-catalog.json catalog.vpcPeerings[] contains one entry with id=vpc-peering-768a1eb6, doId=768a1eb6, status=pending-elimination",
-        "envA and envB FK into existing environments[] (env-staging, env-prod both present at substrate read)",
+        "envA and envB FK into existing environments[] (env-staging, env-prod both present)",
         "eb-agent drift-vpcpeering returns 1 pendingElimination entry (vpc-peering-768a1eb6)"
       ]
     }
@@ -81,7 +91,7 @@
     "preMerge": [
       "ajv-cli@5.0.0 validates .roadmap/infrastructure-catalog.json against schemas.luh.tech/infrastructure-catalog.schema.json v1.2.0 — exit 0",
       "ajv-cli@5.0.0 validates .roadmap/resource-access.json against schemas.luh.tech/resource-access.schema.json v1.1.0 — exit 0",
-      "eb-agent coverage-infrastructure: catalogNotCovered drops by 2 (ectropy-terraform-state, ectropy-development-configs); grantNotInCatalog=0; postureNotInCatalog=0",
+      "eb-agent coverage-infrastructure: catalogNotCovered drops by 4 (ectropy-terraform-state, server-do-primary, db-ectropy-staging, AND cis-services-1 once OUT-1 lands the server entry); grantNotInCatalog=0; postureNotInCatalog=0",
       "eb-agent dangling-resourceRefs: 0",
       "eb-agent dangling-credentialRefs: 0 (unchanged from baseline)",
       "eb-agent coverage-credentials: 0 (unchanged from baseline)",
@@ -92,7 +102,7 @@
     ],
     "postMerge": [
       "main shows merged SHA",
-      "eb-agent coverage-infrastructure on main reflects the closure (catalogNotCovered: 11 services/dbs remain as expected, 2 buckets closed)",
+      "eb-agent coverage-infrastructure on main reflects the closure (catalogNotCovered: ectropy-development-configs + server-edge-karbon521 + 3 self-hosted DBs + 6 internal services remain by design with FUs)",
       "Cat 3b tools (drift-liveness, drift-vpcpeering) return real-data results on main"
     ]
   },
@@ -101,12 +111,21 @@
       "from": "",
       "to": "S4-authored",
       "date": "2026-06-03",
-      "trigger": "spec authored against canonical deliverable.schema.json v1.1.0 per F0B85LNSTC4 doctrine"
+      "trigger": "spec v1.0.0 authored against canonical deliverable.schema.json v1.1.0"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S4-authored",
+      "date": "2026-06-03",
+      "trigger": "amended to v1.1.0 after sandbox-test surfaced OUT-3/OUT-4 substrate misread — buckets already in catalog, gap is missing accessGrants. Amendment tightens scope to substrate-verified externally-accessible resources, defers unverified to follow-ups"
     }
   ],
   "relatedFollowUps": [
     "FU-EB-CATALOG-TF-STATE-BUCKET-MISSING-1",
-    "FU-EB-CATALOG-DEV-OBJECTSTORAGE-POPULATE-1"
+    "FU-EB-CATALOG-DEV-OBJECTSTORAGE-POPULATE-1",
+    "FU-EB-RA-GRANT-DEV-CONFIGS-PROBE-1",
+    "FU-EB-RA-GRANT-KARBON521-METHOD-1",
+    "FU-EB-RA-INTERNAL-RESOURCES-MODELING-1"
   ],
-  "notes": "Scope decision: this deliverable closes the 5 gap classes named at 2026-06-03 substrate read PLUS the VPC peering capture (per memory #20, enterprise-complete when v1.2.0 vpcPeerings landed today specifically to make drift-vpcpeering queryable). The 11 services+DBs in coverage-infrastructure catalogNotCovered are deliberately deferred — they require substrate-decision work on whether ops grants are the right modeling vs env-routes-only reachability, not hygiene-fill. FU closure for OUT-3/OUT-4 references FU-EB-CATALOG-TF-STATE-BUCKET-MISSING-1 and FU-EB-CATALOG-DEV-OBJECTSTORAGE-POPULATE-1 from the 2026-06-02 field coverage assessment; closure can ship in-scope by adding follow-up-register.json to scopeFiles (would expand to 3 files) OR via separate micro-PR after merge. Current spec keeps scopeFiles tight to 2 to preserve branch scope-lock per memory #18 — FU closure micro-PR follows as a planned succession. Cross-repo: this deliverable is EB-only execution but the spec instance must land in luh-tech/schema-registry under schemas/_instances/deliverables/ per the proven cross-repo pattern (2026-06-03 today). SR-chat lands instance via micro-PR; EB-chat executes the data fills; SR closes with TRUTH-DELIVERED. Per memory #14 the resource-access access graph is FK-one-direction into infrastructure-catalog — OUT-2 updates the FK target (resourceRef) only after OUT-1 lands the catalog entry; both happen in the same PR so atomicity holds. Spelling Luhtala verified per memory #22."
+  "notes": "v1.1.0 amendment scope: 7 outputs covering all substrate-verified externally-accessible catalog resources. OUT-3/OUT-4 from v1.0.0 (catalog bucket additions) deleted — sandbox-test confirmed both buckets already in catalog; gap was missing accessGrants. v1.1.0 OUT-3 grants ectropy-terraform-state with f89b9344 (prod key, fleet-wide reach per 2026-06-02 STEP 1-PRE-D substrate). v1.1.0 OUT-4 grants server-do-primary via doctl. v1.1.0 OUT-6 grants db-ectropy-staging via doctl. Deferred to follow-ups for substrate-decision work: (a) ectropy-development-configs — no probe evidence which key reaches it; (b) server-edge-karbon521 — no current accessMethod covers Karbon edge access (Starlink + Peplink, air-gapped per DEC-004); (c) self-hosted DBs (db-speckle, db-redis-cache, db-qdrant) and app-internal services — internal compose-network only, not external ops surfaces, separate modeling design needed. FU closure for the two pre-existing FUs ships via succession micro-PR after merge to preserve memory #18 branch scope-lock. Spec instance currently anchored at SR main 1f8a81d (PR #114) at v1.0.0; v1.1.0 amendment requires SR re-land via succession micro-PR per F0B85LNSTC4 doctrine. Spelling Luhtala verified per memory #22."
 }
