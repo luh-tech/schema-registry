@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/schema-registry",
     "branch": "chore/eb-cross-chat-fu-filings-2026-06-02",
@@ -116,11 +116,40 @@
       "to": "S4-authored",
       "date": "2026-06-02",
       "trigger": "Spec re-authored after substrate-recheck during D-EB-FU-FILE Step 1 revealed pre-existing schema-mismatch in FU at index 12 (added via PR #102 with non-canonical field shape). Per memory #17 spike-supersedes-novel-pattern + memory #20 enterprise-complete: scope expanded to atomic three-part substrate cleanup. Field mapping verified mechanical and lossless against canonical reference index 0. Same Path Z discipline as D-1-CLEANUP earlier today: full re-validation before PR open."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-02",
+      "trigger": "PROCEED STEP 2 atomic reshape+count+append begun"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-02",
+      "trigger": "PR opened, CI green"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-02",
+      "commitSha": "fecfbccd4710d014f1f983614ceea8c18dab407a",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/103",
+      "trigger": "Squash merge"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-02",
+      "commitSha": "fecfbccd4710d014f1f983614ceea8c18dab407a",
+      "trigger": "Cross-chat coordination loop closed; substrate atomic; SR-chat posts ack canvas"
     }
   ],
   "relatedFollowUps": [
     "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
     "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
   ],
-  "notes": "Atomic deliverable expanding D-EB-FU-FILE scope per Path Z discipline. Original scope: file 2 EB-handoff FUs. Surfaced during Step 1 substrate-recheck: pre-existing index-12 FU is schema-mismatched (added via PR #102 with filed/closedAt/closedBy/closingDeliverable/note instead of canonical opened/openedDuring/scope/blockedBy/blocks/resolution). Plus meta.totalCount stale at 12 (should be 13 pre-fix, 15 post-fix). All three issues fixed atomically in one PR per fortune-500 enterprise atomic-canonical-substrate standard. Meta-observation worth filing next session: roadmap-sync.yml on PR #102 should have caught the schema mismatch and rejected the FU. Either workflow had a gap (path filter, validation invocation) or PR #102 bypassed the check. Not in scope tonight; logged for next-session workflow-hygiene arc. Cross-chat coordination loop closes when SR-chat posts ack canvas to #luhtech-agents-comms (OUT-7, chat-action post-merge)."
+  "notes": "Atomic deliverable expanding D-EB-FU-FILE scope per Path Z discipline. Original scope: file 2 EB-handoff FUs. Surfaced during Step 1 substrate-recheck: pre-existing index-12 FU is schema-mismatched (added via PR #102 with filed/closedAt/closedBy/closingDeliverable/note instead of canonical opened/openedDuring/scope/blockedBy/blocks/resolution). Plus meta.totalCount stale at 12 (should be 13 pre-fix, 15 post-fix). All three issues fixed atomically in one PR per fortune-500 enterprise atomic-canonical-substrate standard. Meta-observation worth filing next session: roadmap-sync.yml on PR #102 should have caught the schema mismatch and rejected the FU. Either workflow had a gap (path filter, validation invocation) or PR #102 bypassed the check. Not in scope tonight; logged for next-session workflow-hygiene arc. Cross-chat coordination loop closes when SR-chat posts ack canvas to #luhtech-agents-comms (OUT-7, chat-action post-merge).",
+  "mergeCommitSha": "fecfbccd4710d014f1f983614ceea8c18dab407a",
+  "prUrl": "https://github.com/luh-tech/schema-registry/pull/103"
 }
