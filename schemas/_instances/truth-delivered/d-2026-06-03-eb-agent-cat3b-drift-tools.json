@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-03-eb-agent-cat3b-drift-tools",
+  "deliveredAt": "2026-06-03T18:30:00Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB-chat), L1; closure record authored by Claude (SR-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "daefc3dc0269c6aff9cc3e2c56ebb58443500cd4",
+      "prNumber": 289,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/289",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "daefc3dc0269c6aff9cc3e2c56ebb58443500cd4",
+      "prNumber": 289,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/289",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Cat 3b delivered to EB main 83c06d4 -> daefc3d. 2 drift tools shipped at agent/src/agent/tools/ (drift-liveness against credentialItem.livenessProbe per resource-access.schema.json v1.1.0; drift-vpcpeering against catalog.vpcPeerings[] per infrastructure-catalog.schema.json v1.2.0). 2 tests at agent/tests/. agent.yaml registration appended after coverage_deliverable_fks. AGENTS.md Cat 3 section header updated from 'Cat 3 partial' to 'Cat 3' — closes the arc semantically. FU-EB-AGENT-CAT3B-DRIFT-TOOLS-1 filed P1/open in EB register (meta.totalCount 241 -> 242). Tool surface grew 29 -> 31. Cat 3 arc original 9-tool scope fully delivered across two waves (7 SR-independent + 2 SR-dependent).",
+    "debt": "No debt at this closure. CI green end-to-end on EB PR #289 — distinct from Cat 3 partial PR #288 which closed-with-debt due to AJV baseline drift on follow-up-register.json meta.byPriority. PR #289 narrower scope (7 files) may have avoided triggering the same baseline error, or EB main state remediated between PR #288 and PR #289 cut. Worth observing — substrate-hygiene watch item, not blocking. Cat 3 partial closed-with-debt; Cat 3b closed-clean.",
+    "spikeOutcome": "No SPIKE invoked. Per RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1 (formalized tier, human-loop terminal): SPIKE is the canonical primitive for substrate-beyond-spec but was not needed this iteration. Both schema preconditions verified merged before EB-chat authored Cat 3b spec body: Item B vpcPeerings (SR PR #106 98534ab) and Item A livenessProbe (SR PR #108 a2f8a79). Both at canonical paths on SR main 7129734. EB terminal substrate-read against EB main 83c06d4 verified scopeFiles paths against actual repo layout before spec authoring — path-inference failure of Cat 3 partial (which triggered amendment PR #107 per RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1) not repeated this round. F0B85LNSTC4 canonical-schema authoring doctrine validated end-to-end this iteration (second proof of pattern; first was Cat 3 partial which required reshape). Doctrine candidate for formalization as new working-model rule in future arc — not authored in this closure PR to keep scope clean. Future FU candidate: file FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1 (P2) to track formalization as rule instance per rule.schema.json v1.2.0."
+  },
+  "relatedFollowUps": [
+    "FU-EB-AGENT-CAT3B-DRIFT-TOOLS-1",
+    "FU-EB-AGENT-CAT3-COVERAGE-DRIFT-TOOLS-1",
+    "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
+    "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1",
+      "evidenceClass": "Second iteration of cross-repo execution shape — identical pattern as Cat 3 partial but with reshape friction removed. Five-stage pattern reproduced cleanly: (1) EB authors spec body S4 — canvas F0B7MNF6XJT; (2) SR sandbox-validates first-try PASS (no reshape) + lands instance via PR #110 2fd2126 — canvas F0B8XJBDJRE; (3) EB executes against anchored spec — PR #289 daefc3d; (4) EB posts merge canvas with merge SHA — closure-trigger this artifact; (5) SR closes instance + authors TRUTH-DELIVERED — this artifact. Pattern reusable for unbounded future cross-repo deliverables. Two iterations completed same session — reproducibility validated. Channel #luhtech-agents-comms (C0B7EPFCA85) carried both arcs end-to-end via the broadcast workflow that promoted this rule to automated tier in D-COMMS-2.",
+      "transitionTriggered": {}
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "Cat 3b iteration explicitly did NOT trigger an amendment round-trip — EB terminal substrate-read against EB main 83c06d4 verified scopeFiles paths before EB-chat wrote them. This is the negative-case evidence for the rule: the discipline the rule encodes worked at authoring time, not at amendment time. Cat 3 partial (preceding iteration) triggered the positive case via PR #107 amendment when paths-from-convention failed substrate-check at EB Step 2. Both cases reinforce the rule's predicate: scopeFiles must be verified against substrate before authoring, not inferred from convention; amendment is the safety net when authoring-time verification was skipped.",
+      "transitionTriggered": {}
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-03T18:30:00Z",
+      "actor": "Claude (SR-chat), L1",
+      "event": "TRUTH-DELIVERED instance authored from EB closure report (Cat 3b PR #289 merged at daefc3d, tool surface 29 -> 31, FU register meta.totalCount 241 -> 242). Second TRUTH-DELIVERED in schema-registry; reuses pattern established by Cat 3 partial closure PR #109. closureStatus: closed-clean (no debt; distinct from Cat 3 partial closed-with-debt). Closes the Cat 3 arc. Rule citations verified against substrate uploaded by Erik 2026-06-03: RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 (automated tier, terminal automated, lifecycleStatus working-model) and RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 (automated tier, terminal automated, lifecycleStatus working-model). Other rules referenced in closureNotes prose without rulePipelineEvidence claim: RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1 (formalized, human-loop terminal — verified)."
+    }
+  ]
+}
