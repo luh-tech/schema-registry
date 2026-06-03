@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/skill.schema.json",
   "title": "LuhTech Skill Instance",
+  "version": "1.0.0",
   "description": "Canonical schema for chat-side skill instances. Skills are the chat-behavior enforcement layer that pairs with rule instances (mechanical enforcement). JSON is canonical; SKILL.md is python-generated. Memory rule 19 (no-md-terminus) holds.",
   "type": "object",
   "additionalProperties": false,
