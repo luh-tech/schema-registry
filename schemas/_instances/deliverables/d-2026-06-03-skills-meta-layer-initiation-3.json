@@ -1,0 +1,168 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-03-skills-meta-layer-initiation-3",
+  "version": "1.0.0",
+  "title": "Skill pipeline meta-layer initiation (v3)",
+  "description": "Stand up canonical infrastructure for the LuhTech skill pipeline: skill.schema.json, Python generator and validator, JSON-canonical / markdown-generated pattern, two CI workflows, six category subdirectories, test fixture, schemas/schema-refs.json registry entry. The deliverable that enables all subsequent skill instance authoring across the holdings. Branch scope-locked to 16 files. Supersedes d-2026-06-03-skills-meta-layer-initiation-2 (closed without merge after applier discovered schemas/schema-refs.json disk-path assumption was wrong; v1 closed for non-conforming deliverable instance and missing schema-refs from scope).",
+  "authority": {
+    "author": "Claude (chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/skills-meta-layer-initiation-3-2026-06-03",
+    "scopeFiles": [
+      "schemas/skill.schema.json",
+      "schemas/schema-refs.json",
+      "tools/skill_generate.py",
+      "tools/skill_validate.py",
+      ".github/workflows/skill-instance-validation.yml",
+      ".github/workflows/skill-md-generation-check.yml",
+      ".refsignore",
+      "skills/_instances/org/.gitkeep",
+      "skills/_instances/dev-pipeline/.gitkeep",
+      "skills/_instances/comms/.gitkeep",
+      "skills/_instances/governance/.gitkeep",
+      "skills/_instances/infra/.gitkeep",
+      "skills/_instances/venture/.gitkeep",
+      "skills/_instances/_test-fixture/fixture-skill/skill-instance.json",
+      "skills/_instances/_test-fixture/fixture-skill/SKILL.md",
+      "schemas/_instances/deliverables/d-2026-06-03-skills-meta-layer-initiation-3.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "schemas/skill.schema.json v1.0.0 — Draft 7 canonical schema for skill instances. Six categories enum (org/dev-pipeline/comms/governance/infra/venture); four-state lifecycleStatus (draft/working-model/formalized/deprecated); three-state triggerMode (descriptive/pushy/eval-tuned); lenient pairedRule (optional); evidenceClass required on UP-promotion to formalized via if/then conditional; structured triggerContext and behavior; generationMetadata for CI drift detection.",
+      "acceptanceCriteria": [
+        "File validates as Draft 7 (Draft7Validator.check_schema passes)",
+        "Required fields enforced: $schema, $id, name, description, version, category, lifecycleStatus, triggerMode, triggerContext, behavior, authority, transitions",
+        "additionalProperties: false at top level",
+        "$id pattern enforces urn:luhtech:skill:<category>:<name>:<semver>",
+        "category enum matches: org, dev-pipeline, comms, governance, infra, venture",
+        "if/then conditional on transitions: to=formalized requires evidenceClass"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "tools/skill_generate.py — Python generator. Deterministic JSON-to-SKILL.md transform. Reads skill-instance.json, validates against schemas/skill.schema.json, generates YAML frontmatter and markdown body, stamps generationMetadata footer. Refuses on schema validation failure. Output byte-stable across re-runs given identical input.",
+      "acceptanceCriteria": [
+        "CLI invocation: python3 tools/skill_generate.py <path-to-skill-instance.json>",
+        "Output written to sibling SKILL.md path",
+        "Validates input against schemas/skill.schema.json before generating",
+        "Generated SKILL.md begins with YAML frontmatter and contains required fields",
+        "Footer comment block records generator version, source JSON SHA, deterministic timestamp",
+        "Re-running on unchanged input produces byte-identical output"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "tools/skill_validate.py — Python validator wrapper. Validates a skill-instance.json against schemas/skill.schema.json. Returns 0 on pass, non-zero on fail with field-path-cited errors.",
+      "acceptanceCriteria": [
+        "CLI: python3 tools/skill_validate.py <path-to-skill-instance.json>",
+        "Exits 0 on valid instance, non-zero on invalid",
+        "Error output cites field path and message",
+        "Passes on the test fixture instance"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": ".github/workflows/skill-instance-validation.yml — CI workflow. Runs skill_validate.py against every skill-instance.json under skills/_instances/. Triggered on pull_request when paths skills/_instances/** or schemas/skill.schema.json change.",
+      "acceptanceCriteria": [
+        "Workflow file is valid YAML",
+        "Triggers on pull_request with appropriate path filter",
+        "Fails the check if any instance fails validation",
+        "Passes cleanly on the test fixture"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": ".github/workflows/skill-md-generation-check.yml — CI workflow. Regenerates SKILL.md from skill-instance.json for every skill and diffs against committed SKILL.md. Fails if drift detected. Enforces the JSON-canonical / MD-generated invariant mechanically.",
+      "acceptanceCriteria": [
+        "Workflow file is valid YAML",
+        "Triggers on pull_request with appropriate path filter",
+        "Regenerates and diffs every committed SKILL.md against generator output",
+        "Fails on any drift; passes cleanly on the test fixture"
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "skills/_instances/ directory structure. Six category subdirectories with .gitkeep: org, dev-pipeline, comms, governance, infra, venture. Plus _test-fixture/fixture-skill/ containing the bootstrap test instance.",
+      "acceptanceCriteria": [
+        "All six category directories exist with .gitkeep files",
+        "skills/_instances/_test-fixture/fixture-skill/ contains skill-instance.json and SKILL.md"
+      ]
+    },
+    {
+      "id": "OUT-7",
+      "description": ".refsignore append — adds skills/_instances/** so refs-check does not attempt to index skill instances as schemas.",
+      "acceptanceCriteria": [
+        ".refsignore contains a line matching skills/_instances/**",
+        "refs-check passes on this branch with no false positives on skill instances"
+      ]
+    },
+    {
+      "id": "OUT-8",
+      "description": "skills/_instances/_test-fixture/fixture-skill/ — minimal valid skill instance proving the generator, validator, and CI work end-to-end. Includes skill-instance.json and SKILL.md. Not a behavioral skill; purely a CI fixture.",
+      "acceptanceCriteria": [
+        "skill-instance.json validates against schemas/skill.schema.json",
+        "SKILL.md matches generator output byte-for-byte",
+        "Re-running the generator produces byte-identical SKILL.md",
+        "skill-instance-validation.yml passes on this fixture",
+        "skill-md-generation-check.yml passes on this fixture"
+      ]
+    },
+    {
+      "id": "OUT-9",
+      "description": "schemas/schema-refs.json registry update. Adds skill entry to schemas section (alphabetical between service-graph-venture-edge and tech-stack). Prepends changelog entry version 1.27.0 Added: skill v1.0.0. Bumps meta.version 1.26.0 to 1.27.0 and meta.lastUpdated.",
+      "acceptanceCriteria": [
+        "schemas/schema-refs.json contains skill entry with id, file, version, description",
+        "meta.version is 1.27.0",
+        "meta.changelog[0] documents skill v1.0.0 addition",
+        "refs-check passes on this branch"
+      ]
+    },
+    {
+      "id": "OUT-10",
+      "description": "schemas/_instances/deliverables/d-2026-06-03-skills-meta-layer-initiation-3.json — this deliverable's own instance, self-recorded per deliverable.schema.json v1.1.0.",
+      "acceptanceCriteria": [
+        "File validates against deliverable.schema.json v1.1.0",
+        "lifecycleState transitions S4-authored to S6-staged to S7-merged as PR progresses",
+        "Final state captures commitSha and prUrl"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Schema is valid Draft 7: python3 -c 'from jsonschema import Draft7Validator; import json; Draft7Validator.check_schema(json.load(open(\"schemas/skill.schema.json\")))' exits 0",
+      "Validator passes on fixture: python3 tools/skill_validate.py skills/_instances/_test-fixture/fixture-skill/skill-instance.json exits 0",
+      "Generator SHA-stable roundtrip on the fixture: re-running produces byte-identical SKILL.md",
+      "Deliverable instance validates against schemas/deliverable.schema.json v1.1.0 with forbidden-audit-paint-names resolved from schemas/_definitions/",
+      "schemas/schema-refs.json valid JSON with skill entry at v1.27.0",
+      "CI: refs-check passes",
+      "CI: instance-validation passes",
+      "CI: pr-mergeability-check passes",
+      "CI: amendment-scope-overlap-check passes",
+      "CI: skill-instance-validation (new) passes",
+      "CI: skill-md-generation-check (new) passes"
+    ],
+    "postMerge": [
+      "main shows skill entry registered in schemas/schema-refs.json at v1.27.0",
+      "main shows schemas/skill.schema.json present at v1.0.0",
+      "main shows skills/_instances/ directory tree with all six category subdirectories",
+      "Fixture instance and generated SKILL.md present on main and re-validatable"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-03",
+      "trigger": "Spec authored after v2 closure; substrate re-read of actual repo layout (schemas/schema-refs.json, schemas/_instances/deliverables/, schemas/_definitions/forbidden-audit-paint-names.schema.json) before authoring v3"
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "Supersedes d-2026-06-03-skills-meta-layer-initiation-2 (closed at applier runtime when schemas/schema-refs.json was expected at repo root). v1 closed for non-conforming deliverable instance and missing schema-refs scope. v3 authored after explicit substrate read of actual repo layout. Root cause of three prior iterations: chat-side authoring from inference rather than verbatim substrate reads of the actual repo filesystem. The skill the pipeline is meant to enable (dev-pipeline/substrate-before-write) is the exact discipline that would have prevented this. Work product (schema, generator, validator, CI workflows, test fixture, .refsignore append) is verbatim carry-over from v1 and v2; only the deliverable instance metadata, the schemas/schema-refs.json paths in the applier, and the patch_schema_refs.py path constant changed."
+}

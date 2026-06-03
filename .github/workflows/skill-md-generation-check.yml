@@ -1,0 +1,52 @@
+name: skill-md-generation-check
+
+on:
+  pull_request:
+    paths:
+      - 'skills/_instances/**'
+      - 'schemas/skill.schema.json'
+      - 'tools/skill_generate.py'
+      - '.github/workflows/skill-md-generation-check.yml'
+
+jobs:
+  check-generation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install jsonschema
+        run: pip install jsonschema==4.21.1
+
+      - name: Regenerate SKILL.md for every instance and check for drift
+        run: |
+          set -e
+          shopt -s globstar nullglob
+          drift=0
+          for instance in skills/_instances/**/skill-instance.json; do
+            dir=$(dirname "$instance")
+            committed="$dir/SKILL.md"
+            if [ ! -f "$committed" ]; then
+              echo "ERROR: $committed missing — every skill-instance.json requires a generated SKILL.md sibling"
+              drift=$((drift+1))
+              continue
+            fi
+            # Backup committed, regenerate, compare
+            cp "$committed" "$committed.committed"
+            python3 tools/skill_generate.py "$instance"
+            if ! diff -u "$committed.committed" "$committed"; then
+              echo "DRIFT: $committed does not match generator output from $instance"
+              drift=$((drift+1))
+            fi
+            mv "$committed.committed" "$committed.bak"
+            # Restore committed file so subsequent checks see clean state
+            mv "$committed.bak" "$committed"
+          done
+          if [ "$drift" -gt 0 ]; then
+            echo "FAIL: $drift skill(s) have MD drift from generator output. Run tools/skill_generate.py locally and commit."
+            exit 1
+          fi
+          echo "PASS: all skill MD files match generator output"

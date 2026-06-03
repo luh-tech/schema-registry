@@ -1,0 +1,44 @@
+name: skill-instance-validation
+
+on:
+  pull_request:
+    paths:
+      - 'skills/_instances/**'
+      - 'schemas/skill.schema.json'
+      - 'tools/skill_validate.py'
+      - '.github/workflows/skill-instance-validation.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install jsonschema
+        run: pip install jsonschema==4.21.1
+
+      - name: Validate every skill instance
+        run: |
+          set -e
+          shopt -s globstar nullglob
+          found=0
+          failed=0
+          for f in skills/_instances/**/skill-instance.json; do
+            found=$((found+1))
+            echo "Validating: $f"
+            if ! python3 tools/skill_validate.py "$f"; then
+              failed=$((failed+1))
+            fi
+          done
+          echo "Found: $found instances"
+          echo "Failed: $failed instances"
+          if [ "$failed" -gt 0 ]; then
+            exit 1
+          fi
+          if [ "$found" -eq 0 ]; then
+            echo "No skill instances found. (OK on initiation; will become required as instances land.)"
+          fi
