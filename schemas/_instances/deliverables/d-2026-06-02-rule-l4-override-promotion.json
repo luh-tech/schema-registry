@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-02-rule-l4-override-promotion",
+  "version": "1.0.0",
+  "title": "D-3 — Promote RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 working-model -> automated",
+  "description": "Promote RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 tierState.activeTier from working-model to automated. D-2 (merge SHA 8240f6a4e1009f0db83d18218c3c83aad16a3a15, PR #98) is the evidenceClass: the extended .github/workflows/pr-mergeability-check.yml workflow enforces substrate-artifact-link presence on PR comments when the override-unstable-merge label is applied. Workflow self-evidencing via its enforcement on next override PR. Promotion via canonical mechanism exercised five times in the foundation arc / FU block / D-COMMS sequence (FU-D-2, FU-D-3, FU-D-4, D-COMMS-2, and now this): version bump 1.0.0 -> 1.1.0, append promotion transition with evidenceClass citing D-2 merge SHA, flip tierState.activeTier to automated, append closure note to notes field. lifecycleStatus REMAINS working-model — promotion is on the tier axis only.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/rule-l4-override-promotion-2026-06-02",
+    "scopeFiles": [
+      "schemas/_instances/rules/RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1.json",
+      "schemas/_instances/deliverables/d-2026-06-02-rule-l4-override-promotion.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Promote RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 via canonical mechanism. Four edits on the rule instance: (a) version 1.0.0 -> 1.1.0; (b) tierState.activeTier 'working-model' -> 'automated'; (c) append working-model -> automated transition with evidenceClass citing D-2 SHA 8240f6a4e1009f0db83d18218c3c83aad16a3a15 + PR #98; (d) append closure note to notes field with '| PROMOTED 2026-06-02:' separator. lifecycleStatus REMAINS working-model — promotion is on the tier axis only.",
+      "acceptanceCriteria": [
+        "version field changes from 1.0.0 to 1.1.0",
+        "tierState.activeTier changes from 'working-model' to 'automated'",
+        "tierState.terminalTier remains 'automated' (no change)",
+        "tierState.occupiableTiers unchanged ['working-model', 'human-loop', 'automated']",
+        "lifecycleStatus REMAINS 'working-model' (no change — tier axis promotion only)",
+        "transitions array length grows from 1 to 2",
+        "New transition has from='working-model', to='automated', evidenceClass citing D-2 SHA 8240f6a4 + PR #98, trigger field populated",
+        "evidenceClass minLength 4 satisfied (well over minimum)",
+        "notes field extended with '| PROMOTED 2026-06-02:' suffix matching prior-art pattern from D-COMMS-2",
+        "gateActions block unchanged (human-loop, automated, refine all preserved exactly)",
+        "authority block unchanged",
+        "rationale field unchanged",
+        "statement field unchanged",
+        "Instance validates against rule.schema.json v1.2.0 with -r for forbidden-audit-paint-names allOf",
+        "No other rule instances modified",
+        "No source schemas modified"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Deliverable instance lifecycle — spec lands at S4-authored, transitions through S5-in-progress -> S6-staged -> S7-merged -> S8-closed across the dispatch.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "lifecycleState populated with S8-closed post-merge",
+        "mergeCommitSha populated with actual squash-merge SHA",
+        "transitions array captures full S4->S5->S6->S7->S8 lifecycle"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv validate of edited rule instance against rule.schema.json v1.2.0 passes (with -r for forbidden-audit-paint-names allOf $ref)",
+      "ajv validate of this deliverable spec against deliverable.schema.json v1.1.0 passes (with -r for forbidden-audit-paint-names allOf)",
+      "instance-validation.yml passes on the PR (validates both edited rule and new deliverable instance)",
+      "refs-check.yml passes (no schemas/ schema file changes; only instances modified)",
+      "meta-schema-check.yml passes (no *.schema*.json changes)",
+      "pr-mergeability-check.yml passes (no failing checks on this PR; new substrate-artifact-link requirement does not fire since no override label applied)",
+      "amendment-scope-overlap-check.yml passes (scopeFiles disjoint from any in-flight deliverable)",
+      "slack-broadcast.yml fires on PR open and merge",
+      "roadmap-sync.yml not applicable (no .roadmap/ changes)"
+    ],
+    "postMerge": [
+      "RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 on main shows version 1.1.0",
+      "RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 on main shows tierState.activeTier='automated'",
+      "Slack channel #luhtech-agents-comms broadcasts the merge PR event",
+      "Rules-at-automated count grows from 4 to 5",
+      "L4-OVERRIDE-SUBSTRATE-ARTIFACT 3-deliverable arc closes (D-1 + D-2 + D-3 all S8-closed)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-02",
+      "trigger": "Spec authored against verified D-2 merge state. D-2 (merge SHA 8240f6a4e1009f0db83d18218c3c83aad16a3a15, PR #98) extended .github/workflows/pr-mergeability-check.yml to enforce substrate-artifact-link requirement on override scenarios. Workflow live on main HEAD 56e21e4 with 107 lines confirmed. RULE-L4-OVERRIDE-SUBSTRATE-ARTIFACT-1 promotion via canonical mechanism: same 4-edit shape exercised in D-COMMS-2 (PR #92) and three prior FU-block promotions. Sandbox pre-validation passed: promoted rule instance validates against rule.schema.json v1.2.0 with external $refs neutered."
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "Third and final deliverable in the L4-OVERRIDE-SUBSTRATE-ARTIFACT arc. D-1 (L9 reconcile) merged in PR #96. D-2 (workflow extension) merged in PR #98. This deliverable promotes the rule via canonical mechanism. Pattern complete: L9-reconcile + workflow-extension + rule-promotion is the canonical 3-deliverable shape for any future rule promotion arc. Rules-at-automated count grows 4 -> 5. The L4-OVERRIDE incident pattern from PR #269 (legitimate L4 conscious override of UNSTABLE CI without contemporaneous substrate artifact) is now mechanically prevented — override label without substrate-artifact-link in PR comments fails the pr-mergeability-check workflow. Pure data fix on a single rule instance — no source schema edits, no CI workflow authoring, no code changes. The CI substrate (extended pr-mergeability-check.yml) already exists on main from D-2; this deliverable just records that the rule's automated tier is now operationally backed and flips the activeTier accordingly. Cross-chat-relay origin: EB-agent contributed the rule via FU filing on 2026-06-01 alignment prompt; SR chat schematized and now promotes. Attribution preserved in rule instance authority.author block."
+}
