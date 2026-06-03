@@ -187,6 +187,18 @@
       "blockedBy": [],
       "blocks": [],
       "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1",
+      "title": "Extend infrastructure-catalog objectStorage.purpose enum with terraform-state",
+      "priority": "P2",
+      "status": "closed",
+      "filed": "2026-06-03",
+      "closedAt": "2026-06-03T01:17:21Z",
+      "closedBy": "erik-luh",
+      "closingDeliverable": "d-2026-06-03-sr-infrastructure-catalog-purpose-enum-extension",
+      "trackingRepo": "luh-tech/schema-registry",
+      "note": "Additive enum extension. Driven by EB downstream consumer d-2026-06-03-eb-catalog-objectstorage-hygiene which required terraform-state purpose to capture TF state backend buckets in env-prod.objectStorage. Filed-and-closed in same PR per cross-chat governance pattern."
     }
   ],
   "indexes": {
