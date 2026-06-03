@@ -1,0 +1,126 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-02-eb-cross-chat-fu-filings",
+  "version": "1.0.0",
+  "title": "D-EB-FU-FILE — File 2 EB-handoff FUs + atomic reshape of pre-existing malformed FU + meta.totalCount correction",
+  "description": "Three-part atomic substrate cleanup + intended forward work on SR .roadmap/follow-up-register.json. (1) Reshape FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1 (index 12, added via PR #102) from non-canonical field set (filed/closedAt/closedBy/closingDeliverable/note) to canonical schema (opened/openedDuring/scope/blockedBy/blocks/resolution). Mechanical mapping, zero information loss. (2) Correct meta.totalCount from stale 12 to 15 (covers existing 13 + 2 new appends). (3) Append 2 P1 FUs from EB cross-chat handoff canvas F0B7U37MSDC: FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1 + FU-SR-CATALOG-VPC-PEERING-FIELD-1. Single PR per memory #20 enterprise-complete + memory #17 spike-supersedes-novel-pattern semantics — substrate cleanup is one work-unit, scoped atomically. Full canonical ajv re-validation before PR open per discipline established in D-1-CLEANUP earlier today.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/eb-cross-chat-fu-filings-2026-06-02",
+    "scopeFiles": [
+      ".roadmap/follow-up-register.json",
+      "schemas/_instances/deliverables/d-2026-06-02-eb-cross-chat-fu-filings.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Reshape FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1 (index 12) to canonical follow-up-register.schema.json field set. Mechanical field mapping: filed (2026-06-03) -> opened (2026-06-03); closedAt (2026-06-03T01:17:21Z) -> resolution.closedDate (2026-06-03, truncated to date format); closingDeliverable -> resolution.closedDuring (augmented with reshape context); closedBy + note -> resolution.summary (merged with reshape provenance recorded). Required missing fields added: openedDuring (derived from existing note text), scope (derived from title + note), blockedBy [] empty, blocks [] empty. id, title, priority, status, trackingRepo preserved exactly.",
+      "acceptanceCriteria": [
+        "FU at index 12 has all canonical required fields: id, title, priority, status, opened, openedDuring, scope, blockedBy, blocks, trackingRepo, resolution",
+        "All existing values preserved verbatim where field mapping is identity (id, title, priority, status, trackingRepo)",
+        "Date fields use YYYY-MM-DD format (opened=2026-06-03, resolution.closedDate=2026-06-03)",
+        "resolution.summary preserves original note text + records reshape provenance",
+        "Non-canonical fields removed: filed, closedAt, closedBy, closingDeliverable, note (all migrated to canonical equivalents)",
+        "Zero information loss verified via field mapping table"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Correct meta.totalCount from 12 to 15. Pre-state: array has 13 entries, totalCount stale at 12. Post-reshape (OUT-1, no count change), 2 appends (OUT-3): final array has 15 entries, totalCount=15.",
+      "acceptanceCriteria": [
+        "meta.totalCount = 15 (matches followUps array length after all OUTs applied)",
+        "lastUpdated bumped to 2026-06-02 ISO 8601 timestamp"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Append 2 FU entries from EB cross-chat handoff canvas F0B7U37MSDC: FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1 (P1 open, livenessProbe field on credentialItem in resource-access.schema.json) and FU-SR-CATALOG-VPC-PEERING-FIELD-1 (P1 open, vpcPeerings[] top-level array on infrastructure-catalog.schema.json). Both ids match schema pattern, no collisions verified chat-sandbox.",
+      "acceptanceCriteria": [
+        "followUps array length 15 (13 existing + 2 new)",
+        "Both new FUs match schema id pattern",
+        "Both new FUs have all required canonical fields",
+        "Both new FUs status=open priority=P1 trackingRepo=luh-tech/schema-registry",
+        "Both opened fields use YYYY-MM-DD format (2026-06-02)",
+        "Both openedDuring cite EB cross-chat handoff canvas F0B7U37MSDC",
+        "No existing FU entries modified beyond OUT-1 reshape"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "indexes block regenerated reflecting all 15 entries (reshape adjusts FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1 status remains closed; two new FUs add P1+open entries to indexes).",
+      "acceptanceCriteria": [
+        "indexes.byStatus.open includes both new FUs",
+        "indexes.byStatus.closed includes FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1 (status preserved through reshape)",
+        "indexes.byPriority.P1 includes both new FUs",
+        "indexes.byBlockedBy refreshed (no new blockedBy relationships introduced)"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "Full canonical ajv re-validation before PR open. Confirms zero remaining schema violations across all 15 FUs.",
+      "acceptanceCriteria": [
+        "ajv validate -s follow-up-register.schema.json -r luhtech-enums.schema.json -d follow-up-register.json --spec=draft7 --strict=false -c ajv-formats: zero errors",
+        "If any FU fails validation, dispatch halts and reports verbatim — no autonomous correction"
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "Deliverable instance lifecycle — S4-authored -> S5 -> S6 -> S7 -> S8 across dispatch.",
+      "acceptanceCriteria": [
+        "Spec validates against deliverable.schema.json v1.1.0",
+        "lifecycleState S8-closed post-merge",
+        "mergeCommitSha + prUrl populated",
+        "transitions captures full lifecycle"
+      ]
+    },
+    {
+      "id": "OUT-7",
+      "description": "Cross-chat coordination canvas posted to #luhtech-agents-comms post-merge acknowledging EB ping receipt + confirming FU filings + reporting reshape side-effect.",
+      "acceptanceCriteria": [
+        "Canvas posted to channel C0B7EPFCA85 post-merge",
+        "Canvas titled 'SR -> EB Coordination Response: FU filings + reshape landed 2026-06-02'",
+        "Content includes both new FU ids, P1 priority, merge SHA + PR URL, note on reshape of pre-existing PR #102 FU to canonical shape, cross-reference back to EB canvas F0B7U37MSDC"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Python pre-flight: reshape mapping verified field-by-field; new FU ids pass schema pattern; no collisions with existing 13 ids",
+      "ajv validate of full follow-up-register.json against follow-up-register.schema.json passes with canonical --strict=false -c ajv-formats invocation; zero errors",
+      "ajv validate of this deliverable spec against deliverable.schema.json v1.1.0 passes",
+      "roadmap-sync.yml passes on the PR",
+      "instance-validation.yml passes",
+      "refs-check.yml passes",
+      "meta-schema-check.yml passes",
+      "pr-mergeability-check.yml passes",
+      "amendment-scope-overlap-check.yml passes",
+      "slack-broadcast.yml fires on PR open and merge"
+    ],
+    "postMerge": [
+      "main shows .roadmap/follow-up-register.json with 15 conformant FUs",
+      "Full ajv validation passes on main",
+      "Slack canvas posted acknowledging coordination loop + reshape",
+      "Meta-FU candidate filed in next session: roadmap-sync.yml may have a gap — PR #102 landed a non-conformant FU without CI rejection"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-02",
+      "trigger": "Spec re-authored after substrate-recheck during D-EB-FU-FILE Step 1 revealed pre-existing schema-mismatch in FU at index 12 (added via PR #102 with non-canonical field shape). Per memory #17 spike-supersedes-novel-pattern + memory #20 enterprise-complete: scope expanded to atomic three-part substrate cleanup. Field mapping verified mechanical and lossless against canonical reference index 0. Same Path Z discipline as D-1-CLEANUP earlier today: full re-validation before PR open."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
+    "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
+  ],
+  "notes": "Atomic deliverable expanding D-EB-FU-FILE scope per Path Z discipline. Original scope: file 2 EB-handoff FUs. Surfaced during Step 1 substrate-recheck: pre-existing index-12 FU is schema-mismatched (added via PR #102 with filed/closedAt/closedBy/closingDeliverable/note instead of canonical opened/openedDuring/scope/blockedBy/blocks/resolution). Plus meta.totalCount stale at 12 (should be 13 pre-fix, 15 post-fix). All three issues fixed atomically in one PR per fortune-500 enterprise atomic-canonical-substrate standard. Meta-observation worth filing next session: roadmap-sync.yml on PR #102 should have caught the schema mismatch and rejected the FU. Either workflow had a gap (path filter, validation invocation) or PR #102 bypassed the check. Not in scope tonight; logged for next-session workflow-hygiene arc. Cross-chat coordination loop closes when SR-chat posts ack canvas to #luhtech-agents-comms (OUT-7, chat-action post-merge)."
+}
