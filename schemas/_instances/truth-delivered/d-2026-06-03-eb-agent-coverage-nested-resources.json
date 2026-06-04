@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-03-eb-agent-coverage-nested-resources",
+  "deliveredAt": "2026-06-04T01:30:00Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1+OUT-2",
+      "mergeCommit": "1125924",
+      "prNumber": 290,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/290",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3+OUT-4",
+      "mergeCommit": "cc3e3ac",
+      "prNumber": 291,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/291",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Walker class exhaustively covered across both eb-agent tools (coverage_infrastructure.py + dangling_resource_refs.py) that build a global catalog ref-set walking env.servers[].id and catalog.externalServices[].id. Post-merge substrate state verified clean per EB canvas F0B85QR0UDQ: grantNotInCatalog=[], postureNotInCatalog=[], dangling-resourceRefs=0, dangling-credentialRefs=0. Walker scope is exhaustive — pre-amendment substrate read confirmed 7 other eb-agent tools do not share the walker pattern. Unblocks d-2026-06-03-eb-infra-hygiene v1.1.0 verify.sh checks 3 and 4 naturally (verified by EB execution of PR #292 running clean through checks 1-6).",
+    "overrideRecord": "Process sequencing deviation: EB PR #290 shipped 2026-06-03 17:01 PDT BEFORE SR v1.1.0 instance landing at 50d60b8. F0B85LNSTC4 sequencing (SR lands canonical anchor first, then EB executes) was broken on this iteration. Substrate truth: no v1.0.0 SR instance ever existed despite EB-chat canvas F0B85FX9V0A claim — channel substrate confirmed via search 2026-06-04. Deviation captured in SR PR #117 commit body and PR body for substrate honesty; not blocking this closure. Worth filing as rule candidate in a future session for sequencing enforcement (e.g. RULE-CROSS-REPO-SR-ANCHOR-BEFORE-EB-EXECUTION-1)."
+  },
+  "relatedFollowUps": [],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "third-negative-case-amendment-correctly-handled-in-band"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1",
+      "evidenceClass": "spike-correctly-not-invoked-substrate-known"
+    },
+    {
+      "ruleId": "RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1",
+      "evidenceClass": "cross-chat-canvas-relay-five-times-proven-this-session"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-04T01:30:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED authored for d-2026-06-03-eb-agent-coverage-nested-resources v1.1.0; deliverable instance lifecycleState transitions appended S4-authored -> S6-staged (SR 50d60b8) -> S7-merged (EB PR #290 at 1125924) -> S7-merged (EB PR #291 at cc3e3ac) -> S8-closed in same PR"
+    }
+  ]
+}
