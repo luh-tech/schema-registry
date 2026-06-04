@@ -1,0 +1,82 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-03-sr-eb-agent-coverage-nested-resources-closure",
+  "version": "1.0.0",
+  "title": "SR closure for d-2026-06-03-eb-agent-coverage-nested-resources v1.1.0 — TRUTH-DELIVERED #3",
+  "description": "Cross-repo closure deliverable. EB merged 2 PRs (#290 covers OUT-1+OUT-2 in coverage_infrastructure.py at 1125924; #291 covers OUT-3+OUT-4 in dangling_resource_refs.py at cc3e3ac). SR transitions deliverable instance S4-authored -> S6-staged -> S7-merged (x2 granular per Option B) -> S8-closed, and authors first TRUTH-DELIVERED instance with closure-clean status. Walker class exhaustively covered across 2 eb-agent tools that build a global catalog ref-set. Substrate post-merge: grantNotInCatalog=[], postureNotInCatalog=[], dangling-resourceRefs=0.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/sr-eb-agent-coverage-nested-resources-closure-2026-06-03",
+    "scopeFiles": [
+      "schemas/_instances/deliverables/d-2026-06-03-eb-agent-coverage-nested-resources.json",
+      "schemas/_instances/truth-delivered/d-2026-06-03-eb-agent-coverage-nested-resources.json",
+      "schemas/_instances/deliverables/d-2026-06-03-sr-eb-agent-coverage-nested-resources-closure.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Append 4 closure transitions to schemas/_instances/deliverables/d-2026-06-03-eb-agent-coverage-nested-resources.json (lifecycleState S4 -> S8). Per Option B: granular S7-merged transitions, one per EB PR. transitions count: 2 -> 6.",
+      "acceptanceCriteria": [
+        "Instance lifecycleState updated S4-authored -> S8-closed",
+        "transitions[] length 2 -> 6 (initial + amendment + 4 closure: S4->S6, S6->S7 for PR #290, S7->S7 for PR #291, S7->S8)",
+        "Each S7 transition references EB PR number and merge SHA verbatim per EB canvas F0B85QR0UDQ",
+        "ajv validates updated instance against deliverable.schema.json v1.1.0 with exit 0"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Author TRUTH-DELIVERED instance at schemas/_instances/truth-delivered/d-2026-06-03-eb-agent-coverage-nested-resources.json. closureStatus=closed-clean, 2 outputs (one per EB PR per Option B granular), 3 rulePipelineEvidence entries (RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 third negative case, RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1 not-invoked, RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1 five-times-proven), closureNotes.overrideRecord captures the SR-anchor-before-EB-execution sequencing deviation per substrate honesty.",
+      "acceptanceCriteria": [
+        "File written at schemas/_instances/truth-delivered/d-2026-06-03-eb-agent-coverage-nested-resources.json",
+        "deliverableId=d-2026-06-03-eb-agent-coverage-nested-resources",
+        "closureStatus=closed-clean",
+        "lifecycleState=S8-closed",
+        "outputs[].mergeCommit=1125924 (OUT-1+OUT-2 / PR #290) and cc3e3ac (OUT-3+OUT-4 / PR #291)",
+        "outputs[].ciResult=green for both",
+        "rulePipelineEvidence count=3",
+        "ajv validates against truth-delivered.schema.json v1.0.0 with exit 0"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Deliverable instance for this SR closure lands at S4-authored at schemas/_instances/deliverables/d-2026-06-03-sr-eb-agent-coverage-nested-resources-closure.json. Captures the closure work itself per memory #20 substrate-cleanup-as-you-go.",
+      "acceptanceCriteria": [
+        "Closure deliverable instance lands at canonical path",
+        "lifecycleState=S4-authored",
+        "scopeFiles=3 (target deliverable + TRUTH-DELIVERED + this instance)",
+        "ajv validates against deliverable.schema.json v1.1.0 with exit 0"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli@5.0.0 validates updated deliverable instance against deliverable.schema.json v1.1.0",
+      "ajv-cli@5.0.0 validates TRUTH-DELIVERED instance against truth-delivered.schema.json v1.0.0",
+      "ajv-cli@5.0.0 validates this closure deliverable instance against deliverable.schema.json v1.1.0",
+      "git diff --stat scoped to exactly 3 files",
+      "PR CI green; --admin merge forbidden per memory #15"
+    ],
+    "postMerge": [
+      "main shows merged SHA",
+      "Total TRUTH-DELIVERED instances on main: 2 -> 3",
+      "d-2026-06-03-eb-agent-coverage-nested-resources lifecycleState on main = S8-closed"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-04",
+      "trigger": "Spec authored after substrate-read on SR main 50d60b8 (post-PR #117). EB closure canvas F0B85QR0UDQ provided: EB main HEAD fd618f3b1c330e2a1019d8816e9330f485014004, 3 PRs landed (#290 1125924, #291 cc3e3ac, #292 fd618f3). Two-merge reality for coverage-nested-resources requires Option B granular transitions per Erik direction 2026-06-04. Three-PR sequencing approved (PR 1 coverage-nested-resources closure, PR 2 eb-infra-hygiene closure, PR 3 FU file)."
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "First of 3 succession PRs closing the 2026-06-03 cross-repo arc. PR 2 follows: eb-infra-hygiene closure with TRUTH-DELIVERED #4 (closed-with-debt). PR 3 follows: FU-EB-RA-ROTATION-POLICY-COMPLETION-1 file. Per memory #18 branch scope-lock, each closure ships as its own atomic PR; if any CI gate fails, blast radius is one closure not three. Per memory #20 enterprise-complete, closure record is itself a deliverable instance for substrate honesty."
+}

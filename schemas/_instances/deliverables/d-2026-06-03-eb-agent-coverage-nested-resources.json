@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "fix/eb-agent-coverage-nested-resources-2026-06-03",
@@ -87,6 +87,30 @@
       "to": "S4-authored",
       "date": "2026-06-03",
       "trigger": "amended to v1.1.0 after infra-hygiene verify check 4 surfaced same root cause in dangling_resource_refs.py — substrate read of all 9 eb-agent tools confirmed 2-file walker-fix scope; amendment expands scopeFiles + adds OUT-3/OUT-4 covering dangling_resource_refs.py"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S6-staged",
+      "date": "2026-06-03",
+      "trigger": "SR instance v1.1.0 landed at schema-registry main 50d60b8 (PR #117) — anchored spec available for EB execution against fix/eb-agent-coverage-nested-resources-2026-06-03 branch"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-03",
+      "trigger": "EB PR #290 merged at 1125924 covering OUT-1 + OUT-2 (coverage_infrastructure.py walker extension for env.servers[].id + externalServices[].id). Note: PR #290 shipped 2026-06-03 17:01 PDT BEFORE this SR v1.1.0 instance landing — process sequencing deviation captured in instance commit (PR #117) for substrate honesty"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S7-merged",
+      "date": "2026-06-03",
+      "trigger": "EB PR #291 merged at cc3e3ac covering OUT-3 + OUT-4 (dangling_resource_refs.py walker extension — symmetric mirror of OUT-1+OUT-2). Two-PR split shipped because apply.py partial-apply guard correctly refused running both fills with file 1 already on main from PR #290 — guard working as designed per memory #5 idempotency principle"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-03",
+      "trigger": "All 4 outputs verified on EB main fd618f3 via eb-agent: coverage-infrastructure.grantNotInCatalog=[], coverage-infrastructure.postureNotInCatalog=[], dangling-resourceRefs=0. Walker class exhaustively covered per spec notes (2-tool scope is complete; 7 other eb-agent tools do not share the walker pattern per pre-amendment substrate read). TRUTH-DELIVERED instance authored at schemas/_instances/truth-delivered/d-2026-06-03-eb-agent-coverage-nested-resources.json this PR"
     }
   ],
   "relatedFollowUps": [],
