@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "chore/eb-fu-register-housekeeping-2026-06-04",
@@ -84,6 +84,28 @@
       "to": "S4-authored",
       "date": "2026-06-04",
       "trigger": "spec authored after substrate read of .roadmap/follow-up-register.json on EB main fd618f3 — verified 3 FUs from v1.1.0 spec.relatedFollowUps never landed against register (vapor), 1 FU surfaced during execution, 2 pre-existing FUs closed by d-2026-06-03-eb-catalog-objectstorage-hygiene (not by today's infra-hygiene arc) and require no backfill"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S6-staged",
+      "date": "2026-06-04",
+      "commitSha": "ea841ae",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/118",
+      "trigger": "SR instance landed via PR #118 at ea841ae"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-04",
+      "commitSha": "eda082e",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/293",
+      "trigger": "EB PR #293 squash-merged at eda082e by erik-luh on 2026-06-04T01:48:28Z; all 4 FU outputs landed against .roadmap/follow-up-register.json; CI all green"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-04",
+      "trigger": "TRUTH-DELIVERED #5 authored; SR PR 2 of 3 closure arc"
     }
   ],
   "relatedFollowUps": [],
