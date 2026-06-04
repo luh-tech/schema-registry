@@ -47,7 +47,7 @@ jobs:
       - name: Validate dependencies.json
         if: hashFiles('.roadmap/dependencies.json') != ''
         run: |
-          ajv validate -s schemas/dependencies.schema.json -d .roadmap/dependencies.json --spec=draft7 --strict=false -c ajv-formats
+          ajv validate -s schemas/dependencies.schema.json -r schemas/_enums/luhtech-enums.schema.json -d .roadmap/dependencies.json --spec=draft7 --strict=false -c ajv-formats
       
       - name: Validate boundaries.json
         if: hashFiles('.roadmap/boundaries.json') != ''

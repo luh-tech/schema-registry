@@ -1,0 +1,83 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-04-sr-ajv-r-flag-workflow-normalization",
+  "version": "1.0.0",
+  "title": "SR ajv -r flag workflow normalization — close FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1",
+  "description": "Normalizes ajv-cli invocations across SR workflow files to consistently include -r flag for external $ref resolution. Surfaced as gap in PR #106 (Item B vpcPeerings v1.2.0, first negative case) and re-surfaced in PR #119 (TRUTH-DELIVERED #3 dispatch authoring miss, second negative case). FU was filed in PR #115; this deliverable closes it after audit-and-fix. Substrate-read of all workflow files at current main HEAD; surgical edits to invocations missing -r where the target schema has external $ref dependencies; in-PR FU closure (filed-and-closed pattern per PR #102/#108 precedent).",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "fix/sr-ajv-r-flag-workflow-normalization-2026-06-04",
+    "scopeFiles": [
+      ".github/workflows/roadmap-sync.yml",
+      ".roadmap/follow-up-register.json",
+      "schemas/_instances/deliverables/d-2026-06-04-sr-ajv-r-flag-workflow-normalization.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Audit `.github/workflows/roadmap-sync.yml` for ajv-cli invocations missing -r flag against schemas with external $ref dependencies. Per partial substrate read in prior session turn: lines 35 (roadmap.schema.json), 40 (venture-summary.schema.json), and 45-65 (decision-log, dependencies, boundaries, extensions, feature) — some have -r, some don't. Step 1 of dispatch re-verifies against current main HEAD substrate. For each invocation that needs -r: add `-r schemas/_definitions/forbidden-audit-paint-names.schema.json` (and any other external ref the target schema has per its $ref directives). For roadmap.schema.json line 35: verify whether it has external $refs — if no, document why no -r needed (substrate honesty); if yes, add. Match canonical pattern: `npx -y ajv-cli@5.0.0 validate -s <schema> -r <external-ref-schemas> -d <instance> --spec=draft7 --strict=false -c ajv-formats`.",
+      "acceptanceCriteria": [
+        "All ajv-cli invocations in roadmap-sync.yml that target schemas with external $ref dependencies include the -r flag",
+        "For each invocation NOT requiring -r (target schema has no external $refs), inline yaml comment explains why",
+        "YAML syntax valid (yamllint pass or python -c 'import yaml; yaml.safe_load(open(...))' exit 0)",
+        "git diff scoped to exactly the invocation lines per memory #18 (no unrelated whitespace, no unrelated comment churn)"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Close FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1 in .roadmap/follow-up-register.json per filed-and-closed pattern (PR #102/#108 precedent). Append closedAt + closedBy + closingDeliverable fields to FU entry. Bump meta.lastUpdated. Regenerate indexes (byStatus.open count -1, byStatus.closed count +1).",
+      "acceptanceCriteria": [
+        "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1 status=closed in followUps[]",
+        "FU entry has closedAt, closedBy=erik-luhtala, closingDeliverable=d-2026-06-04-sr-ajv-r-flag-workflow-normalization",
+        "meta.lastUpdated bumped to apply timestamp",
+        "indexes.byStatus.open count decremented by 1, indexes.byStatus.closed count incremented by 1",
+        "ajv validates follow-up-register.json against follow-up-register.schema.json with -r luhtech-enums.schema.json flag, exit 0"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Deliverable instance for this PR lands at S4-authored at schemas/_instances/deliverables/d-2026-06-04-sr-ajv-r-flag-workflow-normalization.json. Per memory #20 substrate-cleanup-as-you-go.",
+      "acceptanceCriteria": [
+        "Deliverable instance lands at canonical path",
+        "lifecycleState=S4-authored",
+        "scopeFiles=3 (workflow + FU register + this instance)",
+        "ajv validates against deliverable.schema.json v1.1.0 with -r forbidden-audit-paint-names schema, exit 0"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Step 1 substrate read verifies which schemas referenced in roadmap-sync.yml have external $refs (not assumed from memory)",
+      "ajv-cli@5.0.0 validates follow-up-register.json against canonical schema with -r luhtech-enums.schema.json, exit 0",
+      "ajv-cli@5.0.0 validates this deliverable instance against deliverable.schema.json v1.1.0 with -r forbidden-audit-paint-names, exit 0",
+      "Python yaml.safe_load(open('.github/workflows/roadmap-sync.yml')) — exit 0",
+      "git diff --stat scoped to exactly 3 files",
+      "PR CI green; --admin merge forbidden per memory #15",
+      "All CI workflows (including the modified roadmap-sync.yml) pass on this PR — proves the normalization itself doesn't break anything"
+    ],
+    "postMerge": [
+      "main shows merged SHA",
+      "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1 status=closed on main",
+      "roadmap-sync.yml canonical ajv pattern on main"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-04",
+      "trigger": "Spec authored after partial substrate read in prior session turn surfaced ajv -r flag gaps in roadmap-sync.yml. Second-negative-case proof in PR #119 (TRUTH-DELIVERED dispatch authoring miss caught by agent REFUSE-AND-SURFACE) confirmed the FU is ripe NOW. Per Erik direction 2026-06-04 'lets address the workflow normalization, agreed'. Dispatch composes WITHOUT pre-baked surgical edits — Step 1 of execution does fresh substrate-read against current main HEAD 809d6d8 (post-PR #120) before any writes, per memory #6 substrate-before-write."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1"
+  ],
+  "notes": "Closes FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1 (filed in PR #115). Two negative-case proofs this session — PR #106 Item B vpcPeerings dispatch failure + PR #119 TRUTH-DELIVERED dispatch authoring miss. Spec design: dispatch does NOT prescribe specific line edits — Step 1 reads current substrate verbatim, agent reports findings, Erik approves line-by-line edits in Step 2 before any writes. Substrate-before-write per memory #6. Three other ripe-ish FUs (FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1 author-new, FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1 design-decision-class) are explicitly out of scope for this PR per memory #18 branch scope-lock — each requires its own deliverable with its own substrate-read. Per memory #10 never fabricate values: the exact line-by-line edits to roadmap-sync.yml are deferred to Step 1 substrate-read; the spec acceptance criteria describe the canonical post-state, not pre-prescribed diffs."
+}

@@ -4,10 +4,10 @@
   "schemaVersion": "1.0.0",
   "version": "1.0.0",
   "ventureId": "schema-registry",
-  "lastUpdated": "2026-06-03T22:30:00Z",
+  "lastUpdated": "2026-06-04T02:39:54Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
-    "totalCount": 21
+    "totalCount": 24
   },
   "followUps": [
     {
@@ -243,13 +243,18 @@
       "id": "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1",
       "title": "Normalize ajv compile/validate invocations across SR workflows and dispatches to include -r for external $ref resolution",
       "priority": "P2",
-      "status": "open",
+      "status": "closed",
       "opened": "2026-06-03",
       "openedDuring": "d-2026-06-03-sr-resource-access-credential-liveness-probe OUT-2",
       "scope": "Substrate observation surfaced during PR #106 (Item B vpcPeerings) Step 2: ajv compile failed with 'can't resolve reference https://schemas.luh.tech/_enums/luhtech-enums.schema.json' because the dispatch's compile invocation omitted -r flag. Pre-existing pattern — workflow CI paths use different invocation that resolves refs correctly, but standalone ajv compile/validate from dispatches or local debug fail. Audit all ajv invocations across .github/workflows/*.yml + dispatch templates; normalize to canonical form including all required -r references. Likely affects meta-schema-check.yml, instance-validation.yml, refs-check.yml + any future standalone validation. PR #106 had to work around this mid-dispatch; this FU normalizes the pattern.",
       "blockedBy": [],
       "blocks": [],
-      "trackingRepo": "luh-tech/schema-registry"
+      "trackingRepo": "luh-tech/schema-registry",
+      "resolution": {
+        "closedDate": "2026-06-04",
+        "closedDuring": "d-2026-06-04-sr-ajv-r-flag-workflow-normalization",
+        "summary": "Closed via surgical -r flag addition to roadmap-sync.yml line 50 dependencies.schema.json ajv invocation. Step 1.5 substrate read 2026-06-04 confirmed line 50 was the only confirmed gap of this class within roadmap-sync.yml (lines 35 and 55 have no external $refs and correctly omit -r; line 45 already had correct -r; line 40 venture-summary.schema.json is FILE NOT FOUND — separate FU; line 65 dynamic loop external-ref behavior — separate FU). Two negative-case proofs preceded this fix: PR #106 Item B vpcPeerings v1.2.0 ajv compile failure, PR #119 TRUTH-DELIVERED dispatch authoring miss caught by REFUSE-AND-SURFACE. F0B85LNSTC4 doctrine working: substrate-vs-spec mismatches caught before main pollution. Forward-looking discipline: TRUTH-DELIVERED schema also requires -r forbidden-audit-paint-names flag per session-level work, baked into all subsequent dispatches."
+      }
     },
     {
       "id": "FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1",
@@ -310,6 +315,42 @@
       "blockedBy": [],
       "blocks": [],
       "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-WORKFLOW-VENTURE-SUMMARY-INVOCATION-PATH-1",
+      "title": "Investigate venture-summary.schema.json invocation in roadmap-sync.yml — FILE NOT FOUND on disk during 2026-06-04 substrate read",
+      "priority": "P2",
+      "status": "open",
+      "opened": "2026-06-04",
+      "openedDuring": "d-2026-06-04-sr-ajv-r-flag-workflow-normalization Step 1.5 substrate read",
+      "scope": "During Step 1.5 substrate read of roadmap-sync.yml, line 40 invocation targets schemas/venture-summary.schema.json but the file is not present at that path on disk. Two possibilities: (1) workflow invocation is dead code — file was deleted or renamed without corresponding workflow cleanup; (2) workflow invocation has wrong path — file exists under a different name or location. As written, the line 40 invocation would fail at runtime if the workflow ran against any venture-summary instance. Investigation work: search repo for venture-summary*.schema.json files (any version), trace any references to determine intent, then either DELETE the line 40 invocation (if dead code) or FIX the schema path (if relocated). Closes after workflow line 40 reflects substrate truth.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-WORKFLOW-AJV-INSTANCE-VALIDATION-AUDIT-1",
+      "title": "Audit .github/workflows/instance-validation.yml ajv invocations for same -r flag gap class",
+      "priority": "P3",
+      "status": "open",
+      "opened": "2026-06-04",
+      "openedDuring": "d-2026-06-04-sr-ajv-r-flag-workflow-normalization Step 1.5 substrate read",
+      "scope": "Step 1.5 substrate read flagged that instance-validation.yml lines 35 + 57 use npx -y ajv-cli@5 validate without visible -r flags. The schemas being validated (deliverable.schema.json + rule.schema.json) have known external refs to forbidden-audit-paint-names.schema.json per session-level work. Audit: read instance-validation.yml verbatim, walk external $refs for each referenced schema, identify any invocation that needs -r and currently lacks it. Same fix class as the line 50 dependencies.schema.json gap closed by d-2026-06-04-sr-ajv-r-flag-workflow-normalization, but applied to a different workflow file — kept out-of-scope from that deliverable per memory #18 branch scope-lock and filed here for separate execution.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-WORKFLOW-DYNAMIC-SCHEMA-LOOP-EXTERNAL-REFS-1",
+      "title": "Analyze roadmap-sync.yml line 65 dynamic-schema-name loop for external-ref behavior",
+      "priority": "P3",
+      "status": "open",
+      "opened": "2026-06-04",
+      "openedDuring": "d-2026-06-04-sr-ajv-r-flag-workflow-normalization Step 1.5 substrate read",
+      "scope": "Step 1.5 substrate read flagged line 65 of roadmap-sync.yml uses a dynamic $schema_name variable inside an examples loop — external-ref behavior could not be statically determined during the read because the schema is selected at runtime per iteration. Analysis work: enumerate all schema files the loop targets at runtime, build the same external-refs table as Step 1.5 substrate read produced for the static lines 35-55, then determine whether the loop's ajv invocation needs -r handling (and if so, what shape — likely a per-iteration -r flag set built dynamically). Forward-looking, not blocking — line 65 may already be functionally correct depending on which schemas the loop iterates over.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
     }
   ],
   "indexes": {
@@ -322,12 +363,14 @@
         "FU-SR-ECTROPY-FEATURE-SCHEMA-CONST-CONSTRAINT-1",
         "FU-RULE-PROJECTION-CONTRACT-F5-FUSION-AUTOMATED-1",
         "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1",
-        "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1",
         "FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1",
         "FU-SR-RESOURCE-ACCESS-AUDIT-PAINT-CONSTRAINT-FUTURE-1",
         "FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1",
         "FU-SR-EB-AGENT-MCP-BROWSER-CHAT-ACCESS-1",
-        "FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1"
+        "FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1",
+        "FU-SR-WORKFLOW-VENTURE-SUMMARY-INVOCATION-PATH-1",
+        "FU-SR-WORKFLOW-AJV-INSTANCE-VALIDATION-AUDIT-1",
+        "FU-SR-WORKFLOW-DYNAMIC-SCHEMA-LOOP-EXTERNAL-REFS-1"
       ],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
@@ -337,8 +380,11 @@
         "FU-RULE-INSTANCE-VALIDATION-CI-ON-MAIN-1",
         "FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1",
         "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
-        "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
-      ]
+        "FU-SR-CATALOG-VPC-PEERING-FIELD-1",
+        "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1"
+      ],
+      "in-progress": [],
+      "blocked": []
     },
     "byPriority": {
       "P2": [
@@ -353,7 +399,8 @@
         "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1",
         "FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1",
         "FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1",
-        "FU-SR-EB-AGENT-MCP-BROWSER-CHAT-ACCESS-1"
+        "FU-SR-EB-AGENT-MCP-BROWSER-CHAT-ACCESS-1",
+        "FU-SR-WORKFLOW-VENTURE-SUMMARY-INVOCATION-PATH-1"
       ],
       "P3": [
         "FU-RESOLVER-PROPAGATION-1",
@@ -361,13 +408,16 @@
         "FU-VENTURE-TYPE-ENUM-REVIEW-1",
         "FU-DECISION-LOG-SCHEMA-BUMP-RULE-PROMOTION-FIELDS-1",
         "FU-SR-RESOURCE-ACCESS-AUDIT-PAINT-CONSTRAINT-FUTURE-1",
-        "FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1"
+        "FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1",
+        "FU-SR-WORKFLOW-AJV-INSTANCE-VALIDATION-AUDIT-1",
+        "FU-SR-WORKFLOW-DYNAMIC-SCHEMA-LOOP-EXTERNAL-REFS-1"
       ],
       "P1": [
         "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
         "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
         "FU-SR-CATALOG-VPC-PEERING-FIELD-1"
-      ]
+      ],
+      "P0": []
     },
     "byBlockedBy": {}
   }
