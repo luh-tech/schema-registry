@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-04-eb-fu-register-housekeeping",
+  "deliveredAt": "2026-06-04T01:48:28Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1..OUT-4",
+      "mergeCommit": "eda082ebb4ce838109a32747a12951808f01114f",
+      "prNumber": 293,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/293",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "All 4 FU outputs landed via single EB PR #293 at eda082e, merged 2026-06-04T01:48:28Z. follow-up-register.json count advanced from 242 to 246 (+4). FU IDs filed: FU-EB-RA-GRANT-DEV-CONFIGS-PROBE-1 (P2, open), FU-EB-RA-GRANT-KARBON521-METHOD-1 (P2, open), FU-EB-RA-INTERNAL-RESOURCES-MODELING-1 (P3, open), FU-EB-RA-ROTATION-POLICY-COMPLETION-1 (P2, open). All follow flat-style FU convention (no resolution block while open). Closes the 2026-06-03 infra-hygiene arc fully — all 3 FUs deferred from d-2026-06-03-eb-infra-hygiene v1.1.0 spec.relatedFollowUps now tracked in canonical register, plus rotation-policy-completion FU surfaced during execution. CI all green on EB PR #293."
+  },
+  "relatedFollowUps": [
+    "FU-EB-RA-GRANT-DEV-CONFIGS-PROBE-1",
+    "FU-EB-RA-GRANT-KARBON521-METHOD-1",
+    "FU-EB-RA-INTERNAL-RESOURCES-MODELING-1",
+    "FU-EB-RA-ROTATION-POLICY-COMPLETION-1"
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-04T18:16:10Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED #5 authored for d-2026-06-04-eb-fu-register-housekeeping v1.0.0; deliverable instance lifecycleState transitions appended S4-authored -> S6-staged (SR ea841ae PR #118) -> S7-merged (EB PR #293 at eda082e) -> S8-closed in same PR; closureStatus=closed-clean"
+    }
+  ]
+}
