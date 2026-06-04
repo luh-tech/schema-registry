@@ -1,0 +1,94 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-04-eb-catalog-ground-truth-atomic",
+  "version": "1.0.0",
+  "title": "EB 5-file catalog substrate refresh — atomic ground-truth update",
+  "description": "Atomic 5-file substrate refresh of EB .roadmap/*.json files capturing operational reality post-2026-06-03 infra-hygiene arc + substrate-validation-matrix SPIKE findings. Shipped EB PR #294 squashed at ecea56f. RETROACTIVE LANDING: this SR instance lands AFTER EB merge because the deliverable was authored chat-side as a tarball without a standalone spec file in the EB repo, and EB shipped to main before SR-anchor landing. Second instance of EB-pre-SR-ship deviation this week (first was PR #290 coverage-nested-resources). Pattern surfaced for substrate-correction via FU FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1 (filed in PR 3 of this closure arc).",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "chore/catalog-ground-truth-atomic-2026-06-04",
+    "scopeFiles": [
+      ".roadmap/infrastructure-catalog.json",
+      ".roadmap/resource-access.json",
+      ".roadmap/architecture.json",
+      ".roadmap/decision-log.json",
+      ".roadmap/follow-up-register.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "infrastructure-catalog.json v2.0.0 -> v2.1.0. Adds env-prod blue-green server modeling (server-do-primary-blue + server-do-primary-green replacing singular server-do-primary), populates env-cis services (13 services), fixes api-gateway port (3002 -> 4000), adds 3 new cis service entries.",
+      "acceptanceCriteria": [
+        "infrastructure-catalog.json present on EB main",
+        "version 2.1.0",
+        "env-prod blue-green model captured",
+        "env-cis services populated"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "resource-access.json v1.0.0 -> v1.1.0. Populates ag-cis-services-1.credentialRef with CIS_DEPLOY_WEBHOOK_SECRET, adds credentialStore entry.",
+      "acceptanceCriteria": [
+        "resource-access.json v1.1.0",
+        "ag-cis-services-1.credentialRef populated"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "architecture.json v1.0.0 -> v1.1.0. Adds interim SEPPA modeling via mcp-server, acknowledges assistant-service slip (3 services + 1 phase had targetDate TBD strings stripped per fixup commit 1 — field is optional, statusNote carries slip intent), adds phase-cis-tier-2, adds 3 cis service entries.",
+      "acceptanceCriteria": [
+        "architecture.json v1.1.0",
+        "mcp-server interim SEPPA model captured",
+        "phase-cis-tier-2 present"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "decision-log.json — 3 new DECs filed: d-2026-06-04-seppa-interim-vs-target-model, d-2026-06-04-service-id-convention-discrimination, d-2026-06-04-catalog-runtime-observations-deferred. Each carries required rationale field (added in fixup commit 1 — initial commit was missing rationale). Indexes rebuilt.",
+      "acceptanceCriteria": [
+        "3 new DECs present",
+        "each has rationale field populated",
+        "indexes rebuilt"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "follow-up-register.json 246 -> 262 (+16). 7 closed-on-arrival SPIKE FUs + 9 new opens. meta block recounted (sum 233 -> 262).",
+      "acceptanceCriteria": [
+        "follow-up-register.json totalCount=262",
+        "7 closed-on-arrival + 9 new opens captured",
+        "meta block recounted"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "First-commit CI failed (3 schema violations: missing rationale, additionalProperties on env-prod.servers, targetDate TBD strings) — captured in fixup commit 1",
+      "Fixup commit 2 stripped agentCapabilities from service-mcp-server + environment from 3 cis services",
+      "Final 3-commit arc squashed clean at ecea56f, all required CI checks green"
+    ],
+    "postMerge": [
+      "EB main at ecea56f",
+      "coverage-infrastructure: 17 gaps (16 uncovered + 1 dangling — new dangling ag-server-do-primary blue-green migration gap)",
+      "dangling-resourceRefs: 1 (ag-server-do-primary blue-green migration gap)",
+      "All 7 SPIKE-resolved FUs filed-as-closed in PR"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-04",
+      "trigger": "RETROACTIVE LANDING. EB shipped PR #294 squashed at ecea56f on 2026-06-04 09:30 PDT without SR anchor in place. This SR instance lands AFTER EB merge to provide the anchor required for TRUTH-DELIVERED #6 closure filing per established cross-repo pattern (4 existing TRUTH-DELIVERED on SR main all anchor to EB-scope deliverable instances). Pattern of EB-pre-SR-ship now observed twice this week (PR #290 + PR #294); FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1 filed in subsequent PR 3 of this closure arc to surface for doctrine refinement decision."
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "Substrate honesty: this deliverable was authored chat-side by EB-chat as a tarball (SHA 1678a334... first commit, 632bce72... fixup tarball SHA per chat output dir) without a standalone spec file landing in the EB repo. Per EB-chat confirmation 2026-06-04: 'no file by that name exists. The deliverable was identified by the d-2026-06-04-eb-catalog-ground-truth-atomic ID but landed as changes to 5 existing .roadmap/*.json files via PR #294.' This SR instance captures the deliverable spec retroactively from EB-chat's channel message (verbatim PR #294 summary), the fixup tarball README, and the fixup commit message. First of 3 PRs in 2026-06-04 cross-repo closure arc: PR 1 (this) lands the anchor; PR 2 closes d-2026-06-04-eb-fu-register-housekeeping (TRUTH-DELIVERED #5); PR 3 closes this deliverable (TRUTH-DELIVERED #6) + files FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1."
+}
