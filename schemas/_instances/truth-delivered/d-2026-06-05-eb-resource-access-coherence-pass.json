@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-05-eb-resource-access-coherence-pass",
+  "deliveredAt": "2026-06-04T19:45:30Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (SR-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1+OUT-2",
+      "mergeCommit": "a254412",
+      "prNumber": 295,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/295",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "EB-only execution deliverable closed clean. All 4 eb-agent post-merge predictions matched exactly: dangling-resourceRefs 1->0, coverage-infrastructure.grantNotInCatalog 1->0, coverage-infrastructure.catalogNotCovered 16->14, total gaps 17->14. Single-file scope (.roadmap/resource-access.json v1.1.0 -> v1.2.0). PR #294 lessons applied two-pattern-applications-clean (schema pre-validation gate in apply.py, L4 patch for flag mismatch, commit_and_merge.sh two-pass interactive flow). First-time CI green, single commit, no fixup arc. Sixth in-band confirmation of EB-pre-SR-ship pattern (FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1 P2 open filed PR #124, L4 doctrine refinement pending). Eighth and tenth in-band confirmations of substrate-before-write skill discipline (PR #125 b488841) accumulated during this very dispatch authoring: SR-chat authored Step 3 v1 TRUTH-DELIVERED template against invented field shapes (id, version, title, closedAt, closure{}, substrate{}, deferredFollowUps[], patternObservations[]) without reading truth-delivered.schema.json — terminal caught at substrate-read + ajv-validate time (8th confirmation); SR-chat then authored Step 2 PATH-B v1 transitions[] against invented lifecycleState enum (S0-proposed, S5-validated) and ISO datetime format without reading deliverable.schema.json transitions schema constraint — terminal caught at ajv-validate time (10th confirmation, schema specifies format=date YYYY-MM-DD and enum without S0/S5-validated values). Terminal reported both verbatim per HARD RULE 5, did not autonomously correct. v2 amendments authored against canonical schemas + reference instance (TRUTH-DELIVERED #6 d-2026-06-04-eb-catalog-ground-truth-atomic.json) shapes. Substrate evidence that the skill discipline propagates terminal-side via REFUSE-AND-SURFACE pattern even before runtime delivery layer is built — and that chat-side composition needs the runtime layer because memory-rule reinforcement is insufficient when authoring novel artifact shapes. Two deferred FUs (FU-EB-RA-GRANT-SERVER-DO-PRIMARY-BLUEGREEN-MIGRATION-1 closed-on-arrival P1, FU-EB-STAGING-PROD-VERSION-DRIFT-1 open P1) file EB-side in next EB deliverable per channel relay 2026-06-04 12:48 PDT — not SR-scope.",
+    "overrideRecord": "none"
+  },
+  "relatedFollowUps": [
+    "FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1",
+    "FU-EB-RA-GRANT-SERVER-DO-PRIMARY-BLUEGREEN-MIGRATION-1",
+    "FU-EB-STAGING-PROD-VERSION-DRIFT-1"
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-04T19:45:30Z",
+      "actor": "erik-luh",
+      "event": "EB PR #295 merged at a254412 (squash-merge clean, no --admin, CI green first time)"
+    },
+    {
+      "timestamp": "2026-06-04T20:30:00Z",
+      "actor": "Claude (SR-chat) on behalf of Erik (L4)",
+      "event": "SR retro-landing of deliverable instance at S8-closed (EB-pre-SR-ship recovery pattern, 6th in-band confirmation) plus TRUTH-DELIVERED #7 authoring after two terminal-caught dispatch schema mismatches corrected v1 -> v2"
+    }
+  ]
+}
