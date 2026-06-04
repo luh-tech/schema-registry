@@ -1,0 +1,80 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-04-sr-skill-cross-repo-execution-shape",
+  "version": "1.0.0",
+  "title": "Third skill instance — cross-repo-execution-shape (dev-pipeline, working-model)",
+  "description": "Third of three foundational skills landing the skills meta-layer into operational use. Captures the 5-stage cross-repo flow seven-times-proven across the session arc: substrate-read -> sandbox-validate -> SR anchor land -> target-repo execute -> SR close. Composite of substrate-before-write (skill 1, the substrate input) and canonical-schema-authoring (skill 2, the validation discipline). Dev-pipeline scope. Lifecycle: working-model from initiation per memory rule 20.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/sr-skill-cross-repo-execution-shape-2026-06-04",
+    "scopeFiles": [
+      "skills/_instances/dev-pipeline/cross-repo-execution-shape/skill-instance.json",
+      "skills/_instances/dev-pipeline/cross-repo-execution-shape/SKILL.md",
+      "schemas/_instances/deliverables/d-2026-06-04-sr-skill-cross-repo-execution-shape.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Land skills/_instances/dev-pipeline/cross-repo-execution-shape/skill-instance.json — third skill instance under skills meta-layer. Encodes 5-stage cross-repo flow with 3 triggerContext blocks, 5 directives, 4 antiPatterns, 3 boundaryConditions, 5 references. lifecycleStatus=working-model.",
+      "acceptanceCriteria": [
+        "skill-instance.json present at canonical path",
+        "ajv validates against skill.schema.json v1.0.0 exit 0",
+        "skill-instance-validation.yml CI PASS",
+        "$id matches urn:luhtech:skill:dev-pipeline:cross-repo-execution-shape:1.0.0",
+        "category=dev-pipeline, lifecycleStatus=working-model"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Generate paired SKILL.md via tools/skill_generate.py.",
+      "acceptanceCriteria": [
+        "SKILL.md present at canonical path",
+        "generationMetadata block populated",
+        "skill-md-generation-check.yml CI PASS"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Deliverable instance lands at schemas/_instances/deliverables/d-2026-06-04-sr-skill-cross-repo-execution-shape.json. Per memory #20.",
+      "acceptanceCriteria": [
+        "Deliverable instance lands at canonical path",
+        "lifecycleState=S4-authored",
+        "ajv validates against deliverable.schema.json v1.1.0 with -r flag exit 0"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Chat-side sandbox: skill-instance.json validates against skill.schema.json v1.0.0 — exit 0",
+      "tools/skill_validate.py + tools/skill_generate.py both exit 0",
+      "ajv-cli@5.0.0 validates deliverable instance with -r flag exit 0",
+      "skill-instance-validation.yml + skill-md-generation-check.yml CI PASS",
+      "All other required CI checks green",
+      "PR squash-merged; --admin forbidden per memory #15"
+    ],
+    "postMerge": [
+      "main shows merged SHA",
+      "skill-instance.json + SKILL.md both present on main",
+      "Total non-fixture skill instances on main: 2 -> 3",
+      "Foundational skill arc COMPLETE",
+      "Composite path opens: FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1 promotable to working-model rule instance paired with canonical-schema-authoring skill (PR 2)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-04",
+      "trigger": "Spec authored as third of three foundational skills per Erik direction 2026-06-04 'finish the skills arc and ship it with all three PR'. Cross-repo flow seven-times-proven across session arc — strongest substrate of any pattern this session."
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "Third and final of foundational skill arc. After PR 3 merges, the composite path opens: FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1 (filed PR #115) becomes promotable to working-model rule instance paired with skill 2 (canonical-schema-authoring) via pairedRule field — first composite rule+skill artifact under the meta-layer. That work is post-arc, in clear path. EB-pre-SR-ship deviation FU (FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1) doctrine refinement is similarly post-arc, L4 decision class."
+}
