@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "chore/catalog-ground-truth-atomic-2026-06-04",
@@ -87,6 +87,28 @@
       "to": "S4-authored",
       "date": "2026-06-04",
       "trigger": "RETROACTIVE LANDING. EB shipped PR #294 squashed at ecea56f on 2026-06-04 09:30 PDT without SR anchor in place. This SR instance lands AFTER EB merge to provide the anchor required for TRUTH-DELIVERED #6 closure filing per established cross-repo pattern (4 existing TRUTH-DELIVERED on SR main all anchor to EB-scope deliverable instances). Pattern of EB-pre-SR-ship now observed twice this week (PR #290 + PR #294); FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1 filed in subsequent PR 3 of this closure arc to surface for doctrine refinement decision."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S6-staged",
+      "date": "2026-06-04",
+      "commitSha": "3079be3",
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/122",
+      "trigger": "SR retroactive anchor instance landed via PR #122 at 3079be3 — closes anchor gap; EB had already shipped PR #294 at ecea56f without SR-side spec landing"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-04",
+      "commitSha": "ecea56f",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/294",
+      "trigger": "EB PR #294 squash-merged at ecea56f on 2026-06-04 09:30 PDT — 3-commit arc squashed: first commit + fixup commit 1 (rationale on DECs + strip env-prod additionalProperties + strip targetDate TBD strings) + fixup commit 2 (strip agentCapabilities from service-mcp-server + strip environment from 3 cis services); all 5 outputs landed against EB .roadmap/ files; all CI green post-fixups"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-04",
+      "trigger": "TRUTH-DELIVERED #6 authored as part of this closure PR; deliverable lifecycle complete; EB-pre-SR-ship deviation captured + filed as FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1 (second observed instance, first was PR #290)"
     }
   ],
   "relatedFollowUps": [],
