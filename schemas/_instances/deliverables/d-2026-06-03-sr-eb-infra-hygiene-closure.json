@@ -1,0 +1,83 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-03-sr-eb-infra-hygiene-closure",
+  "version": "1.0.0",
+  "title": "SR closure for d-2026-06-03-eb-infra-hygiene v1.1.0 — TRUTH-DELIVERED #4 (closed-with-debt)",
+  "description": "Cross-repo closure deliverable. EB merged PR #292 at fd618f3 covering all 7 outputs of v1.1.0 spec (server-cis-services-1 catalog entry, FK refs rename, 3 accessGrants for ectropy-terraform-state + server-do-primary + db-ectropy-staging, rotation+livenessProbe on 2 TF_DO_SPACES items, vpc-peering-768a1eb6 capture). SR transitions deliverable instance S4-authored -> S6-staged -> S7-merged -> S8-closed and authors TRUTH-DELIVERED #4 with closureStatus=closed-with-debt (drift-rotation flagged 2 noPolicy entries — L4 documented-override approved, FU FU-EB-RA-ROTATION-POLICY-COMPLETION-1 filed via EB deliverable d-2026-06-04-eb-fu-register-housekeeping per Option Y sequencing).",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/sr-eb-infra-hygiene-closure-2026-06-03",
+    "scopeFiles": [
+      "schemas/_instances/deliverables/d-2026-06-03-eb-infra-hygiene.json",
+      "schemas/_instances/truth-delivered/d-2026-06-03-eb-infra-hygiene.json",
+      "schemas/_instances/deliverables/d-2026-06-03-sr-eb-infra-hygiene-closure.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Append 3 closure transitions to schemas/_instances/deliverables/d-2026-06-03-eb-infra-hygiene.json (lifecycleState S4-authored -> S8-closed). transitions count: 2 -> 5. Single EB PR #292 at fd618f3 covers all 7 outputs — single S7-merged transition (not granular per output, because single EB PR per spec design). relatedFollowUps[] also extended by 1 entry to include FU-EB-RA-ROTATION-POLICY-COMPLETION-1 surfaced during execution.",
+      "acceptanceCriteria": [
+        "Instance lifecycleState updated S4-authored -> S8-closed",
+        "transitions[] length 2 -> 5 (initial + amendment + 3 closure: S4->S6, S6->S7 for EB PR #292, S7->S8)",
+        "S7-merged transition references EB PR #292 + merge SHA fd618f3 verbatim per EB canvas F0B85QR0UDQ",
+        "relatedFollowUps[] count 5 -> 6 (adds FU-EB-RA-ROTATION-POLICY-COMPLETION-1)",
+        "ajv validates updated instance against deliverable.schema.json v1.1.0 with -r forbidden-audit-paint-names schema, exit 0"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Author TRUTH-DELIVERED instance at schemas/_instances/truth-delivered/d-2026-06-03-eb-infra-hygiene.json. closureStatus=closed-with-debt (drift-rotation gap on TF_DO_SPACES items), 1 output (single EB PR), 4 rulePipelineEvidence entries, closureNotes captures outcome + debt + overrideRecord (L4-approved per memory #15). closureNotes.debt references FU FU-EB-RA-ROTATION-POLICY-COMPLETION-1 filed via EB deliverable d-2026-06-04-eb-fu-register-housekeeping (not SR-side micro-PR per Option Y sequencing correction).",
+      "acceptanceCriteria": [
+        "File written at schemas/_instances/truth-delivered/d-2026-06-03-eb-infra-hygiene.json",
+        "deliverableId=d-2026-06-03-eb-infra-hygiene",
+        "closureStatus=closed-with-debt",
+        "lifecycleState=S8-closed",
+        "outputs[].mergeCommit=fd618f3, prNumber=292, ciResult=green",
+        "rulePipelineEvidence count=4 (RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1, RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1, RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1, RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1)",
+        "relatedFollowUps[] includes FU-EB-RA-ROTATION-POLICY-COMPLETION-1",
+        "ajv validates against truth-delivered.schema.json v1.0.0 with -r forbidden-audit-paint-names schema, exit 0"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Deliverable instance for this SR closure lands at S4-authored at schemas/_instances/deliverables/d-2026-06-03-sr-eb-infra-hygiene-closure.json. Captures the closure work itself per memory #20 substrate-cleanup-as-you-go.",
+      "acceptanceCriteria": [
+        "Closure deliverable instance lands at canonical path",
+        "lifecycleState=S4-authored",
+        "scopeFiles=3 (target deliverable + TRUTH-DELIVERED + this instance)",
+        "ajv validates against deliverable.schema.json v1.1.0 with -r forbidden-audit-paint-names schema, exit 0"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli@5.0.0 validates updated deliverable instance against deliverable.schema.json v1.1.0 WITH -r forbidden-audit-paint-names schema (canonical pattern per PR #119 lesson)",
+      "ajv-cli@5.0.0 validates TRUTH-DELIVERED instance against truth-delivered.schema.json v1.0.0 WITH -r forbidden-audit-paint-names schema (canonical pattern per PR #119 lesson — same external ref dependency as deliverable schema)",
+      "ajv-cli@5.0.0 validates this closure deliverable instance against deliverable.schema.json v1.1.0 WITH -r forbidden-audit-paint-names schema",
+      "git diff --stat scoped to exactly 3 files",
+      "PR CI green; --admin merge forbidden per memory #15"
+    ],
+    "postMerge": [
+      "main shows merged SHA",
+      "Total TRUTH-DELIVERED instances on main: 3 -> 4",
+      "d-2026-06-03-eb-infra-hygiene lifecycleState on main = S8-closed"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-04",
+      "trigger": "Spec authored after substrate-read on SR main 11384cf (post-PR #119). EB closure canvas F0B85QR0UDQ provided EB PR #292 merge SHA fd618f3 covering all 7 outputs. drift-rotation gap surfaced for L4 documented-override. FU FU-EB-RA-ROTATION-POLICY-COMPLETION-1 filed via EB deliverable d-2026-06-04-eb-fu-register-housekeeping (Option Y sequencing: PR 3 #118 shipped first, then PR 1 #119, now this PR 2). Third of 3 succession PRs closing 2026-06-03 cross-repo arc."
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "Third of 3 succession PRs closing 2026-06-03 cross-repo arc. Per memory #18 branch scope-lock, ships as its own atomic PR. Per memory #20 enterprise-complete, closure record is itself a deliverable instance for substrate honesty. PR 4 (D-SR-EB-FU-REGISTER-HOUSEKEEPING-CLOSURE + TRUTH-DELIVERED #5) follows after EB merges housekeeping work. All ajv invocations include -r forbidden-audit-paint-names schema flag per PR #119 lesson (second negative case for FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1)."
+}

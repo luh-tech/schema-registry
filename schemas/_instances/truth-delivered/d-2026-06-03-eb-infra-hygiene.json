@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-03-eb-infra-hygiene",
+  "deliveredAt": "2026-06-04T01:30:00Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-with-debt",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1..OUT-7",
+      "mergeCommit": "fd618f3",
+      "prNumber": 292,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/292",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "All 7 outputs of v1.1.0 spec landed via single EB PR #292 at fd618f3. Post-merge substrate state verified per EB canvas F0B85QR0UDQ: coverage-infrastructure.grantNotInCatalog=[], coverage-infrastructure.postureNotInCatalog=[], coverage-infrastructure.catalogNotCovered=11 (server-edge-karbon521 + 10 deferred per spec notes), dangling-resourceRefs=0, dangling-credentialRefs=0, coverage-credentials=0 gaps, drift-vpcpeering=1 pending-elimination (vpc-peering-stg-prod-768a1eb6 correctly surfaced per OUT-7). First real substrate populated against today's schemas: infrastructure-catalog.schema.json v1.2.0 (vpcPeerings, SR PR #106) and resource-access.schema.json v1.1.0 (livenessProbe, SR PR #108).",
+    "debt": "drift-rotation flagged 2 noPolicy entries against TF_DO_SPACES_STAGING and TF_DO_SPACES_PROD credentialStore items after OUT-5 applied policy=on-exposure with lastRotated=null + trackedByFollowUp=null. Tool's stricter expectation requires lastRotated (non-null) + intervalDays for a 'complete' rotation policy. OUT-5 acceptance criteria were satisfied as authored (per memory #10 never fabricate); the substrate gap is real and tracked. FU FU-EB-RA-ROTATION-POLICY-COMPLETION-1 (P2) filed via EB deliverable d-2026-06-04-eb-fu-register-housekeeping which appends 4 FUs (3 deferred from this v1.1.0 spec.relatedFollowUps that never landed against the EB register, plus this rotation-completion FU surfaced during execution) to EB's .roadmap/follow-up-register.json. SR landing of the EB housekeeping deliverable instance ships ahead of this closure per Option Y sequencing (unblock EB first).",
+    "overrideRecord": "L4 approved proceeding with drift-rotation gap in canonical state per EB canvas narrative: 'Erik approved proceeding with the gap in canonical state' — recorded per memory #15 documented-override-not-compliance pattern. Override scope: drift-rotation tool's stricter completion semantic on OUT-5 outputs; not blanket override of rotation policy enforcement."
+  },
+  "relatedFollowUps": [
+    "FU-EB-CATALOG-TF-STATE-BUCKET-MISSING-1",
+    "FU-EB-CATALOG-DEV-OBJECTSTORAGE-POPULATE-1",
+    "FU-EB-RA-GRANT-DEV-CONFIGS-PROBE-1",
+    "FU-EB-RA-GRANT-KARBON521-METHOD-1",
+    "FU-EB-RA-INTERNAL-RESOURCES-MODELING-1",
+    "FU-EB-RA-ROTATION-POLICY-COMPLETION-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "second-negative-case-content-and-version-bump-amendment-correctly-handled-in-band"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1",
+      "evidenceClass": "spike-correctly-not-invoked-substrate-known"
+    },
+    {
+      "ruleId": "RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1",
+      "evidenceClass": "cross-chat-canvas-relay-five-times-proven-this-session"
+    },
+    {
+      "ruleId": "RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1",
+      "evidenceClass": "drift-rotation-gap-documented-override-substrate-honest"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-04T01:30:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED authored for d-2026-06-03-eb-infra-hygiene v1.1.0; deliverable instance lifecycleState transitions appended S4-authored -> S6-staged (SR ee5dbf5) -> S7-merged (EB PR #292 at fd618f3) -> S8-closed in same PR; closureStatus=closed-with-debt due to drift-rotation gap (FU filed in succession)"
+    }
+  ]
+}
