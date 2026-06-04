@@ -1,0 +1,94 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-03-eb-agent-coverage-nested-resources",
+  "version": "1.1.0",
+  "title": "eb-agent catalog ref-set walkers — env.servers[] + externalServices[] across coverage_infrastructure + dangling_resource_refs",
+  "description": "Extends catalog ref-set walker pattern to walk env.servers[].id and catalog.externalServices[].id across BOTH tools that build a global catalog_refs set: coverage_infrastructure.py (v1.0.0 OUT-1, OUT-2) and dangling_resource_refs.py (v1.1.0 OUT-3, OUT-4). v1.0.0 spec scope was limited to coverage_infrastructure.py based on the symptom that surfaced first (verify check 3). v1.1.0 amendment expands scope after re-verify surfaced same root cause in dangling_resource_refs.py walker. Substrate read of all 9 eb-agent tools confirms only these 2 build a global catalog ref-set; the 7 trace + dangling-credential tools do not share this pattern.",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "fix/eb-agent-coverage-nested-resources-2026-06-03",
+    "scopeFiles": [
+      "agent/src/agent/tools/coverage_infrastructure.py",
+      "agent/src/agent/tools/dangling_resource_refs.py"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Extend catalog_refs builder in coverage_infrastructure.py to walk env.get('servers', []) collecting srv.get('id') values. Insertion point: between the existing env.objectStorage[] walk and the services[] walk, inside the for-env loop. Walk shape mirrors existing objectStorage walk. Closes the FK resolution gap for accessGrants and hostPosture entries referencing server ids that exist nested under environments per infrastructure-catalog.schema.json.",
+      "acceptanceCriteria": [
+        "coverage_infrastructure.py contains a walk over env.get('servers', []) that adds srv.get('id') to catalog_refs inside the environments loop",
+        "Walk only adds non-falsy ids (guard with if srv.get('id'): pattern matching existing walks)",
+        "No other behavior changes - same ToolResult shape, same summary string format",
+        "Module-level import surface unchanged"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Extend catalog_refs builder in coverage_infrastructure.py to walk catalog.get('externalServices', []) collecting svc.get('id') values. Insertion point: after the existing databases[] walk, parallel to services[] walk. accessGrant.resourceType enum includes 'external-service' so externalServices FK targets are canonical resourceRefs.",
+      "acceptanceCriteria": [
+        "coverage_infrastructure.py contains a walk over catalog.get('externalServices', []) that adds svc.get('id') to catalog_refs",
+        "Walk only adds non-falsy ids",
+        "No other behavior changes"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Extend catalog_refs builder in dangling_resource_refs.py to walk env.get('servers', []) collecting srv.get('id') values. Same insertion point and shape as OUT-1 (between objectStorage walk and services walk inside for-env loop). Closes the FK resolution gap for accessGrants referencing nested server ids — currently dangling_resource_refs.py reports server-cis-services-1 and server-do-primary as dangling despite both being present in env.servers[].",
+      "acceptanceCriteria": [
+        "dangling_resource_refs.py contains a walk over env.get('servers', []) that adds srv.get('id') to catalog_refs inside the environments loop",
+        "Walk only adds non-falsy ids (guard with if srv.get('id'): pattern matching existing walks)",
+        "No other behavior changes — same ToolResult shape, same summary string format",
+        "eb-agent dangling-resourceRefs returns 0 dangling against d-2026-06-03-eb-infra-hygiene v1.1.0 substrate"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Extend catalog_refs builder in dangling_resource_refs.py to walk catalog.get('externalServices', []) collecting svc.get('id') values. Same insertion point and shape as OUT-2 (after databases walk). Symmetric with OUT-2 in coverage_infrastructure.py.",
+      "acceptanceCriteria": [
+        "dangling_resource_refs.py contains a walk over catalog.get('externalServices', []) that adds svc.get('id') to catalog_refs",
+        "Walk only adds non-falsy ids",
+        "No other behavior changes"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "python3 -c 'from agent.tools.coverage_infrastructure import CoverageInfrastructure; from agent.tools.dangling_resource_refs import DanglingResourceRefs; print(CoverageInfrastructure.name, DanglingResourceRefs.name)' — exit 0 (both modules load, both classes present)",
+      "eb-agent coverage-infrastructure returns ok=true with grantNotInCatalog=[] and postureNotInCatalog=[] against d-2026-06-03-eb-infra-hygiene v1.1.0 substrate",
+      "eb-agent dangling-resourceRefs returns ok=true with 0 dangling against d-2026-06-03-eb-infra-hygiene v1.1.0 substrate",
+      "eb-agent dangling-credentialRefs returns ok=true with 0 dangling (unchanged — that tool does not touch the catalog walker)",
+      "git diff --stat scoped to exactly 2 files (coverage_infrastructure.py, dangling_resource_refs.py)",
+      "Existing eb-agent tests still pass",
+      "PR CI green; --admin merge forbidden per memory #15"
+    ],
+    "postMerge": [
+      "main shows merged SHA",
+      "eb-agent coverage-infrastructure on main reflects the walker extension",
+      "eb-agent dangling-resourceRefs on main reflects the walker extension",
+      "Unblocks d-2026-06-03-eb-infra-hygiene v1.1.0 verify.sh checks 3 AND 4"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-03",
+      "trigger": "tool-fix spec v1.0.0 authored against canonical deliverable.schema.json v1.1.0 — surfaced as blocker for d-2026-06-03-eb-infra-hygiene v1.1.0 verify check 3"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S4-authored",
+      "date": "2026-06-03",
+      "trigger": "amended to v1.1.0 after infra-hygiene verify check 4 surfaced same root cause in dangling_resource_refs.py — substrate read of all 9 eb-agent tools confirmed 2-file walker-fix scope; amendment expands scopeFiles + adds OUT-3/OUT-4 covering dangling_resource_refs.py"
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "Source files read 2026-06-03: dangling_resource_refs.py, dangling_credential_refs.py, trace_workflow.py, trace_service.py, trace_resource.py, trace_environment.py, trace_bucket.py. Walker pattern audit: coverage_infrastructure.py and dangling_resource_refs.py are the ONLY tools that build a global catalog_refs set walking all environments + top-level collections. The 5 trace tools and dangling_credential_refs.py either don't read infrastructure-catalog (trace_workflow, trace_resource, dangling_credential_refs) or read it for targeted lookups not requiring a global ref-set walk (trace_bucket: specific bucket lookup; trace_environment: single env fetch by id; trace_service: string-match across services[]). v1.1.0 scope is exhaustive for the walker class — no remaining tools share the gap. Per F0B85LNSTC4 doctrine + memory #20 enterprise-complete: amendment scope captures every tool with the gap in one PR, not iteratively across multiple PRs. Spec instance v1.0.0 currently anchored at SR; v1.1.0 amendment requires SR re-land via succession micro-PR. Doctrine note: this is the fifth amendment loop today (Cat 3 partial paths, infra-hygiene v1.1.0 buckets-vs-grants, infra-hygiene v1.1.0 OUT-7 id pattern + trackedByFollowUp, tool-fix v1.0.0 walker-coverage-only, this v1.1.0 walker-dangling-also) — all caught by substrate verification before main pollution. Spelling Luhtala verified per memory #22."
+}
