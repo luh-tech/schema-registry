@@ -1,0 +1,128 @@
+{
+  "$schema": "https://schemas.luh.tech/skill.schema.json",
+  "$id": "urn:luhtech:skill:dev-pipeline:canonical-schema-authoring:1.0.0",
+  "name": "canonical-schema-authoring",
+  "description": "FIRES when authoring any artifact that must validate against a canonical schema before cross-repo handoff — deliverable specs, skill instances, rule instances, FU register patches, TRUTH-DELIVERED records. Sandbox-validate against the canonical schema in chat-side Python BEFORE staging artifact for terminal upload. Pairs with substrate-before-write (the substrate input) and cross-repo-execution-shape (the broader 5-stage flow). F0B85LNSTC4 doctrine seven-times-proven across session arc.",
+  "version": "1.0.0",
+  "category": "dev-pipeline",
+  "lifecycleStatus": "working-model",
+  "triggerMode": "pushy",
+  "triggerContext": [
+    {
+      "precondition": "Authoring any artifact that will be validated against a canonical schema by ajv-cli or jsonschema at terminal time.",
+      "exampleCues": [
+        "compose deliverable spec for X",
+        "author skill instance for Y",
+        "build the FU register patch",
+        "create the TRUTH-DELIVERED instance",
+        "patch the rule instance"
+      ]
+    },
+    {
+      "precondition": "Cross-repo handoff of authored artifact to another agent (terminal, EB-chat, SR-chat) for landing or execution.",
+      "exampleCues": [
+        "stage for SR terminal",
+        "send to EB-chat for execution",
+        "tarball for handoff",
+        "upload for terminal"
+      ]
+    },
+    {
+      "precondition": "Modifying an existing instance that will re-validate post-edit (closure transitions, lifecycleState advances, FU status changes).",
+      "exampleCues": [
+        "append closure transitions",
+        "advance lifecycleState to S8-closed",
+        "close FU with resolution block",
+        "update register meta block"
+      ]
+    }
+  ],
+  "behavior": {
+    "summary": "Sandbox-validate every authored artifact against its canonical schema in chat-side Python (jsonschema.Draft7Validator with $ref neutering for offline operation) BEFORE staging for terminal upload. Catch shape mismatches, missing required fields, additionalProperties violations, pattern failures, and constraint violations at authoring time rather than at terminal ajv invocation time. Trade one chat-side validation round-trip for averted REFUSE-AND-SURFACE recovery cycles at terminal.",
+    "directives": [
+      {
+        "action": "After authoring any artifact JSON, immediately validate against its canonical schema using jsonschema.Draft7Validator in chat sandbox. If validation fails, fix and re-validate. Do not stage artifact to outputs/ until validation PASSES.",
+        "rationale": "F0B85LNSTC4 doctrine — chat-side sandbox catches what terminal ajv would catch, but earlier (cheaper, no round-trip). Seven-times-proven across 2026-06-03 and 2026-06-04 cross-repo arcs."
+      },
+      {
+        "action": "When canonical schema has external $refs (e.g. $ref to luhtech-enums.schema.json or forbidden-audit-paint-names.schema.json), neuter URL-form $refs in chat sandbox before validation; use the canonical -r flag for terminal ajv invocations.",
+        "rationale": "Chat sandbox has no resolver for URL-form $refs. Terminal ajv-cli requires -r flag for external $ref resolution. PR #106 + PR #119 both proved this — -r flag omission causes ajv compile failure. PR #121 closed FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1 after second proof."
+      },
+      {
+        "action": "When schema has additionalProperties:false (strict mode), audit authored artifact for any fields not in schema properties[]. Strip extra fields rather than adding properties.",
+        "rationale": "PR #124 caught case: composed TRUTH-DELIVERED outputs[] with id + description fields, canonical schema requires outputId only with additionalProperties:false. Caught chat-side by sandbox-validate before terminal saw it."
+      },
+      {
+        "action": "When schema has conditional requirements (allOf/if-then-else), audit authored artifact for the if-clause trigger and verify then-clause requirements are satisfied.",
+        "rationale": "Skill schema requires evidenceClass on UP-promotions to formalized (allOf if to==formalized then evidenceClass required). Missing this on a future promotion would fail terminal ajv."
+      },
+      {
+        "action": "Cache canonical schemas in chat-side filesystem (/tmp/<schema>.schema.json) after first read; re-validate against cached schema on every authored artifact for the same target type.",
+        "rationale": "Reduces substrate-read round-trips when authoring multiple instances of the same target type (e.g. three skill instances in this arc all validate against /tmp/skill.schema.json cached once)."
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Author artifact, stage to outputs/, and rely on terminal ajv to catch shape problems.",
+        "instead": "Validate chat-side first; only stage after PASS. Terminal ajv is the second gate, not the first."
+      },
+      {
+        "pattern": "Skip chat-side validation because 'the artifact looks right by inspection'.",
+        "instead": "Always validate. Eye-inspection misses additionalProperties violations, exact pattern matches, and nested-shape requirements."
+      },
+      {
+        "pattern": "Validate against summary description of schema instead of canonical schema text.",
+        "instead": "Read canonical schema text via substrate-before-write skill, cache, then validate against the cached canonical."
+      },
+      {
+        "pattern": "Author artifact against memory of a similar instance from a prior session.",
+        "instead": "Read canonical schema fresh; do not assume prior-session instance shape still matches current schema."
+      }
+    ]
+  },
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "transitions": [
+    {
+      "from": null,
+      "to": "draft",
+      "trigger": "skill instance authored as second of three foundational skills initiated 2026-06-04 per Erik direction; captures F0B85LNSTC4 doctrine seven-times-proven across 2026-06-03 + 2026-06-04 cross-repo arcs"
+    },
+    {
+      "from": "draft",
+      "to": "working-model",
+      "trigger": "loaded at landing per memory rule 20 enterprise-complete; substrate evidence is the strongest of any pattern this session arc — 7 first-try PASSes (Cat 3b, eb-infra-hygiene v1.0.0, eb-infra-hygiene v1.1.0, coverage-nested-resources v1.1.0, FU register housekeeping, retroactive catalog anchor PR #122, housekeeping closure PR #123) plus 5 negative-case proofs all caught by REFUSE-AND-SURFACE; doctrine production-grade"
+    }
+  ],
+  "pairedRule": "urn:luhtech:rule:dev-pipeline:canonical-schema-authoring-doctrine:1.0.0",
+  "boundaryConditions": [
+    "Does NOT fire for conversational replies, explanations, or analysis that does not produce a schema-bound artifact",
+    "Does NOT fire when schema is unknown — substrate-before-write fires first to read the canonical schema",
+    "Does NOT block ajv-cli at terminal — chat-side validation is additive, not substitutive"
+  ],
+  "references": [
+    {
+      "type": "memory-rule",
+      "location": "10",
+      "purpose": "TRUTH ONLY: validate before stating valid"
+    },
+    {
+      "type": "memory-rule",
+      "location": "20",
+      "purpose": "Enterprise-complete: validate at authoring time, not deferred to terminal"
+    },
+    {
+      "type": "closure-doc",
+      "location": "schemas/_instances/deliverables/d-2026-06-04-sr-ajv-r-flag-workflow-normalization.json",
+      "purpose": "Closed FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1 after the -r flag canonical pattern was proved across session"
+    },
+    {
+      "type": "closure-doc",
+      "location": "schemas/_instances/truth-delivered/d-2026-06-04-eb-catalog-ground-truth-atomic.json",
+      "purpose": "Captures fifth negative-case proof — TRUTH-DELIVERED outputs-shape sandbox-catch"
+    }
+  ]
+}

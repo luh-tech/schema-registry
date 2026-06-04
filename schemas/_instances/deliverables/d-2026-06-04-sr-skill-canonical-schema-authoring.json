@@ -1,0 +1,82 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-04-sr-skill-canonical-schema-authoring",
+  "version": "1.0.0",
+  "title": "Second skill instance — canonical-schema-authoring (dev-pipeline, working-model)",
+  "description": "Second of three foundational skills landing the skills meta-layer (PR #113) into operational use. Captures F0B85LNSTC4 doctrine seven-times-proven across the session arc: sandbox-validate authored artifacts against canonical schemas in chat-side Python BEFORE staging for terminal upload. Dev-pipeline scope (code/deliverable/schema work). Lifecycle: working-model from initiation per memory rule 20 (substrate strongest of any pattern this session). pairedRule field references the future working-model rule promotion of FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1 — first composite rule+skill artifact under the meta-layer.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "feat/sr-skill-canonical-schema-authoring-2026-06-04",
+    "scopeFiles": [
+      "skills/_instances/dev-pipeline/canonical-schema-authoring/skill-instance.json",
+      "skills/_instances/dev-pipeline/canonical-schema-authoring/SKILL.md",
+      "schemas/_instances/deliverables/d-2026-06-04-sr-skill-canonical-schema-authoring.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Land skills/_instances/dev-pipeline/canonical-schema-authoring/skill-instance.json — second skill instance under skills meta-layer. Captures F0B85LNSTC4 doctrine with 3 triggerContext blocks, 5 directives, 4 antiPatterns, 3 boundaryConditions, 4 references. lifecycleStatus=working-model. pairedRule references future rule instance promotion (FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1).",
+      "acceptanceCriteria": [
+        "skill-instance.json present at canonical path",
+        "ajv validates against skill.schema.json v1.0.0 exit 0",
+        "skill-instance-validation.yml CI PASS",
+        "$id matches urn:luhtech:skill:dev-pipeline:canonical-schema-authoring:1.0.0",
+        "pairedRule field present (lenient — paired rule does not yet exist)",
+        "category=dev-pipeline, lifecycleStatus=working-model, triggerMode=pushy"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Generate paired SKILL.md via tools/skill_generate.py. Per memory rule 19 no-md-terminus, SKILL.md is generated artifact with generationMetadata.sourceJsonSha.",
+      "acceptanceCriteria": [
+        "SKILL.md present at canonical path",
+        "generationMetadata block populated",
+        "skill-md-generation-check.yml CI PASS (regenerate-in-place + diff returns no drift)"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Deliverable instance lands at schemas/_instances/deliverables/d-2026-06-04-sr-skill-canonical-schema-authoring.json. Per memory #20 substrate-cleanup-as-you-go.",
+      "acceptanceCriteria": [
+        "Deliverable instance lands at canonical path",
+        "lifecycleState=S4-authored",
+        "ajv validates against deliverable.schema.json v1.1.0 with -r flag exit 0"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Chat-side sandbox: skill-instance.json validates against skill.schema.json v1.0.0 — exit 0",
+      "tools/skill_validate.py skill-instance.json exits 0",
+      "tools/skill_generate.py produces SKILL.md without error",
+      "ajv-cli@5.0.0 validates this deliverable instance against deliverable.schema.json v1.1.0 with -r forbidden-audit-paint-names schema exit 0",
+      "skill-instance-validation.yml CI PASS",
+      "skill-md-generation-check.yml CI PASS",
+      "All other required CI checks green",
+      "PR squash-merged; --admin forbidden per memory #15"
+    ],
+    "postMerge": [
+      "main shows merged SHA",
+      "skill-instance.json + SKILL.md both present on main",
+      "Total non-fixture skill instances on main: 1 -> 2",
+      "Unblocks PR 3 (cross-repo-execution-shape)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-04",
+      "trigger": "Spec authored as second of three foundational skills per Erik direction 2026-06-04 'lets finish the skills arc and ship it with all three PR. we can address the FU to start or post based on seq. all work to be completed'. F0B85LNSTC4 doctrine seven-times-proven across session arc is the substrate for working-model lifecycleStatus from initiation."
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "Second of 3 PRs in foundational skill arc. Captures the doctrine that the substrate-before-write skill (PR 1) is the predicate to. pairedRule field references the FUTURE rule instance promotion of FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1 — out of scope this PR per memory #18 scope-lock, in clear path. First composite rule+skill artifact follows after all 3 skills land."
+}
