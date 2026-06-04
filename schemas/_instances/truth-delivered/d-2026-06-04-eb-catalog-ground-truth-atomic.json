@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-04-eb-catalog-ground-truth-atomic",
+  "deliveredAt": "2026-06-04T09:30:49Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "ecea56f",
+      "prNumber": 294,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/294",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-04T17:50:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "authored"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "5-file atomic substrate refresh delivered as single EB PR #294 squash-merged at ecea56f on 2026-06-04 09:30 PDT. Captures operational reality post-2026-06-03 infra-hygiene arc + substrate-validation-matrix SPIKE findings. 3 schema violations caught by CI on first commit (missing rationale on DECs, additionalProperties on env-prod servers, targetDate TBD strings) — corrected in fixup commits 1 and 2 on same branch, then squashed clean. Per memory #15: schemas held, author error caught by CI, no --admin bypass. Post-merge eb-agent state: coverage-infrastructure 17 gaps (16 uncovered + 1 dangling ag-server-do-primary blue-green migration), dangling-resourceRefs=1, 7 SPIKE-resolved FUs filed-as-closed.",
+    "overrideRecord": "Process deviation: EB shipped PR #294 to main on 2026-06-04 09:30 PDT WITHOUT SR anchor in place. Cross-repo doctrine specifies SR-anchor-first, then EB executes, then SR closes. EB-pre-SR-ship pattern now observed twice this week: PR #290 (coverage-nested-resources, captured in TRUTH-DELIVERED #3 overrideRecord) + PR #294 (this catalog, captured here). Compensating control: SR retroactive anchor landed via PR #122 at 3079be3 before this closure ships. FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1 filed in this same PR to surface for doctrine refinement decision. L4-approved per memory #15 documented-override pattern."
+  },
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-CROSS-CHAT-SURFACE-NOTIFICATION-1",
+      "evidenceClass": "cross-chat-canvas-relay-six-times-proven-this-session-arc"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-SPIKE-SUPERSEDES-NOVEL-PATTERN-1",
+      "evidenceClass": "spike-correctly-not-invoked-novel-pattern-was-substrate-revealed-by-substrate-validation-matrix-SPIKE-which-itself-used-DELETE-AND-NEW-DELIVERABLE-terminal"
+    },
+    {
+      "ruleId": "RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1",
+      "evidenceClass": "second-EB-pre-SR-ship-deviation-documented-as-override-FU-filed-for-doctrine-refinement-decision"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1"
+  ]
+}
