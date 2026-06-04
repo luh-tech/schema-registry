@@ -1,0 +1,91 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-04-eb-fu-register-housekeeping",
+  "version": "1.0.0",
+  "title": "EB FU register housekeeping — file 4 FUs from 2026-06-03 infra-hygiene arc",
+  "description": "Files four follow-ups against .roadmap/follow-up-register.json that were either deferred by d-2026-06-03-eb-infra-hygiene v1.1.0 (3 named in spec.relatedFollowUps but never landed against the register) or surfaced during execution (rotation policy completion gap caught by drift-rotation tool). All four are tracked by trackingRepo=luh-tech/Ectropy-Business and follow the flat-style FU convention (closedAt/closedBy/closingDeliverable when closed, no resolution block) consistent with the most recent closures in the register. Closes the 2026-06-03 arc cleanly so canonical state reflects all surfaced gaps as tracked FUs.",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "chore/eb-fu-register-housekeeping-2026-06-04",
+    "scopeFiles": [
+      ".roadmap/follow-up-register.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Append new FU entry FU-EB-RA-GRANT-DEV-CONFIGS-PROBE-1 (P2, open). Tracks the dev-bucket access-grant gap deferred by d-2026-06-03-eb-infra-hygiene v1.1.0. Substrate: ectropy-development-configs is present in env-dev.objectStorage[] (purpose=config-sync) per the catalog as of EB main fd618f3, but has no matching accessGrant in resource-access.json. The 2026-06-02 STEP 1-PRE-D fleet-wide bucket probe matrix verified production key f89b9344 reaches all 7 ectropy-fleet buckets including the production buckets, but did not test against the dev bucket specifically. FU work: live boto3 probe of dev bucket with existing keys (2cffb9fb staging, f89b9344 prod) to determine which key reaches it, OR provision a new dev-scoped Spaces key in BW, THEN add accessGrant ag-bucket-N for ectropy-development-configs with the verified credentialRef. Closes after grant lands in resource-access.json.",
+      "acceptanceCriteria": [
+        "followUps[] contains entry with id=FU-EB-RA-GRANT-DEV-CONFIGS-PROBE-1",
+        "Entry priority=P2, status=open, trackingRepo=luh-tech/Ectropy-Business, opened=2026-06-04",
+        "Entry openedDuring=d-2026-06-03-eb-infra-hygiene",
+        "Entry follows flat-style convention (no resolution block, no closedAt fields while open)"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Append new FU entry FU-EB-RA-GRANT-KARBON521-METHOD-1 (P2, open). Tracks the Karbon edge access-method gap deferred by d-2026-06-03-eb-infra-hygiene v1.1.0. Substrate: server-edge-karbon521 (OnLogic Karbon 521 at Canadian Plant Facility, env-pilot per catalog) is correctly surfaced as catalogNotCovered by the patched coverage-infrastructure tool after PRs #290 + #291 landed. No current accessMethods[] enum entry covers Karbon edge access — connectivity is Starlink Gen 3 primary + Peplink BR1 Pro 5G failover, air-gapped per DEC-004. FU work: design access method (likely tailscale, edge-ssh, or operator-VPN session-based) including credential surface, add to resource-access.accessMethods[], then add accessGrant ag-server-edge-karbon521 referencing it. May require schema extension to accessMethods enum (SR-side dependency).",
+      "acceptanceCriteria": [
+        "followUps[] contains entry with id=FU-EB-RA-GRANT-KARBON521-METHOD-1",
+        "Entry priority=P2, status=open, trackingRepo=luh-tech/Ectropy-Business, opened=2026-06-04",
+        "Entry openedDuring=d-2026-06-03-eb-infra-hygiene",
+        "Entry follows flat-style convention"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Append new FU entry FU-EB-RA-INTERNAL-RESOURCES-MODELING-1 (P3, open). Tracks the modeling gap for 9 catalog resources deferred by d-2026-06-03-eb-infra-hygiene v1.1.0: 3 self-hosted databases (db-speckle, db-redis-cache, db-qdrant) and 6 internal services (service-web-dashboard, service-mcp-server, service-api-gateway, service-mcp-express, service-decision-lifecycle, service-voxel-service). All 9 currently surface as catalogNotCovered by the patched coverage-infrastructure tool. They are internal compose-network only — not external operational access surfaces. FU work: decide whether resource-access.schema.json access-graph should model internal compose-network resources (architectural question: is the access graph for ops access only, or all FK targets of every catalog resource?). If yes, design new accessMethod enum value (e.g. am-internal-compose) and grant pattern. If no, design a separate exclusion mechanism in coverage-infrastructure tool so internal resources don't surface as gaps.",
+      "acceptanceCriteria": [
+        "followUps[] contains entry with id=FU-EB-RA-INTERNAL-RESOURCES-MODELING-1",
+        "Entry priority=P3, status=open, trackingRepo=luh-tech/Ectropy-Business, opened=2026-06-04",
+        "Entry openedDuring=d-2026-06-03-eb-infra-hygiene",
+        "Entry follows flat-style convention"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Append new FU entry FU-EB-RA-ROTATION-POLICY-COMPLETION-1 (P2, open). Surfaced during d-2026-06-03-eb-infra-hygiene v1.1.0 execution at verify.sh check 7 — drift-rotation tool flagged 2 incomplete rotation policies on credentialStore items after OUT-5 applied rotation={policy=on-exposure, lastRotated=null, trackedByFollowUp=null}. The tool's noPolicy detector requires lastRotated (non-null) AND intervalDays for a rotation policy to be considered complete. FU work: for TF_DO_SPACES_STAGING (itemId 2cffb9fb-9123-4bb0-b244-b3e7000fe2af) and TF_DO_SPACES_PROD (itemId f89b9344-3542-43ae-acbf-b3e7002d1904), populate intervalDays (decision: 90 days? 180? per policy) and lastRotated (after first rotation event, OR set retroactively to last known rotation date if policy decision is on-exposure-with-cadence-floor). Closes drift-rotation noPolicy=[] state.",
+      "acceptanceCriteria": [
+        "followUps[] contains entry with id=FU-EB-RA-ROTATION-POLICY-COMPLETION-1",
+        "Entry priority=P2, status=open, trackingRepo=luh-tech/Ectropy-Business, opened=2026-06-04",
+        "Entry openedDuring=d-2026-06-03-eb-infra-hygiene",
+        "Entry scope text references both itemIds verbatim",
+        "Entry follows flat-style convention"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv-cli@5.0.0 validates .roadmap/follow-up-register.json against canonical follow-up-register.schema.json with exit 0 (refs resolved: enum + definitions)",
+      "Python verify: all 4 new FU IDs present in followUps[]",
+      "Python verify: meta.totalCount = 246 (was 242, +4)",
+      "Python verify: meta.byPriority.P2 = 106 (was 103, +3)",
+      "Python verify: meta.byPriority.P3 = 54 (was 53, +1)",
+      "Python verify: meta.byStatus.open = 159 (was 155, +4)",
+      "Python verify: lastUpdated bumped to apply timestamp",
+      "git diff --stat scoped to exactly .roadmap/follow-up-register.json — no other file touched",
+      "PR CI green; --admin merge forbidden per memory #15"
+    ],
+    "postMerge": [
+      "main shows merged SHA",
+      "eb-agent query-followups status=open returns 4 new entries by id",
+      "follow-up-register schema validation green on main"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-04",
+      "trigger": "spec authored after substrate read of .roadmap/follow-up-register.json on EB main fd618f3 — verified 3 FUs from v1.1.0 spec.relatedFollowUps never landed against register (vapor), 1 FU surfaced during execution, 2 pre-existing FUs closed by d-2026-06-03-eb-catalog-objectstorage-hygiene (not by today's infra-hygiene arc) and require no backfill"
+    }
+  ],
+  "relatedFollowUps": [],
+  "notes": "Substrate read 2026-06-04 against .roadmap/follow-up-register.json (SHA 11ebe7ccfad45c94d9bc3626233f58aec76c269b7cb3e345631d345004df52ae, 393455 bytes, 242 followUps, schema-version 1.7.13, $schema https://schemas.luh.tech/follow-up-register.schema.json). Closure pattern uses flat-style fields (closedAt, closedBy, closingDeliverable) consistent with most recent closures including FU-EB-CATALOG-TF-STATE-BUCKET-MISSING-1 and FU-EB-CATALOG-DEV-OBJECTSTORAGE-POPULATE-1 (both closed 2026-06-03T01:36:03Z by closingDeliverable=d-2026-06-03-eb-catalog-objectstorage-hygiene — earlier-today deliverable that closed them BEFORE today's infra-hygiene v1.1.0 ran). All 4 new FUs use trackingRepo=luh-tech/Ectropy-Business, opened=2026-06-04, openedDuring=d-2026-06-03-eb-infra-hygiene. Scope-locked to single file per memory #18. After this lands, the 2026-06-03 arc is fully captured in canonical state and EB returns to demo workflow. Spelling Luhtala verified per memory #22. Per memory #8, dates use system time, not invented values. Per memory #10, never fabricate values: FU IDs verified absent from current register before declaring outputs; pre-existing FU closure data verified against substrate, not memory."
+}
