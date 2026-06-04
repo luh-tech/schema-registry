@@ -4,10 +4,10 @@
   "schemaVersion": "1.0.0",
   "version": "1.0.0",
   "ventureId": "schema-registry",
-  "lastUpdated": "2026-06-04T02:39:54Z",
+  "lastUpdated": "2026-06-04T18:39:59Z",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
-    "totalCount": 24
+    "totalCount": 25
   },
   "followUps": [
     {
@@ -351,6 +351,18 @@
       "blockedBy": [],
       "blocks": [],
       "trackingRepo": "luh-tech/schema-registry"
+    },
+    {
+      "id": "FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1",
+      "title": "Doctrine refinement: EB-pre-SR-ship pattern observed twice — codify acceptance criteria or enforce SR-first",
+      "priority": "P2",
+      "status": "open",
+      "opened": "2026-06-04",
+      "openedDuring": "d-2026-06-04-sr-eb-catalog-ground-truth-atomic-closure",
+      "scope": "Cross-repo doctrine specifies SR-anchor-first, then EB executes, then SR closes with TRUTH-DELIVERED. Pattern of EB shipping to main BEFORE SR anchor landing has now been observed twice this week: PR #290 (coverage-nested-resources, 2026-06-03 — captured in TRUTH-DELIVERED #3 overrideRecord) and PR #294 (catalog-ground-truth-atomic, 2026-06-04 — captured in TRUTH-DELIVERED #6 overrideRecord, this PR). Two instances is substrate-rich enough to trigger doctrine refinement decision. Two paths flat: (1) codify acceptance criteria for EB-pre-SR-ship as a valid deviation — define which deliverable classes allow it, what compensating control is required (e.g. retroactive SR anchor landing within N hours), how TRUTH-DELIVERED captures the deviation. OR (2) tighten doctrine to enforce SR-first — design EB CI check that requires target deliverable have SR instance before allowing merge. Path (2) requires SR-EB cross-repo signal (EB CI checking SR schemas/_instances/deliverables/). Decision is L4-class. This FU surfaces the choice; does not pre-decide.",
+      "blockedBy": [],
+      "blocks": [],
+      "trackingRepo": "luh-tech/schema-registry"
     }
   ],
   "indexes": {
@@ -370,7 +382,8 @@
         "FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1",
         "FU-SR-WORKFLOW-VENTURE-SUMMARY-INVOCATION-PATH-1",
         "FU-SR-WORKFLOW-AJV-INSTANCE-VALIDATION-AUDIT-1",
-        "FU-SR-WORKFLOW-DYNAMIC-SCHEMA-LOOP-EXTERNAL-REFS-1"
+        "FU-SR-WORKFLOW-DYNAMIC-SCHEMA-LOOP-EXTERNAL-REFS-1",
+        "FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1"
       ],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
@@ -400,7 +413,8 @@
         "FU-SR-SCHEMA-VERSION-BUMP-REFS-REBUILD-DISPATCH-PATTERN-1",
         "FU-SR-RULE-CANONICAL-SCHEMA-AUTHORING-DOCTRINE-1",
         "FU-SR-EB-AGENT-MCP-BROWSER-CHAT-ACCESS-1",
-        "FU-SR-WORKFLOW-VENTURE-SUMMARY-INVOCATION-PATH-1"
+        "FU-SR-WORKFLOW-VENTURE-SUMMARY-INVOCATION-PATH-1",
+        "FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1"
       ],
       "P3": [
         "FU-RESOLVER-PROPAGATION-1",
