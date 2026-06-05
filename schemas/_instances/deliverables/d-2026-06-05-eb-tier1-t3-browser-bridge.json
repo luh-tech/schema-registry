@@ -1,0 +1,189 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-05-eb-tier1-t3-browser-bridge",
+  "version": "1.0.0",
+  "title": "URO Tier 1 T3 — Browser WebSocket subscriber + locked Speckle backdrop + /dev/uro page",
+  "description": "Third child of the URO Tier 1 multi-tarball arc. Builds on T1 (foxglove_bridge + viewer JWT route + nginx subrequest, PR #307 EB main c356d81) and T2 (3 simulator nodes publishing canonical Sx topics, PR #308 EB main 2bf6a4a). Lands the browser-side bridge: a TypeScript WebSocket client wrapping @foxglove/ws-protocol, a normalized state store consuming VoxelPose + ResourceStatus messages, a /dev/uro debug page rendering a locked Speckle commit as a low-opacity glTF backdrop plus a live JSON message panel, and the snapshot-speckle-to-gltf.ts script that produces the static backdrop. No overlays yet (T4 owns Speckle Extensions on OVERLAY layer). No voxel groups DB materialization (T5 owns). No EFAS state or replay UI (T6 owns). T3 proves the live data plane end-to-end: ROS 2 nodes → foxglove_bridge → nginx auth_request → browser WS client → state store → page renders.",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/tier1-t3-browser-bridge-2026-06-05",
+    "scopeFiles": [
+      "apps/web-dashboard/src/lib/uro/uro-ws-client.ts",
+      "apps/web-dashboard/src/lib/uro/uro-state.ts",
+      "apps/web-dashboard/src/lib/uro/uro-message-parsers.ts",
+      "apps/web-dashboard/src/lib/uro/index.ts",
+      "apps/web-dashboard/src/lib/uro/__tests__/uro-ws-client.test.ts",
+      "apps/web-dashboard/src/lib/uro/__tests__/uro-state.test.ts",
+      "apps/web-dashboard/src/lib/uro/__tests__/uro-message-parsers.test.ts",
+      "apps/web-dashboard/src/components/uro/SpeckleBackdrop.tsx",
+      "apps/web-dashboard/src/components/uro/MessagePanel.tsx",
+      "apps/web-dashboard/src/components/uro/DevUroPage.tsx",
+      "apps/web-dashboard/scripts/snapshot-speckle-to-gltf.ts",
+      "apps/web-dashboard/scripts/README-snapshot-speckle.md",
+      "apps/web-dashboard/public/backdrops/.gitkeep",
+      "apps/web-dashboard/package.json",
+      ".roadmap/follow-up-register.json",
+      ".dlp/deliverables/d-2026-06-05-eb-tier1-t3-browser-bridge/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "`uro-ws-client.ts` provides a TypeScript class wrapping `@foxglove/ws-protocol` that connects to `/ws/uro/?token=<viewer JWT>` via the Foxglove WebSocket protocol (sub-protocol `foxglove.websocket.v1`), subscribes to the T2 canonical topic set, and emits decoded messages to consumers. Handles token-expiry reconnect: on 401 close, mints a fresh viewer JWT via `GET /api/uro/viewer-token`, then re-connects.",
+      "acceptanceCriteria": [
+        "Class `UroWsClient` exported with constructor `(opts: { tokenEndpoint: string, wsUrl: string, topics: string[] })`.",
+        "Methods: `connect(): Promise<void>`, `disconnect(): void`, `on(event, handler)`, `off(event, handler)`. Events at minimum: `open`, `close`, `message`, `error`, `reconnecting`.",
+        "On `connect()`: fetches viewer JWT from `tokenEndpoint`, opens WSS to `wsUrl?token=<jwt>` with sub-protocol `foxglove.websocket.v1`, sends `subscribe` per topic from the topics list.",
+        "On WS close with 401: triggers `reconnecting` event, re-fetches token, reopens connection. Exponential backoff capped at 30s (1s, 2s, 4s, 8s, 16s, 30s, 30s, ...).",
+        "On WS close with 1000/1001 normal: triggers `close` event with `clean=true` and stops; no reconnect.",
+        "Default subscribed topics (overridable): `/hsx/worker-001/location`, `/hsx/worker-001/status`, `/rsx/spot-001/location`, `/rsx/spot-001/status`, `/esx/crane-001/status`, `/scenarios/active`.",
+        "Uses `@foxglove/ws-protocol` ^1.0.0 (or current stable major) — version pinned in package.json.",
+        "Unit test in `__tests__/uro-ws-client.test.ts` exercises connection lifecycle against a mock WS server, asserts subscribe-message shape, asserts reconnect on 401 close.",
+        "No `localStorage` or `sessionStorage` reads/writes — token always fetched fresh from tokenEndpoint."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "`uro-message-parsers.ts` provides type-safe decoders for the canonical T2 message types: `luhtech_msgs/VoxelPose`, `luhtech_msgs/ResourceStatus`, and `std_msgs/String` (for `/scenarios/active`). Each parser turns a raw Foxglove WS protocol binary message into a normalized TS object with proper field typing.",
+      "acceptanceCriteria": [
+        "TypeScript types exported: `VoxelPose`, `ResourceStatus`, `ScenarioActive` matching the canonical msg field shapes (resource_urn, voxel_urn, position{x,y,z}, confidence, stamp; status, utilization, last_update).",
+        "Decoder functions exported: `decodeVoxelPose(buf: ArrayBuffer): VoxelPose`, `decodeResourceStatus(buf: ArrayBuffer): ResourceStatus`, `decodeScenarioActive(buf: ArrayBuffer): ScenarioActive`.",
+        "Decoders use the @foxglove/ws-protocol message schema dispatch — schema name is identified from the subscribe-confirmation, then routed to the right decoder.",
+        "URN validation: decoders validate `resource_urn` matches regex `^urn:luhtech:ectropy:resource:(human|robot|agent|equipment|material|inspection):[a-z0-9-]+$` (canonical pattern per memory #18). On mismatch: log warning, drop message.",
+        "Unit test in `__tests__/uro-message-parsers.test.ts` exercises each decoder with sample binary payloads matching T2 simulator output, asserts decoded field values + URN-mismatch drop behavior."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "`uro-state.ts` provides a normalized in-memory state store that consumes decoded messages from `UroWsClient` and exposes a query API for UI components. Keyed by resource_urn. Last-write-wins semantics. No external state library (no zustand/redux dependency) — vanilla TS class with subscriber pattern.",
+      "acceptanceCriteria": [
+        "Class `UroStateStore` exported.",
+        "Methods: `ingest(topic: string, msg: VoxelPose | ResourceStatus | ScenarioActive): void`, `getResource(urn: string): ResourceSnapshot | undefined`, `getAllResources(): ResourceSnapshot[]`, `getActiveScenario(): ScenarioActive | undefined`, `subscribe(handler: (snapshot: StateSnapshot) => void): UnsubscribeFn`.",
+        "`ResourceSnapshot` shape: `{ resource_urn: string, last_pose?: VoxelPose, last_status?: ResourceStatus, last_seen: number }` where `last_seen` is `Date.now()` at last ingest.",
+        "Last-write-wins: subsequent VoxelPose updates overwrite `last_pose`; subsequent ResourceStatus updates overwrite `last_status`.",
+        "Subscriber notification is debounced to ~60 Hz max to avoid React re-render storms.",
+        "Unit test in `__tests__/uro-state.test.ts` ingests multiple messages per resource, asserts last-write-wins, asserts subscriber-fire behavior, asserts getAllResources lists every URN ingested."
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "`SpeckleBackdrop.tsx` React component loads the locked Speckle commit's glTF binary (served as static asset from `/backdrops/maple-ridge.glb`) and renders it at low opacity inside a Speckle Viewer 2.0 canvas. Pure static asset — no live Speckle runtime connection.",
+      "acceptanceCriteria": [
+        "Component exported as `<SpeckleBackdrop opacity={0.3} backdropUrl=\"/backdrops/maple-ridge.glb\" />`.",
+        "Default opacity 0.3 (low) per strategy doc decision (\"loaded at low opacity\").",
+        "Uses `@speckle/viewer` ^2.18.0 — version pinned in package.json per strategy decision substrate (R6).",
+        "On glTF load failure (404 or invalid file): displays inline error message in the canvas region without crashing the page.",
+        "Component is the static-backdrop layer only — does NOT load any Extensions onto OVERLAY layer (T4 owns that).",
+        "Canvas resizes responsively to its parent container."
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "`MessagePanel.tsx` React component subscribes to a provided `UroStateStore` and renders a live JSON debug panel showing the last-known state per resource plus the active scenario. Per-resource collapsible cards; full message JSON visible on expand.",
+      "acceptanceCriteria": [
+        "Component exported as `<MessagePanel store={uroStateStore} />`.",
+        "Renders a card per resource URN with: resource type (parsed from URN), resource id, last_pose summary (voxel + position), last_status (status + utilization), last_seen relative time.",
+        "Cards are collapsible — collapsed by default; expanded view shows full JSON of last_pose and last_status.",
+        "Updates at ~60 Hz max (driven by store's debounced subscriber).",
+        "Renders \"no messages yet\" placeholder when store is empty.",
+        "Renders active scenario summary at top of panel if `store.getActiveScenario()` is non-null."
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "`DevUroPage.tsx` is the `/dev/uro` route page component that composes `UroWsClient` + `UroStateStore` + `SpeckleBackdrop` + `MessagePanel` into a working debug page. Route registration follows the dashboard's existing routing convention (substrate-verify at execution time — see notes for framework discrepancy).",
+      "acceptanceCriteria": [
+        "Component file at `apps/web-dashboard/src/components/uro/DevUroPage.tsx` exports default `<DevUroPage />`.",
+        "Page layout: full-viewport Speckle backdrop canvas at z-index 0, MessagePanel overlaid at right side at z-index 10, page header at top showing connection status (connected / reconnecting / disconnected).",
+        "On mount: instantiates `UroWsClient` against `/api/uro/viewer-token` + `/ws/uro/`, instantiates `UroStateStore`, wires client `message` events into store `ingest()`.",
+        "On unmount: calls `client.disconnect()` to clean up the WS.",
+        "Route registration: `/dev/uro` registered in the dashboard's router. EB CLI verifies at execution time whether dashboard uses Vite+react-router (→ register in router config) OR Next.js App Router (→ file-system route at `src/app/dev/uro/page.tsx`) OR Pages Router (→ `pages/dev/uro.tsx`). The component module path lands at `src/components/uro/DevUroPage.tsx` regardless; the route registration file is the framework-dependent piece. Substrate-correction discipline (memory #13) applied here.",
+        "Page is dev-only — visible only when `NODE_ENV !== 'production'` OR when a feature flag is enabled (e.g. `VITE_ENABLE_URO_DEV=true` / `NEXT_PUBLIC_ENABLE_URO_DEV=true`). Not exposed in production by default."
+      ]
+    },
+    {
+      "id": "OUT-7",
+      "description": "`snapshot-speckle-to-gltf.ts` is a Node CLI script that authenticates against a Speckle server (using existing `SPECKLE_SERVER_TOKEN` from BW vault — memory #16), fetches a specific commit URN, and converts it to a `.glb` binary written to `public/backdrops/<name>.glb`. Idempotent — re-running with the same commit URN produces a byte-equivalent output (assuming Speckle commit is locked).",
+      "acceptanceCriteria": [
+        "Script at `apps/web-dashboard/scripts/snapshot-speckle-to-gltf.ts`, runnable via `tsx scripts/snapshot-speckle-to-gltf.ts --commit <urn> --output public/backdrops/<name>.glb`.",
+        "Reads `SPECKLE_SERVER_TOKEN` from environment (or `SPECKLE_TOKEN` fallback). Never logs the token (memory #16 masking rule).",
+        "Fetches the commit via Speckle GraphQL (existing pattern from the BIM viewer code) and serializes to glTF binary via `@speckle/objectsender` or `@gltf-transform/core`.",
+        "Writes the `.glb` to the output path; creates parent directories if missing.",
+        "Exit codes: 0 success, 1 bad args, 2 Speckle auth failed, 3 commit not found, 4 glTF serialize failed, 5 disk write failed.",
+        "README at `apps/web-dashboard/scripts/README-snapshot-speckle.md` documents: env vars required, example invocation, when to re-run (only when the Maple Ridge backdrop commit changes), gltf-validator post-step.",
+        "Script is NOT invoked in CI by default — manual run only. Output `.glb` is committed to `public/backdrops/` as a static asset (or gitignored + generated, per repo .gitignore convention)."
+      ]
+    },
+    {
+      "id": "OUT-8",
+      "description": "`package.json` adds the four new browser-side dependencies pinned to stable versions. No other dependency changes — scope is minimum required.",
+      "acceptanceCriteria": [
+        "Add to `dependencies`: `\"@foxglove/ws-protocol\": \"^1.0.0\"` (or current stable major at execution time).",
+        "Add to `dependencies`: `\"@speckle/viewer\": \"^2.18.0\"` (pinned per strategy doc R6 substrate).",
+        "Add to `devDependencies`: `\"@types/node\": \"^20.0.0\"` if not already present (needed by snapshot-speckle script).",
+        "Add to `devDependencies`: `\"tsx\": \"^4.0.0\"` (CLI runner for the snapshot script).",
+        "`pnpm install` (or `npm install` / `yarn install` per the repo's lockfile) succeeds without dependency conflicts.",
+        "Lockfile updated correspondingly (pnpm-lock.yaml / package-lock.json / yarn.lock) — committed in same PR scope."
+      ]
+    },
+    {
+      "id": "OUT-9",
+      "description": "`.roadmap/follow-up-register.json` files one new FU `FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1` capturing the substrate inconsistency surfaced during T3 authoring: `architecture.json` describes web-dashboard as 'React 18 + Vite 5 + TypeScript + MUI' while `infrastructure-catalog.json` describes it as 'Next.js 14'. Both files are canonical substrate; one is wrong. Resolution = read EB main source, reconcile both files. Not blocking T3 execution (EB CLI verifies framework at execution time and chooses the right route file).",
+      "acceptanceCriteria": [
+        "`.roadmap/follow-up-register.json` contains new FU `FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1` (P3, status=open, opened=2026-06-05, openedDuring=d-2026-06-05-eb-tier1-t3-browser-bridge, trackingRepo=luh-tech/Ectropy-Business).",
+        "FU description captures: architecture.json says Vite+MUI; catalog says Next.js 14; resolution is read source-of-truth from EB main and update whichever is wrong.",
+        "Register modification is idempotent: presence-based check by FU id; re-run is NO-OP.",
+        "No catalog or architecture changes in this PR — those are owned by the new FU's eventual resolution PR."
+      ]
+    },
+    {
+      "id": "OUT-10",
+      "description": "`.dlp/deliverables/d-2026-06-05-eb-tier1-t3-browser-bridge/SPEC.md` summarizes T3 outcomes as a working-model orientation artifact (memory #12: prose survives only as orientation artifacts for human onboarding). Canonical truth remains the SR-anchored deliverable.json.",
+      "acceptanceCriteria": [
+        "SPEC.md created at `.dlp/deliverables/d-2026-06-05-eb-tier1-t3-browser-bridge/SPEC.md` summarizing: T3 mission, 16 scope files, OUT-1..OUT-10 acceptance, references to STRATEGY.md §6.B+§6.C+§8 T3, framework-discrepancy substrate-correction discipline applied, lineage on T1+T2."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "All 16 scope files staged exactly; PR scope-locked per memory #6.",
+      "`pnpm install` (or the repo's canonical install command) succeeds; lockfile updated.",
+      "TypeScript builds: `pnpm --filter web-dashboard tsc --noEmit` passes (or the repo's equivalent build verification).",
+      "Vitest unit tests pass: `pnpm --filter web-dashboard vitest run src/lib/uro/` exits 0; all 3 uro test files run; aggregate ≥ 15 tests pass.",
+      "Lint passes on new files: `pnpm --filter web-dashboard eslint src/lib/uro src/components/uro scripts/snapshot-speckle-to-gltf.ts`.",
+      "Manual smoke test in dev mode: `pnpm --filter web-dashboard dev`, browse to `/dev/uro` with `VITE_ENABLE_URO_DEV=true` (or framework equivalent). Page renders, Speckle backdrop loads (or graceful error if no .glb present), connection-status header shows attempting → connected (assuming T1+T2 are running).",
+      "`@foxglove/ws-protocol` connects to live or simulated `/ws/uro/`, subscribes to topics, receives a message frame within 30s — captured in browser DevTools network panel.",
+      "Token-expiry reconnect verified manually: revoke the viewer JWT mid-session (e.g. by force-rotating BW item); confirm client re-fetches token and reopens WS.",
+      "If a placeholder/generated `.glb` is committed: `gltf-validator` (npx @gltf-transform/cli validate) reports no errors.",
+      "Required EB CI checks all SUCCESS, no `--admin`."
+    ],
+    "postMerge": [
+      "Parent arc `d-2026-06-05-eb-tier1-ros-overlay-foundation` remains `S5-in-progress` (T3 is mid-arc child; transition occurs only when all 6 children S7-merge).",
+      "SR-chat lands `TRUTH-DELIVERED` at `schemas/_instances/truth-delivered/d-2026-06-05-eb-tier1-t3-browser-bridge.json` referencing EB merge SHA. closureNotes.overrideRecord captures any deferred items (likely: real Maple Ridge .glb generation deferred to next session if not landed in PR).",
+      "Web-dashboard build pipeline re-runs (Vercel/CI) and deploys updated bundle to staging — `/dev/uro` route accessible from staging URL when flag enabled.",
+      "Channel notice posted to `#luhtech-agents-comms` with merge SHA + smoke-test confirmation. Prefix `[EB-chat]` per memory #19.",
+      "n8n canary `POST https://n8n.luh.tech/webhook/lead-capture` returns 200 within 10 minutes of merge.",
+      "EB-chat next: T4 spec authoring (Speckle Extensions on OVERLAY layer — VoxelGroupOverlay + ResourcePresenceOverlay + display-rules + click selection)."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-05",
+      "trigger": "L4 approval ('excellent. lets proceed with T3') after T2 close-clean (SR PR #137 ac3d6aa) + memory #20 (CHAT↔CLI↔EL LOOP) locked"
+    }
+  ],
+  "parentDeliverable": "d-2026-06-05-eb-tier1-ros-overlay-foundation",
+  "relatedFollowUps": [
+    "FU-EB-URO-T1-ROUTE-MOUNTING-1",
+    "FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1"
+  ],
+  "notes": "Cross-repo doctrine (memory #10): SR-chat anchors this child instance at schemas/_instances/deliverables/d-2026-06-05-eb-tier1-t3-browser-bridge.json on luh-tech/schema-registry BEFORE EB authors the T3 execution tarball. Substrate-correction discipline (memory #13) applied pre-authoring: eb-agent:trace-service web-dashboard surfaced a substrate inconsistency — architecture.json describes the dashboard as 'React 18 + Vite 5 + TypeScript + MUI' while infrastructure-catalog.json says 'Next.js 14 application'. Both are canonical files; one is wrong. T3 spec resolves the ambiguity by making the framework-dependent surface (route registration file) substrate-verified at EB CLI execution time — OUT-6 acceptance criteria explicitly require EB CLI to read source-of-truth from EB main and choose between Vite+react-router (router config registration) vs Next.js App Router (file-system route) vs Pages Router. The component module path itself (src/components/uro/DevUroPage.tsx) is framework-agnostic. The inconsistency is filed as P3 FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1 in OUT-9 — its resolution is a separate small PR after T3, not bundled into this scope. T3 depends on T1 (foxglove_bridge running in uro-sim container, viewer-token route on api-gateway, nginx auth_request configured at /ws/uro/) and T2 (3 simulator nodes publishing canonical /hsx/, /rsx/, /esx/ topics). Without T1+T2 running, T3's smoke test cannot pass — but T3's unit tests run independently (mock WS server, mock store ingest). Speckle backdrop file (.glb) generation strategy: snapshot-speckle-to-gltf.ts is shipped in T3; the actual maple-ridge.glb production is a one-off manual run by Erik against a real Speckle commit. T3 ships a .gitkeep placeholder under public/backdrops/ — the real .glb lands via a separate small commit after Erik runs the snapshot script (this avoids committing a multi-MB binary asset blindly in T3's PR). If T3 PR-time .glb generation is preferred, escalate via SPIKE per memory #9. Naming compliance (memory #18 acronyms ref): no XaaS-form node names, no /haas/-style topic prefixes — all browser-side topic constants use canonical Sx forms (/hsx/, /rsx/, /esx/). URN validation regex in OUT-2 matches the canonical pattern. No localStorage/sessionStorage usage in any T3 code per artifact-creation rules. T3 files one new FU (FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1) — substrate discovery during authoring, not T3-created tech debt."
+}
