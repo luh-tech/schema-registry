@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-05-eb-tier1-t1-foundation",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "title": "URO Tier 1 — T1 Foundation: ROS 2 base + luhtech_msgs + viewer-JWT + voxel_groups table",
   "description": "First child of URO Tier 1 multi-tarball arc. Lands the foundation building blocks for the URO viewer demo: ROS 2 Jazzy base image, colcon workspace with luhtech_msgs package (canonical 9 .msg files per strategy doc §6.A — VoxelPose, ResourceStatus, VoxelGroup, VoxelGroupArray, VoxelGroupEvent, VoxelStateArray, VoxelStateEvent, EFASState, EFASAlert), foxglove_bridge launch config, /api/uro/viewer-token + /internal/uro-ws-auth API routes, nginx /ws/uro/ subrequest auth config, and voxel_groups table migration (with GIN + B-tree indexes per strategy doc §6.D). No simulator nodes run yet (those land in T2). No production data load (production URN migration tracked separately). Foundation only.",
   "authority": {
@@ -28,7 +28,9 @@
       "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/msg/EFASAlert.msg",
       "infrastructure/uro-sim/launch/foxglove_bridge.launch.xml",
       "apps/api-gateway/src/routes/uro/viewer-token.route.ts",
+      "apps/api-gateway/src/routes/uro/__tests__/viewer-token.route.test.ts",
       "apps/api-gateway/src/routes/internal/uro-ws-auth.route.ts",
+      "apps/api-gateway/src/routes/internal/__tests__/uro-ws-auth.route.test.ts",
       "infrastructure/nginx/uro-bridge.conf",
       "apps/api-gateway/prisma/migrations/20260605120000_add_voxel_groups/migration.sql",
       ".roadmap/infrastructure-catalog.json",
@@ -91,12 +93,13 @@
     },
     {
       "id": "OUT-6",
-      "description": "`.roadmap/` substrate updated: `service-uro-sim` registered in infrastructure-catalog, uro-sim service in architecture.json, new follow-ups filed + overrideRecord captures in follow-up-register.json.",
+      "description": "`.roadmap/` substrate updated: `service-uro-sim` registered in `infrastructure-catalog.json` per `infrastructure-catalog.schema.json` v1.2.0; `uro-sim` service entry in `architecture.json` per `architecture-roadmap.schema.v1.json`; new FU filed in `follow-up-register.json` capturing T1's parent_jti binding deferral.",
       "acceptanceCriteria": [
-        "`.roadmap/infrastructure-catalog.json` contains a `service-uro-sim` entry with image, port, env, scopes per existing catalog convention.",
-        "`.roadmap/architecture.json` contains a `uro-sim` service entry with deliverableId `d-2026-06-05-eb-tier1-t1-foundation` and contractSurfaces matching the 5 contract boundaries from strategy doc §6 (ROS topic schemas, Foxglove WS protocol, viewer-JWT auth, Speckle Extension API — deferred to T3, .mcap browser API — deferred to T3).",
+        "`.roadmap/infrastructure-catalog.json` `catalog.services[]` contains an entry with `id: service-uro-sim`, `name: URO Simulator`, `type: worker` (per `infrastructure-catalog.schema.json` v1.2.0 service.type enum — closest fit; T2+ adds simulator worker nodes), `containerImage: ectropy-uro-sim:t1`, `ports.internal: 8765`, `dependencies: [api-gateway]`, `status: planned`. `lastUpdated` timestamp updated. `auditTrail[]` (if present) gains an entry for this PR.",
+        "`.roadmap/architecture.json` `services[]` contains an entry with `serviceId: uro-sim`, `name: URO Simulator`, `description` summarizing T1's ROS 2 foundation role, `technology: 'ROS 2 Jazzy + foxglove_bridge + Docker'`, `port: 8765`, `deliverableId: d-2026-06-05-eb-tier1-t1-foundation`, `priority: high`, `dependencies: [api-gateway, nginx-gateway]`, `apiEndpoints[]` describing the `/ws/uro/` WebSocket route (the `viewer-token` + `uro-ws-auth` HTTP routes are owned by api-gateway, not this service). `meta.lastUpdated` updated.",
         "`.roadmap/follow-up-register.json` contains new FU `FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1` (P2, status=open, blocked by `FU-EB-USER-JWT-JTI-CLAIM-1`) filed during this deliverable.",
-        "T1 SPEC.md notes section captures the override rationale for merging with `FU-EB-USER-JWT-JTI-CLAIM-1` + `FU-EB-URN-NAMESPACE-RECONCILE-1` still open. That rationale flows verbatim into the T1 `TRUTH-DELIVERED.json` `closureNotes.overrideRecord` field at SR-side closure (post-S7). FU `resolution` records themselves are NOT modified by T1 (the FUs remain open and tracked); the override accounting lives on the deliverable closure record per the established pattern from `d-2026-06-05-eb-prod-oauth-client-secret-fix` (PR #303 824419d)."
+        "T1 SPEC.md notes section captures the override rationale for merging with `FU-EB-USER-JWT-JTI-CLAIM-1` + `FU-EB-URN-NAMESPACE-RECONCILE-1` still open. That rationale flows verbatim into the T1 `TRUTH-DELIVERED.json` `closureNotes.overrideRecord` field at SR-side closure (post-S7). FU `resolution` records themselves are NOT modified by T1 (the FUs remain open and tracked); the override accounting lives on the deliverable closure record per the established pattern from `d-2026-06-05-eb-prod-oauth-client-secret-fix` (PR #303 824419d).",
+        "Applier is idempotent on catalog + architecture modifications: presence-based check by `service.id` / `serviceId`; re-run is NO-OP. Applier validates the added entries against the schemas (no inline JSON-Schema dependency in applier — relies on EB CI `validate-roadmap-files` workflow to confirm post-merge)."
       ]
     },
     {
@@ -110,7 +113,7 @@
   ],
   "validation": {
     "preMerge": [
-      "All 21 scope files staged exactly; PR scope-locked per memory #18.",
+      "All 23 scope files staged exactly; PR scope-locked per memory #18.",
       "`ajv-cli@5.0.0` validation of this deliverable.json against `deliverable.schema.json` v1.1.0 (canonical 3-flag with `_enums/luhtech-enums` + `_definitions/definitions` + `_definitions/forbidden-audit-paint-names`) PASS.",
       "`docker build infrastructure/uro-sim/` succeeds in CI; image size < 800 MB.",
       "Inside built container: `colcon build --packages-select luhtech_msgs` succeeds; `ros2 interface show` returns expected schema for all 9 .msg types.",
@@ -146,5 +149,5 @@
     "FU-EB-URN-NAMESPACE-RECONCILE-1",
     "FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1"
   ],
-  "notes": "Cross-repo doctrine (memory #24): SR-chat anchors this child instance at schemas/_instances/deliverables/d-2026-06-05-eb-tier1-t1-foundation.json on luh-tech/schema-registry BEFORE EB authors the T1 execution tarball. The execution tarball (separate artifact, authored chat-side next) will be a v2 tarball landing the 21 scope files via applier + commit_and_merge.sh phased ops. P1 prerequisite handling — both FU-EB-USER-JWT-JTI-CLAIM-1 and FU-EB-URN-NAMESPACE-RECONCELE-1 (parent arc OUT-4 P1 prereqs) will be captured as overrideRecord entries at T1 merge with rationale: (a) T1's viewer-token endpoint mints with its own jti for endpoint-level tracking; parent_jti binding requires user JWTs to have jti and is deferred to follow-up FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1 (P2, filed during T1, status open, blocked by FU-EB-USER-JWT-JTI-CLAIM-1) — this is a security hardening, not a functional blocker for the viewer demo; (b) T1 creates the voxel_groups table empty; no production data loaded in T1 (Maple Ridge bundle loads in T5), so production URN format (urn:ectropy:* vs canonical urn:luhtech:ectropy:*) does not affect T1 — URN reconcile remains tracked for completion before T5 production data load. T1 new code uses canonical urn:luhtech:ectropy:* from day one. SPEC.md (scope file #21) summarizes this for EB main. STRATEGY.md (landed PR #305 25a1f02 + corrected PR #306 cc5530f) §4 + §4.A are the canonical source for the 9 luhtech_msgs types and the topic surface — T1 .msg files implement §4.A verbatim. .mcap browser API and Speckle Extension API contract surfaces from strategy doc §6 are referenced in architecture.json contractSurfaces but their implementations land in T3 (browser bridge) and T6 (replay scrubber), not T1."
+  "notes": "Cross-repo doctrine (memory #24): SR-chat amends the existing anchored T1 instance (currently at v1.0.1 SHA f6f2f59... from PR #132 bb98acd on schema-registry main) to this v1.0.4 spec before EB executes the T1 tarball PHASE_3 (PR open). The execution tarball (separate artifact, authored chat-side, sandbox-tested) is a v2 tarball landing 23 scope files via applier + commit_and_merge.sh phased ops. v1.0.4 fixes forward against the schema substrate Erik provided (infrastructure-catalog.schema.json v1.2.0, architecture-roadmap.schema.v1.json) — catalog + architecture entries land in this PR per their schemas rather than being deferred. P1 prerequisite handling — both FU-EB-USER-JWT-JTI-CLAIM-1 and FU-EB-URN-NAMESPACE-RECONCILE-1 (parent arc OUT-4 P1 prereqs) will be captured as overrideRecord entries on T1's TRUTH-DELIVERED.json at SR closure (S7 post-merge). Rationale: (a) T1's viewer-token endpoint mints with its own jti for endpoint-level tracking; parent_jti binding requires user JWTs to have jti and is deferred to follow-up FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1 (P2, filed during T1, status open, blocked by FU-EB-USER-JWT-JTI-CLAIM-1) — security hardening, not a functional blocker for the viewer demo; (b) T1 creates voxel_groups table empty; no production data loaded in T1 (Maple Ridge bundle loads in T5), so production URN format does not affect T1 — URN reconcile remains tracked for completion before T5 production data load. T1 new code uses canonical urn:luhtech:ectropy:* from day one. SPEC.md (scope file #23 of 23) summarizes this for EB main. STRATEGY.md (landed PR #305 25a1f02 + corrected PR #306 cc5530f) §4 + §4.A are the canonical source for the 9 luhtech_msgs types and the topic surface — T1 .msg files implement §4.A verbatim. infrastructure-catalog service.type 'worker' chosen as closest enum fit — none of (api|web|worker|database|cache|queue|proxy|gateway|mcp-server|storage|monitoring|logging|scheduler|bim-viewer|file-processor) perfectly fits a ROS 2 simulator container; worker fits the T2+ simulator nodes runtime. If a more accurate type ('ros2-service' or similar) becomes available in a future catalog schema version, T1 entry can be updated."
 }
