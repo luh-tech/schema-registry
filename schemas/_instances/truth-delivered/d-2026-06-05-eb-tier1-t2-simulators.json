@@ -1,0 +1,110 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-05-eb-tier1-t2-simulators",
+  "deliveredAt": "2026-06-05T20:36:22Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "2bf6a4a827ddc389da2bc4f4bb35e07d836f2880",
+      "prNumber": 308,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/308",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "2bf6a4a827ddc389da2bc4f4bb35e07d836f2880",
+      "prNumber": 308,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/308",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "2bf6a4a827ddc389da2bc4f4bb35e07d836f2880",
+      "prNumber": 308,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/308",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "2bf6a4a827ddc389da2bc4f4bb35e07d836f2880",
+      "prNumber": 308,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/308",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "2bf6a4a827ddc389da2bc4f4bb35e07d836f2880",
+      "prNumber": 308,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/308",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "2bf6a4a827ddc389da2bc4f4bb35e07d836f2880",
+      "prNumber": 308,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/308",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-7",
+      "mergeCommit": "2bf6a4a827ddc389da2bc4f4bb35e07d836f2880",
+      "prNumber": 308,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/308",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-8",
+      "mergeCommit": "2bf6a4a827ddc389da2bc4f4bb35e07d836f2880",
+      "prNumber": 308,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/308",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-9",
+      "mergeCommit": "2bf6a4a827ddc389da2bc4f4bb35e07d836f2880",
+      "prNumber": 308,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/308",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "URO Tier 1 T2 simulators landed on EB main at 2bf6a4a (PR #308). Per v1.0.0 spec (SR PR #136 50255ba): 19 scope files including HumSx + RobSx + EqpSx simulator ROS 2 nodes publishing canonical luhtech_msgs topics on /hsx/, /rsx/, /esx/ roots; scenario controller node; rosbag2 mcap recorder; 4 scripted scenarios YAML; record_scenario.sh helper; Dockerfile extension for simulator runtime; follow-up-register carry-forward of FU-EB-URO-T1-ROUTE-MOUNTING-1. All required CI checks green. Tarball sandbox-validation pre-execution: 29/29 unit tests PASSED (URN/voxel-grid/lerp helpers + scenario YAML loading + Draft 7 schema validation); AST syntax check on all 4 ROS 2 node files OK; applier dry-run + real apply + idempotent re-apply + SHA-drift refusal all PASSED. No framework substrate-correction needed (T2 is pure ROS 2, no api-gateway touch). Substrate-correction discipline applied at authoring per memory #25 (T1 lesson absorbed): pre-authoring eb-agent:trace-service queries against api-gateway + uro-sim confirmed scope. Canonical Sx-suffix naming applied throughout — NOT strategy doc §8's deprecated XaaS form. Parent arc d-2026-06-05-eb-tier1-ros-overlay-foundation remains S5-in-progress with 2 of 6 children landed (T1 S8-closed, T2 S8-closed).",
+    "overrideRecord": "none"
+  },
+  "relatedFollowUps": [
+    "FU-EB-URO-T1-ROUTE-MOUNTING-1"
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-05T20:36:22Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-308-squash-merged"
+    },
+    {
+      "timestamp": "2026-06-05T20:38:13Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-handoff-to-SR-chat-for-closure"
+    },
+    {
+      "timestamp": "2026-06-05T20:45:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored"
+    }
+  ]
+}
