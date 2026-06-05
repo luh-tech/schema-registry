@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-05-eb-prod-parity-deploy",
+  "deliveredAt": "2026-06-05T14:01:30Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "a4e840025c9f6adebfbc524b3df1b018701ec6be",
+      "prNumber": 302,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/302",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "a4e840025c9f6adebfbc524b3df1b018701ec6be",
+      "prNumber": 302,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/302",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "4f36a59af7525957ab9ab8dec46589350040489f",
+      "prNumber": 301,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/301",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Production parity deploy executed clean end-to-end 2026-06-05. SR anchor landed at PR #130 (34c3578). Deploy ran via deploy-production-app.yml workflow_dispatch --ref ed6fc3396952caf43594e71d1c0334c6d4ed0e6e; production image updated from a59f22e (2026-04-15, 7 weeks stale) to ed6fc33. Post-deploy: /api/health status=healthy buildSha=ed6fc33 score=100; /lb-health 200 blue+green; n8n canary 200 pre+post. 8h soak clean: 0 rollbacks, 0 alertmanager pages, 0 break-glass. L4 browser-verified login+dashboard post-soak. FU-EB-PROD-DEPLOY-GAP-2026-04-21 closed in PR #301 (4f36a59af). FU-EB-CIS-SERVICES-1-PROD-TAG-DRIFT-1 filed P3 (cis-services-1 droplet carries environment:production tag but is canonically env-cis; benign for deploy, tracked for catalog hygiene). health-validation job step had a false-positive curl --no-follow failure (tracked as FU-EB-DEPLOY-PROD-APP-HEALTH-VALIDATION-CURL-NO-FOLLOW-1 P2); the deploy itself succeeded. EB-side scope-files (SPEC.md + TRUTH-DELIVERED.json) landed in PR #302 (a4e840025c9f) to complete canonical scope per SR spec.",
+    "overrideRecord": "none"
+  },
+  "relatedFollowUps": [
+    "FU-EB-PROD-DEPLOY-GAP-2026-04-21",
+    "FU-EB-CIS-SERVICES-1-PROD-TAG-DRIFT-1",
+    "FU-EB-DEPLOY-PROD-APP-HEALTH-VALIDATION-CURL-NO-FOLLOW-1",
+    "FU-EB-VPC-PEERING-STG-PROD-ELIMINATION-1"
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-05T14:01:30Z",
+      "actor": "erik-luh",
+      "event": "EB-closure-PR-302-merged-S7-merged"
+    },
+    {
+      "timestamp": "2026-06-05T17:30:00Z",
+      "actor": "Claude L1 (SR-chat)",
+      "event": "truth-delivered-retro-authored"
+    }
+  ]
+}

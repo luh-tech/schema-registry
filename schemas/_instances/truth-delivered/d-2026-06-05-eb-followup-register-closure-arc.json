@@ -1,0 +1,77 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-05-eb-followup-register-closure-arc",
+  "deliveredAt": "2026-06-05T13:31:13Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "4f36a59af7525957ab9ab8dec46589350040489f",
+      "prNumber": 301,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/301",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "4f36a59af7525957ab9ab8dec46589350040489f",
+      "prNumber": 301,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/301",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "4f36a59af7525957ab9ab8dec46589350040489f",
+      "prNumber": 301,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/301",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "4f36a59af7525957ab9ab8dec46589350040489f",
+      "prNumber": 301,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/301",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "4f36a59af7525957ab9ab8dec46589350040489f",
+      "prNumber": 301,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/301",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "FU-EB-PROD-DEPLOY-GAP-2026-04-21 (P1) closed with full resolution block in PR #301. Five new FUs filed open: FU-EB-CIS-SERVICES-1-PROD-TAG-DRIFT-1 (P3, cis-services-1 env:production tag drift vs canonical env-cis), FU-EB-DEPLOY-PROD-APP-HEALTH-VALIDATION-CURL-NO-FOLLOW-1 (P2, curl --no-follow false-positive in health-validation job step), FU-EB-OAUTH-SECRET-ENVSCOPED-NAMING-1 (P3, generic naming pattern for env-scoped OAuth secrets), FU-EB-BW-OAUTH-SECRET-INITIAL-WRITE-NEVER-MATCHED-GOOGLE-1 (P3, learn-from: BW initial-write never verified against GCP source-of-truth), FU-EB-VPC-PEERING-STG-PROD-ELIMINATION-1 (P2, staging-prod VPC peering elimination per eb-agent drift-vpcpeering finding). follow-up-register.json indexes rebuilt from authoritative followUps[]; version 1.7.13 to 1.7.14; pre-existing 9-FU stale-index drift from d-2026-06-04-seppa-cis-demo-path-arc cleared as side effect of rebuild (memory #26). All required CI checks green first time, no --admin override."
+  },
+  "relatedFollowUps": [
+    "FU-EB-PROD-DEPLOY-GAP-2026-04-21",
+    "FU-EB-CIS-SERVICES-1-PROD-TAG-DRIFT-1",
+    "FU-EB-DEPLOY-PROD-APP-HEALTH-VALIDATION-CURL-NO-FOLLOW-1",
+    "FU-EB-OAUTH-SECRET-ENVSCOPED-NAMING-1",
+    "FU-EB-BW-OAUTH-SECRET-INITIAL-WRITE-NEVER-MATCHED-GOOGLE-1",
+    "FU-EB-VPC-PEERING-STG-PROD-ELIMINATION-1"
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-05T13:31:13Z",
+      "actor": "erik-luh",
+      "event": "EB-PR-301-merged-S7-merged"
+    },
+    {
+      "timestamp": "2026-06-05T17:30:00Z",
+      "actor": "Claude L1 (SR-chat)",
+      "event": "truth-delivered-retro-authored"
+    }
+  ]
+}
