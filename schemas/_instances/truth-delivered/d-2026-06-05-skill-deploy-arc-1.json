@@ -1,0 +1,113 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-05-skill-deploy-arc-1",
+  "deliveredAt": "2026-06-05T02:13:00Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude L1 (BT-chat)",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "e6f33b70",
+      "prNumber": 270,
+      "prUrl": "https://github.com/luh-tech/business-tools/pull/270",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "e6f33b70",
+      "prNumber": 270,
+      "prUrl": "https://github.com/luh-tech/business-tools/pull/270",
+      "ciResult": "skipped"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "e6f33b70",
+      "prNumber": 270,
+      "prUrl": "https://github.com/luh-tech/business-tools/pull/270",
+      "ciResult": "skipped"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Deployed 3 working-model SR skills (substrate-before-write, canonical-schema-authoring, cross-repo-execution-shape) from pinned SR SHA 0b20177 to three delivery surfaces. OUT-1 landed via BT PR #270 to main e6f33b70 (tools/skill-sync/ — script, README, manifest template). OUT-3 was the Anthropic org-skills upload — three .zip files from BT dist/org-skills/ uploaded manually by L4 to claude.ai/admin-settings/skills, all three visible in Organization skills directory. OUT-4 was the doctrine doc LUHTECH-SKILL-DEPLOY-DOCTRINE-2026-06-05.md preserved to project files plus Google Drive. EB-agent runtime surface received the same SKILL.md files via skill-sync.py execute step writing to Ectropy-Business/agent/skills/ (runtime-only per Option B amendment, not committed to EB git). EB existing critical-path-analysis skill untouched per scope-lock. Original spec OUT-2 (EB commit PR) removed via Option B amendment after G4-halt surfaced that EB .gitignore line 271 blanket-ignores *.md with no exception for agent/skills/, and that existing critical-path-analysis/SKILL.md has been runtime-only since May 27. Amendment honored established EB convention rather than introducing a new one. S5 reusable seeding kit pattern proven end-to-end across the SR-canonical to BT-sync-tool to delivery-surfaces flow.",
+    "overrideRecord": "none"
+  },
+  "relatedFollowUps": [],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "amendment-via-substrate-discovery-gitignore-runtime-only"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-05T01:30:00Z",
+      "actor": "Claude L1 (BT-chat)",
+      "event": "G1-preflight-passed"
+    },
+    {
+      "timestamp": "2026-06-05T01:35:00Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "G1-named-approval"
+    },
+    {
+      "timestamp": "2026-06-05T01:40:00Z",
+      "actor": "Claude L1 (BT-chat)",
+      "event": "G2-halt-sha-width-mismatch"
+    },
+    {
+      "timestamp": "2026-06-05T01:45:00Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "G2-resume-approved-with-sha-correction"
+    },
+    {
+      "timestamp": "2026-06-05T01:50:00Z",
+      "actor": "Claude L1 (BT-chat)",
+      "event": "G2-resume-author-and-dry-run-passed"
+    },
+    {
+      "timestamp": "2026-06-05T01:55:00Z",
+      "actor": "Claude L1 (BT-chat)",
+      "event": "G3-commit-push-pr-merged-bt-main-e6f33b70"
+    },
+    {
+      "timestamp": "2026-06-05T02:00:00Z",
+      "actor": "Claude L1 (BT-chat)",
+      "event": "G4-execute-halt-eb-gitignore-finding"
+    },
+    {
+      "timestamp": "2026-06-05T02:05:00Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "option-b-amendment-approved"
+    },
+    {
+      "timestamp": "2026-06-05T02:08:00Z",
+      "actor": "Claude L1 (BT-chat)",
+      "event": "G4-execute-complete-eb-runtime-files-written"
+    },
+    {
+      "timestamp": "2026-06-05T02:10:00Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "G5-anthropic-org-skills-upload-complete"
+    },
+    {
+      "timestamp": "2026-06-05T02:13:00Z",
+      "actor": "Claude L1 (BT-chat)",
+      "event": "G6-doctrine-doc-authored"
+    },
+    {
+      "timestamp": "2026-06-05T02:13:00Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "G6-named-approval-doc-preserved"
+    },
+    {
+      "timestamp": "2026-06-05T02:15:00Z",
+      "actor": "Claude L1 (BT-chat)",
+      "event": "G7-truth-delivered-instance-authored"
+    }
+  ]
+}
