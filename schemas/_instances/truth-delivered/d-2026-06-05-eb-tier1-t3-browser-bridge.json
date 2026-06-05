@@ -1,0 +1,130 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-05-eb-tier1-t3-browser-bridge",
+  "deliveredAt": "2026-06-05T23:36:21Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-with-debt",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+      "prNumber": 309,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+      "prNumber": 309,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+      "prNumber": 309,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+      "prNumber": 309,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+      "prNumber": 309,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+      "prNumber": 309,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-7",
+      "mergeCommit": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+      "prNumber": 309,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-8",
+      "mergeCommit": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+      "prNumber": 309,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-9",
+      "mergeCommit": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+      "prNumber": 309,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-10",
+      "mergeCommit": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+      "prNumber": 309,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "URO Tier 1 T3 browser-bridge landed on EB main at 9d16312 (PR #309). Per v1.0.0 spec (SR PR #138 24fe684): 16 scope files + lockfile side-effect. URO library (UroWsClient, UroStateStore, decoders, DevUroPage component) shipped at apps/web-dashboard/src/lib/uro/* and apps/web-dashboard/src/components/uro/* — importable as @/lib/uro. Speckle backdrop snapshot script + .gitkeep + 3 vitest files + dependency additions (@foxglove/ws-protocol@0.8.0, @speckle/objectloader, @speckle/viewer, @types/three) all landed. All required CI checks green. Parent arc d-2026-06-05-eb-tier1-ros-overlay-foundation remains S5-in-progress with 3 of 6 children landed (T1 S8-closed-with-debt, T2 S8-closed-clean, T3 S8-closed-with-debt). Memory #25 substrate-correction discipline observed at multiple layers this T3 cycle: at authoring (catalog↔architecture framework drift surfaced via eb-agent:trace-service, captured as FU rather than guessed), and at execution (two in-execution corrections caught at EB CI per overrideRecord below).",
+    "debt": "Two pieces of debt at T3 close:\n\n1. /dev/uro route returns 404. URO library code lands fully (importable via @/lib/uro), but route REGISTRATION is deferred to FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1 (P2 — escalated from spec's P3 at execution time per overrideRecord item 2 below). Route registration is framework-dependent (catalog says Next.js 14, architecture says React+Vite+MUI); the framework reconciliation must land before the route can be wired correctly. Path A deferred-route per memory #15 enterprise-complete decision — better to ship code + defer route than ship a framework-wrong route that needs revert.\n\n2. Carry-forward from T1: FU-EB-URO-T1-ROUTE-MOUNTING-1 (P2) — viewer-token + uro-ws-auth routes compile + test clean but not mounted in api-gateway server.ts. Same shape as T3 debt: code shipped, wiring deferred. Both wiring gaps are pure follow-on PRs, no scope expansion required at T3 close.",
+    "overrideRecord": "Two in-execution substrate-corrections captured at EB CI before T3 PR merged:\n\n1. Dependency version correction (chat-side authoring error). Spec authored @foxglove/ws-protocol at ^1.0.0; latest published version on npm is 0.8.0. EB CLI caught at install time and corrected to ^0.8.0 before commit. Root cause: EB-chat authored against assumed/hallucinated version without verifying against npm registry. Memory #25 (substrate-correction discipline) violation at authoring layer, self-caught at execution layer rather than reaching production. Pattern parallel to T1's Fastify→Express correction — different surface (npm registry vs framework choice), same anti-pattern (authoring against assumption instead of substrate-verified truth).\n\n2. FU priority escalation (substrate-discovered during execution). FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1 priority changed from P3 (spec) to P2 (landed). Reclassification rationale: during T3 execution it became clear that the framework discrepancy isn't just hygiene — route registration directly blocks the /dev/uro validation gate (OUT-3). What was filed as cleanup-class follow-on (P3) is actually a blocking gate (P2). Substrate-correction reflects execution-discovered reality, not initial-authoring estimate.\n\nT1 substrate-correction-discipline lesson (Fastify→Express, captured at T1 closure) was structurally absorbed at T2 (clean, no override) and structurally improved at T3 authoring (eb-agent:trace-service called pre-authoring, surfaced framework drift cleanly). The two T3 in-execution corrections above are different failure modes: (a) version-of-third-party-dep (npm registry verification missed) and (b) priority-classification (execution-time discovery, not authoring failure). The pattern-of-improvement is real but the specific anti-patterns at each layer are still being surfaced. T4 authoring should add: pre-authoring npm registry version check for any new dependencies."
+  },
+  "relatedFollowUps": [
+    "FU-EB-URO-T1-ROUTE-MOUNTING-1",
+    "FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "npm-registry-version-substrate-correction-via-ci-catch"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "fu-priority-escalation-via-execution-discovery"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-05T23:36:21Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-309-squash-merged"
+    },
+    {
+      "timestamp": "2026-06-05T23:37:41Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-handoff-to-SR-chat-for-closure"
+    },
+    {
+      "timestamp": "2026-06-06T00:05:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored"
+    }
+  ]
+}
