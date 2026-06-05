@@ -1,0 +1,100 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-05-eb-tier1-ros-overlay-foundation",
+  "version": "1.0.0",
+  "title": "URO Tier 1 ROS Overlay Foundation — multi-tarball arc",
+  "description": "Stand up the Ectropy URO (Universal Resource Orchestration per acronyms catalog v1.2.0 section K) viewer: full ROS 2 architecture deployed cloud-only, voxel-group + resource-presence + EFAS-alert overlays on a locked Speckle backdrop of Maple Ridge Commerce Centre, replayable scenarios via .mcap with browser-side scrubbing, and nav_msgs/OccupancyGrid published per level. Composed as parent arc + six child deliverables (T1 foundation, T2 simulator, T3 browser-bridge, T4 overlays, T5 groups-occupancy, T6 efas-replay). Parent S7 fires when all six children S7 fire.",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/tier1-ros-overlay-foundation-arc-2026-06-05",
+    "scopeFiles": [
+      ".dlp/deliverables/d-2026-06-05-eb-tier1-ros-overlay-foundation/SPEC.md",
+      ".dlp/deliverables/d-2026-06-05-eb-tier1-ros-overlay-foundation/STRATEGY.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "EB-side arc anchor landed: SPEC.md (canonical EB-local copy of this deliverable.json) and STRATEGY.md (the strategy-of-record document) ship at .dlp/deliverables/d-2026-06-05-eb-tier1-ros-overlay-foundation/ on EB main.",
+      "acceptanceCriteria": [
+        "SPEC.md present at the canonical path on EB main post-merge of arc anchor PR.",
+        "STRATEGY.md present at the canonical path on EB main post-merge of arc anchor PR; content matches LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-05.md from project knowledge with acronyms catalog v1.2.0 corrections applied (URO = Universal Resource Orchestration; HumSx/RobSx/EqpSx/MatSx/InsSx naming, XaaS naming deprecated; AgtSx/GovSx/CorSx/PaySx added per The Nine taxonomy).",
+        "Arc anchor PR squash-merged without --admin override; required CI checks all SUCCESS."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "All six child deliverables (T1–T6) reach S7-merged on EB main, each with its own SR-anchored instance + TRUTH-DELIVERED.json closure record. Child IDs are assigned at the time each child spec is authored; childDeliverables list below holds the planned slots.",
+      "acceptanceCriteria": [
+        "Six child deliverable instances exist at schemas/_instances/deliverables/ on SR main, each with lifecycleState=S7-merged or S8-closed.",
+        "Six TRUTH-DELIVERED instances exist at schemas/_instances/truth-delivered/ on SR main, each referencing the corresponding child's merge SHA on EB.",
+        "Each child PR squash-merged on EB main without --admin override; required CI checks all SUCCESS for each child.",
+        "Each child's scope-files declared in its own deliverable.json validate against the child's actual delivered files (scope-lock invariant per memory #18)."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Demo readiness: cloud-hosted URO viewer renders Maple Ridge Commerce Centre Speckle backdrop with voxel-group + resource-presence + EFAS-alert overlays; scenarios play/pause/scrub via browser-side .mcap; nav_msgs/OccupancyGrid published per level. Demonstrable to technical/robotics audience (Dusty Robotics, Locus, 6 River, Boston Dynamics Orbit operators) as a credible ROS 2-native construction intelligence architecture.",
+      "acceptanceCriteria": [
+        "https://ectropy.ai/dev/uro renders the Maple Ridge glTF backdrop + live + replayed overlays; L4 browser-verified.",
+        "ros2 topic list run against the deployed uro-sim container surfaces the documented topic list (per strategy doc §6.B): /box/groups/snapshot, /box/groups/dynamic, /box/groups/occupancy_grid/level_{N}, /box/voxels/octomap, /hsx/{id}/location, /hsx/{id}/status, /rsx/{id}/location, /rsx/{id}/status, /eaas/{id}/status, /efas/state, /efas/alerts.",
+        "Maple Ridge bundle v1.0.0 (decisions.json, staff.json, takt-schedule.json, seppa-context.json, voxel group definitions) loaded and renderable.",
+        "At least three scripted scenarios playable end-to-end via browser scrub controls."
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "FU register state: this arc's PR-#304 precursor FUs are correctly referenced; new FUs filed during execution are linked back via openedDuring fields to the appropriate child deliverable id.",
+      "acceptanceCriteria": [
+        "All 5 precursor FUs from PR #304 referenced in this deliverable's relatedFollowUps list.",
+        "FU-EB-URN-NAMESPACE-RECONCILE-1 (P1, blocks arc start per its blocks[] field) reaches status=closed before T1 child merges, OR the T1 child captures an overrideRecord justifying merge with the URN reconcile still open.",
+        "FU-EB-USER-JWT-JTI-CLAIM-1 (P1, blocks viewer-token mint per its blocks[] field) reaches status=closed before T1's viewer-token mint endpoint lands.",
+        "FU-EB-VOXEL-GROUP-DRILL-DOWN-DESIGN-1 (D3 follow-on), FU-EB-STAGE-8-AUTO-ENRICHMENT-1 (F1 follow-on), and FU-EB-INSTANCED-MESH-PICKING-RESTORE-1 (adjacent) remain open through arc closure — they are explicit follow-ons captured for future arcs, not gating items."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Arc anchor PR scope-locked to exactly the two scopeFiles declared above.",
+      "STRATEGY.md content matches the project-knowledge LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-05.md with the acronyms catalog v1.2.0 reconciliation corrections applied (URO expansion + Sx-suffix naming + XaaS deprecation per LUHTECH-EB-TIER1-RECONCILIATION-ADDENDUM-2026-06-05.md).",
+      "ajv-cli@5.0.0 validation of this deliverable.json passes against schemas/deliverable.schema.json v1.1.0 (with -r against _enums/ + _definitions/ + _definitions/forbidden-audit-paint-names).",
+      "Arc anchor PR CI passes all required checks without --admin override.",
+      "SR-side anchor PR for this deliverable instance landed at schemas/_instances/deliverables/d-2026-06-05-eb-tier1-ros-overlay-foundation.json before EB anchor PR opens (per cross-repo doctrine memory #24)."
+    ],
+    "postMerge": [
+      "eb-agent query for d-2026-06-05-eb-tier1-ros-overlay-foundation returns lifecycleState=S5-in-progress (transitioned from S4 once child T1 spec authoring begins).",
+      "Strategy doc accessible at the canonical EB path; cross-repo TRUTH-DELIVERED for parent will land at schemas/_instances/truth-delivered/ when all six children S7-merge (per strategy doc §5).",
+      "Children T1–T6 each independently traversable from this parent via childDeliverables list and reverse-link parentDeliverable on each child."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-05",
+      "trigger": "L4 approval to author parent arc deliverable spec post-PR-#304 precursor FU landing"
+    }
+  ],
+  "childDeliverables": [
+    "d-2026-06-05-eb-tier1-t1-foundation",
+    "d-2026-06-05-eb-tier1-t2-simulator",
+    "d-2026-06-05-eb-tier1-t3-browser-bridge",
+    "d-2026-06-05-eb-tier1-t4-overlays",
+    "d-2026-06-05-eb-tier1-t5-groups-occupancy",
+    "d-2026-06-05-eb-tier1-t6-efas-replay"
+  ],
+  "relatedFollowUps": [
+    "FU-EB-USER-JWT-JTI-CLAIM-1",
+    "FU-EB-URN-NAMESPACE-RECONCILE-1",
+    "FU-EB-VOXEL-GROUP-DRILL-DOWN-DESIGN-1",
+    "FU-EB-STAGE-8-AUTO-ENRICHMENT-1",
+    "FU-EB-INSTANCED-MESH-PICKING-RESTORE-1"
+  ],
+  "notes": "Substrate-anchored facts at authoring (memory #10 verify-at-use-time): URO canonical expansion = Universal Resource Orchestration per acronyms-catalog.json v1.2.0 section K (LOCKED). XaaS naming deprecated per section O — canonical resource service-category naming is Sx-suffix (HumSx, RobSx, AgtSx, EqpSx, MatSx, InsSx) plus governance tier (GovSx, CorSx, PaySx), collectively The Nine under SNx (Service Network Exchange). Strategy doc LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-05.md is the design-of-record; reconciliation addendum LUHTECH-EB-TIER1-RECONCILIATION-ADDENDUM-2026-06-05.md captures the URO + XaaS corrections that must be applied to the STRATEGY.md landed on EB. Five precursor FUs were filed in PR #304 (49e3530); two block this arc directly (URN namespace reconcile blocks arc-start, JWT jti claim blocks viewer-token mint), three are explicit follow-on captures (D3 drill-down, F1 stage-8 enrichment, adjacent InstancedMesh picking restore). Child deliverable IDs above use placeholder dating (2026-06-05) since canonical authoring date is yet TBD per child; the IDs will be amended via patch version bumps when actual child authoring dates are known. The deliverable.schema.json v1.1.0 already carries parentDeliverable + childDeliverables optional fields (the strategy doc §5 R7 schema-extension precursor recommendation is out of date — schema has evolved). arcType field was proposed but not added; arc-parent role is derivable from childDeliverables non-empty + parentDeliverable absent. Cross-repo doctrine per memory #24: SR anchors this instance at schemas/_instances/deliverables/ before EB anchor PR opens; child specs follow same SR-first pattern."
+}
