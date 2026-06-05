@@ -1,0 +1,150 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-05-eb-tier1-t1-foundation",
+  "version": "1.0.1",
+  "title": "URO Tier 1 — T1 Foundation: ROS 2 base + luhtech_msgs + viewer-JWT + voxel_groups table",
+  "description": "First child of URO Tier 1 multi-tarball arc. Lands the foundation building blocks for the URO viewer demo: ROS 2 Jazzy base image, colcon workspace with luhtech_msgs package (canonical 9 .msg files per strategy doc §6.A — VoxelPose, ResourceStatus, VoxelGroup, VoxelGroupArray, VoxelGroupEvent, VoxelStateArray, VoxelStateEvent, EFASState, EFASAlert), foxglove_bridge launch config, /api/uro/viewer-token + /internal/uro-ws-auth API routes, nginx /ws/uro/ subrequest auth config, and voxel_groups table migration (with GIN + B-tree indexes per strategy doc §6.D). No simulator nodes run yet (those land in T2). No production data load (production URN migration tracked separately). Foundation only.",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/tier1-t1-foundation-2026-06-05",
+    "scopeFiles": [
+      "infrastructure/uro-sim/Dockerfile",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/package.xml",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/CMakeLists.txt",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/msg/VoxelPose.msg",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/msg/ResourceStatus.msg",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/msg/VoxelGroup.msg",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/msg/VoxelGroupArray.msg",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/msg/VoxelGroupEvent.msg",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/msg/VoxelStateArray.msg",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/msg/VoxelStateEvent.msg",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/msg/EFASState.msg",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_msgs/msg/EFASAlert.msg",
+      "infrastructure/uro-sim/launch/foxglove_bridge.launch.xml",
+      "apps/api-gateway/src/routes/uro/viewer-token.route.ts",
+      "apps/api-gateway/src/routes/internal/uro-ws-auth.route.ts",
+      "infrastructure/nginx/uro-bridge.conf",
+      "apps/api-gateway/prisma/migrations/20260605120000_add_voxel_groups/migration.sql",
+      ".roadmap/infrastructure-catalog.json",
+      ".roadmap/architecture.json",
+      ".roadmap/follow-up-register.json",
+      ".dlp/deliverables/d-2026-06-05-eb-tier1-t1-foundation/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "ROS 2 Jazzy base container builds with luhtech_msgs package compiled; all 9 canonical message types exposed via `ros2 interface show`.",
+      "acceptanceCriteria": [
+        "`docker build -t ectropy-uro-sim:t1 infrastructure/uro-sim/` succeeds in CI.",
+        "Built image size < 800 MB (per strategy doc T1 validation gate).",
+        "`colcon build --packages-select luhtech_msgs` succeeds inside container.",
+        "`ros2 interface show luhtech_msgs/msg/VoxelPose` (and equivalent for ResourceStatus, VoxelGroup, VoxelGroupArray, VoxelGroupEvent, VoxelStateArray, VoxelStateEvent, EFASState, EFASAlert) returns the expected schema with no errors.",
+        "Each of the 9 `.msg` files contains the field set canonical per strategy doc §6.A; field types and order match."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "URO API endpoints land and behave correctly: viewer-token mint + internal WS auth subrequest.",
+      "acceptanceCriteria": [
+        "`GET /api/uro/viewer-token` with authenticated user returns 200 with JSON `{token, ttl_seconds, ws_url}`; the minted viewer JWT carries its own `jti` claim (for endpoint-side tracking — parent_jti binding deferred per overrideRecord below).",
+        "`GET /api/uro/viewer-token` without authenticated user returns 401.",
+        "`GET /internal/uro-ws-auth?token=<valid viewer JWT>` returns 200 with `X-Auth-Status: valid` header.",
+        "`GET /internal/uro-ws-auth?token=<expired or invalid>` returns 401.",
+        "`GET /internal/uro-ws-auth` without token query param returns 401.",
+        "Route handlers have JSDoc per project standards; corresponding tests added under `apps/api-gateway/src/routes/uro/__tests__/`."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "nginx `/ws/uro/` upstream proxy + auth_request configured and validated.",
+      "acceptanceCriteria": [
+        "`infrastructure/nginx/uro-bridge.conf` defines `location /ws/uro/` with `auth_request /internal/uro-ws-auth` directive and proxy_pass to `foxglove_bridge` upstream.",
+        "`nginx -t -c infrastructure/nginx/uro-bridge.conf` validates clean in CI.",
+        "Config sets `proxy_http_version 1.1`, `proxy_set_header Upgrade $http_upgrade`, `proxy_set_header Connection 'upgrade'` for WS pass-through.",
+        "Config preserves `Sec-WebSocket-Protocol` header for `foxglove.websocket.v1` sub-protocol echo per R1/R2 research."
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "`voxel_groups` table migration lands cleanly on staging with full schema + indexes per strategy doc §6.D.",
+      "acceptanceCriteria": [
+        "Prisma migration `20260605120000_add_voxel_groups` runs cleanly on staging without errors.",
+        "`psql -c '\\d voxel_groups'` returns the expected schema: `id UUID PK`, `group_urn TEXT UNIQUE NOT NULL`, `project_id UUID NOT NULL REFERENCES projects(id) ON DELETE CASCADE`, `group_type TEXT NOT NULL CHECK (group_type IN (...9 values))`, `label`, `voxel_urns TEXT[]`, `base_priority INTEGER CHECK (1..100)`, `display JSONB`, `metadata JSONB`, `generated_by`, `is_dynamic`, `expires_at`, `created_at`, `updated_at`.",
+        "Three indexes present: `voxel_groups_voxel_urns_gin` (GIN on voxel_urns), `voxel_groups_project_type_idx` (B-tree on project_id, group_type), `voxel_groups_dynamic_expiry_idx` (B-tree on expires_at WHERE is_dynamic = TRUE).",
+        "Migration is reversible (down migration drops table cleanly)."
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "foxglove_bridge launch config + Dockerfile entrypoint together produce a runnable bridge inside the container (image-level smoke test only — actual service running deferred to T2).",
+      "acceptanceCriteria": [
+        "`infrastructure/uro-sim/launch/foxglove_bridge.launch.xml` declares foxglove_bridge node with port + retry + heartbeat config per R1/R2 research.",
+        "Container smoke test: `docker run --rm ectropy-uro-sim:t1 ros2 launch foxglove_bridge foxglove_bridge_launch.xml port:=8765` starts cleanly and logs READY within 30s (then exits since no Foxglove client connects — this is image-level smoke only)."
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "`.roadmap/` substrate updated: `service-uro-sim` registered in infrastructure-catalog, uro-sim service in architecture.json, new follow-ups filed + overrideRecord captures in follow-up-register.json.",
+      "acceptanceCriteria": [
+        "`.roadmap/infrastructure-catalog.json` contains a `service-uro-sim` entry with image, port, env, scopes per existing catalog convention.",
+        "`.roadmap/architecture.json` contains a `uro-sim` service entry with deliverableId `d-2026-06-05-eb-tier1-t1-foundation` and contractSurfaces matching the 5 contract boundaries from strategy doc §6 (ROS topic schemas, Foxglove WS protocol, viewer-JWT auth, Speckle Extension API — deferred to T3, .mcap browser API — deferred to T3).",
+        "`.roadmap/follow-up-register.json` contains new FU `FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1` (P2, status=open, blocked by `FU-EB-USER-JWT-JTI-CLAIM-1`) filed during this deliverable.",
+        "T1 SPEC.md notes section captures the override rationale for merging with `FU-EB-USER-JWT-JTI-CLAIM-1` + `FU-EB-URN-NAMESPACE-RECONCILE-1` still open. That rationale flows verbatim into the T1 `TRUTH-DELIVERED.json` `closureNotes.overrideRecord` field at SR-side closure (post-S7). FU `resolution` records themselves are NOT modified by T1 (the FUs remain open and tracked); the override accounting lives on the deliverable closure record per the established pattern from `d-2026-06-05-eb-prod-oauth-client-secret-fix` (PR #303 824419d)."
+      ]
+    },
+    {
+      "id": "OUT-7",
+      "description": "`.dlp/deliverables/d-2026-06-05-eb-tier1-t1-foundation/SPEC.md` lands on EB main — canonical EB-local markdown summary of this child deliverable.",
+      "acceptanceCriteria": [
+        "SPEC.md present at canonical path on EB main post-merge.",
+        "SPEC.md content references parentDeliverable `d-2026-06-05-eb-tier1-ros-overlay-foundation`, the SR-anchored T1 instance, and the corrected STRATEGY.md §4 + §4.A as canonical source for message types + topic surface."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "All 21 scope files staged exactly; PR scope-locked per memory #18.",
+      "`ajv-cli@5.0.0` validation of this deliverable.json against `deliverable.schema.json` v1.1.0 (canonical 3-flag with `_enums/luhtech-enums` + `_definitions/definitions` + `_definitions/forbidden-audit-paint-names`) PASS.",
+      "`docker build infrastructure/uro-sim/` succeeds in CI; image size < 800 MB.",
+      "Inside built container: `colcon build --packages-select luhtech_msgs` succeeds; `ros2 interface show` returns expected schema for all 9 .msg types.",
+      "`pnpm --filter @ectropy/api-gateway tsc --noEmit` passes (new routes type-check).",
+      "`pnpm --filter @ectropy/api-gateway test` passes (new route handler tests).",
+      "`nginx -t -c infrastructure/nginx/uro-bridge.conf` validates clean.",
+      "`pnpm prisma migrate diff --from-empty --to-schema-datamodel <schema>` shows the voxel_groups migration as expected (no unrelated schema drift).",
+      "n8n canary `POST https://n8n.luh.tech/webhook/lead-capture` returns 200 immediately before PR open.",
+      "T1 PR required CI checks all SUCCESS without `--admin` override.",
+      "Cross-repo doctrine (memory #24): SR-side anchor PR for `schemas/_instances/deliverables/d-2026-06-05-eb-tier1-t1-foundation.json` MUST be merged on schema-registry main BEFORE this EB PR opens."
+    ],
+    "postMerge": [
+      "Parent arc `d-2026-06-05-eb-tier1-ros-overlay-foundation` transitions from `S4-authored` to `S5-in-progress` (per parent spec `validation.postMerge[0]`).",
+      "Prisma migrate deploy runs cleanly on staging; voxel_groups table queryable.",
+      "viewer-token endpoint deployed to staging; smoke-test returns 200 for authenticated user, 401 unauthenticated.",
+      "uro-ws-auth endpoint deployed to staging; internal subrequest path testable via curl with valid/invalid token.",
+      "Container image pushed to DOCR for staging consumption.",
+      "n8n canary `POST https://n8n.luh.tech/webhook/lead-capture` returns 200 within 10 minutes of merge.",
+      "SR-side TRUTH-DELIVERED instance for this child lands at `schemas/_instances/truth-delivered/d-2026-06-05-eb-tier1-t1-foundation.json` referencing the EB merge SHA (per cross-repo doctrine memory #24)."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-05",
+      "trigger": "L4 approval to author T1 child deliverable spec post parent arc EB anchor landing (PR #305 cc5530f) and STRATEGY.md correction (PR #306 cc5530f)"
+    }
+  ],
+  "parentDeliverable": "d-2026-06-05-eb-tier1-ros-overlay-foundation",
+  "relatedFollowUps": [
+    "FU-EB-USER-JWT-JTI-CLAIM-1",
+    "FU-EB-URN-NAMESPACE-RECONCILE-1",
+    "FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1"
+  ],
+  "notes": "Cross-repo doctrine (memory #24): SR-chat anchors this child instance at schemas/_instances/deliverables/d-2026-06-05-eb-tier1-t1-foundation.json on luh-tech/schema-registry BEFORE EB authors the T1 execution tarball. The execution tarball (separate artifact, authored chat-side next) will be a v2 tarball landing the 21 scope files via applier + commit_and_merge.sh phased ops. P1 prerequisite handling — both FU-EB-USER-JWT-JTI-CLAIM-1 and FU-EB-URN-NAMESPACE-RECONCELE-1 (parent arc OUT-4 P1 prereqs) will be captured as overrideRecord entries at T1 merge with rationale: (a) T1's viewer-token endpoint mints with its own jti for endpoint-level tracking; parent_jti binding requires user JWTs to have jti and is deferred to follow-up FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1 (P2, filed during T1, status open, blocked by FU-EB-USER-JWT-JTI-CLAIM-1) — this is a security hardening, not a functional blocker for the viewer demo; (b) T1 creates the voxel_groups table empty; no production data loaded in T1 (Maple Ridge bundle loads in T5), so production URN format (urn:ectropy:* vs canonical urn:luhtech:ectropy:*) does not affect T1 — URN reconcile remains tracked for completion before T5 production data load. T1 new code uses canonical urn:luhtech:ectropy:* from day one. SPEC.md (scope file #21) summarizes this for EB main. STRATEGY.md (landed PR #305 25a1f02 + corrected PR #306 cc5530f) §4 + §4.A are the canonical source for the 9 luhtech_msgs types and the topic surface — T1 .msg files implement §4.A verbatim. .mcap browser API and Speckle Extension API contract surfaces from strategy doc §6 are referenced in architecture.json contractSurfaces but their implementations land in T3 (browser bridge) and T6 (replay scrubber), not T1."
+}
