@@ -1,0 +1,81 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-05-eb-prod-parity-deploy",
+  "version": "1.0.0",
+  "title": "EB production parity deploy — main HEAD",
+  "description": "Close the production parity gap by deploying the latest image from luh-tech/Ectropy-Business main to production. Current production runs buildSha a59f22e (2026-04-15); main HEAD is ~7 weeks ahead. Deploy via deploy-production-app.yml (workflow_dispatch on ref=ed6fc33, the staging-validated image SHA; main HEAD 6f6d7f4 is roadmap-only). Closes FU-EB-PROD-DEPLOY-GAP-2026-04-21. Files FU-EB-CIS-SERVICES-1-PROD-TAG-DRIFT-1 as separate FU.",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "chore/prod-parity-deploy-2026-06-05",
+    "scopeFiles": [
+      ".roadmap/follow-up-register.json",
+      ".dlp/deliverables/d-2026-06-05-eb-prod-parity-deploy/SPEC.md",
+      ".dlp/deliverables/d-2026-06-05-eb-prod-parity-deploy/TRUTH-DELIVERED.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Production runs image from main HEAD with buildSha verified end-to-end via /api/health.",
+      "acceptanceCriteria": [
+        "deploy-production-app.yml workflow run completes with all 10 jobs SUCCESS: validate-cloudflare-config, confirm-check, canary-pre, compute-tag, verify-images (3 services), apply-gate-check, terraform-apply-image-tag, wait-for-config-sync, health-validation, log-release-metadata, canary-post.",
+      "Post-deploy GET https://ectropy.ai/api/health returns status=healthy with buildSha starting with ed6fc33.",
+      "Post-deploy GET https://ectropy.ai/lb-health returns HTTP 200.",
+      "n8n canary POST https://n8n.luh.tech/webhook/lead-capture returns 200 both pre-dispatch (PHASE 1) and post-deploy (PHASE 3)."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "8-hour observation window passes with no production incidents requiring rollback.",
+      "acceptanceCriteria": [
+        "8h elapsed from PHASE 3 completion with no operator-initiated rollback.",
+        "/api/health remains status=healthy on spot-check at T+1h, T+4h, T+8h.",
+        "No alertmanager pages requiring response.",
+        "No emergency break-glass firewall-add invoked during window."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "FU register updated: FU-EB-PROD-DEPLOY-GAP-2026-04-21 closed, FU-EB-CIS-SERVICES-1-PROD-TAG-DRIFT-1 filed as new open P3.",
+      "acceptanceCriteria": [
+        "FU-EB-PROD-DEPLOY-GAP-2026-04-21 status transitions open -> closed with resolution.commitSha set to merge SHA of the closure PR and resolution.outcome populated.",
+        "FU-EB-CIS-SERVICES-1-PROD-TAG-DRIFT-1 lands as new open P3 entry citing the observed environment:production tag on droplet 571217813 (cis-services-1) which catalog models as env-cis.",
+        "follow-up-register.json indexes (byStatus, byPriority) rebuilt and consistent.",
+        "ajv validation passes against follow-up-register.schema.json on the resulting register state."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Dispatch PHASE 1 reads all pass: n8n canary 200, DOCR has main short_sha tag for all 3 services (api-gateway, mcp-server, web-dashboard), baseline /api/health captured.",
+      "deploy-production-app.yml workflow run completes with all jobs SUCCESS.",
+      "PHASE 3 post-deploy reads pass: buildSha matches expected, /lb-health 200, n8n canary 200.",
+      "Closure PR opens against EB main with the FU register changes scope-locked to .roadmap/follow-up-register.json + .dlp/deliverables/d-2026-06-05-eb-prod-parity-deploy/ files only.",
+      "Closure PR CI passes (audit-workflows, roadmap-validate, etc) without --admin override."
+    ],
+    "postMerge": [
+      "TRUTH-DELIVERED instance lands in luh-tech/schema-registry at schemas/_instances/truth-delivered/d-2026-06-05-eb-prod-parity-deploy.json with closureStatus.",
+      "Slack #luhtech-agents-comms canvas updated with deploy SHA, deploy timestamp, and 8h soak conclusion.",
+      "eb-agent query-followups shows FU-EB-PROD-DEPLOY-GAP-2026-04-21 closed and FU-EB-CIS-SERVICES-1-PROD-TAG-DRIFT-1 open."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-05",
+      "trigger": "L4 approval to author full deliverable"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-PROD-DEPLOY-GAP-2026-04-21",
+    "FU-EB-CIS-SERVICES-1-PROD-TAG-DRIFT-1"
+  ],
+  "notes": "Substrate-anchored facts at authoring time (verify at use-time per memory #10): Production currently a59f22e (2026-04-15); deploy target = ed6fc3396952caf43594e71d1c0334c6d4ed0e6e (deploy executes against ref=ed6fc33; PR #299 and #300 on main are .roadmap/*.json only and did not trigger a DOCR image build, so ed6fc33 is the canonical staging-validated image). LB ID 051530f8-c736-4358-aaef-6e273484c9fe, cert 1efd4db4-1bb8-449e-a451-516cdc655929 (read live in substrate-read 2026-06-05 R5 — memory previously held stale cc7c246b, now per memory #29 infrastructure IDs are read at use-time only). LB pool includes droplet 571217813 (cis-services-1) via environment:production tag — this is benign because cis-services-1 nginx returns 301 on /lb-health so LB excludes it via health check, but the tag itself is catalog-vs-ops drift (cis-services-1 is canonically env-cis). This deploy does not touch LB, cert, or cis-services-1; the workflow only mutates the production .env IMAGE_TAG via Spaces -> config-sync -> Watchtower. Per memory #14 Zero-SSH posture holds. Per memory #28 break-glass available during 8h observation window. CIS Tier-2 architecture (cis-services-1 deploy-agent HMAC, cis-mcp:5001 internal VPC routing, cis.luh.tech for deploy-agent observability only) is orthogonal to this deploy — separate workflow (deploy-cis-infra.yml) governs CIS infra."
+}
