@@ -1,0 +1,113 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-05-eb-followup-register-closure-arc",
+  "version": "1.0.0",
+  "title": "EB follow-up register closure arc — parity-deploy + OAuth fix FU closure",
+  "description": "Close FU-EB-PROD-DEPLOY-GAP-2026-04-21 (P1) and file 5 new follow-ups surfaced during the 2026-06-05 production parity deploy and OAuth client-secret fix arcs. Mutations: .roadmap/follow-up-register.json (1 FU closure + 5 FU filings + index rebuild + version 1.7.13 to 1.7.14). PHASE 5 of d-2026-06-05-eb-prod-parity-deploy and EB-side closure for d-2026-06-05-eb-prod-oauth-client-secret-fix. SR retro-anchor: SR did not land this deliverable instance before EB executed (EB-pre-SR-ship deviation, same pattern as d-2026-06-05-eb-prod-oauth-client-secret-fix).",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S8-closed",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "chore/followup-register-closure-arc-2026-06-05",
+    "scopeFiles": [
+      ".roadmap/follow-up-register.json",
+      ".dlp/deliverables/d-2026-06-05-eb-followup-register-closure-arc/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "FU-EB-PROD-DEPLOY-GAP-2026-04-21 transitions open to closed with resolution block.",
+      "acceptanceCriteria": [
+        "FU-EB-PROD-DEPLOY-GAP-2026-04-21 status=closed with closedDate=2026-06-05, closedDuring=d-2026-06-05-eb-followup-register-closure-arc, summary carrying full evidence trail."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Five new follow-ups filed open: FU-EB-CIS-SERVICES-1-PROD-TAG-DRIFT-1 (P3), FU-EB-DEPLOY-PROD-APP-HEALTH-VALIDATION-CURL-NO-FOLLOW-1 (P2), FU-EB-OAUTH-SECRET-ENVSCOPED-NAMING-1 (P3), FU-EB-BW-OAUTH-SECRET-INITIAL-WRITE-NEVER-MATCHED-GOOGLE-1 (P3), FU-EB-VPC-PEERING-STG-PROD-ELIMINATION-1 (P2).",
+      "acceptanceCriteria": [
+        "All 5 FUs present in followUps[] with required schema fields: id, title, priority, status=open, opened, openedDuring, scope, blockedBy, blocks, trackingRepo."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Indexes and meta counts rebuilt from authoritative followUps[].",
+      "acceptanceCriteria": [
+        "indexes.byStatus, indexes.byPriority, indexes.byBlockedBy rebuilt; meta.totalCount, meta.byStatus, meta.byPriority consistent with rebuilt indexes.",
+        "Pre-existing 9-FU stale-index drift from d-2026-06-04-seppa-cis-demo-path-arc cleared as side effect."
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "File metadata bumped: version 1.7.13 to 1.7.14, lastUpdated to 2026-06-05T00:00:00Z.",
+      "acceptanceCriteria": [
+        "version field equals 1.7.14.",
+        "lastUpdated starts with 2026-06-05."
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "SPEC.md lands at .dlp/deliverables/d-2026-06-05-eb-followup-register-closure-arc/SPEC.md on EB main.",
+      "acceptanceCriteria": [
+        "SPEC.md present at canonical path post-merge of PR #301."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Applier SHA-drift refusal verified: live follow-up-register.json SHA256 equals baseline anchor 4a81885ef4943ccac32c725ecd28d6c07854238da801aac13e5eb996032f5a0e before write.",
+      "Idempotent NO-OP verified: re-run on post-state detects operations already present and exits 0.",
+      "Post-write verify: target FU closed, 5 new FUs present, meta.byStatus counts consistent, version=1.7.14.",
+      "ajv schema validation of resulting follow-up-register.json passes against follow-up-register.schema.json with canonical -r flags.",
+      "PR CI passes all required checks without --admin override."
+    ],
+    "postMerge": [
+      "eb-agent query-followups id=FU-EB-PROD-DEPLOY-GAP-2026-04-21 returns status=closed.",
+      "eb-agent query-followups id=FU-EB-VPC-PEERING-STG-PROD-ELIMINATION-1 returns status=open.",
+      "SR retro-anchor and TRUTH-DELIVERED land per cross-repo doctrine memory #24."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-05",
+      "trigger": "EB-chat authored spec prior to PR #301 execution; SR did not land anchor before EB merged (EB-pre-SR-ship deviation, 8th+ in-band confirmation of FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1)"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S6-staged",
+      "date": "2026-06-05",
+      "trigger": "EB CLI applied follow-up-register mutations via applier script and commit_and_merge.sh (S5 collapsed per EB-pre-SR-ship pattern)"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-05",
+      "commitSha": "4f36a59af7525957ab9ab8dec46589350040489f",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/301",
+      "trigger": "EB PR #301 merged at 4f36a59af: follow-up-register.json + SPEC.md on EB main"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-05",
+      "trigger": "SR retro-landing: deliverable instance + TRUTH-DELIVERED land at schemas/_instances/ on SR main"
+    }
+  ],
+  "mergeCommitSha": "4f36a59af7525957ab9ab8dec46589350040489f",
+  "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/301",
+  "relatedFollowUps": [
+    "FU-EB-PROD-DEPLOY-GAP-2026-04-21",
+    "FU-EB-CIS-SERVICES-1-PROD-TAG-DRIFT-1",
+    "FU-EB-DEPLOY-PROD-APP-HEALTH-VALIDATION-CURL-NO-FOLLOW-1",
+    "FU-EB-OAUTH-SECRET-ENVSCOPED-NAMING-1",
+    "FU-EB-BW-OAUTH-SECRET-INITIAL-WRITE-NEVER-MATCHED-GOOGLE-1",
+    "FU-EB-VPC-PEERING-STG-PROD-ELIMINATION-1"
+  ],
+  "notes": "SR retro-anchor. EB authored and executed this deliverable without SR-anchor-first per cross-repo doctrine memory #24. The SPEC.md was authored by EB-chat; the SR deliverable instance lands retroactively at S8-closed. Pre-existing 9-FU stale-index drift cleared as side effect of index rebuild (memory #26: diff-vs-baseline surfaced the drift; strict drift-reduction, no new CI violations introduced). Substrate-honest: this deliverable is PHASE 5 of d-2026-06-05-eb-prod-parity-deploy and the EB-side FU closure component of d-2026-06-05-eb-prod-oauth-client-secret-fix."
+}
