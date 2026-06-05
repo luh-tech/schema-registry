@@ -1,0 +1,104 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-05-eb-tier1-t1-foundation",
+  "deliveredAt": "2026-06-05T19:22:35Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-with-debt",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "c356d81cc40091b24abfcc829d5e1f0fced4680e",
+      "prNumber": 307,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/307",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "c356d81cc40091b24abfcc829d5e1f0fced4680e",
+      "prNumber": 307,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/307",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "c356d81cc40091b24abfcc829d5e1f0fced4680e",
+      "prNumber": 307,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/307",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "c356d81cc40091b24abfcc829d5e1f0fced4680e",
+      "prNumber": 307,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/307",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "c356d81cc40091b24abfcc829d5e1f0fced4680e",
+      "prNumber": 307,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/307",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "c356d81cc40091b24abfcc829d5e1f0fced4680e",
+      "prNumber": 307,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/307",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-7",
+      "mergeCommit": "c356d81cc40091b24abfcc829d5e1f0fced4680e",
+      "prNumber": 307,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/307",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "URO Tier 1 T1 foundation landed on EB main at c356d81 (PR #307). Per v1.0.4 spec (SR PR #134 e59a567): 23 scope files including ROS 2 Jazzy Dockerfile + colcon workspace with 9 luhtech_msgs .msg files (VoxelPose, ResourceStatus, VoxelGroup, VoxelGroupArray, VoxelGroupEvent, VoxelStateArray, VoxelStateEvent, EFASState, EFASAlert), foxglove_bridge launch config, /api/uro/viewer-token + /internal/uro-ws-auth API routes with tests, nginx /ws/uro/ subrequest auth config, voxel_groups Prisma migration with GIN + B-tree indexes, service-uro-sim catalog entry, uro-sim architecture entry, follow-up register addition for parent_jti binding, EB-local SPEC.md. All 4 required CI checks green; non-required Phase 2 DB Integration + E2E Staging failures triaged as not T1-caused. Parent arc d-2026-06-05-eb-tier1-ros-overlay-foundation transitions to S5-in-progress per parent spec validation.postMerge[0].",
+    "debt": "FU-EB-URO-T1-ROUTE-MOUNTING-1 (P2, no blockers): viewerTokenRoute + uroWsAuthRoute compile + test clean but are not mounted in apps/api-gateway/src/server.ts. Live smoke tests against /api/uro/viewer-token return 404 until wiring lands. Pure wiring change; deferred to a separate small PR rather than expanding T1 scope. OUT-2 acceptance criteria 1-5 are met at unit-test level; live verification blocked by mounting gap. T1 closes with debt explicitly named per truth-delivered schema closureStatus=closed-with-debt requirement.",
+    "overrideRecord": "Three substrate-corrections + deferrals captured for the record:\n\n1. FU-EB-USER-JWT-JTI-CLAIM-1 (P1, parent arc OUT-4 prereq) remains open through T1 merge. Rationale: T1 viewer-token endpoint mints with its own jti for endpoint-level tracking; parent_jti binding requires user JWTs to carry jti and is deferred to follow-on FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1 (P2, filed during T1, blocked by JWT-JTI-CLAIM-1). This is a security hardening, not a functional blocker for the viewer demo.\n\n2. FU-EB-URN-NAMESPACE-RECONCILE-1 (P1, parent arc OUT-4 prereq) remains open through T1 merge. Rationale: T1 creates voxel_groups table empty; no production data loaded in T1 (Maple Ridge bundle loads in T5), so production URN format (urn:ectropy:* vs canonical urn:luhtech:ectropy:*) does not affect T1. URN reconcile remains tracked for completion before T5 production data load. T1 new code uses canonical urn:luhtech:ectropy:* from day one.\n\n3. Framework substrate-correction during execution (commit a7c6e94 within PR #307): tarball-authored route files imported from 'fastify' but api-gateway uses Express + Passport.js. EB CLI caught this at PR CI and refactored both route files in-place — pure mintViewerToken / validateViewerToken logic unchanged, Fastify wrappers replaced with Express Router + handler exports, type-augmentation import path corrected (4 levels -> 5 levels). TypeScript + tests clean post-fix. Root cause: EB-chat authored against assumed framework without verifying via eb-agent:trace-service api-gateway. Memory #25 (substrate-correction discipline) violation, self-caught at execution layer rather than authoring layer. Pattern recoverable; recording as substrate evidence for the rule-pipeline (see rulePipelineEvidence below).\n\nP1 deferrals (items 1 + 2) are pre-agreed at parent arc OUT-4 acceptance criterion 3 — explicit follow-on captures, not gating items. The framework correction (item 3) was an in-execution recovery, not a pre-agreed deferral."
+  },
+  "relatedFollowUps": [
+    "FU-EB-USER-JWT-JTI-CLAIM-1",
+    "FU-EB-URN-NAMESPACE-RECONCILE-1",
+    "FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1",
+    "FU-EB-URO-T1-ROUTE-MOUNTING-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "framework-import-substrate-correction-via-ci-catch"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-05T19:22:35Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-307-squash-merged"
+    },
+    {
+      "timestamp": "2026-06-05T19:25:54Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-handoff-to-SR-chat-for-closure"
+    },
+    {
+      "timestamp": "2026-06-05T19:35:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored"
+    }
+  ]
+}
