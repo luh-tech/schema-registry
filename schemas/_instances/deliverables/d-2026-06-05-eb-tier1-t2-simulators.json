@@ -1,0 +1,178 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-05-eb-tier1-t2-simulators",
+  "version": "1.0.0",
+  "title": "URO Tier 1 T2 — Simulator nodes (humsx + robsx + eqpsx) + scenario controller + rosbag2 .mcap recording",
+  "description": "Second child of the URO Tier 1 multi-tarball arc. Builds on T1 foundation (PR #307, EB main c356d81). Lands the simulator layer inside the uro-sim container: 3 resource-type simulator nodes publishing on canonical Sx-prefixed topics, a scenario controller that orchestrates simulator behaviors from declarative YAML scenarios, the first scripted scenario (worker_walks_through_l2), and rosbag2 .mcap recording wired into the container entrypoint. No browser receiving yet (T3 owns). No overlays yet (T4 owns). No production data (T5 owns Maple Ridge bundle). Simulator infrastructure only — proves the topic-publishing layer and replay capability end-to-end at the ROS 2 layer.",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/tier1-t2-simulators-2026-06-05",
+    "scopeFiles": [
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/package.xml",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/setup.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/setup.cfg",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/resource/luhtech_uro_sim",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/__init__.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/common.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/humsx_simulator_node.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/robsx_simulator_node.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/eqpsx_simulator_node.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/scenario_controller_node.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/launch/simulators.launch.xml",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/scenarios/worker_walks_through_l2.yaml",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/scenarios/scenario.schema.json",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/test/test_humsx_simulator.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/test/test_scenario_controller.py",
+      "infrastructure/uro-sim/scripts/record_scenario.sh",
+      "infrastructure/uro-sim/Dockerfile",
+      ".roadmap/follow-up-register.json",
+      ".dlp/deliverables/d-2026-06-05-eb-tier1-t2-simulators/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "`luhtech_uro_sim` Python ament colcon package lands at `infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/` with correct ament_python structure (package.xml + setup.py + setup.cfg + resource marker + __init__.py) and builds cleanly via `colcon build --packages-select luhtech_uro_sim`.",
+      "acceptanceCriteria": [
+        "`package.xml` declares `<buildtool_depend>ament_python</buildtool_depend>`, runtime `<depend>` entries for `rclpy`, `std_msgs`, `geometry_msgs`, `builtin_interfaces`, `luhtech_msgs` (the package landed in T1).",
+        "`setup.py` registers all four node entry points: `humsx_simulator_node`, `robsx_simulator_node`, `eqpsx_simulator_node`, `scenario_controller_node`.",
+        "`setup.cfg` declares correct script install destination.",
+        "`resource/luhtech_uro_sim` ament marker file is present (empty file is correct).",
+        "`colcon build --packages-select luhtech_uro_sim` exits 0 with no warnings.",
+        "`ros2 pkg list | grep luhtech_uro_sim` returns the package after sourcing the install."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "`humsx_simulator_node.py` publishes worker-001 on canonical `/hsx/` topic root: `/hsx/worker-001/location` (VoxelPose at 1 Hz) and `/hsx/worker-001/status` (ResourceStatus, event-driven on status transitions). Resource URN follows canonical pattern `urn:luhtech:ectropy:resource:human:worker-001`.",
+      "acceptanceCriteria": [
+        "Node implementation in `humsx_simulator_node.py` uses `rclpy` with a `Node` subclass `HumsxSimulatorNode`.",
+        "Publishes `luhtech_msgs/msg/VoxelPose` on topic `/hsx/worker-001/location` at 1 Hz ±10% (verified via `ros2 topic hz` in container test).",
+        "Publishes `luhtech_msgs/msg/ResourceStatus` on topic `/hsx/worker-001/status` event-driven (initial AVAILABLE on startup, transitions on simulated state changes).",
+        "VoxelPose.resource_urn = `urn:luhtech:ectropy:resource:human:worker-001` (canonical pattern from memory #18 acronyms ref).",
+        "VoxelPose.voxel_urn populated with `urn:luhtech:ectropy:voxel:{voxel_id}` where voxel_id is computed from position via the helper in `common.py`.",
+        "Default behavior (no scenario loaded): worker idles at fixed position. Scenario controller can override path/status.",
+        "Unit test in `test/test_humsx_simulator.py` exercises pose publication + URN composition without requiring a running ROS context."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "`robsx_simulator_node.py` publishes spot-001 (autonomous robot) on canonical `/rsx/` topic root: `/rsx/spot-001/location` (VoxelPose at 10 Hz — higher rate than human) and `/rsx/spot-001/status` (ResourceStatus, event-driven). Resource URN follows canonical pattern `urn:luhtech:ectropy:resource:robot:spot-001`.",
+      "acceptanceCriteria": [
+        "Node implementation in `robsx_simulator_node.py` uses `rclpy` with `Node` subclass `RobsxSimulatorNode`.",
+        "Publishes `luhtech_msgs/msg/VoxelPose` on topic `/rsx/spot-001/location` at 10 Hz ±10%.",
+        "Publishes `luhtech_msgs/msg/ResourceStatus` on topic `/rsx/spot-001/status` event-driven.",
+        "VoxelPose.resource_urn = `urn:luhtech:ectropy:resource:robot:spot-001`.",
+        "Default behavior: robot idles at fixed position. Higher rate reflects autonomous robot positioning precision."
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "`eqpsx_simulator_node.py` publishes crane-001 (equipment) on canonical `/esx/` topic root: `/esx/crane-001/status` (ResourceStatus at 0.1 Hz — equipment status is slow-changing). No location topic (equipment is fixed; position is in BIM, not telemetry). Resource URN follows canonical pattern `urn:luhtech:ectropy:resource:equipment:crane-001`.",
+      "acceptanceCriteria": [
+        "Node implementation in `eqpsx_simulator_node.py` uses `rclpy` with `Node` subclass `EqpsxSimulatorNode`.",
+        "Publishes `luhtech_msgs/msg/ResourceStatus` on topic `/esx/crane-001/status` at 0.1 Hz (every 10 seconds) ±20%.",
+        "ResourceStatus.resource_urn = `urn:luhtech:ectropy:resource:equipment:crane-001`.",
+        "Default status: AVAILABLE. Utilization value is simulated (e.g. random walk 0.0-1.0 with realistic transitions).",
+        "Topic path `/esx/...` (NOT `/eaas/...` — strategy doc §8 XaaS form is deprecated per acronyms catalog v1.2.0 + reconciliation addendum 2026-06-05)."
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "`scenario_controller_node.py` is a lifecycle-managed ROS 2 node that loads a YAML scenario file (path passed via parameter), validates against `scenario.schema.json`, and orchestrates simulator behaviors over time. First scenario `worker_walks_through_l2.yaml` ships with T2 and executes end-to-end.",
+      "acceptanceCriteria": [
+        "Node implementation in `scenario_controller_node.py` uses `rclpy` with `Node` subclass `ScenarioControllerNode`.",
+        "Accepts ROS 2 parameter `scenario_path` (string, path to YAML file inside container at `/scenarios/`).",
+        "On startup: reads the YAML, validates against `scenarios/scenario.schema.json` (JSON Schema Draft 7), publishes scenario metadata to `/scenarios/active` (latched, ResourceStatus-style payload with scenario_id + duration).",
+        "Drives simulator nodes via ROS 2 parameters or dedicated control topics (chosen at authoring time — both options valid; sandbox-prove the chosen approach).",
+        "`scenarios/worker_walks_through_l2.yaml` declares a 60-second scenario: worker-001 walks a 5-waypoint path on Level 2 (L2) starting AVAILABLE, transitions to WORKING after 5s, completes at AVAILABLE.",
+        "`scenarios/scenario.schema.json` (Draft 7) validates the YAML — required fields: `scenario_id`, `duration_seconds`, `resource_paths[]` (array of objects with `resource_urn`, `waypoints[]`, `status_transitions[]`).",
+        "Unit test `test_scenario_controller.py` exercises YAML loading + schema validation without requiring a running ROS context."
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "rosbag2 `.mcap` recording wired into the container entrypoint: when the simulator launches, rosbag2 records the active scenario to `/data/bags/<scenario_id>.mcap`. The recording captures all 5 canonical topics. Resulting `.mcap` is playable by stock Foxglove desktop + parseable by `@mcap/core` (browser library used in T6 replay UI).",
+      "acceptanceCriteria": [
+        "`scripts/record_scenario.sh` is a shell wrapper that takes a scenario_id, invokes `ros2 bag record` with the canonical topic list, and outputs to `/data/bags/<scenario_id>.mcap` with `--storage mcap` plugin.",
+        "Dockerfile entrypoint (or launch file) integrates the recorder so that running the container with `-e SCENARIO=worker_walks_through_l2` produces the corresponding `.mcap` file at the documented path.",
+        "Topic list recorded covers: `/hsx/worker-001/location`, `/hsx/worker-001/status`, `/rsx/spot-001/location`, `/rsx/spot-001/status`, `/esx/crane-001/status`, `/scenarios/active`.",
+        "`ros2 bag info /data/bags/worker_walks_through_l2.mcap` reports valid metadata (start time, end time, message counts > 0 for all 6 topics).",
+        "`ros2 bag play /data/bags/worker_walks_through_l2.mcap` reproduces the original topic stream end-to-end."
+      ]
+    },
+    {
+      "id": "OUT-7",
+      "description": "Launch infrastructure: `simulators.launch.xml` brings up all 4 nodes (3 simulators + scenario controller) with the scenario_path parameter wired in. Single command starts the full T2 simulator stack. Dockerfile is updated (only if T1 Dockerfile does not already accommodate the new Python package — sandbox-verify before modification).",
+      "acceptanceCriteria": [
+        "`launch/simulators.launch.xml` includes all 4 nodes with namespaces matching their topic roots.",
+        "Scenario path is parameterized via launch argument (default: `worker_walks_through_l2.yaml`).",
+        "`ros2 launch luhtech_uro_sim simulators.launch.xml` brings up all nodes cleanly with no startup errors.",
+        "`ros2 topic list` after launch shows all 5 simulator topics + `/scenarios/active`.",
+        "Dockerfile modification (if needed): adds Python build dependency (`python3-yaml` for scenario loading; `rosbag2_storage_mcap` for mcap plugin) and ensures `luhtech_uro_sim` package is built in the colcon workspace. Modification minimized — T1 Dockerfile already handles colcon build; T2 may only need apt-get additions.",
+        "Sandbox-verify that the Dockerfile change is the minimum required — if T1 Dockerfile already covers the build, do NOT modify (scope-lock per memory #6)."
+      ]
+    },
+    {
+      "id": "OUT-8",
+      "description": "`.roadmap/` substrate updates: file new FU `FU-EB-URO-T1-ROUTE-MOUNTING-1` flagged in T1's TRUTH-DELIVERED (route Routers compile + test clean but unmounted in api-gateway server.ts); no catalog or architecture changes needed (T2 lives entirely inside the uro-sim container which is already registered).",
+      "acceptanceCriteria": [
+        "`.roadmap/follow-up-register.json` contains new FU `FU-EB-URO-T1-ROUTE-MOUNTING-1` (P2, status=open, opened=2026-06-05, openedDuring=d-2026-06-05-eb-tier1-t1-foundation, trackingRepo=luh-tech/Ectropy-Business) capturing the route-mounting follow-up from T1 closure post.",
+        "`.roadmap/infrastructure-catalog.json`: NO modification. service-uro-sim entry from T1 covers the container; simulator nodes are internal implementation, not separately registered services.",
+        "`.roadmap/architecture.json`: NO modification. uro-sim service description from T1 (`Simulator nodes ... (T2)`) already anticipates this work.",
+        "Register modification is idempotent: presence-based check by FU id; re-run is NO-OP."
+      ]
+    },
+    {
+      "id": "OUT-9",
+      "description": "`.dlp/deliverables/d-2026-06-05-eb-tier1-t2-simulators/SPEC.md` summarizes T2 outcomes for EB main as a working-model orientation artifact (memory #12: prose survives only as orientation artifacts for human onboarding). Canonical truth remains the SR-anchored deliverable.json.",
+      "acceptanceCriteria": [
+        "SPEC.md created at `.dlp/deliverables/d-2026-06-05-eb-tier1-t2-simulators/SPEC.md` summarizing: T2 mission, 19 scope files, OUT-1..OUT-9 acceptance, canonical Sx topic naming used (drift-free from start), rosbag2 .mcap output paths, references to STRATEGY.md §6.B + §8 T2 + reconciliation addendum 2026-06-05."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "All 19 scope files staged exactly; PR scope-locked per memory #6.",
+      "`docker build infrastructure/uro-sim/` succeeds (or NO-OP if T1 image is reused and Dockerfile unchanged).",
+      "Image size stays under 1.0 GB (T1 target was <800MB; T2 adds Python package + rosbag2 plugins).",
+      "`colcon build --packages-select luhtech_uro_sim luhtech_msgs` succeeds inside the container.",
+      "`ros2 launch luhtech_uro_sim simulators.launch.xml` starts all 4 nodes cleanly; `ros2 topic list` shows 6 expected topics.",
+      "`ros2 topic hz /hsx/worker-001/location` reports 1.0 Hz ±10% for 30 seconds.",
+      "`ros2 topic hz /rsx/spot-001/location` reports 10.0 Hz ±10% for 30 seconds.",
+      "`ros2 topic hz /esx/crane-001/status` reports 0.1 Hz ±20% for 60 seconds.",
+      "Scenario controller loads `worker_walks_through_l2.yaml` cleanly; schema validation passes.",
+      "rosbag2 recording produces valid `.mcap` file; `ros2 bag info` reports 6 topics with non-zero message counts; `ros2 bag play` reproduces the stream.",
+      "Unit tests pass: `colcon test --packages-select luhtech_uro_sim` exits 0.",
+      "Required EB CI checks all SUCCESS, no `--admin`."
+    ],
+    "postMerge": [
+      "Parent arc `d-2026-06-05-eb-tier1-ros-overlay-foundation` remains `S5-in-progress` (T2 is mid-arc child; transition occurs only when all 6 children S7-merge).",
+      "SR-chat lands `TRUTH-DELIVERED` at `schemas/_instances/truth-delivered/d-2026-06-05-eb-tier1-t2-simulators.json` referencing EB merge SHA. closureNotes.overrideRecord captures any deferred items.",
+      "Container image rebuilt and pushed to DOCR if Dockerfile changed; tagged `ectropy-uro-sim:t2`.",
+      "Staging smoke test: launch container with `SCENARIO=worker_walks_through_l2`; tail `/data/bags/` to confirm `.mcap` file lands; download + open in stock Foxglove desktop for visual confirmation.",
+      "Channel notice posted to `#luhtech-agents-comms` with merge SHA + topic verification output. Prefix `[EB-chat]` per memory #19.",
+      "n8n canary `POST https://n8n.luh.tech/webhook/lead-capture` returns 200 within 10 minutes of merge.",
+      "EB-chat next: T3 spec authoring (browser WebSocket subscriber + Speckle backdrop + `/dev/uro` page)."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-05",
+      "trigger": "L4 approval ('excellent, proceed') to author T2 child deliverable spec post T1 closure (EB main c356d81) + SR amend land (e59a567) + memory consolidation (slots 18-19 acronyms + slack identity)"
+    }
+  ],
+  "parentDeliverable": "d-2026-06-05-eb-tier1-ros-overlay-foundation",
+  "relatedFollowUps": [
+    "FU-EB-URO-T1-ROUTE-MOUNTING-1"
+  ],
+  "notes": "Cross-repo doctrine (memory #10): SR-chat anchors this child instance at schemas/_instances/deliverables/d-2026-06-05-eb-tier1-t2-simulators.json on luh-tech/schema-registry BEFORE EB authors the T2 execution tarball. T1 substrate confirmed via eb-agent:trace-service: api-gateway = Express + Passport.js (T1 violated this discipline by assuming Fastify — memory #13 substrate-correction discipline applies; T2 verified first this time). service-uro-sim is live in catalog + architecture from T1; T2 extends the container internals only (no new service registration). Topic naming uses canonical Sx-suffix per acronyms catalog v1.2.0 (memory #18): /hsx/ /rsx/ /esx/ — strategy doc §8 uses deprecated XaaS form (haas_simulator, /eaas/) which is pre-known drift captured in LUHTECH-EB-TIER1-RECONCILIATION-ADDENDUM-2026-06-05 and amended in this T2 implementation. URN composition follows canonical pattern urn:luhtech:ectropy:resource:{type}:{id} from memory #18. T2 lands the simulator infrastructure that T3 (browser bridge), T4 (overlays), and T6 (replay UI) depend on. matsx + inssx simulators deferred — not required at T2 since T4 overlay validation gate works with 3 resource types; if T4 surfaces a need, file a small follow-up. T2 files one new FU (FU-EB-URO-T1-ROUTE-MOUNTING-1) flagged in T1 closure as the unmounted-routes follow-up — this is housekeeping carry-forward, not new T2-created tech debt."
+}
