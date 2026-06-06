@@ -1,0 +1,206 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-05-eb-tier1-t4-overlays",
+  "version": "1.0.0",
+  "title": "URO Tier 1 T4 — Speckle Extensions on OVERLAY layer: VoxelGroup + ResourcePresence overlays + display rules + click selection",
+  "description": "Fourth child of the URO Tier 1 multi-tarball arc. Builds on T1 (foxglove_bridge + viewer JWT route + nginx subrequest, PR #307 EB main c356d81), T2 (3 simulator nodes publishing canonical Sx topics, PR #308 EB main 2bf6a4a), and T3 (browser WS client + state store + locked Speckle backdrop + /dev/uro page, PR #309 EB main 9d16312). Lands the Speckle Viewer 2.0 Extension layer on top of T3's locked glTF backdrop: VoxelGroupOverlay renders group boundaries with glow + color from rolled_up_status; ResourcePresenceOverlay renders InstancedMesh markers with lerp interpolation between live VoxelPose updates; display-rules.json drives priority + color + opacity resolution; raycaster + ResourceDetailPanel side-panel handle click selection. T4 ships the overlay infrastructure with mock-source bindings so it renders today against T2/T3 simulator data; T5 will supply VoxelGroup msg producers via box_simulator + group materialization. No EFAS overlay (T6 owns). No replay UI (T6). No real Maple Ridge bundle data (T5).",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/tier1-t4-overlays-2026-06-05",
+    "scopeFiles": [
+      "apps/web-dashboard/src/lib/uro/voxel-group-overlay.ts",
+      "apps/web-dashboard/src/lib/uro/resource-presence-overlay.ts",
+      "apps/web-dashboard/src/lib/uro/display-rules.ts",
+      "apps/web-dashboard/src/lib/uro/click-selection.ts",
+      "apps/web-dashboard/src/lib/uro/__tests__/voxel-group-overlay.test.ts",
+      "apps/web-dashboard/src/lib/uro/__tests__/resource-presence-overlay.test.ts",
+      "apps/web-dashboard/src/lib/uro/__tests__/display-rules.test.ts",
+      "apps/web-dashboard/src/lib/uro/__tests__/click-selection.test.ts",
+      "apps/web-dashboard/src/components/uro/ResourceDetailPanel.tsx",
+      "apps/web-dashboard/public/uro/display-rules.json",
+      "apps/web-dashboard/src/lib/uro/uro-message-parsers.ts",
+      "apps/web-dashboard/src/lib/uro/__tests__/uro-message-parsers.test.ts",
+      "apps/web-dashboard/src/lib/uro/uro-state.ts",
+      "apps/web-dashboard/src/lib/uro/index.ts",
+      "apps/web-dashboard/src/components/uro/SpeckleBackdrop.tsx",
+      "apps/web-dashboard/src/components/uro/DevUroPage.tsx",
+      "apps/web-dashboard/package.json",
+      ".dlp/deliverables/d-2026-06-05-eb-tier1-t4-overlays/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "`voxel-group-overlay.ts` provides a Speckle Viewer 2.0 Extension class `VoxelGroupOverlay` that mounts on `ObjectLayers.OVERLAY` and renders group boundaries as a glowing wireframe + filled-volume mesh per group. Color, opacity, and priority resolved via `display-rules.ts` from `rolled_up_status` + `group_type` + active filter context. Subscribes to `UroStateStore` for `VoxelGroupRenderState` updates and re-renders incrementally (add/remove/update single group, not rebuild scene).",
+      "acceptanceCriteria": [
+        "Class `VoxelGroupOverlay extends Extension` (Speckle Viewer Extension base class) exported.",
+        "Constructor: `(viewer: IViewer, store: UroStateStore, rules: DisplayRules)`. Pulls `getViewer()` from Speckle context; mounts a `THREE.Group` parented under `ObjectLayers.OVERLAY` per Speckle Viewer 2.0 layer model.",
+        "Methods: `enable(): void`, `disable(): void`, `onUpdate(group: VoxelGroupRenderState): void`, `onRemove(group_urn: string): void`. `enable()` subscribes to store, `disable()` unsubscribes and disposes meshes.",
+        "Per-group mesh: wireframe `THREE.LineSegments` of group bounding box + a transparent filled box (`THREE.Mesh` with `MeshBasicMaterial`, transparent=true). Color from `display.color`. Opacity from `display.opacity`.",
+        "Incremental updates: store subscriber receives `StateSnapshot` diffs; overlay only touches changed groups (add/update/remove). Full scene rebuild forbidden as steady-state.",
+        "InstancedMesh forbidden for groups (groups are heterogeneous in size/position); use one mesh-pair per group. Resource markers use InstancedMesh — see OUT-2.",
+        "Unit test in `__tests__/voxel-group-overlay.test.ts` exercises mount + unmount + add/update/remove against a mock IViewer + mock store; asserts `THREE.Object3D` count in overlay layer matches expected per scenario."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "`resource-presence-overlay.ts` provides a Speckle Viewer 2.0 Extension class `ResourcePresenceOverlay` that renders one marker per active `ResourcePresenceState` on `ObjectLayers.OVERLAY` using `THREE.InstancedMesh` for efficient batching. Markers lerp-interpolate position between live VoxelPose updates over a configurable duration (default 1s per strategy doc §11). Marker glyph + color resolved per `resource_type` parsed from URN.",
+      "acceptanceCriteria": [
+        "Class `ResourcePresenceOverlay extends Extension` exported.",
+        "Constructor: `(viewer: IViewer, store: UroStateStore, options?: { lerpDurationMs?: number })`. Default `lerpDurationMs = 1000`.",
+        "Methods: `enable(): void`, `disable(): void`.",
+        "Single `THREE.InstancedMesh` per resource_type (one for human, one for robot, etc.) — six types total per memory #18 canonical URN regex. Instance matrices updated each frame from interpolated positions.",
+        "Lerp interpolation: maintain a target position (from latest VoxelPose) and a previous position; in `requestAnimationFrame` loop, interpolate matrix translation with t = (now - last_update) / lerpDurationMs clamped to [0,1].",
+        "Marker glyphs (initial): `BoxGeometry` of size 0.3m for all types in T4. Color from a hardcoded per-type palette (human=green, robot=blue, agent=purple, equipment=amber, material=gray, inspection=red). T4's marker glyph palette is intentionally minimal; richer glyphs deferred to D2 follow-on.",
+        "Marker carries a userData reference `{ resource_urn, resource_type }` for the raycaster (see OUT-4).",
+        "Unit test in `__tests__/resource-presence-overlay.test.ts` ingests sample VoxelPose stream into mock store, advances time, asserts interpolated InstancedMesh matrix at intermediate t values."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "`display-rules.ts` provides the priority + color + opacity resolution engine for VoxelGroupOverlay. Loads `display-rules.json` once at init (no runtime reload in T4 — that's deferred to D2 per strategy validation gate note). Implements `highest_wins` overlap rule per strategy doc §6 lock. Pure TS module with a runtime validator (no ajv runtime dep).",
+      "acceptanceCriteria": [
+        "Module exports: `loadDisplayRules(json: unknown): DisplayRules`, `resolveGroupDisplay(group: VoxelGroup, rules: DisplayRules, filterContext?: FilterContextKey[]): { color: string, opacity: number, effective_priority: number }`.",
+        "`DisplayRules` type matches the strategy doc §6.E shape: `base_priority: Record<GroupType, number>`, `status_modifiers: Record<VoxelStatus, number>`, `filter_bumps: Record<FilterContextKey, Record<GroupType, number>>`, `overlap_rule: 'highest_wins' | 'blend' | 'priority_with_outline'`.",
+        "`loadDisplayRules` validates the JSON shape with hand-written type guards (no ajv runtime); throws an `Error` with a precise path on shape mismatch. No partial loads — all-or-nothing.",
+        "`resolveGroupDisplay` computes: effective_priority = base_priority[group_type] + status_modifiers[group.rolled_up_status] + sum(filter_bumps[ctx][group_type] for ctx in filterContext). Returns the resolved priority + a color derived from rolled_up_status (PLANNED=#888, IN_PROGRESS=#3399ff, COMPLETE=#33cc66, BLOCKED=#ff3333, UNKNOWN=#666) + opacity 0.35 default.",
+        "`display-rules.json` ships at `apps/web-dashboard/public/uro/display-rules.json` with strategy-doc §11 default base_priority values: DECISION_ZONE=90, WORKER_ACTIVITY=80, FLOW=70, TAKT_ZONE=60, ROOM=40, SYSTEM=30, LEVEL=20, ELEMENT=10, CUSTOM=50. Status modifiers + filter bumps + overlap_rule='highest_wins' included.",
+        "Unit test in `__tests__/display-rules.test.ts` exercises: valid JSON loads cleanly; invalid JSON throws with path; resolveGroupDisplay returns correct effective_priority for all 9 group types × 5 statuses; filter_bumps additive."
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "`click-selection.ts` provides a raycaster utility that converts a DOM click event on the Speckle canvas into a `{ resource_urn, group_urn } | null` selection result. Walks the OVERLAY layer's intersections in priority order — top-most resource marker wins; if no resource, top-most group wins; otherwise null. Returns the URN(s) of the picked object so the side-panel can render details.",
+      "acceptanceCriteria": [
+        "Module exports: `class ClickSelector { constructor(viewer: IViewer); attach(canvas: HTMLCanvasElement, onSelect: (sel: SelectionResult) => void): UnsubscribeFn; }`.",
+        "`SelectionResult = { type: 'resource', resource_urn: string } | { type: 'group', group_urn: string } | { type: 'background' }`.",
+        "Raycaster pre-filtered to objects on `ObjectLayers.OVERLAY` only — backdrop is intentionally not pickable.",
+        "InstancedMesh raycast: when ray hits a resource InstancedMesh, the `instanceId` indexes into a per-overlay map maintained by ResourcePresenceOverlay back to the `resource_urn`. Per memory: this pattern is what `FU-EB-INSTANCED-MESH-PICKING-RESTORE-1` (P2, open) addresses — T4 implements the restored picking path canonically.",
+        "Unit test in `__tests__/click-selection.test.ts` constructs a synthetic scene with a mock InstancedMesh + a mock group mesh, invokes raycaster with controlled NDC coordinates, asserts correct URN returned for each surface."
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "`ResourceDetailPanel.tsx` is the side-panel that opens when a resource or group is clicked. Pure presentation — receives a `SelectionResult` and the relevant snapshot from `UroStateStore`. Shows: URN, type, last status, last position, age (seconds since last_update), and a 'View raw JSON' details disclosure. Closeable via X button or background click. No editing — read-only view.",
+      "acceptanceCriteria": [
+        "Functional React component exported as default + named: `ResourceDetailPanel(props: { selection: SelectionResult | null, store: UroStateStore, onClose: () => void }): JSX.Element`.",
+        "Renders nothing when `selection === null` or `selection.type === 'background'`.",
+        "For resource selection: pulls `ResourcePresenceState` from store via `selection.resource_urn`; shows URN, type-from-URN, status pill (color from status), last position (x,y,z to 1 decimal), age in seconds.",
+        "For group selection: pulls `VoxelGroupRenderState` from store via `selection.group_urn`; shows group_urn, group_type pill, rolled_up_status pill, voxel count (size of voxel_urns set), centroid + bbox dimensions.",
+        "Inline styles only (no CSS file dependency) — pattern consistent with T3's `MessagePanel.tsx`.",
+        "Renders inside `<DevUroPage>` overlay layer (top-right docking) — wired in by DevUroPage edit per OUT-9."
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "`uro-message-parsers.ts` extended (T3 modified) with a `decodeVoxelGroup(buf: ArrayBuffer): VoxelGroup` decoder for the canonical `luhtech_msgs/VoxelGroup` msg type that T5 will publish. T4 ships the decoder; T5 supplies the producer. No removal of T3's existing decoders — additive only.",
+      "acceptanceCriteria": [
+        "TypeScript type `VoxelGroup` exported with strategy doc §6.A shape: `{ group_urn: string, group_type: GroupType, label: string, voxel_urns: string[], base_priority: number, display: { color: string, icon?: string, opacity: number }, rolled_up_status: VoxelStatus, bbox: { min: Point3, max: Point3 }, centroid: Point3, stamp: RosTime }`.",
+        "TypeScript types `GroupType` (ROOM|LEVEL|SYSTEM|TAKT_ZONE|DECISION_ZONE|FLOW|WORKER_ACTIVITY|ELEMENT|CUSTOM) and `VoxelStatus` (PLANNED|IN_PROGRESS|COMPLETE|BLOCKED|UNKNOWN) exported.",
+        "Decoder `decodeVoxelGroup` validates `group_urn` matches regex `^urn:luhtech:ectropy:voxel-group:[a-z0-9-]+:[a-z0-9-]+$` (group URN canonical per memory #18). On mismatch: log warning, drop message.",
+        "Unit test in `__tests__/uro-message-parsers.test.ts` (T3-modified) extended with VoxelGroup decoder coverage: shape parsing, URN validation, enum-value validation."
+      ]
+    },
+    {
+      "id": "OUT-7",
+      "description": "`uro-state.ts` extended (T3 modified) with `VoxelGroupRenderState` storage + interpolated-position tracking for resources. New methods on `UroStateStore` for groups parallel the existing resource methods. The `ResourcePresenceState` type from strategy doc §6.E (with `position_interpolated` field) is realized here.",
+      "acceptanceCriteria": [
+        "`UroStateStore` extended with: `ingestVoxelGroup(topic: string, msg: VoxelGroup): void`, `removeVoxelGroup(group_urn: string): void`, `getGroup(urn: string): VoxelGroupRenderState | undefined`, `getAllGroups(): VoxelGroupRenderState[]`.",
+        "`VoxelGroupRenderState` type matches strategy doc §6.E: `{ group_urn, group_type, voxel_urns: Set<string>, rolled_up_status, effective_priority, display, bbox, centroid }`. (bbox + centroid stored as JSON shape; THREE.Box3 / THREE.Vector3 conversions happen at the overlay layer, not in the store.)",
+        "`ResourcePresenceState` shape per strategy §6.E: `{ resource_urn, voxel_urn, position, position_interpolated, status, last_update }`. The store maintains `position` (latest) and `position_interpolated` (current frame's interpolated value, updated by ResourcePresenceOverlay's RAF loop via a public setter).",
+        "Setter `setResourceInterpolatedPosition(resource_urn: string, position: Point3): void` exposed for ResourcePresenceOverlay to write back each frame. Setter does NOT trigger subscriber notifications (would be 60Hz storm); read-only field on snapshots.",
+        "Existing T3 methods + types unchanged.",
+        "Unit test in `__tests__/uro-state.test.ts` (existing, may be extended): existing tests still pass; new tests cover ingestVoxelGroup + getAllGroups + setResourceInterpolatedPosition non-emission."
+      ]
+    },
+    {
+      "id": "OUT-8",
+      "description": "`index.ts` extended (T3 modified) with barrel exports for T4's new modules. Maintains the `@/lib/uro` single-import surface contract.",
+      "acceptanceCriteria": [
+        "New exports from `voxel-group-overlay.ts`: `VoxelGroupOverlay`.",
+        "New exports from `resource-presence-overlay.ts`: `ResourcePresenceOverlay`.",
+        "New exports from `display-rules.ts`: `DisplayRules`, `loadDisplayRules`, `resolveGroupDisplay`, `GroupType`, `VoxelStatus`, `FilterContextKey`.",
+        "New exports from `click-selection.ts`: `ClickSelector`, `SelectionResult`.",
+        "New exports from `uro-message-parsers.ts`: `VoxelGroup`, `decodeVoxelGroup`.",
+        "New exports from `uro-state.ts`: `VoxelGroupRenderState`, `ResourcePresenceState`.",
+        "All existing T3 exports preserved (additive only)."
+      ]
+    },
+    {
+      "id": "OUT-9",
+      "description": "`DevUroPage.tsx` extended (T3 modified) and `SpeckleBackdrop.tsx` extended (T3 modified) to wire the Speckle Viewer instance through to the overlay layer. SpeckleBackdrop exposes its internal `IViewer` instance via an `onViewerReady` callback prop; DevUroPage uses that instance to instantiate VoxelGroupOverlay + ResourcePresenceOverlay + ClickSelector, fetches `display-rules.json`, and mounts ResourceDetailPanel.",
+      "acceptanceCriteria": [
+        "`SpeckleBackdrop.tsx` adds prop `onViewerReady?: (viewer: IViewer) => void` — fired when the Speckle Viewer is initialized and the static glTF is loaded. The viewer instance is the same one the Extensions will mount onto.",
+        "`DevUroPage.tsx` adds state for `selection: SelectionResult | null` and a `viewerRef` capturing the IViewer instance.",
+        "`DevUroPage.tsx` on viewer-ready: fetches `/uro/display-rules.json`, parses via `loadDisplayRules`; instantiates `VoxelGroupOverlay(viewer, store, rules)` + `ResourcePresenceOverlay(viewer, store)`; attaches `ClickSelector(viewer)` to the canvas with handler `setSelection`.",
+        "`DevUroPage.tsx` renders `<ResourceDetailPanel selection={selection} store={store} onClose={() => setSelection(null)} />` alongside the existing `<MessagePanel />`.",
+        "Cleanup on unmount: overlays.disable() + clickSelector.unsubscribe() per OUT-1/2/4 lifecycle.",
+        "Feature flags from T3 preserved (`VITE_ENABLE_URO_DEV` / `NEXT_PUBLIC_ENABLE_URO_DEV` / `NODE_ENV !== 'production'`).",
+        "T3 manual smoke test path still works: with no T5 data, ResourcePresenceOverlay renders incoming resources; VoxelGroupOverlay renders empty (no groups yet)."
+      ]
+    },
+    {
+      "id": "OUT-10",
+      "description": "`package.json` adds three.js + @types/three dependencies pinned to the canonical DEC-029 version (0.149.0, LOCKED per strategy doc §11). No other dep changes — Speckle Viewer already shipped in T3 brings three.js transitively, but explicit pin + @types is required for type-safe Extension authoring.",
+      "acceptanceCriteria": [
+        "Add to `dependencies`: `\"three\": \"0.149.0\"` (exact version, NOT a caret — DEC-029 lock per strategy §11).",
+        "Add to `devDependencies`: `\"@types/three\": \"0.149.0\"` (matching exact version).",
+        "Confirm `@speckle/viewer ^2.18.0` (from T3) is unchanged.",
+        "`pnpm install` (or repo equivalent) succeeds; lockfile updated; peer dependency warnings reviewed and resolved if any.",
+        "Pre-authoring npm registry verification per SR T3 closure coaching: `three@0.149.0` and `@types/three@0.149.0` confirmed published versions on npm registry (verified pre-authoring at execution time)."
+      ]
+    },
+    {
+      "id": "OUT-11",
+      "description": "`.dlp/deliverables/d-2026-06-05-eb-tier1-t4-overlays/SPEC.md` summarizes T4 outcomes as a working-model orientation artifact (memory #12: prose survives only as orientation artifacts for human onboarding). Canonical truth remains the SR-anchored deliverable.json.",
+      "acceptanceCriteria": [
+        "SPEC.md created at `.dlp/deliverables/d-2026-06-05-eb-tier1-t4-overlays/SPEC.md`.",
+        "Content summarizes: T4 mission, 18 scope files, OUT-1..OUT-11 acceptance, references to STRATEGY.md §6.E (TypeScript contracts) + §8 T4 (validation gates) + §11 (default parameters), three.js 0.149.0 DEC-029 lock cited, lineage on T1+T2+T3."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "All 18 scope files staged exactly; PR scope-locked per memory #6.",
+      "`pnpm install` (or the repo's canonical install command) succeeds; lockfile updated.",
+      "TypeScript builds: `pnpm --filter web-dashboard tsc --noEmit` passes.",
+      "Vitest unit tests pass: `pnpm --filter web-dashboard vitest run src/lib/uro/` exits 0; aggregate ≥ 30 tests pass (T3's ≥15 + T4's 4 new test files).",
+      "Lint passes on new + modified files: `pnpm --filter web-dashboard eslint src/lib/uro src/components/uro`.",
+      "Manual smoke test in dev mode: `/dev/uro` renders T3's backdrop + connection-status pill, plus the empty overlay layer (no groups yet — T5 owns producers). Resource markers from T2's simulator data appear and lerp-interpolate between updates.",
+      "Click on a resource marker opens `ResourceDetailPanel` with the correct URN + status + position; click on backdrop closes the panel.",
+      "Display rules JSON validates against `loadDisplayRules` shape guard; invalid JSON correctly rejected with path-precise error.",
+      "Resource pose lerp visibly smooth at default 1s duration; no visible snap or stutter.",
+      "Required EB CI checks all SUCCESS, no `--admin`."
+    ],
+    "postMerge": [
+      "Parent arc `d-2026-06-05-eb-tier1-ros-overlay-foundation` remains `S5-in-progress` (T4 is mid-arc child; arc transition occurs only when all 6 children S7-merge).",
+      "SR-chat lands `TRUTH-DELIVERED` at `schemas/_instances/truth-delivered/d-2026-06-05-eb-tier1-t4-overlays.json` referencing EB merge SHA.",
+      "Web-dashboard build pipeline re-runs and deploys updated bundle to staging.",
+      "Channel notice posted to `#luhtech-agents-comms` with merge SHA + smoke-test confirmation. Prefix `[EB-chat]` per memory #19.",
+      "n8n canary `POST https://n8n.luh.tech/webhook/lead-capture` returns 200 within 10 minutes of merge.",
+      "EB-chat next: T5 spec authoring (Voxel group materialization + box_simulator + OccupancyGrid + Maple Ridge bundle v1.0.0). Requires fresh L4 named-step approval per memory #22 — pickup signal from SR T4 closure does NOT cross deliverable boundaries.",
+      "`FU-EB-INSTANCED-MESH-PICKING-RESTORE-1` (P2, open) candidate for closure: T4 implements restored InstancedMesh picking via OUT-4's instanceId→URN map pattern. Closure decision deferred to T4 PR review — if scope is sufficient, close in TRUTH-DELIVERED overrideRecord; if T4's pattern is partial, leave open and capture residual in T4 closure."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-05",
+      "trigger": "L4 named-step approval ('L4 named-step approval: T4 child deliverable spec authoring') after T3 close-with-debt (SR PR #139 5227b1c) + memory #23 (CLI REPORT-BACK RESPONSE TAXONOMY) locked"
+    }
+  ],
+  "parentDeliverable": "d-2026-06-05-eb-tier1-ros-overlay-foundation",
+  "relatedFollowUps": [
+    "FU-EB-INSTANCED-MESH-PICKING-RESTORE-1",
+    "FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1",
+    "FU-EB-URO-T1-ROUTE-MOUNTING-1"
+  ],
+  "notes": "Cross-repo doctrine (memory #10): SR-chat anchors this child instance at schemas/_instances/deliverables/d-2026-06-05-eb-tier1-t4-overlays.json on luh-tech/schema-registry BEFORE EB authors the T4 execution tarball. Substrate-correction discipline (memory #13) applied pre-authoring: (a) eb-agent:trace-service web-dashboard re-verified framework discrepancy still open as P3 in EB main register (eb-agent index does not yet reflect SR's claimed P3→P2 escalation in T3 closure record — substrate-vs-claim divergence; reconciliation belongs to FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1's resolution PR, not bundled into T4); (b) three.js version locked at 0.149.0 per DEC-029 — strategy doc §11 — no npm registry check needed, version is substrate-cited; (c) @speckle/viewer ^2.18.0 continues from T3 — no version bump; (d) per SR T3 closure coaching, npm registry version pre-flight added to T4 execution discipline for any T4-specific deps (none beyond three.js + @types/three, both substrate-locked). T4 builds Speckle Viewer 2.0 Extension infrastructure that renders TODAY against T2 simulator data (ResourcePresenceOverlay shows worker/robot/equipment markers from /hsx /rsx /esx topics); VoxelGroupOverlay renders nothing until T5 supplies a /box/groups/snapshot producer — this is BY DESIGN, T4 ships the consumer infrastructure, T5 ships the producer. T4's restored InstancedMesh picking (OUT-4) addresses FU-EB-INSTANCED-MESH-PICKING-RESTORE-1 (P2, open); closure decision deferred to T4 TRUTH-DELIVERED based on actual pattern coverage. ResourceDetailPanel is intentionally minimal — D2 follow-on (warehouse polish) adds richer surfaces. Click selection limits to OVERLAY layer per OUT-4 — backdrop intentionally not pickable. Three.js 0.149.0 LOCKED per DEC-029; no upgrades or version bumps in T4. The /dev/uro route still 404s until FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1's resolution PR lands — T4 does not address that follow-up; T4 builds on T3's deferred-route assumption. Naming compliance (memory #18 acronyms ref): no XaaS-form types, all canonical Sx-suffix resource categories (human, robot, agent, equipment, material, inspection); group types from strategy doc §6.C lock (ROOM, LEVEL, SYSTEM, TAKT_ZONE, DECISION_ZONE, FLOW, WORKER_ACTIVITY, ELEMENT, CUSTOM). URN regex for group_urn is `urn:luhtech:ectropy:voxel-group:<project>:<id>` per the same memory #18 canonical scheme. No localStorage/sessionStorage usage anywhere in T4 code per artifact-creation rules. No new follow-ups filed by T4 at authoring time — substrate-correction-driven FUs may surface at execution time (per T3 precedent: framework + npm version corrections). T4 carries the highest cross-cutting integration count of the 6 children (overlay layer + Extension lifecycle + raycaster + side-panel + display-rules schema validation + Viewer ref plumbing); scope at 18 files reflects this; T5 + T6 are smaller scopes."
+}
