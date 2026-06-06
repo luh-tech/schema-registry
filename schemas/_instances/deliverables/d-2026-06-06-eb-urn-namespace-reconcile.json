@@ -1,0 +1,150 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-06-eb-urn-namespace-reconcile",
+  "version": "1.0.0",
+  "title": "URN namespace reconcile to canonical urn:luhtech:ectropy with type-first shape",
+  "description": "Reconcile production code and database from legacy 'urn:ectropy:*' to canonical 'urn:luhtech:ectropy:<type>:<id>' shape matching portfolio canonical pattern (urn:luhtech:ectropy:feature:*, urn:luhtech:ectropy:authority-level:*). 12 emitter sites across 6 files; Prisma SQL migration for voxels.urn, pm_decisions.urn, pm_decisions.primary_voxel_urn with regex-based REPLACE preserving project/id segments while flipping project-first sites (stage-4-ifc, stage-6-decisions, voxels.routes:704) to canonical type-first. Aggregation query swap deferred to PR 1.2 (d-2026-06-XX-eb-voxel-decision-aggregation-fix). Scaling rationale: portfolio canonical URN pattern is type-first; consistent shape eliminates ambiguity when new resource types adopt the URN namespace.",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/urn-namespace-reconcile-2026-06-06",
+    "scopeFiles": [
+      "apps/api-gateway/src/intake/stages/stage-4-ifc.ts",
+      "apps/api-gateway/src/intake/stages/stage-6-decisions.ts",
+      "apps/api-gateway/src/routes/voxels.routes.ts",
+      "apps/api-gateway/src/routes/contract-upload.routes.ts",
+      "apps/mcp-server/src/graphql/voxel/voxel.resolvers.ts",
+      "apps/mcp-server/src/graphql/decision-lifecycle.resolvers.ts",
+      "apps/api-gateway/prisma/migrations/20260606_urn_canonical_reconcile/migration.sql",
+      "apps/api-gateway/prisma/migrations/20260606_urn_canonical_reconcile/README.md",
+      "apps/api-gateway/src/intake/stages/__tests__/stage-4-ifc.test.ts",
+      "apps/api-gateway/src/intake/stages/__tests__/stage-6-decisions.test.ts",
+      "apps/api-gateway/src/routes/__tests__/voxels.routes.test.ts",
+      "apps/api-gateway/src/routes/__tests__/contract-upload.routes.test.ts",
+      "apps/mcp-server/src/graphql/voxel/__tests__/voxel.resolvers.test.ts",
+      "apps/mcp-server/src/graphql/decision-lifecycle/__tests__/decision-lifecycle.resolvers.test.ts",
+      ".roadmap/follow-up-register.json",
+      ".roadmap/decision-log.json",
+      ".dlp/deliverables/d-2026-06-06-eb-urn-namespace-reconcile/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Canonical URN emitter rename across 12 sites in 6 production files. Sites 1-4 (stage-4-ifc line 319, stage-6-decisions lines 165 and 189, voxels.routes line 704) flip from project-first 'urn:ectropy:{projectId}:{type}:{id}' to canonical type-first 'urn:luhtech:ectropy:{type}:{projectId}:{id}'. Sites 5-12 (contract-upload, voxel.resolvers, decision-lifecycle.resolvers) keep their existing type-first shape and only update the prefix from 'urn:ectropy:' to 'urn:luhtech:ectropy:'.",
+      "acceptanceCriteria": [
+        "grep -rn 'urn:ectropy:' apps/ services/ libs/ --include='*.ts' returns ZERO matches outside test files that intentionally exercise legacy-format inputs",
+        "grep -rn 'urn:luhtech:ectropy:voxel:' apps/api-gateway/src returns matches at stage-4-ifc.ts, stage-6-decisions.ts, voxels.routes.ts (confirming shape flip)",
+        "grep -rn 'urn:luhtech:ectropy:contract:' apps/api-gateway/src returns match at contract-upload.routes.ts",
+        "grep -rn 'urn:luhtech:ectropy:' apps/mcp-server/src/graphql returns matches at voxel.resolvers (3 sites) and decision-lifecycle.resolvers (4 sites)",
+        "TypeScript compile (tsc --noEmit --project tsconfig.app.json) passes with zero errors",
+        "ESLint passes on all 6 modified files"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Prisma migration 20260606_urn_canonical_reconcile applies a regex-based UPDATE to three confirmed URN columns: voxels.urn, pm_decisions.urn, pm_decisions.primary_voxel_urn. Migration uses Postgres regexp_replace with capture groups to flip project-first segments to type-first canonical form. Wrapped in BEGIN/COMMIT for transactional atomicity. Includes a post-UPDATE audit block raising NOTICE if any legacy 'urn:ectropy:%' rows remain (advisory, not blocking).",
+      "acceptanceCriteria": [
+        "migration.sql applies cleanly on a fresh Prisma database with prisma migrate deploy (exit 0)",
+        "Re-running the migration on already-migrated data yields zero row changes (idempotent — regex WHERE clause filters legacy-only)",
+        "After apply, SELECT COUNT(*) FROM voxels WHERE urn LIKE 'urn:ectropy:%' returns 0",
+        "After apply, SELECT COUNT(*) FROM pm_decisions WHERE urn LIKE 'urn:ectropy:%' returns 0",
+        "After apply, SELECT COUNT(*) FROM pm_decisions WHERE primary_voxel_urn LIKE 'urn:ectropy:%' returns 0",
+        "After apply, sample SELECT confirms voxels.urn matches 'urn:luhtech:ectropy:voxel:<projectId>:<voxelId>' shape",
+        "After apply, sample SELECT confirms pm_decisions.primary_voxel_urn matches voxels.urn shape exactly (enables PR 1.2 join fix)",
+        "migration/README.md documents the regex transformation, the columns touched, and the idempotency guarantee"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Substrate-honest amendment to FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 in .roadmap/follow-up-register.json. The current title 'Voxelizer level extraction + decision aggregation handler fix (Maple Ridge data quality)' misrepresents the root cause — substrate research confirmed the voxelizer extractor reads IfcBuildingStorey correctly; the bad name 'Level 1 Living Rm.' is real source-IFC data. Amend the title and description to accurately scope the actual work: aggregation join fix (PR 1.2 scope) and source IFC storey-name cleanup (Arc 2 scope). No closure in this PR — only substrate correction. Register version patch-bumps.",
+      "acceptanceCriteria": [
+        "FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 title updated to reflect actual root cause (aggregation join + source IFC storey data)",
+        "FU description updated with substrate-corrected analysis citing voxels.routes.ts:858 (aggregation) and Maple Ridge Ifc4_Revit_ARC.ifc (storey naming)",
+        "FU status remains 'open' — no closure in this PR",
+        "follow-up-register meta.totalCount unchanged",
+        "follow-up-register version increments by patch level",
+        "ajv canonical 3-flag validation against follow-up-register.schema.json v1.1.0 passes"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "DEC entry 'd-2026-06-06-urn-canonical-shape-type-first' appended to .roadmap/decision-log.json per decision-log.schema.v2.json. Locks the canonical URN shape decision as type-first ('urn:luhtech:ectropy:<type>:<id>') matching portfolio canonical pattern. Provides context (shape ambiguity in current emitters), constraints (n8n PostgreSQL pipeline must remain live), alternatives considered (project-first vs type-first), decision (type-first), rationale (scaling alignment with portfolio canonical), consequences (positive/negative/risks), category=architecture, status=approved, impact per impactLevel enum. References relatedDecisions and impactedDeliverables.",
+      "acceptanceCriteria": [
+        "DEC entry decisionId matches pattern '^d-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$'",
+        "DEC entry includes all 9 required fields per decision-log v2 schema: decisionId, timestamp, title, context, decision, rationale, status, category, impact",
+        "category set to 'architecture'",
+        "status set to 'approved'",
+        "approvedBy includes 'erik-luh' (memory #13: approvedBy is array per canonical 15-field shape)",
+        "impactedDeliverables includes 'd-2026-06-06-eb-urn-namespace-reconcile' and the planned 'd-2026-06-XX-eb-voxel-decision-aggregation-fix'",
+        "ajv canonical 3-flag validation against decision-log.schema.v2.json passes",
+        "decision-log meta.lastUpdated touched to authoring date"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "Regression test coverage across all 6 modified production files. Each modified emitter site gets at least one test asserting canonical URN format. Migration gets an idempotency test (apply twice, second yields zero changes). voxels.routes.ts:858 aggregation query NOT modified in this PR — its existing tests continue to pass against the unchanged query shape. Aggregation behavior change is PR 1.2 scope.",
+      "acceptanceCriteria": [
+        "Each of the 12 emitter sites has a regression test asserting the generated URN matches 'urn:luhtech:ectropy:' prefix",
+        "Sites 1-4 tests additionally assert the type-first shape ('urn:luhtech:ectropy:voxel:<projectId>:<voxelId>')",
+        "Migration idempotency test: apply migration twice on a snapshot, assert second apply yields zero row changes",
+        "Vitest runs PASS across all modified test files",
+        "Aggregation query existing tests continue to PASS unchanged (decisionCount=0 expected, fixed in PR 1.2)",
+        "No new test files in scopes outside the modified production paths"
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "EB-local SPEC.md at .dlp/deliverables/d-2026-06-06-eb-urn-namespace-reconcile/SPEC.md documents the deliverable per F0B85LNSTC4 doctrine. Cites the substrate research, the shape decision, the migration mechanics, the 12-site emitter inventory, the PR 1.2 dependency for aggregation closure, and the n8n integrity constraint (Hard Constraint #1).",
+      "acceptanceCriteria": [
+        "SPEC.md authored at .dlp/deliverables/d-2026-06-06-eb-urn-namespace-reconcile/SPEC.md",
+        "SPEC.md includes: mission, scope summary, 12-site emitter inventory table, migration mechanics, dependency chain (PR 1.2 follows), n8n integrity note",
+        "SPEC.md ends with mantra: Enterprise Excellence. Schema-First. No Shortcuts."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv canonical 3-flag validation passes against follow-up-register.schema.json v1.1.0 for the FU register update",
+      "ajv canonical 3-flag validation passes against decision-log.schema.v2.json for the DEC entry",
+      "TypeScript compile (tsc --noEmit --project tsconfig.app.json) passes with zero errors across api-gateway and mcp-server",
+      "ESLint passes on all 6 modified production files",
+      "Vitest passes for all modified and new test files",
+      "Prisma migration applies cleanly on a fresh dev database via prisma migrate deploy",
+      "Prisma migration is idempotent: re-running on already-migrated data yields zero row changes",
+      "grep -rn 'urn:ectropy:' apps/ services/ libs/ --include='*.ts' returns ZERO matches outside designated legacy-format test fixtures",
+      "Audit-workflows.yml CI gate passes (no new workflow files in this PR; no patterns.yml changes required)",
+      "Roadmap V3 Schema Validation CI gate passes",
+      "PR-label deploy-to-dev triggers build-dev-images then deploy-dev workflows successfully",
+      "Required SR CI checks all GREEN; NO --admin merge"
+    ],
+    "postMerge": [
+      "Dev DB voxels SELECT confirms 100% of rows have urn matching 'urn:luhtech:ectropy:voxel:%' shape",
+      "Dev DB pm_decisions SELECT confirms 100% of rows have urn matching 'urn:luhtech:ectropy:decision:%' and primary_voxel_urn matching 'urn:luhtech:ectropy:voxel:%' shape",
+      "n8n PostgreSQL pipeline canary remains 200 throughout deploy and post-merge window (Hard Constraint #1)",
+      "Staging Watchtower picks up new image on main merge; staging DB shows same canonical URN format after Watchtower cycle",
+      "Aggregation query (voxels.routes.ts:858) remains unchanged in this PR; decisionCount still returns 0 — known state until PR 1.2 lands",
+      "Cross-repo doctrine: SR-chat lands TRUTH-DELIVERED at schemas/_instances/truth-delivered/d-2026-06-06-eb-urn-namespace-reconcile.json referencing EB merge SHA with closureStatus closed-clean",
+      "Full 40-char EB merge SHA posted to #luhtech-agents-comms channel C0B7EPFCA85 with [EB-chat] prefix per memory #27"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-06",
+      "trigger": "L4 named-step approval: 'proceed with authoring PR 1.1 deliverable as written, approved'"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-URN-NAMESPACE-RECONCILE-1",
+    "FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1",
+    "FU-EB-USER-WALK-2026-05-22-VOXEL-WRONG-LEVELS-DECISIONS-ORPHANED-1"
+  ],
+  "notes": "PR 1.1 of Arc 1 (URN reconcile arc). Closes FU-EB-URN-NAMESPACE-RECONCILE-1 (P1) clean. Substrate-corrects (does NOT close) FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 title. Aggregation join fix is PR 1.2 scope (d-2026-06-XX-eb-voxel-decision-aggregation-fix) which depends on this PR being merged + production-deployed first (PR 1.2's join condition pd.primary_voxel_urn = v.urn requires both columns in canonical form). Maple Ridge IFC source storey-name cleanup is Arc 2 scope (separate L4 named-step). Hard Constraint #1: n8n PostgreSQL pipeline (159.223.203.231) MUST remain live throughout deploy — migration UPDATE statements are non-blocking writes and acquire only brief row locks. Cross-repo doctrine F0B85LNSTC4: this spec gets posted to Slack channel C0B7EPFCA85 with file SHA256 + bytes + validation status; SR-chat picks up from channel and lands SR anchor at schemas/_instances/deliverables/d-2026-06-06-eb-urn-namespace-reconcile.json on luh-tech/schema-registry. Memory #20 substrate honesty: scope file paths for tests reflect convention; if execution discovers actual paths differ (e.g., co-located *.test.ts files not in __tests__ subdirs), spec amends to v1.0.1 via SR PR per established pattern (see d-2026-06-05-eb-tier1-t1-foundation v1.0.1->v1.0.4 amendment chain).\n\nEnterprise Excellence. Schema-First. No Shortcuts."
+}
