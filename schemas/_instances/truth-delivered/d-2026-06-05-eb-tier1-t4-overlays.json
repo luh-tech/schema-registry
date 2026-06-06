@@ -1,0 +1,159 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-05-eb-tier1-t4-overlays",
+  "deliveredAt": "2026-06-06T01:45:26Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-with-debt",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "9c978a6b90b1891b0ce9fa99d40c52d93efe6c26",
+      "prNumber": 310,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/310",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "9c978a6b90b1891b0ce9fa99d40c52d93efe6c26",
+      "prNumber": 310,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/310",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "9c978a6b90b1891b0ce9fa99d40c52d93efe6c26",
+      "prNumber": 310,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/310",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "9c978a6b90b1891b0ce9fa99d40c52d93efe6c26",
+      "prNumber": 310,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/310",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "9c978a6b90b1891b0ce9fa99d40c52d93efe6c26",
+      "prNumber": 310,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/310",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "9c978a6b90b1891b0ce9fa99d40c52d93efe6c26",
+      "prNumber": 310,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/310",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-7",
+      "mergeCommit": "9c978a6b90b1891b0ce9fa99d40c52d93efe6c26",
+      "prNumber": 310,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/310",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-8",
+      "mergeCommit": "9c978a6b90b1891b0ce9fa99d40c52d93efe6c26",
+      "prNumber": 310,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/310",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-9",
+      "mergeCommit": "9c978a6b90b1891b0ce9fa99d40c52d93efe6c26",
+      "prNumber": 310,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/310",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-10",
+      "mergeCommit": "9c978a6b90b1891b0ce9fa99d40c52d93efe6c26",
+      "prNumber": 310,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/310",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-11",
+      "mergeCommit": "9c978a6b90b1891b0ce9fa99d40c52d93efe6c26",
+      "prNumber": 310,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/310",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "URO Tier 1 T4 overlays landed on EB main at 9c978a6 (PR #310). Per v1.0.0 spec (SR PR #140 20a428f): 18 declared scope files + 3 type-correctness fixes (uro-ws-client.ts + tsconfig adjustments) = 21 net files +2215/-96. Speckle Extensions on ObjectLayers.OVERLAY (VoxelGroupOverlay + ResourcePresenceOverlay with 1s lerp interpolation), click-selection with InstancedMesh instanceId->URN map, display-rules engine (strategy §11 defaults), ResourceDetailPanel side-panel, 4 vitest test files, three@0.149.0 + @types/three@0.149.0 added per DEC-029 LOCKED. All importable from @/lib/uro. Parent arc d-2026-06-05-eb-tier1-ros-overlay-foundation remains S5-in-progress with 4 of 6 children landed (T1 with-debt, T2 clean, T3 with-debt, T4 with-debt). Substrate-correction discipline now fully systemic at authoring layer (T4 author pre-flighted eb-agent:trace-service web-dashboard + DEC-029 three.js version cite + canonical naming throughout); seven new in-execution substrate-corrections surfaced at the type-check/lint/test layer — caught at EB CLI execution, captured in overrideRecord below. Deploy delivery posture: T4 holds at EB main; staging path-filter trigger does NOT match T4 changes; auto-deploy will not fire. Manual build-production-images.yml workflow_dispatch required for staging Watchtower to pick up, OR deploy ladder rework needed (separate scope — new dev-deploy spec d-2026-06-06-eb-deploy-dev-via-pr-label addresses this).",
+    "debt": "Two pieces of debt at T4 close:\n\n1. /dev/uro route still returns 404. URO library + components + overlays all land cleanly (importable from @/lib/uro), but route REGISTRATION remains deferred to FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1. Same debt shape as T3 carry-forward; T4 did not address the framework discrepancy resolution.\n\n2. Carry-forward from T1: FU-EB-URO-T1-ROUTE-MOUNTING-1 (P2) — api-gateway viewer-token + uro-ws-auth routes still not mounted in server.ts. Tracking continuity across all four children to date.\n\nPosture-class observation (not debt): T4 will not auto-reach staging via current deploy-staging.yml path-filter. Image build requires manual build-production-images.yml workflow_dispatch, OR deploy ladder rework (the new spec d-2026-06-06-eb-deploy-dev-via-pr-label addresses this separately). T4 code is correct and merged; deploy infrastructure for dev/staging propagation is separate scope.",
+    "overrideRecord": "Seven in-execution substrate-corrections captured at EB CLI execution (chat-side T4 authoring errors caught at tsc/eslint/vitest before PR merged):\n\n1. tsc invocation pattern. Chat wrapper used bare `tsc --noEmit`; @/ alias only resolves in tsconfig.app.json, so invocation required `--project tsconfig.app.json`. Authoring-layer assumption about default tsconfig; substrate-truth caught at type-check.\n\n2. URN regex too restrictive. display-rules.ts + uro-message-parsers.ts URN_PATTERN authored as `[a-z0-9-]+`; actual canonical IDs are mixed-case (e.g. `steel-beam-A47`, `l2-room-A`). Corrected to `[a-z][a-zA-Z0-9-]*`. Authoring-layer over-restriction; substrate-truth caught at runtime tests.\n\n3. `private enabled` shadowing Speckle Extension base class. VoxelGroupOverlay declared `private enabled: boolean`; Speckle Extension base class exposes `enabled` as a getter/setter. Field declaration shadowed inherited accessor. Removed local declaration. Authoring-layer base-class-API assumption; substrate-truth caught at tsc.\n\n4. MockWebSocket test pattern mismatch. T4 vitest mocks used `addEventListener` but FoxgloveClient uses property-assignment style (`ws.onclose = ...`). Tests rewritten to match FoxgloveClient pattern. Authoring-layer test-pattern assumption; substrate-truth caught at vitest run.\n\n5. SharedArrayBuffer cast required. `data.buffer.slice(...)` returns `ArrayBufferLike` (could be ArrayBuffer OR SharedArrayBuffer); FoxgloveClient APIs accept ArrayBuffer specifically. Added explicit `as ArrayBuffer` cast. Authoring-layer TypeScript narrowing assumption; substrate-truth caught at tsc strict mode.\n\n6. @ts-expect-error scope reduction. T4 authored `@ts-expect-error` blocks covering entire new Set() + add/delete/forEach operations; actually only `new Set()` construction needs the suppression (modern lib.dom types cover the rest). Reduced scope to construction line only. Authoring-layer over-suppression; substrate-truth caught at tsc strict mode.\n\n7. Vitest scope restriction. Initial T4 vitest invocation hit T3 timer-flush test failures (pre-existing, unrelated to T4 scope). Restricted T4 vitest run to src/lib/uro/ + src/components/uro/ directories to isolate T4 validation from T3-pre-existing failures. Memory #26 diff-vs-baseline pattern applied at test layer: T3 failures aren't T4 violations.\n\nMeta-observation across T1→T2→T3→T4 substrate-correction trajectory:\n- T1: 1 framework correction (Fastify→Express) — caught at CI, captured at TD\n- T2: 0 corrections — T1 lesson absorbed at authoring (eb-agent:trace-service pre-flight)\n- T3: 2 corrections (npm version + FU priority) — new anti-patterns at different layers\n- T4: 7 corrections at type-check/lint/test layer — none at framework/dependency layer (T1+T3 lessons fully systemic), all at TypeScript strict-mode and base-class API knowledge layer\n\nPattern improving at higher layers (framework, dependencies, naming) but new anti-patterns continuing to surface at lower layers (type narrowing, base class APIs, test pattern matching). Forward rule for T5 authoring: when extending an existing class hierarchy (Speckle Extension here), enumerate the inherited accessor surface before declaring fields — prevents shadowing-class corrections like (3) above."
+  },
+  "relatedFollowUps": [
+    "FU-EB-INSTANCED-MESH-PICKING-RESTORE-1",
+    "FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1",
+    "FU-EB-URO-T1-ROUTE-MOUNTING-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "tsconfig-project-flag-substrate-correction"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "urn-pattern-mixed-case-substrate-correction"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "base-class-accessor-shadowing-substrate-correction"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "mock-websocket-pattern-substrate-correction"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "arraybuffer-narrowing-cast-substrate-correction"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "ts-expect-error-scope-substrate-correction"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "vitest-scope-diff-vs-baseline-substrate-correction"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-06T01:45:26Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-310-squash-merged"
+    },
+    {
+      "timestamp": "2026-06-06T01:48:25Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-handoff-to-SR-chat-for-closure"
+    },
+    {
+      "timestamp": "2026-06-06T02:30:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored"
+    }
+  ]
+}
