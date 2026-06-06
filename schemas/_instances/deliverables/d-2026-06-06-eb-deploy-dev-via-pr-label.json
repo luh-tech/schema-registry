@@ -1,0 +1,142 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-06-eb-deploy-dev-via-pr-label",
+  "version": "1.0.0",
+  "title": "Deploy ladder — feat-branch → dev via PR label, mirroring production IMAGE_TAG → Spaces → config-sync pull pattern (NOT Watchtower)",
+  "description": "Closes the third lane of the canonical trunk deploy ladder. main → staging is wired today via build-staging-images.yml + workflow_run + deploy-staging.yml + Watchtower polling :staging. Production app uses build-production-images.yml + deploy-production-app.yml with workflow_dispatch + dual typed confirms + TF apply targeted on local_file.production_env + module.production_env_upload (IMAGE_TAG → Spaces config-sync, NO Watchtower). The feat-branch → dev lane does not exist: dev compose has hardcoded SHAs (411dd568 at substrate-read time), no IMAGE_TAG substitution, no auto-build on feat branches, no auto-deploy. Erik's design: PR label `deploy-to-dev` triggers the lane (sparse opt-in, not every commit). Build mirrors staging build shape. Deploy mirrors production app shape (TF apply IMAGE_TAG; NO Watchtower on dev — matches prod pull doctrine). Validation chain stripped to health + smoke + non-blocking DOCR GC (per Erik strip-down decision; full integration/e2e remains a staging concern). Resolves the open DEC-NN watchtower-on-dev question from LUHTECH-PLATFORM-CLOSURE-STRATEGY-2026-04-27.md §5: dev follows production pull model, not staging Watchtower model. Substrate verified: development TF env has local_file.development_env + module.development_env_upload (same shape as production); image_tag variable absent; terraform-development.yml accepts an image-tag input that is currently a dead input not wired into the .env. Scope corrects all three.",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/deploy-dev-via-pr-label-2026-06-06",
+    "scopeFiles": [
+      "infrastructure/terraform/environments/development/variables.tf",
+      "infrastructure/terraform/environments/development/main.tf",
+      "docker-compose.development.yml",
+      ".github/workflows/build-dev-images.yml",
+      ".github/workflows/deploy-dev.yml",
+      ".github/labels.yml",
+      ".roadmap/decision-log.json",
+      ".dlp/deliverables/d-2026-06-06-eb-deploy-dev-via-pr-label/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Development Terraform environment wires an `image_tag` variable through to `local_file.development_env`, so the dev `.env` file uploaded to Spaces contains an `IMAGE_TAG=<short_sha>` line. Mirrors production's pattern (`local_file.production_env` consumes a TF `image_tag` var). Without this, the new deploy-dev workflow has no canonical surface to write the SHA to; with this, dev pull semantics match prod exactly.",
+      "acceptanceCriteria": [
+        "`infrastructure/terraform/environments/development/variables.tf` declares `variable \"image_tag\"` with type=string, no default (caller must supply).",
+        "`infrastructure/terraform/environments/development/main.tf` adds `image_tag = var.image_tag` to the `local_file.development_env` content template, producing an `IMAGE_TAG=${var.image_tag}` line in the rendered `.env`.",
+        "`module.development_env_upload` (existing) continues to upload the rendered `.env` to the `ectropy-development-configs` Spaces bucket unchanged — no changes to the upload module itself.",
+        "`terraform-development.yml` is left untouched in this deliverable: its `image-tag` input was previously a dead input; once the variable wiring lands, that workflow's input also becomes functional. (Workflow signature does not change.)",
+        "TF validate passes (`terraform -chdir=infrastructure/terraform/environments/development validate`) and a `terraform plan` with `image_tag=test-sha-1234567` produces a diff containing `IMAGE_TAG=test-sha-1234567` in the rendered local_file.development_env content."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "`docker-compose.development.yml` is refactored from three hardcoded image SHAs to `${IMAGE_TAG}` substitution per service (api-gateway, mcp-server, web-dashboard). The `.env` file on the dev droplet (synced from Spaces by config-sync) supplies `IMAGE_TAG`; docker compose reads the variable and pulls the matching image tag from DOCR. This is the same pattern used by `docker-compose.production.yml`. No Watchtower added to dev compose — per memory #25 SLACK NOTICE SHAPE applied to this DEC: dev follows production pull doctrine.",
+      "acceptanceCriteria": [
+        "Three `image:` lines in `docker-compose.development.yml` change from `registry.digitalocean.com/ectropy-registry/<service>:411dd568...` (current literal SHA) to `registry.digitalocean.com/ectropy-registry/<service>:${IMAGE_TAG}` substitution form.",
+        "All other services (postgres, redis, nginx, etc.) keep their existing pinned versions — only api-gateway, mcp-server, web-dashboard get the IMAGE_TAG substitution.",
+        "No `watchtower` service added. No `com.centurylinklabs.watchtower.enable: true` labels added to any service. This is deliberate per the DEC entry — dev uses TF apply pull, not Watchtower poll.",
+        "`docker compose -f docker-compose.development.yml config` parses successfully with `IMAGE_TAG=test-sha` set in the environment (validates substitution syntax)."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "NEW `.github/workflows/build-dev-images.yml` mirrors `build-staging-images.yml` shape (same matrix of 3 services, same path filters on app/lib changes, same `docker/login-action@v3` auth, same buildcache pattern, same concurrency cancel-in-progress), with two differences: (a) trigger is `pull_request: types: [labeled, synchronize]` gated on the PR carrying the `deploy-to-dev` label — NOT `push: main`; (b) tags pushed are `:dev` + `:{full-sha}` (mirrors `:staging` + `:{full-sha}` exactly, just a different floating tag name). Concurrency group keyed on the PR number to allow parallel feat-branch deploys across different PRs while preventing tag races within one PR.",
+      "acceptanceCriteria": [
+        "Triggers: `pull_request: types: [labeled, synchronize], branches: [main]` with path filters mirroring `build-staging-images.yml` (`apps/api-gateway/**`, `apps/mcp-server/**`, `apps/web-dashboard/**`, `libs/**`, `packages/**`, `prisma/**`, `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `nx.json`, `tsconfig.base.json`, `tsconfig.enterprise-standard.json`, `.nvmrc`, `.npmrc`, all three Dockerfiles).",
+        "Job gate: `if: contains(github.event.pull_request.labels.*.name, 'deploy-to-dev')` — skips the build unless the PR carries the label.",
+        "`workflow_dispatch` trigger available as escape hatch (operator can build dev images for an arbitrary branch via gh workflow run).",
+        "Strategy matrix: api-gateway + mcp-server + web-dashboard (3 services).",
+        "Auth: `docker/login-action@v3` (matches the proven pattern in build-staging-images.yml; NOT the broken `docr-login` composite).",
+        "Build: `docker/build-push-action@v6`, `platforms: linux/amd64`, `push: true` on the labeled-PR or synchronize event (no verify-only on dev — the label IS the gate), tags = `${REGISTRY}/<service>:dev` and `${REGISTRY}/<service>:${github.sha}` (full 40-char SHA).",
+        "Build cache: `cache-from: type=registry,ref=${REGISTRY}/<service>:buildcache, cache-to: type=registry,ref=${REGISTRY}/<service>:buildcache,mode=max` (same as staging build).",
+        "Concurrency: `group: build-dev-images-pr-${{ github.event.pull_request.number }}` with `cancel-in-progress: true` (prevents in-flight builds when the same PR pushes new commits; allows different PRs to build in parallel).",
+        "Permissions: `contents: read` only."
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "NEW `.github/workflows/deploy-dev.yml` mirrors `deploy-production-app.yml` shape (compute-tag → verify-images → TF apply targeted on dev env_upload + local_file → wait-for-config-sync → health validation → smoke tests → log-release → canary-post), with these differences: (a) no `DEPLOY-PRODUCTION` / `APPLY-AFTER-PLAN-REVIEW` typed confirms — the PR label IS the gate; (b) trigger is `workflow_run` on Build Dev Images completion (chains off OUT-3) plus `workflow_dispatch` escape hatch; (c) validation chain stripped per Erik strip-down decision — keeps health validation + smoke tests + non-blocking DOCR garbage collection; (d) targets `module.development_env_upload` + `local_file.development_env` (vs production's equivalents); (e) health endpoint `https://dev.ectropy.ai/api/health`.",
+      "acceptanceCriteria": [
+        "Triggers: `workflow_run: workflows: ['Build Dev Images'], types: [completed], branches: [main]` (chain off OUT-3 completion) + `workflow_dispatch` with `inputs.image_tag` string input for manual replays.",
+        "`if: github.event.workflow_run.conclusion == 'success'` on first job to skip when build failed.",
+        "Concurrency: `group: deploy-dev` with `cancel-in-progress: false` (mirrors deploy-staging.yml; serialize dev deploys for image-push + config-sync race avoidance).",
+        "Job sequence: validate-immutable-config → canary-pre → compute-tag → verify-images (matrix on 3 services, fail-fast) → terraform-apply-image-tag → wait-for-config-sync → health-validation → smoke-tests → docr-garbage-collection (non-blocking, continue-on-error: true) → log-release → canary-post → notify.",
+        "compute-tag: outputs `image_tag` (semver-shortsha format) + `semver` + `short_sha`. For workflow_run trigger, uses `${{ github.event.workflow_run.head_sha }}`; for workflow_dispatch, uses `${{ inputs.image_tag }}`.",
+        "verify-images: matrix on api-gateway + mcp-server + web-dashboard; uses `doctl registry repository list-tags` to confirm `:{short_sha}` exists in DOCR for each (mirrors deploy-production-app.yml verify-images job byte-for-byte except for `environment: development` instead of `production`).",
+        "terraform-apply-image-tag: uses `./.github/actions/setup-terraform-vars` with `environment: development` and `image-tag: ${{ needs.compute-tag.outputs.short_sha }}`; runs `terraform apply -auto-approve -target=local_file.development_env -target=module.development_env_upload -input=false`. NO typed confirm gate.",
+        "wait-for-config-sync: `sleep 90` matching deploy-production-app.yml convergence budget.",
+        "health-validation: polls `https://dev.ectropy.ai/lb-health` (10 attempts × 15s) then `https://dev.ectropy.ai/api/health` with `--retry 5 --retry-delay 10 --retry-all-errors --retry-max-time 120` (mirrors deploy-production-app.yml health-validation job exactly). Cross-checks `buildSha` from /api/health JSON against `EXPECTED_SHA = compute-tag.outputs.short_sha`. Pre-config-sync-installed posture: WARN not FAIL on mismatch (TODO Stream 7 comment, same as production).",
+        "smoke-tests: lightweight check — `pnpm test:smoke:ci` if exists, else curl probes of `/api/health`, `/api/auth/me` (anonymous), and `/speckle/graphql` for serverInfo. Time budget: 5 minutes.",
+        "canary-pre + canary-post: standard `POST https://n8n.luh.tech/webhook/lead-capture` with HTTP 200 assertion (matches every other deploy workflow in the repo; per hard constraint #1 the canary stays).",
+        "docr-garbage-collection: matrix retention policy `keep :dev + :latest + 5 most recent SHA tags per service`; same retention shape as deploy-staging.yml's docr-garbage-collection job. continue-on-error: true (non-blocking).",
+        "notify: GITHUB_STEP_SUMMARY block listing deployed images (`${REGISTRY}/<service>:dev` + `${REGISTRY}/<service>:{short_sha}` for each of 3 services), dev URL `https://dev.ectropy.ai`, smoke result, full-SHA-on-deploy summary per memory #27.",
+        "Permissions: `contents: read, deployments: write` (mirrors deploy-production-app.yml)."
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "`.github/labels.yml` defines the `deploy-to-dev` PR label. If the file already exists, append the entry; if not, create with this single entry. Label appears in the GH UI PR sidebar; PR author adds it to trigger the deploy lane; removes it to stop further dev deploys for that PR.",
+      "acceptanceCriteria": [
+        "Label name: `deploy-to-dev`.",
+        "Label color: hex `#0E8A16` (GitHub green, signals additive deploy intent).",
+        "Label description: \"Triggers feat-branch → dev deploy lane: build-dev-images.yml builds + pushes :dev tag; deploy-dev.yml chains via workflow_run to TF apply IMAGE_TAG on dev environment.\"",
+        "If `.github/labels.yml` does not exist, create with this single label entry plus a header comment explaining the file's role and pointing to a labeler-sync workflow if one is added later (not in scope here).",
+        "If `.github/labels.yml` already exists, append the `deploy-to-dev` entry; preserve all existing labels untouched."
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "DEC entry in `.roadmap/decision-log.json` resolving the open watchtower-on-dev question from `LUHTECH-PLATFORM-CLOSURE-STRATEGY-2026-04-27.md` §5 (which had named it as DEC-NN with no resolution). The decision: dev follows the production pull model (TF apply IMAGE_TAG → Spaces config-sync → docker compose pulls explicit SHA), NOT the staging Watchtower polling model. Rationale: dev is a PR-validation lane where the PR label is the explicit deploy gate; Watchtower's strength (zero-friction auto-pull on tag repoint) conflicts with the explicit-gate design. Trade-off: feat-branch deploy is gated, not magical — but that's the design intent.",
+      "acceptanceCriteria": [
+        "decisionId follows canonical date-slug convention: `d-2026-06-06-dev-deploy-pull-model-tf-apply-not-watchtower`.",
+        "DEC fields per canonical shape (matches the 15-field shape used in `d-2026-05-28-tier1-vpc-peering-kernel-route` and `d-2026-05-26-break-glass-speckle-nginx-recovery` reference entries).",
+        "status: `implemented` (DEC + supporting workflows + TF wiring + compose refactor land in the same PR).",
+        "category: `infrastructure` (string, singular per memory #16 schema discipline).",
+        "impact: `high` (introduces a new env deploy lane).",
+        "approvedBy: `Erik Luhtala (L4)`.",
+        "impactedDeliverables: `[\"d-2026-06-06-eb-deploy-dev-via-pr-label\"]`.",
+        "evidence: array of strings — references to OUT-3 + OUT-4 + OUT-2 + OUT-1, plus a reference to `LUHTECH-PLATFORM-CLOSURE-STRATEGY-2026-04-27.md §5` as the originating open question.",
+        "relatedDecisions: array referencing DEC-032 (Zero-SSH Watchtower architecture for staging) and `d-2026-05-07-trunk-based-development` (the trunk model this lane extends).",
+        "alternatives: array of objects each with option/pros/cons/estimatedEffort/riskLevel. Three alternatives recorded: (a) Watchtower on dev watching :dev tag — pro: matches staging exactly; con: removes the explicit gate; (b) push: feat/* trigger — pro: simpler trigger; con: noisy, every WIP commit deploys; (c) Direct SSH from CI workflow (like deploy-console.yml outlier) — pro: simplest; con: breaks Zero-SSH doctrine."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "`terraform -chdir=infrastructure/terraform/environments/development validate` passes.",
+      "`terraform plan` with `-var image_tag=test-sha-1234567` shows the IMAGE_TAG line appearing in the rendered local_file.development_env content; no other unintended diff.",
+      "`docker compose -f docker-compose.development.yml config` parses successfully with `IMAGE_TAG=test-sha` set in the environment.",
+      "`actionlint .github/workflows/build-dev-images.yml` returns no errors.",
+      "`actionlint .github/workflows/deploy-dev.yml` returns no errors.",
+      "DEC entry validates against the decision-log canonical schema (`ajv-cli@5.0.0 -r _enums -r _definitions validate -s decision-log.schema.json -d new-entry.json`).",
+      "End-to-end manual verification on a throwaway PR: open a PR touching `apps/web-dashboard/**` (a trivial doc-comment change), add the `deploy-to-dev` label, confirm: (1) build-dev-images.yml fires, (2) :dev + :{full-sha} tags land in DOCR, (3) deploy-dev.yml fires via workflow_run, (4) compute-tag emits correct short_sha, (5) verify-images job confirms all 3 images present, (6) TF apply runs and updates the dev .env in Spaces, (7) wait-for-config-sync sleeps 90s, (8) health validation passes, (9) smoke tests pass, (10) canary-post returns 200, (11) GITHUB_STEP_SUMMARY block contains full 40-char SHA per memory #27."
+    ],
+    "postMerge": [
+      "Verify the `deploy-to-dev` label appears in the GH PR sidebar UI for the deliverable PR after merge.",
+      "Verify `dev.ectropy.ai/api/health` returns `buildSha` matching the most recently labeled PR's HEAD SHA after the end-to-end manual verification completes.",
+      "Update follow-up register: file new FU `FU-EB-DEPLOY-CONSOLE-SSH-OUTLIER-1` (P3, open, tracking_repo: `luh-tech/Ectropy-Business`) noting that `deploy-console.yml` is the remaining SSH-based outlier and targets stale dev IP `64.23.157.16` (actual `24.199.127.18`); reconciliation is separate hygiene work.",
+      "Candidate close: none in this deliverable scope (no prior FU resolved by this lane).",
+      "Post deliverable merge SHA (full 40-char per memory #27) to `#luhtech-agents-comms` (C0B7EPFCA85) with `[EB-chat]` prefix; SR-chat lands TRUTH-DELIVERED."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-06",
+      "trigger": "L4 named-step approval ('approved author_deploy_dev_spec') after Erik substrate-read confirmed dev TF env has local_file.development_env + module.development_env_upload + no image_tag wiring + docker-compose.development.yml has hardcoded SHAs + 8 workflow YAML patterns read + DEC d-2026-05-07-trunk-based-development + DEC-032 Zero-SSH Watchtower architecture pre-authoring."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-DEPLOY-CONSOLE-SSH-OUTLIER-1"
+  ],
+  "notes": "Cross-repo doctrine F0B85LNSTC4: EB chat authors spec + sandbox-validates; SR-chat anchors at schemas/_instances/deliverables/d-2026-06-06-eb-deploy-dev-via-pr-label.json; EB CLI executes from tarball; EB opens PR + posts merge SHA; SR closes with TRUTH-DELIVERED. No --admin per memory #6. Squash-merge only. Branch `feat/deploy-dev-via-pr-label-2026-06-06` scope-locked to declared scopeFiles. Erik L4 named-step approval required at: spec authoring (already given), tarball execution PHASE_1 APPLY, PHASE_2 COMMIT, PHASE_3 PUSH-PR, PHASE_4 SQUASH-MERGE."
+}
