@@ -1,0 +1,82 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-06-eb-deploy-dev-via-pr-label",
+  "deliveredAt": "2026-06-06T21:33:02Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-with-debt",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "5817cc44c5f8d78eb2a3e8e07effec44ce916cee",
+      "prNumber": 311,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/311",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "5817cc44c5f8d78eb2a3e8e07effec44ce916cee",
+      "prNumber": 311,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/311",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "5817cc44c5f8d78eb2a3e8e07effec44ce916cee",
+      "prNumber": 311,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/311",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "5817cc44c5f8d78eb2a3e8e07effec44ce916cee",
+      "prNumber": 311,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/311",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "5817cc44c5f8d78eb2a3e8e07effec44ce916cee",
+      "prNumber": 311,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/311",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "5817cc44c5f8d78eb2a3e8e07effec44ce916cee",
+      "prNumber": 311,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/311",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Deploy ladder third lane closed: feat-branch → dev via PR label `deploy-to-dev`, mirroring production TF apply IMAGE_TAG pull model (not Watchtower). EB main at 5817cc44 (PR #311). Scope landed: OUT-1 development TF env wires image_tag variable into local_file.development_env; OUT-2 docker-compose.development.yml refactored from 3 hardcoded SHAs (411dd568) to ${IMAGE_TAG:-latest} substitution; OUT-3 NEW build-dev-images.yml (label-gated build, mirrors staging shape, pushes :dev + :{full-sha} tags); OUT-4 NEW deploy-dev.yml (workflow_run chain off build, TF apply IMAGE_TAG, health + smoke + non-blocking DOCR GC, no typed confirms — label is the gate); OUT-5 NEW labels.yml (deploy-to-dev #0E8A16); OUT-6 DEC d-2026-06-06-dev-deploy-pull-model-tf-apply-not-watchtower (15-field canonical shape, status: implemented). Open DEC-NN watchtower-on-dev question from LUHTECH-PLATFORM-CLOSURE-STRATEGY-2026-04-27.md §5 resolved: dev follows production pull doctrine. Tarball 4-phase L4 wrapper executed: PHASE_1 APPLY → PHASE_2 COMMIT → PHASE_3 PUSH-PR → PHASE_4 SQUASH-MERGE, all NO --admin per memory #6. Effective scope: 9 files (8 declared + infrastructure/workflows/patterns.yml added at execution — see debt).",
+    "debt": "infrastructure/workflows/patterns.yml was not included in the original 8-file tarball scope. The audit-workflows.yml CI gate requires every workflow file to have a class+tier assignment in patterns.yml; both new workflows (build-dev-images.yml: build-image/develop, deploy-dev.yml: deploy-application/develop) were missing entries and failed the gate with drift=2. EB-chat patched patterns.yml on the feat branch during the PHASE_3 CI wait (commit 9a2b389), CI re-ran, PHASE_4 proceeded. The fix is correct and merged, but the omission was a tarball authoring gap: substrate read at spec time covered all build-* and deploy-* workflow files but did not read audit-workflows.yml or patterns.yml to surface the required entries. Process improvement to memorialize: any deliverable that adds workflow files must include infrastructure/workflows/patterns.yml in scope with class+tier assignments for each new workflow. Candidate memory rule: 'audit-workflows.yml gate: any new .github/workflow file must also have a class+tier entry in infrastructure/workflows/patterns.yml. Read both when authoring workflow-adding deliverables.' Requires explicit L4 named-step per memory #22 before adoption.",
+    "overrideRecord": "Four substrate-corrections embedded at tarball authoring (memory #13), all correct at execution:\n\n1. OUT-2 substitution shape: authored as ${IMAGE_TAG:-latest} per canonical production pattern, not bare ${IMAGE_TAG} as spec prose text implied. The :-latest fallback prevents compose parse failure on droplets where config-sync has not yet written the .env; matches docker-compose.production.yml canonical form.\n\n2. OUT-6 approvedBy field: authored as array [\"erik-luh\"] not string per canonical 15-field DEC shape. Reference DEC d-2026-05-28-tier1-vpc-peering-kernel-route confirms array form; spec prose stated the string form; array is substrate-correct.\n\n3. decision-log.json append ordering: appended at index 130 (substrate-verified; prior total was 130 entries; new total 131). Ordering invariant preserved.\n\n4. OUT-3 build tag contract: authored as 3-tag shape (:dev + :fullsha + :shortsha) per the spec's contract text, matching the staging build's 2-tag shape extended with a :dev floating tag. The spec's OUT-3 acceptance criteria states ':dev + :{full-sha}' (2 tags); tarball authors 3 tags for operational utility (shortsha enables DOCR GC retention matching). Minor scope-extension at authoring layer, captured here."
+  },
+  "relatedFollowUps": [
+    "FU-EB-DEPLOY-CONSOLE-SSH-OUTLIER-1"
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-06T21:33:02Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-311-squash-merged"
+    },
+    {
+      "timestamp": "2026-06-06T21:35:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored"
+    }
+  ]
+}
