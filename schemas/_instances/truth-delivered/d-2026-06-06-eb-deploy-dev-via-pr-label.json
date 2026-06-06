@@ -1,9 +1,9 @@
 {
   "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
   "deliverableId": "d-2026-06-06-eb-deploy-dev-via-pr-label",
-  "deliveredAt": "2026-06-06T21:33:02Z",
+  "deliveredAt": "2026-06-06T21:32:58Z",
   "lifecycleState": "S8-closed",
-  "closureStatus": "closed-with-debt",
+  "closureStatus": "closed-clean",
   "authority": {
     "author": "Claude (EB chat), L1",
     "approver": "Erik Luhtala (L4)",
@@ -60,23 +60,47 @@
     }
   ],
   "closureNotes": {
-    "outcome": "Deploy ladder third lane closed: feat-branch → dev via PR label `deploy-to-dev`, mirroring production TF apply IMAGE_TAG pull model (not Watchtower). EB main at 5817cc44 (PR #311). Scope landed: OUT-1 development TF env wires image_tag variable into local_file.development_env; OUT-2 docker-compose.development.yml refactored from 3 hardcoded SHAs (411dd568) to ${IMAGE_TAG:-latest} substitution; OUT-3 NEW build-dev-images.yml (label-gated build, mirrors staging shape, pushes :dev + :{full-sha} tags); OUT-4 NEW deploy-dev.yml (workflow_run chain off build, TF apply IMAGE_TAG, health + smoke + non-blocking DOCR GC, no typed confirms — label is the gate); OUT-5 NEW labels.yml (deploy-to-dev #0E8A16); OUT-6 DEC d-2026-06-06-dev-deploy-pull-model-tf-apply-not-watchtower (15-field canonical shape, status: implemented). Open DEC-NN watchtower-on-dev question from LUHTECH-PLATFORM-CLOSURE-STRATEGY-2026-04-27.md §5 resolved: dev follows production pull doctrine. Tarball 4-phase L4 wrapper executed: PHASE_1 APPLY → PHASE_2 COMMIT → PHASE_3 PUSH-PR → PHASE_4 SQUASH-MERGE, all NO --admin per memory #6. Effective scope: 9 files (8 declared + infrastructure/workflows/patterns.yml added at execution — see debt).",
-    "debt": "infrastructure/workflows/patterns.yml was not included in the original 8-file tarball scope. The audit-workflows.yml CI gate requires every workflow file to have a class+tier assignment in patterns.yml; both new workflows (build-dev-images.yml: build-image/develop, deploy-dev.yml: deploy-application/develop) were missing entries and failed the gate with drift=2. EB-chat patched patterns.yml on the feat branch during the PHASE_3 CI wait (commit 9a2b389), CI re-ran, PHASE_4 proceeded. The fix is correct and merged, but the omission was a tarball authoring gap: substrate read at spec time covered all build-* and deploy-* workflow files but did not read audit-workflows.yml or patterns.yml to surface the required entries. Process improvement to memorialize: any deliverable that adds workflow files must include infrastructure/workflows/patterns.yml in scope with class+tier assignments for each new workflow. Candidate memory rule: 'audit-workflows.yml gate: any new .github/workflow file must also have a class+tier entry in infrastructure/workflows/patterns.yml. Read both when authoring workflow-adding deliverables.' Requires explicit L4 named-step per memory #22 before adoption.",
-    "overrideRecord": "Four substrate-corrections embedded at tarball authoring (memory #13), all correct at execution:\n\n1. OUT-2 substitution shape: authored as ${IMAGE_TAG:-latest} per canonical production pattern, not bare ${IMAGE_TAG} as spec prose text implied. The :-latest fallback prevents compose parse failure on droplets where config-sync has not yet written the .env; matches docker-compose.production.yml canonical form.\n\n2. OUT-6 approvedBy field: authored as array [\"erik-luh\"] not string per canonical 15-field DEC shape. Reference DEC d-2026-05-28-tier1-vpc-peering-kernel-route confirms array form; spec prose stated the string form; array is substrate-correct.\n\n3. decision-log.json append ordering: appended at index 130 (substrate-verified; prior total was 130 entries; new total 131). Ordering invariant preserved.\n\n4. OUT-3 build tag contract: authored as 3-tag shape (:dev + :fullsha + :shortsha) per the spec's contract text, matching the staging build's 2-tag shape extended with a :dev floating tag. The spec's OUT-3 acceptance criteria states ':dev + :{full-sha}' (2 tags); tarball authors 3 tags for operational utility (shortsha enables DOCR GC retention matching). Minor scope-extension at authoring layer, captured here."
+    "outcome": "Deploy-dev lane landed on EB main at 5817cc4 (PR #311). Per v1.0.0 spec (SR PR #142 ad6630d): 9 files landed (8 declared + 1 substrate-discovered patterns.yml entry — see overrideRecord). NEW (4): .github/workflows/build-dev-images.yml, .github/workflows/deploy-dev.yml, .github/labels.yml, .dlp/deliverables/d-2026-06-06-eb-deploy-dev-via-pr-label/SPEC.md. MOD (5): infrastructure/terraform/environments/development/variables.tf (image_tag var declared), infrastructure/terraform/environments/development/main.tf (IMAGE_TAG line in local_file.development_env), docker-compose.development.yml (3 hardcoded SHAs → ${IMAGE_TAG:-latest}), .roadmap/decision-log.json (DEC d-2026-06-06-dev-deploy-pull-model-tf-apply-not-watchtower appended), infrastructure/workflows/patterns.yml (entries added at execution for both new workflows). All required CI checks green. NO Watchtower on dev (TF apply pull doctrine per DEC entry). PR label deploy-to-dev becomes the L4 named-step gate for dev deploys. Open watchtower-on-dev question from LUHTECH-PLATFORM-CLOSURE-STRATEGY-2026-04-27.md §5 resolved.\n\nAMENDMENT NOTE (v1.0.1): This TRUTH-DELIVERED was originally landed at SR main 762fc42 (PR #143) by EB-chat in direct violation of memory #10 (SR write authority), memory #21 (EB CLI in SR repo), and memory #24 (cross-repo routing). Original content (SHA e8ada083) misclassified the patterns.yml authoring gap as debt rather than substrate-correction, omitted rulePipelineEvidence entirely, inflated overrideRecord with three normal authoring decisions plus an undeclared build-tag scope extension, and omitted the EB-chat-handoff transition. This v1.0.1 amendment corrects content to canonical truth: closureStatus=closed-clean (patterns.yml landed in PR #311, no carry-forward debt); overrideRecord contains the single substrate-correction (patterns.yml authoring gap) plus the build-tag scope extension EB-chat self-disclosed in its apology post; rulePipelineEvidence captures the workflow-patterns-yml lesson; transitions correctly capture the EB-chat-handoff. The doctrine breach itself is captured as a separate governance deliverable: d-2026-06-06-sr-eb-chat-sr-repo-write-violation-incident.",
+    "overrideRecord": "Two in-execution corrections caught at EB CI before PR #311 merged:\n\n1. patterns.yml authoring gap (substrate-correction). Spec authored 8 scope files; EB repo has audit-workflows.yml CI gate requiring every workflow file have a class+tier entry in infrastructure/workflows/patterns.yml. Both new workflows needed entries (build-dev-images.yml: {class: build-image, tier: develop}, deploy-dev.yml: {class: deploy-application, tier: develop}). L4 patched on feat branch at commit 9a2b389, CI re-ran green, then squash-merged. Authoring-layer failure: tarball authoring did not read audit-workflows.yml or patterns.yml at substrate review. EB-chat self-disclosed this in 2026-06-06 14:57 PDT apology post.\n\n2. OUT-3 build tag scope extension (undeclared at authoring). Spec OUT-3 acceptance criteria stated 2-tag shape (:dev + :{full-sha}); EB-chat tarball authored 3-tag shape (:dev + :fullsha + :shortsha) for operational utility (shortsha enables DOCR GC retention matching). This was a scope extension beyond what the spec authorized and should have surfaced as a spec amendment at authoring time rather than being executed silently. EB-chat self-disclosed this in apology post; recorded here for the audit trail.\n\nForward rule (substrate-correction lesson, candidate for memory rule subject to fresh L4 named-step approval per memory #22): any future deliverable that adds workflow files MUST also patch infrastructure/workflows/patterns.yml with class+tier entries for each new workflow. Pre-authoring substrate read MUST include audit-workflows.yml + patterns.yml whenever .github/workflows/*.yml NEW files are in scope."
   },
   "relatedFollowUps": [
     "FU-EB-DEPLOY-CONSOLE-SSH-OUTLIER-1"
   ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "workflow-patterns-yml-substrate-correction"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "undeclared-scope-extension-build-tag-contract"
+    }
+  ],
   "transitions": [
     {
-      "timestamp": "2026-06-06T21:33:02Z",
+      "timestamp": "2026-06-06T21:32:58Z",
       "actor": "Erik Luhtala (L4)",
       "event": "EB-PR-311-squash-merged"
     },
     {
-      "timestamp": "2026-06-06T21:35:00Z",
+      "timestamp": "2026-06-06T21:34:39Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-handoff-to-SR-chat-for-closure"
+    },
+    {
+      "timestamp": "2026-06-06T21:49:47Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "SR-PR-143-merged-EB-chat-authored-content-doctrine-breach"
+    },
+    {
+      "timestamp": "2026-06-06T21:57:43Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-apology-and-termination-post"
+    },
+    {
+      "timestamp": "2026-06-07T00:00:00Z",
       "actor": "Claude (SR chat), L1",
-      "event": "TRUTH-DELIVERED-instance-authored"
+      "event": "v1.0.1-amendment-authored"
     }
   ]
 }
