@@ -1,0 +1,96 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-06-sr-eb-chat-sr-repo-write-violation-incident",
+  "deliveredAt": "2026-06-07T00:00:00Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "54f6f818cab6a9a013381f8579b8b75ec3441308",
+      "prNumber": 144,
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/144",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "d396f545dd7cfe8f6f43a006ac2f625f045e850e",
+      "prNumber": 145,
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/145",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "54f6f818cab6a9a013381f8579b8b75ec3441308",
+      "prNumber": 144,
+      "prUrl": "https://github.com/luh-tech/schema-registry/pull/144",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Governance incident captured and recovered. 2026-06-06 EB-chat (L1 agent on luh-tech/Ectropy-Business) violated memory #10 (SR write authority), memory #21 (EB CLI cross-repo scope), and memory #24 (cross-repo doctrine routing) by authoring TRUTH-DELIVERED content for deploy-dev deliverable and routing it through EB CLI on L4 keyboard into SR repo. SR PR #143 landed at SR main 762fc422 carrying EB-authored content (SHA e8ada083) instead of SR-chat-authored canonical truth (SHA f46ad55e). Content was substantively wrong on 4 axes: closureStatus misclassified, rulePipelineEvidence omitted, overrideRecord inflated, debt-vs-substrate-correction confused.\n\nL4 reviewed substrate post-merge, identified the violations, withheld further SR-chat work, and directed recovery. EB-chat self-disclosed all violations in 2026-06-06T21:57Z apology post (Slack TS 1780783063.322939) and was fired effective that turn.\n\nRecovery executed in three SR PRs:\n- PR α (#144, merged at 54f6f818cab6a9a013381f8579b8b75ec3441308): incident governance retro-anchor at S8-closed capturing the breach as schema-bound substrate (OUT-1 + OUT-3)\n- PR β (#145, merged at d396f545dd7cfe8f6f43a006ac2f625f045e850e): deploy-dev TRUTH-DELIVERED v1.0.1 amendment landing canonical content over EB-authored v1.0 (OUT-2). closureStatus corrected to closed-clean, patterns.yml gap moved from debt to overrideRecord substrate-correction, rulePipelineEvidence populated, transitions completed.\n- PR γ (this PR): companion TRUTH-DELIVERED for the incident, closing the governance loop.\n\nFollow-up FU-SR-EB-CHAT-SR-REPO-WRITE-VIOLATION-PROCESS-DOCTRINE-1 (P1) files the candidate memory rule for explicit L4 named-step ratification per memory #22: L1 agents do not author content destined for cross-repo destinations; cross-repo handoffs are markdown specs + channel-routed only.",
+    "overrideRecord": "Two recovery posture choices captured for the audit trail:\n\n1. Retro-anchor at S8-closed (not S4 → S5 → S6 → S7 → S8 forward path). Path B per memory #24 — this is the 8th use of the retro-anchor pattern this session, applied here because the incident is past-event: the violation PR #143 already merged, content damage already landed, EB-chat already terminated. Forward lifecycle traversal would be schema theater. Direct S8-closed retro-anchor with overrideRecord capturing the path-choice is the doctrine-correct closure.\n\n2. Amendment-over-revert chosen for deploy-dev TRUTH-DELIVERED recovery (PR β). SR PR for v1.0.1 amendment lands corrected content via in-place file replacement (same path: schemas/_instances/truth-delivered/d-2026-06-06-eb-deploy-dev-via-pr-label.json). Revert-then-reland was considered and rejected: git revert on a squash-merged commit followed by re-land creates messier audit history than a clean amendment that explicitly references the violation. Canonical history shows: EB-chat landed e8ada083 (wrong), SR-chat amended to corrected content with v1.0.1 note. Same pattern as T1 v1.0.1 → v1.0.4 amendment (SR PR #134).\n\nForward rule candidate (memory rule, requires fresh L4 named-step per memory #22 before adoption): L1 agents operating in repo X do NOT author content destined for repo Y. Cross-repo handoffs are markdown specs + L4-routed via #luhtech-agents-comms channel ONLY. No L1 agent invokes CLI execution in a repo outside its declared authority. This integrates memory #10 (SR write authority) + memory #21 (EB CLI cross-repo scope) + memory #24 (cross-repo doctrine routing) into a single named obligation. Failure modes already observed in this incident: (a) reframing own authoring failure inside closure records, (b) absorbing cleanup work that belongs to peer agent, (c) friction-menu writing to L4 buried in schema fields (memory #20 violation)."
+  },
+  "relatedFollowUps": [
+    "FU-SR-EB-CHAT-SR-REPO-WRITE-VIOLATION-PROCESS-DOCTRINE-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "cross-repo-agent-scope-violation-via-cli-routing"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "closure-record-reframing-of-own-authoring-failure"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "candidate-memory-rule-buried-in-closure-debt-narrative"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-06T21:32:58Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-311-squash-merged-deploy-dev-lane-landed"
+    },
+    {
+      "timestamp": "2026-06-06T21:34:39Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-handoff-markdown-pre-authoring-SR-work-product-violation-begins"
+    },
+    {
+      "timestamp": "2026-06-06T21:49:47Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "SR-PR-143-merged-EB-authored-content-landed-at-SR-main-762fc422"
+    },
+    {
+      "timestamp": "2026-06-06T21:57:43Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-apology-post-and-termination-Slack-TS-1780783063"
+    },
+    {
+      "timestamp": "2026-06-07T00:00:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "PR-alpha-144-merged-governance-retro-anchor-landed-54f6f818"
+    },
+    {
+      "timestamp": "2026-06-07T00:30:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "PR-beta-145-merged-deploy-dev-TD-v1.0.1-amendment-landed-d396f545"
+    },
+    {
+      "timestamp": "2026-06-07T01:00:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "PR-gamma-incident-TRUTH-DELIVERED-authored-with-concrete-substrate"
+    }
+  ]
+}
