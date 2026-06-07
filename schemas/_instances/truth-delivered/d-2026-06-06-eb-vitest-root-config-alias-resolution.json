@@ -1,0 +1,94 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-06-eb-vitest-root-config-alias-resolution",
+  "deliveredAt": "2026-06-07T01:11:01Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "34f063b360e9232fbcb3a78eaf0fe764c8618db1",
+      "prNumber": 312,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/312",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "34f063b360e9232fbcb3a78eaf0fe764c8618db1",
+      "prNumber": 312,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/312",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "34f063b360e9232fbcb3a78eaf0fe764c8618db1",
+      "prNumber": 312,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/312",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "34f063b360e9232fbcb3a78eaf0fe764c8618db1",
+      "prNumber": 312,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/312",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "34f063b360e9232fbcb3a78eaf0fe764c8618db1",
+      "prNumber": 312,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/312",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "34f063b360e9232fbcb3a78eaf0fe764c8618db1",
+      "prNumber": 312,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/312",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Precursor alpha (1 of 4 before PR 1.1 URN reconcile resumes) landed on EB main at 34f063b (PR #312). Per v1.0.0 spec (SR PR #148 aa97d13): 4 scope files (root vitest.config.ts new, .roadmap/follow-up-register.json + .roadmap/decision-log.json patches, .dlp local SPEC.md). Root vitest.config.ts mirrors 7 @ectropy/shared/* alias entries from apps/api-gateway/vitest.config.ts with path.resolve transforms for repo-root __dirname; defines NO other vitest options (alias surface only). 4/4 previously alias-failing tests now PASS from repo root: project.routes.test.ts, speckle.routes.test.ts, uro-ws-auth.route.test.ts, viewer-token.route.test.ts. 110/110 GREEN total at PHASE_1. Zero per-app invocation regression. Deploy lane: deploy-to-dev PR label fired (first non-URN use of the lane post-recovery arc).\n\nOUT-4 FU activity: FU-EB-VITEST-SHARED-ALIAS-RESOLUTION-1 (P1) closed clean with resolutionRefs pointing to merge SHA 34f063b. Three new FUs filed open for precursors beta/gamma/delta: FU-EB-VITEST-API-GATEWAY-DUPLICATE-POOL-CLEANUP-1 (P2), FU-EB-VOXEL-STREAM-SPEC-TIMEOUT-1 (P1), FU-EB-SCHEMA-VALIDATION-TEST-CURRENT-TRUTH-1 (P1).\n\nOUT-5 DEC d-2026-06-06-vitest-root-config-alias-canonical appended to .roadmap/decision-log.json with substrate-corrected canonical shape (see overrideRecord).",
+    "overrideRecord": "One in-execution substrate-correction caught at EB CI before PR #312 merged:\n\n1. DEC shape substrate-before-write gap (in-PR fix commit 98859af). Chat-side patch-decision-log.sh composed the DEC structure from memory rather than reading canonical decision-log.schema.v2.json. CI rejected on four shape violations: (a) alternatives[].rejected_because key (canonical is rejectionReason per #/definitions/alternative additionalProperties:false), (b) approvalDate as date-only string (canonical is implementedDate ISO 8601 date-time format), (c) non-canonical constraints key (not in schema), (d) non-canonical consequences key as flat object (canonical shape is nested positive/negative/risks). EB-CLI applied fix commit 98859af on feat branch before PHASE_4 squash-merge: canonical keys substituted, ISO 8601 timestamp used, non-canonical fields removed. CI re-ran green, PR squash-merged. Authoring-layer memory #25 violation: composed schema from memory instead of fetching canonical decision-log.schema.v2.json at substrate read.\n\nForward rule (substrate-correction lesson for next precursor beta authoring): patch-decision-log.sh template MUST be regenerated from canonical decision-log.schema.v2.json at the start of every spec authoring session that includes a DEC append. Beta spec already anticipates this lesson per its notes section (FU-EB-PATCH-DECISION-LOG-TEMPLATE-CANONICAL-SHAPE-1 filed separately to capture the chat-side template fix needed)."
+  },
+  "relatedFollowUps": [
+    "FU-EB-VITEST-API-GATEWAY-DUPLICATE-POOL-CLEANUP-1",
+    "FU-EB-VOXEL-STREAM-SPEC-TIMEOUT-1",
+    "FU-EB-SCHEMA-VALIDATION-TEST-CURRENT-TRUTH-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "dec-shape-substrate-correction-via-canonical-schema-fetch"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-07T01:11:01Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-312-squash-merged"
+    },
+    {
+      "timestamp": "2026-06-07T01:18:07Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-handoff-to-SR-chat-for-closure"
+    },
+    {
+      "timestamp": "2026-06-07T01:25:03Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored"
+    }
+  ]
+}
