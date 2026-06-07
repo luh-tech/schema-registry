@@ -1,0 +1,111 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-06-eb-vitest-api-gateway-duplicate-pool-cleanup",
+  "version": "1.0.0",
+  "title": "Remove duplicate pool/poolOptions block in apps/api-gateway/vitest.config.ts",
+  "description": "apps/api-gateway/vitest.config.ts contains two pool declarations: line 28 (pool: 'forks') with a 7-line rationale comment block explaining why threads pool was rejected (workers hang 17+ min when tests leak DB/Redis/HTTP handles), and line 122 (pool: 'threads') with a throwaway 'Pool options for better performance' comment. In JavaScript object literals, the last key wins, so pool: 'threads' is what actually executes at test time — silently overriding the deliberate forks choice and exposing tests to the 17+ minute hang failure mode the rationale comment was explicitly designed to prevent. The second block was likely leftover from the Jest→Vitest migration documented at the top of the file (created 2025-12-24). Same for poolOptions: line 29 (forks-specific) is shadowed by line 123 (threads-specific). This deliverable removes the second pool/poolOptions block (lines 121-127 inclusive, plus the throwaway comment), preserving the intentional forks configuration. Surfaced by spike A-2 (spike/vitest-shared-alias-fix-2026-06-06) which observed test files executing twice under vitest.workspace.ts mode because both the forks pool and the threads pool ran the same test file — symptom of the duplicate key. Closes FU-EB-VITEST-API-GATEWAY-DUPLICATE-POOL-CLEANUP-1 (P2) clean.",
+  "authority": {
+    "author": "Claude (EB-chat)",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/vitest-api-gateway-duplicate-pool-cleanup-2026-06-06",
+    "scopeFiles": [
+      "apps/api-gateway/vitest.config.ts",
+      ".roadmap/follow-up-register.json",
+      ".roadmap/decision-log.json",
+      ".dlp/deliverables/d-2026-06-06-eb-vitest-api-gateway-duplicate-pool-cleanup/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Duplicate pool/poolOptions block removed from apps/api-gateway/vitest.config.ts.",
+      "acceptanceCriteria": [
+        "File apps/api-gateway/vitest.config.ts contains exactly ONE pool: declaration after merge.",
+        "Remaining pool: declaration is the intentional 'forks' block (line 28 pre-merge, preserved with its 7-line rationale comment).",
+        "File contains exactly ONE poolOptions: declaration after merge (the forks-specific one).",
+        "Removed block is the 'Pool options for better performance' comment + pool: 'threads' + poolOptions: { threads: ... } closing — pre-merge lines 121-127 inclusive plus any adjacent whitespace.",
+        "No other lines in the file change."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Per-app vitest invocation unchanged behavior (regression baseline).",
+      "acceptanceCriteria": [
+        "cd apps/api-gateway && npx vitest run completes without throwing config errors.",
+        "Test execution uses forks pool (verifiable via vitest --reporter=verbose output or VITEST_POOL env emission).",
+        "No test that previously passed begins failing as a result of this change."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Repo-root vitest invocation unchanged behavior (post-α validation).",
+      "acceptanceCriteria": [
+        "npx vitest run apps/api-gateway/ from repo root: same pass/fail surface as before this deliverable (only pre-existing failures from γ and δ scope remain — voxel-stream.spec.ts timeout, schema-validation.test.ts current-truth).",
+        "Root vitest.config.ts (landed by α) continues to resolve @ectropy/shared/* aliases."
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Follow-up register reflects closure.",
+      "acceptanceCriteria": [
+        "FU-EB-VITEST-API-GATEWAY-DUPLICATE-POOL-CLEANUP-1 status is 'closed' in .roadmap/follow-up-register.json with resolutionRefs pointing to this deliverable's merge commit SHA.",
+        ".roadmap/follow-up-register.json validates against follow-up-register.schema.json (ajv canonical 3-flag PASS)."
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "Decision log records canonical pool choice.",
+      "acceptanceCriteria": [
+        "DEC d-2026-06-06-vitest-api-gateway-pool-forks-canonical present in .roadmap/decision-log.json.",
+        "DEC includes the 9 required fields per decision-log.schema.v2.json: decisionId, timestamp (ISO 8601 date-time), title, context, decision, rationale, status, category, impact.",
+        "If alternatives are included, each uses canonical alternative shape: option (required) + optional rejectionReason (NOT rejected_because — canonical key per #/definitions/alternative additionalProperties: false).",
+        ".roadmap/decision-log.json validates against decision-log.schema.v2.json (Draft 7 PASS)."
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "Deliverable local spec captured.",
+      "acceptanceCriteria": [
+        ".dlp/deliverables/d-2026-06-06-eb-vitest-api-gateway-duplicate-pool-cleanup/SPEC.md present after merge.",
+        "SPEC.md references SR anchor (deliverable instance SHA + SR PR # + SR main SHA at anchor)."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv canonical 3-flag validation passes on .roadmap/follow-up-register.json after FU closure.",
+      "Draft 7 validation passes on .roadmap/decision-log.json after DEC append (canonical alternative shape; date-time approvalDate/timestamp).",
+      "TypeScript compile (npx tsc --noEmit -p apps/api-gateway/tsconfig.app.json) returns zero errors.",
+      "grep -c '^\\s*pool:' apps/api-gateway/vitest.config.ts returns 1 (down from 2).",
+      "grep -c '^\\s*poolOptions:' apps/api-gateway/vitest.config.ts returns 1 (down from 2).",
+      "The remaining pool: line content is exactly: pool: 'forks',",
+      "From app dir: cd apps/api-gateway && npx vitest run completes (regression baseline).",
+      "From repo root: npx vitest run apps/api-gateway/ surfaces only pre-existing failures (voxel-stream timeout, schema-validation current-truth) — no NEW failures attributable to this change.",
+      "scope-lock holds: git diff --name-only shows exactly the 4 files in scopeFiles."
+    ],
+    "postMerge": [
+      "main shows apps/api-gateway/vitest.config.ts with single pool: 'forks' declaration.",
+      "CI: build-dev-images workflow surfaces no new vitest failures attributable to this deliverable.",
+      "n8n PostgreSQL pipeline (159.223.203.231) liveness probe GREEN (Hard Constraint #1 — vitest config does not touch runtime data path).",
+      "Subsequent deliverable γ (voxel-stream timeout research) starts from a clean baseline where vitest invocation uses exactly one pool."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-06",
+      "trigger": "EB-chat S4 spec authoring complete, full substrate read of apps/api-gateway/vitest.config.ts (SHA256 3c481585cbe7327a2933ee2d15e827529eea8e8e4d70a43a03e5759b3fcd903d, 182 lines), sandbox-validated against canonical schemas at SR main aa97d13"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-VITEST-API-GATEWAY-DUPLICATE-POOL-CLEANUP-1",
+    "FU-EB-PATCH-DECISION-LOG-TEMPLATE-CANONICAL-SHAPE-1"
+  ],
+  "notes": "Sequencing context: precursor 2 of 4 before PR 1.1 (URN namespace reconcile) resumes. Order: α (vitest root config alias resolution, landed at EB main 34f063b360e9232fbcb3a78eaf0fe764c8618db1) → β (this) → γ (voxel-stream.spec.ts timeout resolution; needs research spike) → δ (current-truth.json deprecation removal; spike B). Cross-repo doctrine F0B85LNSTC4: EB-chat authors, SR-chat anchors at schemas/_instances/deliverables/d-2026-06-06-eb-vitest-api-gateway-duplicate-pool-cleanup.json, EB CLI executes via deploy-to-dev PR-label lane, SR-chat closes with TRUTH-DELIVERED. Substrate-before-write discipline applied: apps/api-gateway/vitest.config.ts content read in EB-chat session at SHA256 3c481585cbe7327a2933ee2d15e827529eea8e8e4d70a43a03e5759b3fcd903d before spec authoring (lesson from α: DEC shape composed from memory created schema violation; β's DEC will be authored against fetched canonical decision-log.schema.v2.json with canonical alternative.rejectionReason key and ISO 8601 date-time format). Filed FU FU-EB-PATCH-DECISION-LOG-TEMPLATE-CANONICAL-SHAPE-1 (P2) captures the chat-side template correction needed so future deliverables reusing the DEC-append pattern start from canonical shape — separately tracked, NOT bundled with β."
+}
