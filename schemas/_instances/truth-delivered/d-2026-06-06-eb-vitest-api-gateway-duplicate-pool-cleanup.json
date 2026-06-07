@@ -1,0 +1,92 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-06-eb-vitest-api-gateway-duplicate-pool-cleanup",
+  "deliveredAt": "2026-06-07T02:14:38Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "0d1736e5e4f6153b02d57bd555204fb602431231",
+      "prNumber": 313,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/313",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "0d1736e5e4f6153b02d57bd555204fb602431231",
+      "prNumber": 313,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/313",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "0d1736e5e4f6153b02d57bd555204fb602431231",
+      "prNumber": 313,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/313",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "0d1736e5e4f6153b02d57bd555204fb602431231",
+      "prNumber": 313,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/313",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "0d1736e5e4f6153b02d57bd555204fb602431231",
+      "prNumber": 313,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/313",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "0d1736e5e4f6153b02d57bd555204fb602431231",
+      "prNumber": 313,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/313",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Precursor beta (2 of 4 before PR 1.1 URN reconcile resumes) landed on EB main at 0d1736e (PR #313). Per v1.0.0 spec (SR PR #150 364b61a): 4 scope files. Duplicate pool/poolOptions block removed from apps/api-gateway/vitest.config.ts (182 to 175 lines; post-fix file SHA256 03a51d1cb84bc05fe73887dba505b113cfe132db9e184edde430e39f57a8d7e1). The intentional pool: 'forks' block with 7-line rationale comment preserved; the shadow pool: 'threads' block deleted. 0 in-PR fix commits (canonical DEC shape worked first-try; lesson from alpha absorbed). 0 --admin overrides. deploy-to-dev label fired the lane; alpha-regression 4 alias-failing tests + 110/110 GREEN at PHASE_1.\n\nMid-run substrate-honest correction by EB-CLI: previous partial run had left vitest.config.ts modified; CLI restored to baseline before retry. Drift-refusal SHA pin caught the dirty state; clean retry succeeded. This is exactly the drift-refusal pattern working as designed.\n\nOUT-4 FU activity: FU-EB-VITEST-API-GATEWAY-DUPLICATE-POOL-CLEANUP-1 (P2) closed clean with resolutionRefs pointing to merge SHA 0d1736e. New FU FU-EB-PATCH-DECISION-LOG-TEMPLATE-CANONICAL-SHAPE-1 (P2) filed open tracking the chat-side template fix for future deliverables that include DEC appends.\n\nOUT-5 DEC d-2026-06-06-vitest-api-gateway-pool-forks-canonical appended with canonical decision-log.schema.v2.json shape verified Draft 7 PASS via Python jsonschema sandbox before tarball staging.\n\nBonus value beyond test cleanup (per EB-CLI post-merge analysis): voxel-stream.spec.ts timeout failures may resolve as side effect of forks-pool reinstatement. Pending PHASE_1 surface verification at PR 1.1. If confirmed, the original gamma scope (voxel-stream timeout) retires without a separate deliverable.",
+    "overrideRecord": "One mid-run posture choice captured for the audit trail:\n\n1. Drift-refusal SHA pin caught dirty working tree from previous partial run. Pre-tarball baseline check detected vitest.config.ts modified from the SHA pin (3c481585cbe7327a2933ee2d15e827529eea8e8e4d70a43a03e5759b3fcd903d). EB-CLI restored to baseline before retry rather than overwriting with new content. Clean retry succeeded. This is the substrate-correction discipline working at the right layer: drift detected at execution gate, not at merge or post-merge. No content lost, no scope violations, no doctrine breach.\n\nForward observation: beta is the first precursor to land with zero in-PR fixes. alpha had a DEC shape substrate-correction (in-PR fix commit 98859af). Beta absorbed that lesson; canonical decision-log.schema.v2.json read at authoring time, sandbox-validated before staging. Pattern: each cycle the substrate-correction discipline integrates one more layer."
+  },
+  "relatedFollowUps": [
+    "FU-EB-PATCH-DECISION-LOG-TEMPLATE-CANONICAL-SHAPE-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "drift-refusal-sha-pin-caught-dirty-tree-clean-retry"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-07T02:14:38Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-313-squash-merged"
+    },
+    {
+      "timestamp": "2026-06-07T02:18:05Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-handoff-to-SR-chat-for-closure"
+    },
+    {
+      "timestamp": "2026-06-07T02:40:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored"
+    }
+  ]
+}
