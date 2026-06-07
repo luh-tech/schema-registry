@@ -1,0 +1,119 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-06-eb-vitest-root-config-alias-resolution",
+  "version": "1.0.0",
+  "title": "Root vitest.config.ts — @ectropy/shared/* alias resolution from repo root",
+  "description": "Add a root-level vitest.config.ts so @ectropy/shared/* workspace aliases resolve regardless of vitest invocation cwd. Closes a substrate gap that has been failing 4 tests on main throughout the URO Tier 1 arc and would block PR 1.1 URN namespace reconcile's PHASE_1 vitest gate. Validated via spike: spike/vitest-shared-alias-fix-2026-06-06 (collapse-and-resume terminal; 4/4 alias-failing tests, 110 tests total, GREEN from repo root; zero regressions on per-app invocation). Solution B (vitest.workspace.ts referencing per-app projects) attempted in spike and rejected: apps/mcp-server/vitest.config.ts uses repo-root-relative include paths that break under workspace-context cwd shift, and apps/api-gateway/vitest.config.ts contains duplicate pool/poolOptions keys that cause double-execution under workspace mode. Solution A (root config with explicit shared alias mirror) is the validated approach. Per-app vitest configs remain authoritative when run from their app dir; root config only adds the shared aliases for root-invocation coverage. NOTE: spike A-2 surfaced two additional substrate items NOT addressed by this deliverable: (a) apps/api-gateway/vitest.config.ts duplicate pool/poolOptions keys (files FU-EB-VITEST-API-GATEWAY-DUPLICATE-POOL-CLEANUP-1, scope of deliverable β); (b) voxel-stream.spec.ts pre-existing timeout failures on main (files FU-EB-VOXEL-STREAM-SPEC-TIMEOUT-1, scope of deliverable γ). schema-validation.test.ts current-truth.json deprecation also pre-existing (files FU-EB-SCHEMA-VALIDATION-TEST-CURRENT-TRUTH-1, scope of deliverable δ).",
+  "authority": {
+    "author": "Claude (EB-chat)",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/vitest-root-config-alias-resolution-2026-06-06",
+    "scopeFiles": [
+      "vitest.config.ts",
+      ".roadmap/follow-up-register.json",
+      ".roadmap/decision-log.json",
+      ".dlp/deliverables/d-2026-06-06-eb-vitest-root-config-alias-resolution/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Root vitest.config.ts file added at repository root.",
+      "acceptanceCriteria": [
+        "File vitest.config.ts exists at repository root after merge.",
+        "File mirrors the @ectropy/shared/* alias entries from apps/api-gateway/vitest.config.ts (13-entry alias map per spike research), with path.resolve calls adjusted for repo-root __dirname.",
+        "File defines NO other vitest options (no test.include, no test.exclude, no globalSetup) — strictly an alias surface for root-invocation coverage. Per-app configs remain authoritative for their own test layouts.",
+        "File contains a header comment explaining the resolution problem, why workspace mode was rejected, and that per-app configs remain authoritative."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "The 4 alias-failing tests pass when vitest is invoked from repo root.",
+      "acceptanceCriteria": [
+        "npx vitest run apps/api-gateway/src/routes/__tests__/project.routes.test.ts PASSES (no @ectropy/shared/* resolution error).",
+        "npx vitest run apps/api-gateway/src/routes/__tests__/speckle.routes.test.ts PASSES.",
+        "npx vitest run apps/api-gateway/src/routes/internal/__tests__/uro-ws-auth.route.test.ts PASSES.",
+        "npx vitest run apps/api-gateway/src/routes/uro/__tests__/viewer-token.route.test.ts PASSES."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Zero regression on per-app vitest invocation.",
+      "acceptanceCriteria": [
+        "cd apps/api-gateway && npx vitest run still works (per-app config still active in app dir context).",
+        "cd apps/mcp-server && npx vitest run still works.",
+        "cd apps/web-dashboard && npx vitest run still works.",
+        "apps/api-gateway/vitest.config.ts unchanged.",
+        "apps/mcp-server/vitest.config.ts unchanged.",
+        "apps/web-dashboard/vitest.config.ts unchanged."
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Follow-up register reflects new FU and closure.",
+      "acceptanceCriteria": [
+        "FU-EB-VITEST-SHARED-ALIAS-RESOLUTION-1 (P1) is present in .roadmap/follow-up-register.json with status closed and resolutionRefs pointing to this deliverable's merge commit SHA.",
+        "FU-EB-VITEST-API-GATEWAY-DUPLICATE-POOL-CLEANUP-1 (P2) FILED open in same register (this deliverable opens it; deliverable β closes it).",
+        "FU-EB-VOXEL-STREAM-SPEC-TIMEOUT-1 (P1) FILED open (deliverable γ closes it).",
+        "FU-EB-SCHEMA-VALIDATION-TEST-CURRENT-TRUTH-1 (P1) FILED open (deliverable δ closes it).",
+        ".roadmap/follow-up-register.json validates against follow-up-register.schema.json v1.1.0 (ajv canonical 3-flag PASS)."
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "Decision log records architectural choice.",
+      "acceptanceCriteria": [
+        "DEC d-2026-06-06-vitest-root-config-alias-canonical present in .roadmap/decision-log.json.",
+        "DEC entry includes: context (workspace mode rejected substrate), decision (root config + per-app configs both authoritative within their scope), alternatives (workspace mode with reasons rejected), consequences (positive: root-invocation coverage; negative: alias map duplication carries small drift risk).",
+        ".roadmap/decision-log.json validates against decision-log.schema.v2.json (Draft 7 PASS)."
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "Deliverable local spec captured.",
+      "acceptanceCriteria": [
+        ".dlp/deliverables/d-2026-06-06-eb-vitest-root-config-alias-resolution/SPEC.md present after merge.",
+        "SPEC.md references SR anchor (deliverable instance SHA + SR PR # + SR main SHA at anchor)."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv canonical 3-flag validation passes on .roadmap/follow-up-register.json after FU insert + closure ref.",
+      "Draft 7 validation passes on .roadmap/decision-log.json after DEC insert.",
+      "TypeScript compile (npx tsc --noEmit -p apps/api-gateway/tsconfig.app.json) returns zero errors.",
+      "From repo root: npx vitest run apps/api-gateway/src/routes/__tests__/project.routes.test.ts PASSES.",
+      "From repo root: npx vitest run apps/api-gateway/src/routes/__tests__/speckle.routes.test.ts PASSES.",
+      "From repo root: npx vitest run apps/api-gateway/src/routes/internal/__tests__/uro-ws-auth.route.test.ts PASSES.",
+      "From repo root: npx vitest run apps/api-gateway/src/routes/uro/__tests__/viewer-token.route.test.ts PASSES.",
+      "From app dir: cd apps/api-gateway && npx vitest run completes without alias resolution errors (regression baseline).",
+      "scope-lock holds: git diff --name-only shows exactly the 4 files in scopeFiles plus no others."
+    ],
+    "postMerge": [
+      "main shows vitest.config.ts present at repo root.",
+      "CI: build-dev-images workflow surfaces no new vitest failures attributable to this deliverable.",
+      "n8n PostgreSQL pipeline (159.223.203.231) liveness probe GREEN (Hard Constraint #1 — vitest config changes do not touch runtime data path, but probe documented as part of every EB merge).",
+      "Subsequent deliverable PHASE_1 vitest gates from repo root surface only the documented pre-existing failures (voxel-stream.spec.ts timeout, schema-validation.test.ts current-truth.json) and the new FUs are properly tracked."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-06",
+      "trigger": "EB-chat S4 spec authoring complete, sandbox-validated against canonical schemas at SR main 73b1c7e"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-VITEST-SHARED-ALIAS-RESOLUTION-1",
+    "FU-EB-VITEST-API-GATEWAY-DUPLICATE-POOL-CLEANUP-1",
+    "FU-EB-VOXEL-STREAM-SPEC-TIMEOUT-1",
+    "FU-EB-SCHEMA-VALIDATION-TEST-CURRENT-TRUTH-1"
+  ],
+  "notes": "Sequencing context: precursor 1 of 4 before PR 1.1 (URN namespace reconcile) resumes. Order: α (this) → β (api-gateway duplicate pool cleanup) → γ (voxel-stream timeout resolution; needs its own research spike before deliverable authoring) → δ (current-truth.json deprecation removal; spike B). PR 1.1 resumes after all four land clean. Cross-repo doctrine F0B85LNSTC4: EB-chat authors, SR-chat anchors at schemas/_instances/deliverables/d-2026-06-06-eb-vitest-root-config-alias-resolution.json, EB CLI executes via deploy-to-dev PR-label lane (first non-URN use of the lane), SR-chat closes with TRUTH-DELIVERED. Spike substrate captured in EB-chat session transcript; spike branch already deleted per L4 named-step at 2026-06-06."
+}
