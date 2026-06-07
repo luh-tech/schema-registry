@@ -1,0 +1,117 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-06-eb-current-truth-consumer-cleanup",
+  "version": "1.0.0",
+  "title": "current-truth.json absent-handling: existsSync guards in schema-validation test + platform-context adapter",
+  "description": "current-truth.json was decommissioned in the F-2 schema extraction arc (2026-04-18) but two consumer call sites were never updated to match: (1) apps/mcp-server/src/graphql/__tests__/schema-validation.test.ts beforeAll does unconditional readFileSync(DATA_FILES.currentTruth), throwing ENOENT before any of the 10 tests run; (2) apps/mcp-server/src/adapters/platform-context.adapter.ts at lines 511 and 592 calls loadJSON<RawCurrentTruth>(DATA_FILES.currentTruth) unconditionally, throwing at runtime whenever getNodes() is called on the live MCP server. Substrate-read by EB-CLI shows only 2 of the 10 schema-validation tests actually depend on currentTruth.nodes.length (Node Schema > should handle nullable author fields ~line 224, Data Consistency > should return consistent node counts ~line 286); the other 8 tests (Decision Category Enum, Service Schema, Server Schema, GraphQL Enum Syntax, Data Consistency for decisions/services) use only decisionLog and infrastructureCatalog (both live files on disk) and are valid tests blocked collaterally by the beforeAll crash. Resolution: add existsSync guard in beforeAll (skip currentTruth read when file absent); add vi.skipIf on the 2 dependent tests; add existsSync guard in adapter loadJSON calls (return empty nodes array when absent, matching the optional-data-file pattern used elsewhere in the adapter). DATA_FILES.currentTruth path entry in data-paths.config.ts is preserved (backward compat for one-shot migration scripts; out-of-scope consumers like file-data-source.service.ts, ude-tools.ts, evidence-generator.ts also receive separate FUs for the same guard pattern but are not in this deliverable's scope). Closes FU-EB-SCHEMA-VALIDATION-TEST-CURRENT-TRUTH-1 (P1) clean. Bonus value: fixes a live runtime crash bug in MCP server adapter getNodes() path.",
+  "authority": {
+    "author": "Claude (EB-chat)",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/current-truth-consumer-cleanup-2026-06-06",
+    "scopeFiles": [
+      "apps/mcp-server/src/graphql/__tests__/schema-validation.test.ts",
+      "apps/mcp-server/src/adapters/platform-context.adapter.ts",
+      ".roadmap/follow-up-register.json",
+      ".roadmap/decision-log.json",
+      ".dlp/deliverables/d-2026-06-06-eb-current-truth-consumer-cleanup/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "schema-validation.test.ts beforeAll() guards currentTruth read; 2 node-count tests skip when absent; 8 other tests run unconditionally.",
+      "acceptanceCriteria": [
+        "schema-validation.test.ts beforeAll wraps DATA_FILES.currentTruth readFileSync in an existsSync guard; absent file does NOT throw.",
+        "The 2 tests that reference currentTruth.nodes.length are marked with vi.skipIf(!existsSync(DATA_FILES.currentTruth)) or equivalent skip-when-absent pattern.",
+        "The 8 other tests (decisionLog and infrastructureCatalog dependent) run successfully regardless of currentTruth presence.",
+        "When .roadmap/current-truth.json is absent (current state on EB main 0d1736e): 8 tests PASS, 2 tests SKIP, 0 tests FAIL.",
+        "When .roadmap/current-truth.json is present (hypothetical future restoration): 10 tests PASS, 0 SKIP, 0 FAIL (no regression on the 8 tests previously blocked)."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "platform-context.adapter.ts loadJSON<RawCurrentTruth> calls guarded; runtime crash on absent file eliminated.",
+      "acceptanceCriteria": [
+        "Adapter line ~511 loadJSON<RawCurrentTruth>(DATA_FILES.currentTruth) wrapped with existsSync(DATA_FILES.currentTruth) guard.",
+        "Adapter line ~592 same.",
+        "When file absent, adapter returns RawCurrentTruth with empty nodes array (or equivalent canonical empty shape), no throw.",
+        "getNodes() and currentTruthCache getter paths do not throw when file is absent.",
+        "TypeScript compile passes with zero errors after change."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "data-paths.config.ts DATA_FILES.currentTruth entry preserved (out-of-scope; backward compat).",
+      "acceptanceCriteria": [
+        "data-paths.config.ts unchanged in this deliverable.",
+        "DATA_FILES.currentTruth path still points to .roadmap/current-truth.json.",
+        "Migration scripts (migrate-roadmap-to-db.ts, validate-migration.ts, export-roadmap-from-db.ts) and other lower-priority consumers (file-data-source.service.ts, ude-tools.ts, evidence-generator.ts) remain unchanged in this deliverable; tracked separately by FU-EB-CURRENT-TRUTH-LOWER-PRIORITY-CONSUMERS-GUARD-1 (P3, filed by this deliverable for future cleanup)."
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Follow-up register reflects closure + lower-priority follow-on FU filing.",
+      "acceptanceCriteria": [
+        "FU-EB-SCHEMA-VALIDATION-TEST-CURRENT-TRUTH-1 status is closed in .roadmap/follow-up-register.json with resolutionRefs pointing to this deliverable's merge commit SHA.",
+        "FU-EB-CURRENT-TRUTH-LOWER-PRIORITY-CONSUMERS-GUARD-1 (P3) filed open, tracking the migration scripts + service file consumer guards (out of γ scope).",
+        ".roadmap/follow-up-register.json validates against follow-up-register.schema.json."
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "Decision log records the canonical absent-data-file handling pattern.",
+      "acceptanceCriteria": [
+        "DEC d-2026-06-06-decommissioned-data-file-existsSync-guard-canonical present in .roadmap/decision-log.json.",
+        "DEC contains the 9 required fields per canonical decision-log.schema.v2.json (decisionId, timestamp ISO 8601 date-time, title, context, decision, rationale, status, category, impact).",
+        "alternatives use canonical shape (option + rejectionReason where applicable).",
+        ".roadmap/decision-log.json validates against decision-log.schema.v2.json (Draft 7 PASS) — no in-PR fix needed (lesson from α + β applied)."
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "Deliverable local SPEC.md present.",
+      "acceptanceCriteria": [
+        ".dlp/deliverables/d-2026-06-06-eb-current-truth-consumer-cleanup/SPEC.md present after merge.",
+        "References SR anchor (deliverable instance SHA + SR PR # + SR main SHA at anchor)."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "TypeScript compile (npx tsc --noEmit -p apps/mcp-server/tsconfig.json) returns zero errors.",
+      "schema-validation.test.ts: vitest reports 8 PASS + 2 SKIP (not FAIL) on the test file when current-truth.json absent.",
+      "platform-context.adapter.ts: grep shows existsSync guard adjacent to both loadJSON<RawCurrentTruth>(DATA_FILES.currentTruth) call sites.",
+      "data-paths.config.ts is unchanged (scope-lock catches any drift).",
+      "ajv canonical 3-flag validation passes on .roadmap/follow-up-register.json.",
+      "Draft 7 validation passes on .roadmap/decision-log.json after DEC append.",
+      "α-regression: 4 alias-failing tests pass from repo root (project.routes.test.ts, speckle.routes.test.ts, uro-ws-auth.route.test.ts, viewer-token.route.test.ts).",
+      "β-regression: apps/api-gateway/vitest.config.ts has exactly 1 pool: declaration (forks).",
+      "Scope-lock holds: git diff --name-only shows exactly the 5 files in scopeFiles."
+    ],
+    "postMerge": [
+      "main shows the existsSync guards present in both files.",
+      "CI vitest gate from repo root surfaces 2 SKIP + 0 FAIL on schema-validation.test.ts (was 10 FAIL via ENOENT crash).",
+      "MCP server runtime: getNodes() does not throw when current-truth.json absent.",
+      "n8n PostgreSQL pipeline (159.223.203.231) liveness probe GREEN.",
+      "Subsequent PR 1.1 (URN reconcile) PHASE_1 vitest gate runs with all pre-existing failures resolved across the wrapper's scope (apps/api-gateway/src/intake/stages + apps/api-gateway/src/routes + apps/mcp-server/src/graphql)."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-06",
+      "trigger": "EB-chat S4 spec authoring complete. Substrate-validated against EB-CLI substrate read on main 0d1736e: schema-validation.test.ts is 315 lines with beforeAll crash blocking 10 tests (only 2 truly currentTruth-dependent); platform-context.adapter.ts lines 511 + 592 are live runtime crash sites. Sandbox-validated against canonical schemas at SR main 364b61a."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-SCHEMA-VALIDATION-TEST-CURRENT-TRUTH-1",
+    "FU-EB-CURRENT-TRUTH-LOWER-PRIORITY-CONSUMERS-GUARD-1"
+  ],
+  "notes": "Sequencing context: precursor γ (3 of 3 — voxel-stream timeout resolved as side effect of β forks-pool fix; was original γ, now resolved without separate deliverable). Order: α (DONE, EB main 34f063b) → β (DONE, EB main 0d1736e) → γ (this) → PR 1.1 (URN reconcile) resumes. Cross-repo doctrine F0B85LNSTC4: EB-chat authors, SR-chat anchors at schemas/_instances/deliverables/d-2026-06-06-eb-current-truth-consumer-cleanup.json, EB CLI executes via deploy-to-dev PR-label lane, SR-chat closes with TRUTH-DELIVERED. The DEC for this deliverable is authored against canonical decision-log.schema.v2.json (lesson absorbed from α's in-PR fix and β's first-try clean landing); Python jsonschema sandbox-validation gates DEC shape before tarball staging. Bonus value: fixes a live runtime crash bug in MCP server adapter (getNodes path), not just test cleanup."
+}
