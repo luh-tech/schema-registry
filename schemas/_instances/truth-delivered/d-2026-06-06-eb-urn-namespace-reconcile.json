@@ -1,0 +1,98 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-06-eb-urn-namespace-reconcile",
+  "deliveredAt": "2026-06-07T03:33:47Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "f81f7b6b665f77eb4da9ae7afd8817de8b894d1e",
+      "prNumber": 315,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/315",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "f81f7b6b665f77eb4da9ae7afd8817de8b894d1e",
+      "prNumber": 315,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/315",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "f81f7b6b665f77eb4da9ae7afd8817de8b894d1e",
+      "prNumber": 315,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/315",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "f81f7b6b665f77eb4da9ae7afd8817de8b894d1e",
+      "prNumber": 315,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/315",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "f81f7b6b665f77eb4da9ae7afd8817de8b894d1e",
+      "prNumber": 315,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/315",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "f81f7b6b665f77eb4da9ae7afd8817de8b894d1e",
+      "prNumber": 315,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/315",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "PR 1.1 of Arc 1 (URN namespace reconcile) landed on EB main at f81f7b6 (PR #315). 6 outputs all GREEN. T5 URN gate cleared.\n\nOUT-1: All URN emitters migrated urn:ectropy:* to canonical urn:luhtech:ectropy:<type>:<id> shape across 6 production files: apps/api-gateway/src/intake/stages/stage-4-ifc.ts, apps/api-gateway/src/intake/stages/stage-6-decisions.ts, apps/api-gateway/src/routes/voxels.routes.ts, apps/api-gateway/src/routes/contract-upload.routes.ts, apps/mcp-server/src/graphql/voxel/voxel.resolvers.ts, apps/mcp-server/src/graphql/decision-lifecycle.resolvers.ts. 4 sites flipped project-first to type-first; 8 sites already type-first, prefix-only update.\n\nOUT-2: Prisma migration 20260606_urn_canonical_reconcile applied cleanly with idempotent regex UPDATE on voxels.urn, pm_decisions.urn, pm_decisions.primary_voxel_urn. Re-running yields zero row changes. All 3 columns now match canonical shape.\n\nOUT-3: FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 title substrate-corrected (NOT closed — aggregation closes on PR 1.2, storey-name on Arc 2).\n\nOUT-4: DEC d-2026-06-06-urn-canonical-shape-type-first appended via Path A re-authoring (substrate-before-write applied to the tarball ITSELF — pre-alpha DEC shape pattern caught and re-authored to canonical shape before send).\n\nOUT-5: 6 NEW test files covering migrated emitters; tests assert canonical URN format.\n\nOUT-6: SPEC.md present.\n\nClosure activity: FU-EB-URN-NAMESPACE-RECONCILE-1 (P1) closed clean — T5 voxel_groups gate now CLEAR. T5 voxel_groups can proceed after PR 1.2 lands.\n\nHard Constraint #1 honored: n8n PostgreSQL pipeline at 159.223.203.231 remained live throughout migration window. UPDATEs were non-blocking row-lock writes with brief locks per DEC rationale; canary check GREEN throughout.\n\n0 DEC shape in-PR fixes — Path A pre-stage audit caught the pattern. 2 companion in-PR fix commits for TS2742 (TypeScript export inference) + duplicate imports — distinct application-code substrate failure mode that emerged post-rename, not patch-script authoring gap. 0 --admin overrides. deploy-to-dev label fired the lane.",
+    "overrideRecord": "Two substrate-corrections captured for the audit trail, representing distinct failure modes:\n\n1. Path A pre-stage audit applied to the tarball itself. URN reconcile tarball was authored earlier in session BEFORE the alpha DEC shape lesson (canonical decision-log.schema.v2.json shape requirements). After alpha caught DEC shape gap at CI and beta absorbed the lesson at authoring, EB-chat applied the lesson recursively to the pre-existing URN tarball: audited the tarball's DEC payload against canonical schema BEFORE sending to terminal, Path A re-authored the DEC to canonical shape, sandbox-validated against decision-log.schema.v2.json (Draft 7 PASS), then sent the corrected tarball. Result: 0 DEC shape in-PR fixes at PHASE_1 CI despite tarball pre-dating the lesson. Substrate-before-write applied to substrate-of-substrate.\n\n2. Post-rename TypeScript compile substrate fixes. After URN rename executed across 6 production files at PHASE_1, EB-CLI surfaced 2 compile failures: TS2742 (TypeScript could not infer the return type of an exported declaration that referenced renamed URN constants from an external symbol path) and duplicate imports (the rename script touched imports paths in a way that created duplicate import statements in 2 files). Both surfaced at the terminal as in-PR fix commits, NOT pre-stage substrate gaps. Distinct from DEC shape because these are application-code symptoms of a large-scale rename, not patch-authoring drift. Worth tracking as evidence class for future URN-style large-rename arcs: post-rename TypeScript compile audit should be added to substrate-before-write skill for rename deliverables.\n\nForward observation: the URN tarball is the first deliverable to demonstrate substrate-before-write applied to substrate-of-substrate (the tarball auditing itself before send). Path A re-authoring is now a proven pattern for inherited artifacts that pre-date a lesson. The 2 post-rename TS fixes are a distinct failure-mode class — recording for the rule pipeline as candidate refinement evidence for any future skill addressing large-rename arcs."
+  },
+  "relatedFollowUps": [
+    "FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1",
+    "FU-EB-USER-WALK-2026-05-22-VOXEL-WRONG-LEVELS-DECISIONS-ORPHANED-1",
+    "FU-EB-URO-T1-ROUTE-MOUNTING-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "substrate-before-write-applied-to-tarball-itself-pre-stage"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "post-rename-typescript-compile-substrate-fixes"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-07T03:33:47Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-315-squash-merged-PR-1.1-of-Arc-1"
+    },
+    {
+      "timestamp": "2026-06-07T03:35:10Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-handoff-to-SR-chat-for-closure"
+    },
+    {
+      "timestamp": "2026-06-08T15:20:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored"
+    }
+  ]
+}
