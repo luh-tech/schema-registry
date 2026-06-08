@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-08-eb-dlp-spec-md-gitignore-negation",
+  "deliveredAt": "2026-06-08T20:54:36Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "a0bf24c2f7a85fc7bb7dcbc4a8c5252a3b4deb78",
+      "prNumber": 318,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/318",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "a0bf24c2f7a85fc7bb7dcbc4a8c5252a3b4deb78",
+      "prNumber": 318,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/318",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "a0bf24c2f7a85fc7bb7dcbc4a8c5252a3b4deb78",
+      "prNumber": 318,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/318",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Gitignore negation sibling micro-deliverable (v1.0.1) landed on EB main at a0bf24c (PR #318). Pattern instance of 'Repo Config Micro-PR' canonical micro-PR shape. Closes FU-EB-DLP-SPEC-MD-GITIGNORE-CONFLICT-1 (P2) clean.\n\nOUT-1: .gitignore negation rule !.dlp/deliverables/**/*.md applied with annotated 3-line block (blank + 2 comment lines + rule) matching the file's existing annotated-negation convention at lines 272-286. Per v1.0.1 amended acceptance criteria — 'single semantic addition + optional adjacent annotation block matching file convention'. 3 git check-ignore tests PASS at OUT-1 verification.\n\nOUT-2: SPEC.md authored at .dlp/deliverables/d-2026-06-08-eb-dlp-spec-md-gitignore-negation/SPEC.md and committed via plain git add (no -f flag) — canary verified OUT-1 negation works end-to-end. Future deliverable SPEC.md files at canonical .dlp/deliverables/{id}/SPEC.md location now commit without git add -f — friction permanently removed.\n\nOUT-3: FU-EB-DLP-SPEC-MD-GITIGNORE-CONFLICT-1 closed in .roadmap/follow-up-register.json. resolution.commitSha + prUrl carry PENDING_POST_MERGE placeholders (will be backfilled in next S7->S8 hygiene cycle per file-and-close-on-tight-loop discipline). Indexes + meta synced from followUps[]. version patch-bumped.\n\nHard Constraint #1 trivially preserved: .gitignore + SPEC.md + follow-up-register.json only. No source code, no migrations, no schema mutations, no infrastructure config. n8n PostgreSQL pipeline cannot be affected.\n\nSR amendment v1.0.0 -> v1.0.1 landed at SR PR #157 (01941a8) after EB-CLI substrate-confirm at P1.1 revealed .gitignore's existing annotated-negation convention. v1.0.1 acceptance criteria relaxed to match file convention; technical work (negation rule itself) unchanged. EB-CLI execution P1.2 result (3-line annotated form) preserved across amendment — consistent with v1.0.1 acceptance, no re-execution needed.",
+    "overrideRecord": "One pre-execution substrate-correction captured for the audit trail:\n\n1. Filesystem substrate-prefetch gap (memory #1 named-failure). v1.0.0 spec OUT-1 acceptance criterion #1 ('Exactly one line added') was authored without inspecting .gitignore content. EB-CLI substrate-confirm at P1.1 revealed the file carries annotated negation blocks at lines 272-286 (CLAUDE.md, README.md, infrastructure/docs/*.md negations all carry comment annotations explaining purpose). Spec text was too strict and inconsistent with file convention.\n\nRecovery via SR amendment v1.0.0 -> v1.0.1: drift-refusal SHA gate enforced at SR PR #157; in-place file replacement; PATCH-level scope (clarification, no behavior change); OUT-1 ac[0] relaxed to 'Single semantic addition (negation rule + optional adjacent annotation block matching file convention)'. Technical work unchanged. EB-CLI P1.2 execution preserved.\n\nForward observation: this is the 6th substrate-correction in the cumulative arc (alpha -> beta -> gamma -> URN -> PR 1.2 -> this). EB-chat self-named the gap as 'substrate-before-write applied to schema substrate but not to filesystem substrate.' Forward fix tracked via FU-EB-DISPATCH-AUTHORING-SCHEMA-PREFETCH-DISCIPLINE-1 scope expansion: schema substrate-prefetch discipline extends to filesystem substrate whenever spec acceptance references file structure.\n\nPattern formalization this arc — three canonical micro-PR shapes proven in sequence:\n- S7->S8 Hygiene Micro-PR: FU register state only, scope-locked to .roadmap/follow-up-register.json\n- Repo Config Micro-PR: root-cause resolution of repo-level config-vs-convention conflicts\n- Substrate-honest Amendment Micro-PR: in-place v1.0.0 -> v1.0.x amendment via drift-refusal SHA gate (precedent from T1 foundation v1.0.1 -> v1.0.4 chain and deploy-dev TD v1.0.1 recovery arc)\n\nFile-and-close-on-tight-loop discipline applied: FU filed in S7->S8 hygiene PR #317, closed in sibling Repo Config Micro-PR #318 within 24h cycle. Net audit trail: real open->closed transition with cited resolution, not forever-open tech-debt entry."
+  },
+  "relatedFollowUps": [],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "filesystem-substrate-prefetch-gap-surfaced-by-cli-substrate-confirm"
+    },
+    {
+      "ruleId": "RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1",
+      "evidenceClass": "root-cause-resolution-rejecting-force-add-anti-pattern"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-08T20:54:36Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-318-squash-merged-Repo-Config-Micro-PR"
+    },
+    {
+      "timestamp": "2026-06-08T20:57:37Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored"
+    }
+  ]
+}
