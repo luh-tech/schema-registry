@@ -1,0 +1,170 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-08-eb-voxel-decision-aggregation-fix",
+  "version": "1.0.0",
+  "title": "Voxel decision aggregation fix via canonical primary_voxel_urn join",
+  "description": "Replace correlated-subquery reads against voxel_decision_attachments with canonical primary_voxel_urn join against pm_decisions in voxels.routes.ts (3 sites: list line 881, aggregation handler line 942, single voxel line 1062). Aggregation handler getVoxelAggregations SQL rewritten to count decisions via pd.primary_voxel_urn = v.urn — the canonical spatial join shape locked by PR 1.1 (d-2026-06-06-eb-urn-namespace-reconcile). Closes the aggregation half of FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 (P1) and the decisions-orphaned half of FU-EB-USER-WALK-2026-05-22-VOXEL-WRONG-LEVELS-DECISIONS-ORPHANED-1 (P1) — both remaining preconditions for T5 voxel_groups gate per LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-07.",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "fix/voxel-decision-aggregation-2026-06-08",
+    "scopeFiles": [
+      "apps/api-gateway/src/routes/voxels.routes.ts",
+      "apps/api-gateway/src/intake/__tests__/stage-6-decisions.spec.ts",
+      "apps/api-gateway/src/routes/__tests__/voxels.routes.aggregation.spec.ts",
+      ".roadmap/follow-up-register.json",
+      ".roadmap/decision-log.json",
+      ".dlp/deliverables/d-2026-06-08-eb-voxel-decision-aggregation-fix/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Replace correlated-subquery reads against voxel_decision_attachments with primary_voxel_urn-keyed reads against pm_decisions across the 3 sites in voxels.routes.ts. Site at line 881 (list handler decisionCount), site at line 942 (getVoxelAggregations SUM), site at line 1062 (single voxel handler decisionCount) all rewritten to count rows in pm_decisions WHERE pd.primary_voxel_urn = v.urn. SQL shape preserved (correlated subquery pattern unchanged) — only the table and join column change. No schema changes, no Prisma model edits, no migration. The voxel_decision_attachments table remains in place for curated/typed attachments written by VoxelPersistenceService.attachDecision; this PR decouples aggregation read paths from that table.",
+      "acceptanceCriteria": [
+        "voxels.routes.ts line 881 (list handler) contains 'FROM pm_decisions pd WHERE pd.primary_voxel_urn = v.urn' substring",
+        "voxels.routes.ts line 1062 (single voxel handler) contains 'FROM pm_decisions pd WHERE pd.primary_voxel_urn = v.urn' substring",
+        "voxels.routes.ts getVoxelAggregations handler (around line 942) decisionCount aggregation counts via primary_voxel_urn join — either correlated subquery shape '(SELECT COUNT(*) FROM pm_decisions pd WHERE pd.primary_voxel_urn = v.urn)' or LEFT JOIN equivalent",
+        "grep -n 'voxel_decision_attachments' apps/api-gateway/src/routes/voxels.routes.ts returns ZERO matches (table reference removed from this file)",
+        "TypeScript compile (tsc --noEmit --project tsconfig.app.json) passes with zero errors",
+        "ESLint passes on voxels.routes.ts",
+        "Existing URN regression test apps/api-gateway/src/routes/__tests__/voxels.routes.test.ts continues to PASS unchanged"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Fix stale URN assertion in apps/api-gateway/src/intake/__tests__/stage-6-decisions.spec.ts line 135. The test currently asserts 'urn:ectropy:{projectId}:voxel:{voxelId}' (legacy project-first shape) but stage-6-decisions.ts:187 emits canonical type-first 'urn:luhtech:ectropy:voxel:{projectId}:{voxelId}' after PR 1.1 merged at EB main f81f7b6b665f77eb4da9ae7afd8817de8b894d1e. The test fails against current main. Update the regex assertion to match canonical type-first form. Test name updated to reflect canonical pattern.",
+      "acceptanceCriteria": [
+        "stage-6-decisions.spec.ts line ~135 it() title reads 'primary_voxel_urn follows canonical type-first pattern urn:luhtech:ectropy:voxel:{projectId}:{voxelId}'",
+        "Assertion regex matches /^urn:luhtech:ectropy:voxel:[^:]+:VOX-/ (or equivalent capturing canonical type-first shape)",
+        "Vitest run for stage-6-decisions.spec.ts PASSES against current EB main",
+        "No other test cases in the same file are touched"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "New regression test file apps/api-gateway/src/routes/__tests__/voxels.routes.aggregation.spec.ts covering URN-join aggregation behavior. Mocks pg.Pool with controlled query responses. Asserts: (a) decisionCount returned by /voxels/aggregation reflects pm_decisions rows where primary_voxel_urn matches voxel URNs in the project; (b) decisionCount is non-zero when pm_decisions are seeded with primary_voxel_urn populated but voxel_decision_attachments empty (the Stage-6-seeded scenario per DEC-010 Project Intake Pipeline); (c) groupBy='level' and groupBy='system' both function with the new join. Co-located with the existing URN regression test, separate file for clear test boundary.",
+      "acceptanceCriteria": [
+        "New test file at apps/api-gateway/src/routes/__tests__/voxels.routes.aggregation.spec.ts exists",
+        "Test file contains at least 3 it() cases: one for decisionCount with empty attachments + populated primary_voxel_urn, one for groupBy=level aggregation correctness, one for groupBy=system aggregation correctness",
+        "Test file imports VoxelRoutes from ../voxels.routes (canonical relative path)",
+        "Test file mocks pg.Pool and asserts on the SQL query string passed to pool.query (string contains pm_decisions + primary_voxel_urn)",
+        "Vitest runs the new file: ALL cases PASS",
+        "No mutation of pre-existing test files in __tests__ directory"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Substrate-corrected closure of FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 (P1) aggregation portion and FU-EB-USER-WALK-2026-05-22-VOXEL-WRONG-LEVELS-DECISIONS-ORPHANED-1 (P1) decisions-orphaned portion in .roadmap/follow-up-register.json. Both FUs were two-part — PR 1.2 closes the aggregation/orphan parts; IFC source-data storey naming remains open as Arc 2 work. Closure entries cite EB merge SHA (populated post-merge) and resolution prUrl. Status moves to 'closed', resolution.commitSha and resolution.prUrl populated, resolution.resolvedDate set to merge wall-clock.",
+      "acceptanceCriteria": [
+        "FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 status field flips from 'open' to 'closed' in this PR's commit",
+        "FU-EB-USER-WALK-2026-05-22-VOXEL-WRONG-LEVELS-DECISIONS-ORPHANED-1 status field flips from 'open' to 'closed' in this PR's commit",
+        "Each closure resolution.summary cites: 'aggregation closed via primary_voxel_urn join per d-2026-06-08-eb-voxel-decision-aggregation-fix; IFC storey naming remains open as Arc 2 work'",
+        "Each closure resolution.commitSha is populated with the EB squash-merge SHA (40-char) post-merge",
+        "follow-up-register meta.totalCount reflects 9 new FUs filed in this PR (see OUT-5); openCount delta = +9 -2 = +7; closedCount delta = +2",
+        "follow-up-register version increments by patch level",
+        "ajv canonical 3-flag validation against follow-up-register.schema.json v1.1.0 PASSES"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "File 9 new follow-ups in .roadmap/follow-up-register.json capturing sibling surfaces enumerated in Phase-2 substrate research but explicitly scope-locked OUT of PR 1.2. These represent Arc 2 work, sibling-app refactors, and denormalization-review items. Each new FU includes id, priority, status='open', title, tracking_repo, blocks/blocked_by arrays per follow-up-register schema. No closure of these in this PR.",
+      "acceptanceCriteria": [
+        "FU-EB-MCP-VOXELDECISIONSURFACE-URN-JOIN-1 (P2) filed — voxel.resolvers.ts:142-196 voxelDecisionSurface resolver mirror fix for mcp-server",
+        "FU-EB-MCP-PERSISTENCE-AGG-URN-JOIN-1 (P3) filed — voxel-persistence.service.ts:getAggregation denorm-read review",
+        "FU-EB-LEGACY-URN-DECISION-RESOLVERS-1 (P2) filed — decision.resolvers.ts:59,626,694 stale urn:ectropy emit",
+        "FU-EB-LEGACY-URN-SEED-DEMO-SCENARIOS-1 (P3) filed — libs/demo-scenarios/** + seed-ros-mro-demo.ts stale urn:ectropy emit",
+        "FU-EB-LEGACY-URN-VOXEL-DECOMPOSITION-1 (P3) filed — voxel-decomposition.service.ts:75,1599 stale urn:ectropy emit (in-memory service)",
+        "FU-EB-LEGACY-URN-MOBILE-ROUTES-1 (P3) filed — mobile.routes.ts:473 stale urn:ectropy:decision fallback emission",
+        "FU-EB-TASK-URN-MISSING-NAMESPACE-1 (P2) filed — tasks_routes.ts:347-349 emits urn:luhtech:{projectId}:task missing ectropy namespace segment (Type-2 stale URN class)",
+        "FU-EB-DEMO-PERSISTENCE-BROKEN-VOXEL-ID-UPDATE-1 (P2) filed — demo-persistence.service.ts:499-504 UPDATE references non-existent pm_decisions.voxel_id column",
+        "FU-EB-VOXELS-DECISION-COUNT-DENORM-REVIEW-1 (P3) filed — voxels.decision_count denorm column now bypassed by canonical read path; review for removal in Arc 2",
+        "All 9 new FUs validate against follow-up-register.schema.json v1.1.0 per ajv canonical 3-flag validation"
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "DEC entry 'd-2026-06-08-aggregation-via-primary-voxel-urn-join' appended to .roadmap/decision-log.json per decision-log.schema.v2.json. Locks the canonical aggregation strategy: voxel-decision aggregation reads count via pd.primary_voxel_urn = v.urn join, NOT via voxel_decision_attachments correlated subquery. Rationale: primary_voxel_urn is the canonical spatial reference (one decision → one primary voxel) populated by Stage 6 intake per DEC-010; voxel_decision_attachments represents curated/typed attachments with attachment_type semantics (LOCATION/SCOPE/IMPACT) populated only by VoxelCoordinationService.routeAndAttachDecision via MCP tool attach_decision_to_voxel. The two tables serve semantically distinct roles; aggregation reads should use the canonical spatial reference. Alternatives considered: (A) fix demo-seed to auto-create attachment rows — rejected as it conflates primary/curated semantics; (B) URN-join in aggregation reads — adopted.",
+      "acceptanceCriteria": [
+        "DEC entry decisionId matches pattern '^d-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$'",
+        "DEC entry includes all 9 required fields per decision-log v2 schema: decisionId, timestamp, title, context, decision, rationale, status, category, impact",
+        "category set to 'architecture'",
+        "status set to 'approved'",
+        "approvedBy includes 'erik-luh' (memory #13: approvedBy is array per canonical 15-field shape)",
+        "alternatives_considered field documents Path A (auto-attach in intake) and Path B (URN-join in reads) with rejection rationale for Path A",
+        "impactedDeliverables includes 'd-2026-06-08-eb-voxel-decision-aggregation-fix' and references 'd-2026-06-06-eb-urn-namespace-reconcile' as prerequisite",
+        "relatedDecisions includes 'd-2026-06-06-urn-canonical-shape-type-first' (PR 1.1 DEC)",
+        "ajv canonical 3-flag validation against decision-log.schema.v2.json PASSES",
+        "decision-log meta.lastUpdated touched to 2026-06-08"
+      ]
+    },
+    {
+      "id": "OUT-7",
+      "description": "EB-local SPEC.md at .dlp/deliverables/d-2026-06-08-eb-voxel-decision-aggregation-fix/SPEC.md documents the deliverable per F0B85LNSTC4 doctrine. Captures: mission (close T5 P1 blockers), scope summary (3 sites in voxels.routes.ts + test fixes + register updates + DEC), Path B rationale citing schema design intent + SR PR #154 closure expectation + DEC-010 Stage 6 alignment, the 9 Arc-2 FUs filed, the prerequisite chain (PR 1.1 URN reconcile must be merged + production-deployed first), the n8n integrity constraint (Hard Constraint #1 — pure read-path change, no migrations, no DB writes).",
+      "acceptanceCriteria": [
+        "SPEC.md authored at .dlp/deliverables/d-2026-06-08-eb-voxel-decision-aggregation-fix/SPEC.md",
+        "SPEC.md includes: mission, scope summary, Path B rationale, 9-FU Arc-2 inventory table, prerequisite chain, n8n integrity note, T5 precondition closure",
+        "SPEC.md cites LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-07 as parent arc reference",
+        "SPEC.md cites DEC-010 Project Intake Pipeline architecture as canonical decisions intake reference",
+        "SPEC.md ends with mantra: Enterprise Excellence. Schema-First. No Shortcuts."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv canonical 3-flag validation passes against follow-up-register.schema.json v1.1.0 for the FU register update (2 closures + 9 new FUs)",
+      "ajv canonical 3-flag validation passes against decision-log.schema.v2.json for the DEC entry",
+      "TypeScript compile (tsc --noEmit --project tsconfig.app.json) passes with zero errors across api-gateway",
+      "ESLint passes on voxels.routes.ts",
+      "Vitest passes for voxels.routes.aggregation.spec.ts (new) and stage-6-decisions.spec.ts (modified)",
+      "Existing voxels.routes.test.ts URN regression continues to PASS unchanged",
+      "Pre-existing voxel-stream.spec.ts timeouts are NOT regressed (baseline-diff per memory #13: same count of pre-existing failures, no new ones)",
+      "grep -n 'voxel_decision_attachments' apps/api-gateway/src/routes/voxels.routes.ts returns ZERO matches",
+      "grep -n 'primary_voxel_urn' apps/api-gateway/src/routes/voxels.routes.ts returns at minimum 3 matches (one per fixed site)",
+      "PR-label deploy-to-dev triggers build-dev-images then deploy-dev workflows successfully",
+      "Roadmap V3 Schema Validation CI gate passes",
+      "Audit-workflows.yml CI gate passes",
+      "Required SR CI checks all GREEN; NO --admin merge"
+    ],
+    "postMerge": [
+      "Dev API /api/v1/projects/{maple-ridge-project-id}/voxels/aggregation?groupBy=level returns non-zero decisionCount entries (decisions resolve via primary_voxel_urn join)",
+      "Dev API /api/v1/projects/{maple-ridge-project-id}/voxels list returns voxel objects with decisionCount > 0 where pm_decisions.primary_voxel_urn matches voxel.urn",
+      "Dev API /api/v1/projects/{maple-ridge-project-id}/voxels/{voxelId} single voxel returns decisionCount via canonical join",
+      "n8n PostgreSQL pipeline canary remains 200 throughout deploy and post-merge window (Hard Constraint #1 — no DB writes in this PR, pure read-path change)",
+      "Staging deploy-to-dev image cycles successfully via Terraform apply IMAGE_TAG pull model per PR #311 lane",
+      "Cross-repo doctrine: SR-chat lands TRUTH-DELIVERED at schemas/_instances/truth-delivered/d-2026-06-08-eb-voxel-decision-aggregation-fix.json referencing EB merge SHA with closureStatus closed-clean",
+      "FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 aggregation portion closure recorded in TRUTH-DELIVERED resolvedFollowUps array",
+      "FU-EB-USER-WALK-2026-05-22-VOXEL-WRONG-LEVELS-DECISIONS-ORPHANED-1 decisions-orphaned portion closure recorded in TRUTH-DELIVERED resolvedFollowUps array",
+      "9 newly-filed FUs reflected in TRUTH-DELIVERED filedFollowUps array",
+      "Full 40-char EB merge SHA posted to #luhtech-agents-comms channel C0B7EPFCA85 with [EB-chat] prefix per memory #27",
+      "T5 voxel_groups gate now CLEAR — both remaining P1 blockers closed; parent ROS overlay arc can anchor"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-08",
+      "trigger": "L4 named-step approval: 'proceed with authoring deliverable based on as written'"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1",
+    "FU-EB-USER-WALK-2026-05-22-VOXEL-WRONG-LEVELS-DECISIONS-ORPHANED-1",
+    "FU-EB-MCP-VOXELDECISIONSURFACE-URN-JOIN-1",
+    "FU-EB-MCP-PERSISTENCE-AGG-URN-JOIN-1",
+    "FU-EB-LEGACY-URN-DECISION-RESOLVERS-1",
+    "FU-EB-LEGACY-URN-SEED-DEMO-SCENARIOS-1",
+    "FU-EB-LEGACY-URN-VOXEL-DECOMPOSITION-1",
+    "FU-EB-LEGACY-URN-MOBILE-ROUTES-1",
+    "FU-EB-TASK-URN-MISSING-NAMESPACE-1",
+    "FU-EB-DEMO-PERSISTENCE-BROKEN-VOXEL-ID-UPDATE-1",
+    "FU-EB-VOXELS-DECISION-COUNT-DENORM-REVIEW-1"
+  ],
+  "notes": "PR 1.2 of Arc 1 (URN reconcile arc, sequel to PR 1.1 d-2026-06-06-eb-urn-namespace-reconcile). Strategic position: named precursor to T5 voxel_groups gate per LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-07 §8.T5. Closes the two remaining P1 T5 preconditions (aggregation half of voxelizer-level-extraction-fix, decisions-orphaned half of user-walk-voxel-wrong-levels) clean. Maple Ridge IFC source storey-name cleanup remains explicitly Arc 2 scope (separate L4 named-step) — Maple Ridge curated bundle v1.0.0 with explicit group definitions lands at T5 per DEC-010 Project Intake Pipeline.\n\nPath B (URN-join in reads) chosen over Path A (auto-attach in intake) after Phase-2 substrate research across 16 files revealed the architectural distinction: pm_decisions.primary_voxel_urn = canonical spatial reference (one decision → one primary voxel, populated by Stage 6 intake); voxel_decision_attachments = curated/typed attachments with attachment_type semantics (populated by VoxelCoordinationService.routeAndAttachDecision via MCP tool attach_decision_to_voxel). These tables serve semantically distinct roles. Path A would conflate the two semantics; Path B respects the schema design intent and matches the SR PR #154 closure expectation (pd.primary_voxel_urn = v.urn).\n\nHard Constraint #1 (n8n integrity): this PR is a pure read-path change. NO migrations, NO DB writes, NO schema changes. n8n PostgreSQL pipeline (159.223.203.231) is untouched. Acquires no row locks during deploy.\n\nPrerequisite chain: requires PR 1.1 (d-2026-06-06-eb-urn-namespace-reconcile, EB main f81f7b6b665f77eb4da9ae7afd8817de8b894d1e) merged + production-deployed first. PR 1.1 ensured voxels.urn and pm_decisions.primary_voxel_urn share canonical type-first shape; the join condition only works post-PR-1.1.\n\nCross-repo doctrine F0B85LNSTC4: this spec gets posted to Slack channel C0B7EPFCA85 with file SHA256 + bytes + validation status; SR-chat picks up from channel and lands SR anchor at schemas/_instances/deliverables/d-2026-06-08-eb-voxel-decision-aggregation-fix.json on luh-tech/schema-registry. EB-CLI tarball authoring follows AFTER SR anchor lands per memory #24.\n\nSibling surfaces enumerated but explicitly scope-locked OUT (9 new FUs filed in this PR): MCP-side aggregation paths (voxel.resolvers.ts + voxel-persistence.service.ts), in-memory voxel-decomposition.service.ts stale URN + aggregation, demo-persistence.service.ts broken UPDATE, legacy urn:ectropy emit sites across decision.resolvers/decomposition/mobile.routes/seed-demo-scenarios, tasks_routes.ts Type-2 missing-namespace URN, and voxels.decision_count denorm review.\n\nEnterprise Excellence. Schema-First. No Shortcuts."
+}
