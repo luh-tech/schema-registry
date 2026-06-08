@@ -1,0 +1,112 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-08-eb-voxel-decision-aggregation-fix",
+  "deliveredAt": "2026-06-08T19:50:36Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "c32c7b149bd636895458f72464d41827e8ac2278",
+      "prNumber": 316,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/316",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "c32c7b149bd636895458f72464d41827e8ac2278",
+      "prNumber": 316,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/316",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "c32c7b149bd636895458f72464d41827e8ac2278",
+      "prNumber": 316,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/316",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "4b16a06aefd4baa3dbc564dd5287bddf573529f2",
+      "prNumber": 317,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/317",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "c32c7b149bd636895458f72464d41827e8ac2278",
+      "prNumber": 316,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/316",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "c32c7b149bd636895458f72464d41827e8ac2278",
+      "prNumber": 316,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/316",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-7",
+      "mergeCommit": "c32c7b149bd636895458f72464d41827e8ac2278",
+      "prNumber": 316,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/316",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "PR 1.2 of Arc 1 (voxel-decision aggregation fix) landed on EB main at c32c7b1 (PR #316). 7 outputs all GREEN. Sequel to PR 1.1 URN reconcile (EB main f81f7b6). T5 voxel_groups gate fully CLEAR per LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-07 section 8.T5.\n\nOUT-1 through OUT-3: voxels.routes.ts aggregation reads at 3 sites (lines 881, 942, 1062) migrated to canonical pd.primary_voxel_urn = v.urn join. Path B locked via DEC.\n\nOUT-4: 2 P1 FUs closed clean — FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 (aggregation portion) + FU-EB-USER-WALK-2026-05-22-VOXEL-WRONG-LEVELS-DECISIONS-ORPHANED-1 (decisions-orphaned portion). resolution.commitSha + prUrl backfilled in S7->S8 hygiene PR #317 (4b16a06) — no PENDING placeholders remaining on T5 blockers. 9 Arc 2 sibling FUs filed open in PR #316 resolution + 5 Type-B execution-discovery FUs filed in PR #317 hygiene.\n\nOUT-5: DEC d-2026-06-08-aggregation-via-primary-voxel-urn-join landed. Path B canonical locked: pm_decisions.primary_voxel_urn = canonical spatial reference (Stage 6 intake per DEC-010); voxel_decision_attachments = curated/typed attachments via MCP. Semantically distinct.\n\nOUT-6: new voxels.routes.aggregation.spec.ts tests added; stage-6-decisions.spec.ts stale URN test removed.\n\nOUT-7: SPEC.md present at .dlp/deliverables/d-2026-06-08-eb-voxel-decision-aggregation-fix/SPEC.md.\n\nHard Constraint #1 honored: n8n PostgreSQL pipeline at 159.223.203.231 trivially preserved across pure read-path SQL substitution. No migrations, no schema changes, no DB writes.\n\nCI gate qualified per RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1 — zero NEW failures. Two pre-existing failures identical to immediately preceding merge #315: (a) E2E Tests Staging Shards 1-4 Playwright JSON report artifact infra issue (17/17 tests passed), (b) validate@20.x web-dashboard @/lib undeclared path alias. Pure read-path SQL substitution has no mechanism to affect either surface. Rule fired correctly to admit the merge — substrate-honest gate handling.",
+    "overrideRecord": "One in-execution substrate-correction captured for the audit trail:\n\n1. Dispatch authoring authored from memory not canonical schema (memory #1 named-failure). CLI silently corrected multiple field-name violations in chat-authored Phase 4 + 5 JSON-mutating scripts: snake_case to camelCase conversions, missing required fields, additionalProperties:false violations. EB-chat self-named the gap; discipline correction codified in S7->S8 hygiene dispatch template (schema substrate pre-fetched + embedded as template constraint for self-check). Promotion to canonical-schema-authoring skill tracked via FU-EB-DISPATCH-AUTHORING-SCHEMA-PREFETCH-DISCIPLINE-1 (P2, filed by hygiene PR #317).\n\nForward observation: PR 1.2 is the 5th substrate-correction in the cumulative arc (alpha -> beta -> gamma -> URN reconcile -> PR 1.2). Pattern persists at the authoring layer — discipline integrates one more layer per cycle. From this arc forward, canonical-schema-authoring skill expanded to include schema substrate-prefetch as canonical pattern."
+  },
+  "relatedFollowUps": [
+    "FU-EB-MCP-VOXELDECISIONSURFACE-URN-JOIN-1",
+    "FU-EB-MCP-PERSISTENCE-AGG-URN-JOIN-1",
+    "FU-EB-LEGACY-URN-DECISION-RESOLVERS-1",
+    "FU-EB-LEGACY-URN-SEED-DEMO-SCENARIOS-1",
+    "FU-EB-LEGACY-URN-VOXEL-DECOMPOSITION-1",
+    "FU-EB-LEGACY-URN-MOBILE-ROUTES-1",
+    "FU-EB-TASK-URN-MISSING-NAMESPACE-1",
+    "FU-EB-DEMO-PERSISTENCE-BROKEN-VOXEL-ID-UPDATE-1",
+    "FU-EB-VOXELS-DECISION-COUNT-DENORM-REVIEW-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "dispatch-authoring-from-memory-cli-silent-correction"
+    },
+    {
+      "ruleId": "RULE-CI-UNSTABLE-GATES-IDENTICALLY-RED-1",
+      "evidenceClass": "preexisting-ci-failures-identical-to-preceding-merge-admit"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-08T19:48:18Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-316-squash-merged-PR-1.2-of-Arc-1"
+    },
+    {
+      "timestamp": "2026-06-08T20:12:34Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-317-S7-to-S8-hygiene-squash-merged-backfill-complete"
+    },
+    {
+      "timestamp": "2026-06-08T20:57:37Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored"
+    }
+  ]
+}
