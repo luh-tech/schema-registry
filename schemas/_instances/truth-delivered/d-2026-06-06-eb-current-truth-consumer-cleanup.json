@@ -1,0 +1,92 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-06-eb-current-truth-consumer-cleanup",
+  "deliveredAt": "2026-06-07T03:10:59Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "ca68e5112553f7031c41f520d548ad8e522d4b65",
+      "prNumber": 314,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/314",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "ca68e5112553f7031c41f520d548ad8e522d4b65",
+      "prNumber": 314,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/314",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "ca68e5112553f7031c41f520d548ad8e522d4b65",
+      "prNumber": 314,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/314",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "ca68e5112553f7031c41f520d548ad8e522d4b65",
+      "prNumber": 314,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/314",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "ca68e5112553f7031c41f520d548ad8e522d4b65",
+      "prNumber": 314,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/314",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "ca68e5112553f7031c41f520d548ad8e522d4b65",
+      "prNumber": 314,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/314",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Precursor gamma (final precursor before PR 1.1 URN reconcile resumed) landed on EB main at ca68e51 (PR #314). Per v1.0.0 spec (SR PR #152 5c9ad4a): 5 scope files. Test cleanup + live MCP runtime crash fix shipped together.\n\nOUT-1: schema-validation.test.ts beforeAll guards currentTruth via existsSync; 2 currentTruth-dependent tests use it.skipIf(!currentTruthExists); 8 previously-collaterally-blocked valid tests (Decision Category Enum, Service Schema, Server Schema, GraphQL Enum Syntax, Data Consistency for decisions/services) now run successfully.\n\nOUT-2: platform-context.adapter.ts loadCurrentTruth() mirrors canonical loadArchitecture and loadDependencies guard pattern. Live MCP runtime crash on getNodes() path resolved. Adapter returns RawCurrentTruth with empty nodes array when file absent.\n\nOUT-3: data-paths.config.ts preserved (backward compat for migration scripts).\n\nOUT-4: FU-EB-SCHEMA-VALIDATION-TEST-CURRENT-TRUTH-1 closed; new FU-EB-CURRENT-TRUTH-LOWER-PRIORITY-CONSUMERS-GUARD-1 (P3) filed open for migration scripts + service file consumer guards.\n\nOUT-5: DEC d-2026-06-06-decommissioned-data-guard-pattern-canonical appended (canonical schema shape verified Python jsonschema Draft 7 PASS via sandbox-validation BEFORE staging — pattern absorbed from alpha lesson).\n\nOUT-6: SPEC.md present.\n\n0 in-PR fix commits. 0 --admin overrides. deploy-to-dev label fired the lane. EB main ca68e51 reached substrate-clean state, enabling PR 1.1 URN reconcile to resume immediately after this TD.",
+    "overrideRecord": "One pre-stage substrate-correction captured for the audit trail:\n\n1. DEC id pattern caught by sandbox-validation pre-stage. Initial DEC id used existsSync (capital S) violating the kebab-case decisionId pattern. Python jsonschema Draft 7 validation rejected at the sandbox layer BEFORE tarball was staged. Renamed to d-2026-06-06-decommissioned-data-guard-pattern-canonical (all lowercase kebab-case, semantic meaning preserved). Tarball re-authored with corrected DEC id, sandbox-validated again, PASSED, then staged.\n\nForward observation: gamma is the second precursor to land with zero in-PR fixes (beta was first). Pre-stage sandbox-validation catching DEC id pattern violation is the substrate-correction discipline working at the earliest possible layer — before tarball staging, before terminal apply, before CI. This integrates the alpha + beta lessons: alpha caught DEC shape gap at CI (in-PR fix), beta absorbed shape lesson but drift-refusal caught dirty tree at execution, gamma now catches DEC id pattern at chat-side sandbox before anything reaches the terminal. Substrate-correction discipline has now integrated three layers across the precursor arc.\n\nBonus value confirmed: original delta scope (voxel-stream.spec.ts timeout) RESOLVED as side effect of beta's forks-pool fix. No separate delta deliverable needed. Sequence collapsed from 4 precursors to 3."
+  },
+  "relatedFollowUps": [
+    "FU-EB-CURRENT-TRUTH-LOWER-PRIORITY-CONSUMERS-GUARD-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "sandbox-validation-caught-dec-id-pattern-pre-stage"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-07T03:10:59Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-314-squash-merged"
+    },
+    {
+      "timestamp": "2026-06-07T03:13:25Z",
+      "actor": "Claude (EB chat), L1",
+      "event": "EB-chat-handoff-to-SR-chat-for-closure"
+    },
+    {
+      "timestamp": "2026-06-08T15:20:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored"
+    }
+  ]
+}
