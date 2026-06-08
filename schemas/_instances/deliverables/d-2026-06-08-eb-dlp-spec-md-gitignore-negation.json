@@ -1,0 +1,93 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-08-eb-dlp-spec-md-gitignore-negation",
+  "version": "1.0.0",
+  "title": "Add .dlp/deliverables/**/*.md negation rule to .gitignore (resolve SPEC.md conflict at root cause)",
+  "description": "Append a single-line .gitignore negation rule (`!.dlp/deliverables/**/*.md`) below the blanket `*.md` exclusion so that per-deliverable SPEC.md files at `.dlp/deliverables/{deliverable-id}/SPEC.md` (canonical location per deliverable schema convention) commit without `git add -f`. Closes FU-EB-DLP-SPEC-MD-GITIGNORE-CONFLICT-1. Resolves at root cause rather than carrying force-add as a standing pattern, which would match the forbidden-paint anti-pattern (RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1) wrapped around SPEC.md authoring across all future arc deliverables.",
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "chore/dlp-spec-md-gitignore-negation-2026-06-08",
+    "scopeFiles": [
+      ".gitignore",
+      ".dlp/deliverables/d-2026-06-08-eb-dlp-spec-md-gitignore-negation/SPEC.md",
+      ".roadmap/follow-up-register.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Append .gitignore negation rule for .dlp/deliverables/**/*.md immediately below the blanket *.md exclusion line. The negation rule MUST appear after the blanket so gitignore's later-rule-wins semantics apply correctly. Pattern: `!.dlp/deliverables/**/*.md`. No other .gitignore rules touched; behavior for all other *.md paths preserved.",
+      "acceptanceCriteria": [
+        "Exactly one line added to .gitignore — the negation pattern `!.dlp/deliverables/**/*.md`",
+        "Line appears AFTER the existing blanket `*.md` exclusion (verify with `grep -n '\\*\\.md' .gitignore` showing blanket first, negation second)",
+        "No other .gitignore lines modified, deleted, or reordered (verify with `git diff .gitignore` showing one-line addition only)",
+        "Test the negation works: `touch .dlp/deliverables/test/SPEC.md && git check-ignore -v .dlp/deliverables/test/SPEC.md` returns exit code 1 (not ignored); cleanup the test file before staging",
+        "Test the blanket still works for other .md paths: `touch foo.md && git check-ignore -v foo.md` returns exit code 0 (still ignored); cleanup test file before staging",
+        "Test the negation is path-specific: `touch .dlp/scratch.md && git check-ignore -v .dlp/scratch.md` returns exit code 0 (still ignored — only .dlp/deliverables/**/*.md is allowed)"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Author this deliverable's SPEC.md at .dlp/deliverables/d-2026-06-08-eb-dlp-spec-md-gitignore-negation/SPEC.md following the canonical convention. The file commits without `git add -f` because OUT-1's negation rule applies first in the same commit. Demonstrates the pattern works end-to-end and serves as the canary test for all future deliverable SPEC.md authoring.",
+      "acceptanceCriteria": [
+        "SPEC.md authored at .dlp/deliverables/d-2026-06-08-eb-dlp-spec-md-gitignore-negation/SPEC.md",
+        "SPEC.md includes: mission (resolve gitignore-vs-convention conflict at root cause), scope (single-line negation rule + FU closure), forbidden-paint anti-pattern reasoning, prerequisite chain (depends on PR 1.2 main + S7→S8 hygiene PR landing first so FU exists to close), n8n integrity note (Hard Constraint #1 trivially preserved — no DB anything)",
+        "SPEC.md commits via plain `git add` (no `-f` flag), confirming OUT-1 negation works",
+        "SPEC.md ends with mantra: Enterprise Excellence. Schema-First. No Shortcuts."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Close FU-EB-DLP-SPEC-MD-GITIGNORE-CONFLICT-1 in .roadmap/follow-up-register.json. Status open → closed. resolution.closedDate set to wall-clock, resolution.closedDuring set to this deliverable id, resolution.summary cites the root-cause resolution. resolution.commitSha and resolution.prUrl populated POST-merge via a separate backfill step (memory: same PENDING_POST_MERGE placeholder pattern as PR 1.2 closures). Indexes refreshed from followUps[]. meta.totalCount and meta.byStatus/byPriority synced. version patch-bumped. Top-level lastUpdated set.",
+      "acceptanceCriteria": [
+        "FU-EB-DLP-SPEC-MD-GITIGNORE-CONFLICT-1 status field flips from 'open' to 'closed' in this commit",
+        "resolution block populated with required fields: closedDate (date format YYYY-MM-DD), closedDuring (string referencing this deliverable id), summary (cites root-cause resolution + this deliverable id)",
+        "resolution.commitSha = 'PENDING_POST_MERGE' placeholder (filled by sibling backfill PR or next-cycle hygiene PR)",
+        "resolution.prUrl = 'PENDING_POST_MERGE' placeholder",
+        "indexes.byStatus, indexes.byPriority, indexes.byBlockedBy recomputed from followUps[] (canonical sync requirement per schema)",
+        "meta.totalCount, meta.byPriority, meta.byStatus synced to followUps[]",
+        "Top-level lastUpdated set to current date-time (ISO 8601)",
+        "version patch-bumped (e.g., 1.0.X → 1.0.X+1)",
+        "ajv canonical 3-flag validation against follow-up-register.schema.json v1.1.0 passes (baseline-diff: zero NEW violations vs main)"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "git diff .gitignore shows exactly one line added (the negation rule)",
+      "git check-ignore tests pass per OUT-1 acceptance criteria (negation works for .dlp/deliverables/**/*.md; blanket preserved for other *.md paths; .dlp/ root still excluded)",
+      "SPEC.md committed via plain git add (no -f flag) — confirms OUT-1 negation works end-to-end",
+      "ajv canonical 3-flag validation against follow-up-register.schema.json v1.1.0 passes for register update",
+      "Baseline-diff per memory #13: zero NEW schema violations introduced",
+      "TypeScript compile not applicable (no .ts changes)",
+      "ESLint not applicable (no source changes)",
+      "Vitest not applicable (no test changes)",
+      "Required SR CI checks all GREEN; NO --admin merge"
+    ],
+    "postMerge": [
+      "Future deliverable spec authoring (T1–T6 of URO arc, all subsequent arcs) commits SPEC.md without git add -f — friction permanently resolved",
+      "FU-EB-DLP-SPEC-MD-GITIGNORE-CONFLICT-1 shows status=closed with resolution.commitSha + resolution.prUrl populated (via sibling backfill commit or next-cycle hygiene PR)",
+      "Cross-repo doctrine: SR-chat lands TRUTH-DELIVERED at schemas/_instances/truth-delivered/d-2026-06-08-eb-dlp-spec-md-gitignore-negation.json referencing EB merge SHA with closureStatus closed-clean",
+      "Full 40-char EB merge SHA posted to #luhtech-agents-comms channel C0B7EPFCA85 with [EB-chat] prefix per memory #27",
+      "n8n PostgreSQL pipeline canary remains 200 throughout deploy and post-merge window (Hard Constraint #1 — no DB anything in this PR)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-08",
+      "trigger": "L4 named-step approval: 'I want enterprise best to proceed. do not propose patches or work arounds'"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-DLP-SPEC-MD-GITIGNORE-CONFLICT-1"
+  ],
+  "notes": "Sibling micro-PR to PR 1.2 (d-2026-06-08-eb-voxel-decision-aggregation-fix). Pattern instance of 'Repo Config Micro-PR' — root-cause resolution of a repo-level config conflict surfaced during main PR execution, separate from the S7→S8 Hygiene Micro-PR which is scope-locked to FU register state only.\n\nFile-and-close-on-tight-loop: FU-EB-DLP-SPEC-MD-GITIGNORE-CONFLICT-1 is filed by the S7→S8 hygiene PR (sibling) immediately after PR 1.2 main merges, and closed by THIS PR within the same 24h cycle. Net audit trail: FU has a real open→closed transition with cited resolution, not a forever-open tech-debt entry.\n\nRationale for root-cause resolution over force-add-and-log: force-add + standing FU is the precise shape of the forbidden-paint anti-pattern (RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1) that the deliverable schema's forbidden-audit-paint-names constraint exists to reject. Carrying force-add as ongoing practice on every deliverable SPEC.md (T1, T2, T3, T4, T5, T6 of the URO arc and all subsequent arcs) compounds the anti-pattern across every child deliverable. Resolving at root costs ~one line + this small deliverable cycle; resolving at root pays back permanently.\n\nSequencing (strict order):\n1. PR 1.2 main (d-2026-06-08-eb-voxel-decision-aggregation-fix) squash-merges\n2. S7→S8 hygiene PR runs — files FU-EB-DLP-SPEC-MD-GITIGNORE-CONFLICT-1 among others\n3. This PR's EB-CLI execution dispatch authored chat-side + sandbox-validated, then routed to EB-CLI\n4. EB-CLI executes — applies OUT-1 .gitignore patch, then OUT-2 SPEC.md author, then OUT-3 FU closure\n5. Squash-merge; SR-chat closes with TRUTH-DELIVERED\n\nHard Constraint #1 (n8n integrity): trivially preserved. This PR touches .gitignore, SPEC.md, and follow-up-register.json — no source code, no migrations, no schema mutations, no infrastructure config. n8n PostgreSQL pipeline at 159.223.203.231 cannot be affected by these changes.\n\nCross-repo doctrine F0B85LNSTC4: this spec gets posted to Slack channel C0B7EPFCA85 with file SHA256 + bytes + validation status; SR-chat picks up from channel and lands SR anchor at schemas/_instances/deliverables/d-2026-06-08-eb-dlp-spec-md-gitignore-negation.json on luh-tech/schema-registry. EB-CLI execution dispatch follows AFTER SR anchor lands per memory #24.\n\nEnterprise Excellence. Schema-First. No Shortcuts."
+}
