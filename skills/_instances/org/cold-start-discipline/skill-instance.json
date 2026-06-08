@@ -1,0 +1,146 @@
+{
+  "$schema": "https://schemas.luh.tech/skill.schema.json",
+  "$id": "urn:luhtech:skill:org:cold-start-discipline:1.0.0",
+  "name": "cold-start-discipline",
+  "description": "FIRES on session opening when no prior assistant turn exists or operator says fresh chat, new session, pick up, resume, cold start, ground truth pass. Forces 4 mandatory tool calls before any prose state claim and enforces credential-echo prohibition with redaction substitution. Filed 2026-06-07 after three consecutive cold-start failures: two agents fabricated state from handoff documents, the third echoed credential references from project knowledge and panicked.",
+  "version": "1.0.0",
+  "category": "org",
+  "lifecycleStatus": "working-model",
+  "triggerMode": "pushy",
+  "triggerContext": [
+    {
+      "precondition": "Session opens with no prior assistant turn in the conversation",
+      "exampleCues": [
+        "this is a fresh chat",
+        "new chat for X work",
+        "cold start",
+        "ground truth pass",
+        "resume from yesterday",
+        "pick up the work",
+        "continue from where we left off"
+      ]
+    },
+    {
+      "precondition": "A handoff document is referenced as opening context for the chat",
+      "exampleCues": [
+        "the handoff doc says",
+        "per the handoff",
+        "according to the handoff document",
+        "load the handoff",
+        "read the prompt"
+      ]
+    },
+    {
+      "precondition": "Operator asks for portfolio state that the assistant has not verified via tool call in this session",
+      "exampleCues": [
+        "what's the current EB main SHA",
+        "what FUs are open",
+        "where are we on T5",
+        "summarize the state",
+        "what changed since yesterday"
+      ]
+    }
+  ],
+  "behavior": {
+    "summary": "Block any prose state claim until verifying tool calls have returned in the same turn. Enforce credential-echo prohibition portfolio-wide via pattern detection and redaction substitution. Refuse to present option menus on cold start; pick a single next action and hold for L4 approval. Produce no recitation of memory or handoff content as session-opening preamble.",
+    "directives": [
+      {
+        "action": "Execute four verification tool calls in order before producing any prose state claim: memory_user_edits view, eb-agent query-followups with limit at least 50 and priority filter for P0 P1 and status open, slack_read_channel against the comms channel with limit 5 and concise response format, and EB main HEAD probe via dispatch when a dispatch lane is available.",
+        "rationale": "Cold-start fabrication failure mode 2026-06-07: handoff documents are wall-of-claims with no verification chain. Forcing tool calls before prose state claims structurally prevents fabrication. Memory rule 10 (TRUTH ONLY) operationalized at session open."
+      },
+      {
+        "action": "Every state claim in prose output must be IMMEDIATELY preceded by the verifying tool call in the same turn. Claims about EB SHA, FU state, SR state, PR state, infrastructure state, or deliverable state without preceding verification are fabrication and must be redacted.",
+        "rationale": "Authority of the handoff document is reference-class, not truth-class. Substrate-before-write skill applied to session-opening prose. Memory rule 10 (TRUTH ONLY)."
+      },
+      {
+        "action": "Detect credential-name patterns in composing output and substitute matches with <REDACTED:credential-pattern-detected>. Patterns: identifiers matching [A-Z][A-Z0-9_]*_(SECRET|KEY|TOKEN|PASSWORD|JWT|PASSPHRASE|CREDENTIAL)([A-Z0-9_]*); known portfolio secret names including TIER2_JWT_SECRET, DEV_JWT_SECRET, SPACES_ACCESS_KEY, BW_ prefixed identifiers; UUID-shaped strings in credential context; hex or base64 strings 32 or more characters near credential vocabulary.",
+        "rationale": "Cold-start failure 3 of 3 on 2026-06-07: agent read project knowledge files containing credential-name references, echoed in planning prose, panicked. Chat had to be deleted. Inviolable substitution prevents the output record from ever existing. Paired with RULE-COMMS-CREDENTIAL-PATTERN-REDACTION-1."
+      },
+      {
+        "action": "If credential pattern is detected mid-output, substitute the matched value retroactively in the same response with a one-sentence acknowledgment of the substitution. Do not panic. Do not delete. Do not apologize at length. Continue the work.",
+        "rationale": "Catch-and-redact preserves chat continuity. Memory rule for accountability without self-abasement. Failure recovery is structural, not emotional. Operator does not need a spiral; operator needs the redaction and the continuation."
+      },
+      {
+        "action": "Do not present 4-option entry-point menus on cold start. Pick the obvious next action from verified state, name it, hold for L4 approval. Default entry point lives in the operator-provided cold-start prompt template when one is provided.",
+        "rationale": "Memory rule 20: false-choice menus after direction is settled is a violation. Cold start is the moment of highest paralysis-bait. Single-action discipline."
+      },
+      {
+        "action": "Do not summarize the memory rules just read, the handoff document, the eb-agent results in their entirety, or the Slack channel history. Produce at most 10 lines of substrate findings, each pointing to its verifying tool call by name. Then hold for L4 named-step.",
+        "rationale": "Summary-as-output is fabrication-adjacent and consumes turn budget. Operator needs verified findings, not recitation. Memory rule for DENSE communication: one-line state changes, single next action, stop."
+      }
+    ],
+    "antiPatterns": [
+      {
+        "pattern": "Producing prose claiming EB SHA, FU state, or any portfolio state on session open without an immediately-preceding tool call returning that state",
+        "instead": "Issue tool calls first, await results, then claim only what tool calls returned. Cite verifying tool by name."
+      },
+      {
+        "pattern": "Reading project knowledge with credential-name references and discussing them by name in planning prose",
+        "instead": "Substitute <REDACTED:credential-pattern-detected> for every match in output. Discuss the architectural role of the credential, never the name."
+      },
+      {
+        "pattern": "Opening with 'I have read memory and the handoff doc; here is my plan' followed by recitation of both",
+        "instead": "Issue the 4 verification tool calls first. No summary preamble of read materials."
+      },
+      {
+        "pattern": "Presenting 4 entry-point options for the operator to choose between",
+        "instead": "Pick the obvious next action from verified state. Hold for L4 approval. Memory rule 20."
+      },
+      {
+        "pattern": "Panicking on detected credential-echo mid-output: deleting partial response, apologizing at length, requesting the chat be deleted",
+        "instead": "Substitute the matched value with the redaction marker retroactively, note the substitution in one sentence, continue the work."
+      }
+    ]
+  },
+  "authority": {
+    "author": "Claude (EB chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "transitions": [
+    {
+      "from": null,
+      "to": "working-model",
+      "trigger": "Three consecutive cold-start failures 2026-06-07 in operator EB chats: two agents fabricated portfolio state from handoff documents (operator hours lost), third echoed credential references from project knowledge and panicked (chat deleted). Authored in EB-chat against research deliverable LUHTECH-COLD-START-DISCIPLINE-RESEARCH-2026-06-07.",
+      "transitionedAt": "2026-06-07T00:00:00Z"
+    }
+  ],
+  "pairedRule": "urn:luhtech:rule:pipeline:cold-start-verification:1.0.0",
+  "compatibility": {
+    "environments": ["claude-chat", "any"],
+    "requiredTools": ["memory_user_edits", "eb-agent", "slack_read_channel"]
+  },
+  "boundaryConditions": [
+    "Does NOT fire mid-session once the verification chain is established and operator has named the first action",
+    "Does NOT fire on greetings or conversational replies that do not require state claims",
+    "Does NOT replace substrate-before-write skill (per-action discipline); cold-start-discipline is per-session discipline that ENFORCES substrate-before-write at the moment of highest fabrication risk",
+    "Does NOT apply to chats that have already established verification via tool calls earlier in the session"
+  ],
+  "references": [
+    {
+      "type": "memory-rule",
+      "location": "10",
+      "purpose": "TRUTH ONLY foundation — never state as fact anything not verified this session"
+    },
+    {
+      "type": "memory-rule",
+      "location": "20",
+      "purpose": "Enterprise-complete; no false-choice menus after direction is settled"
+    },
+    {
+      "type": "rule-instance",
+      "location": "RULE-PIPELINE-COLD-START-VERIFICATION-1",
+      "purpose": "Paired mechanical enforcement of the 4-tool-call verification ritual"
+    },
+    {
+      "type": "rule-instance",
+      "location": "RULE-COMMS-CREDENTIAL-PATTERN-REDACTION-1",
+      "purpose": "Portfolio-wide credential-echo prohibition referenced by this skill but applying beyond cold-start"
+    },
+    {
+      "type": "closure-doc",
+      "location": "LUHTECH-COLD-START-DISCIPLINE-RESEARCH-2026-06-07.md",
+      "purpose": "Research deliverable that grounded this skill authoring"
+    }
+  ]
+}
