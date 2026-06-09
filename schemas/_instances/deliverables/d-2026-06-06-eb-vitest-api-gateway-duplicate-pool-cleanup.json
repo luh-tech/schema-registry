@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-06-eb-vitest-api-gateway-duplicate-pool-cleanup",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "Remove duplicate pool/poolOptions block in apps/api-gateway/vitest.config.ts",
   "description": "apps/api-gateway/vitest.config.ts contains two pool declarations: line 28 (pool: 'forks') with a 7-line rationale comment block explaining why threads pool was rejected (workers hang 17+ min when tests leak DB/Redis/HTTP handles), and line 122 (pool: 'threads') with a throwaway 'Pool options for better performance' comment. In JavaScript object literals, the last key wins, so pool: 'threads' is what actually executes at test time — silently overriding the deliberate forks choice and exposing tests to the 17+ minute hang failure mode the rationale comment was explicitly designed to prevent. The second block was likely leftover from the Jest→Vitest migration documented at the top of the file (created 2025-12-24). Same for poolOptions: line 29 (forks-specific) is shadowed by line 123 (threads-specific). This deliverable removes the second pool/poolOptions block (lines 121-127 inclusive, plus the throwaway comment), preserving the intentional forks configuration. Surfaced by spike A-2 (spike/vitest-shared-alias-fix-2026-06-06) which observed test files executing twice under vitest.workspace.ts mode because both the forks pool and the threads pool ran the same test file — symptom of the duplicate key. Closes FU-EB-VITEST-API-GATEWAY-DUPLICATE-POOL-CLEANUP-1 (P2) clean.",
   "authority": {
@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "feat/vitest-api-gateway-duplicate-pool-cleanup-2026-06-06",
@@ -101,11 +101,27 @@
       "to": "S4-authored",
       "date": "2026-06-06",
       "trigger": "EB-chat S4 spec authoring complete, full substrate read of apps/api-gateway/vitest.config.ts (SHA256 3c481585cbe7327a2933ee2d15e827529eea8e8e4d70a43a03e5759b3fcd903d, 182 lines), sandbox-validated against canonical schemas at SR main aa97d13"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S7-merged",
+      "date": "2026-06-07",
+      "commitSha": "0d1736e5e4f6153b02d57bd555204fb602431231",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/313",
+      "trigger": "EB PR #313 squash-merged 2026-06-07T02:14:38Z at commit 0d1736e5e4f6153b02d57bd555204fb602431231. All 6 outputs delivered. closed-clean with 1 carry-forward follow-ups noted in TRUTH-DELIVERED. rulePipelineEvidence captured: 1 entries."
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-07",
+      "trigger": "TRUTH-DELIVERED instance authored 2026-06-07T02:40:00Z at schemas/_instances/truth-delivered/d-2026-06-06-eb-vitest-api-gateway-duplicate-pool-cleanup.json. closureStatus: closed-clean. relatedFollowUps (1): FU-EB-PATCH-DECISION-LOG-TEMPLATE-CANONICAL-SHAPE-1. Cross-repo doctrine F0B85LNSTC4 cycle complete on this arc."
     }
   ],
   "relatedFollowUps": [
     "FU-EB-VITEST-API-GATEWAY-DUPLICATE-POOL-CLEANUP-1",
     "FU-EB-PATCH-DECISION-LOG-TEMPLATE-CANONICAL-SHAPE-1"
   ],
-  "notes": "Sequencing context: precursor 2 of 4 before PR 1.1 (URN namespace reconcile) resumes. Order: α (vitest root config alias resolution, landed at EB main 34f063b360e9232fbcb3a78eaf0fe764c8618db1) → β (this) → γ (voxel-stream.spec.ts timeout resolution; needs research spike) → δ (current-truth.json deprecation removal; spike B). Cross-repo doctrine F0B85LNSTC4: EB-chat authors, SR-chat anchors at schemas/_instances/deliverables/d-2026-06-06-eb-vitest-api-gateway-duplicate-pool-cleanup.json, EB CLI executes via deploy-to-dev PR-label lane, SR-chat closes with TRUTH-DELIVERED. Substrate-before-write discipline applied: apps/api-gateway/vitest.config.ts content read in EB-chat session at SHA256 3c481585cbe7327a2933ee2d15e827529eea8e8e4d70a43a03e5759b3fcd903d before spec authoring (lesson from α: DEC shape composed from memory created schema violation; β's DEC will be authored against fetched canonical decision-log.schema.v2.json with canonical alternative.rejectionReason key and ISO 8601 date-time format). Filed FU FU-EB-PATCH-DECISION-LOG-TEMPLATE-CANONICAL-SHAPE-1 (P2) captures the chat-side template correction needed so future deliverables reusing the DEC-append pattern start from canonical shape — separately tracked, NOT bundled with β."
+  "notes": "Sequencing context: precursor 2 of 4 before PR 1.1 (URN namespace reconcile) resumes. Order: α (vitest root config alias resolution, landed at EB main 34f063b360e9232fbcb3a78eaf0fe764c8618db1) → β (this) → γ (voxel-stream.spec.ts timeout resolution; needs research spike) → δ (current-truth.json deprecation removal; spike B). Cross-repo doctrine F0B85LNSTC4: EB-chat authors, SR-chat anchors at schemas/_instances/deliverables/d-2026-06-06-eb-vitest-api-gateway-duplicate-pool-cleanup.json, EB CLI executes via deploy-to-dev PR-label lane, SR-chat closes with TRUTH-DELIVERED. Substrate-before-write discipline applied: apps/api-gateway/vitest.config.ts content read in EB-chat session at SHA256 3c481585cbe7327a2933ee2d15e827529eea8e8e4d70a43a03e5759b3fcd903d before spec authoring (lesson from α: DEC shape composed from memory created schema violation; β's DEC will be authored against fetched canonical decision-log.schema.v2.json with canonical alternative.rejectionReason key and ISO 8601 date-time format). Filed FU FU-EB-PATCH-DECISION-LOG-TEMPLATE-CANONICAL-SHAPE-1 (P2) captures the chat-side template correction needed so future deliverables reusing the DEC-append pattern start from canonical shape — separately tracked, NOT bundled with β.\n\n[v1.0.1 RECONCILE AMENDMENT 2026-06-09] Deliverable lifecycleState reconciled with canonical TRUTH-DELIVERED already on SR main since 2026-06-07T02:40:00Z. Mixed-state substrate gap diagnosed by SR-chat substrate-before-write 2026-06-09 portfolio sweep: TRUTH-DELIVERED was authored on day-of-merge with full canonical shape (40-char mergeCommit 0d1736e5e4f6153b02d57bd555204fb602431231, S8-closed, 1 relatedFollowUps), but the deliverable instance was never updated from S4-authored to reflect the EB merge (2026-06-07T02:14:38Z). This v1.0.1 amendment brings the deliverable into agreement with the TRUTH-DELIVERED without touching the canonical TRUTH-DELIVERED file. Full 40-char merge SHA pulled chat-side directly from the existing TRUTH-DELIVERED on SR main — no gh-CLI fetch required. Part of portfolio-wide stale-deliverable audit clearance (Batch 2 of 3 per L4-approved enterprise scope-lock exception for closure-style atomic batching, precedent SR PR #162 + #164 + #168). T1 reconcile landed via SR PR #167; URO Tier 1 T2/T3/T4 batch landed via SR PR #168; this batch covers the 2026-06-05/06 portfolio reconciles. Closure-backlog discipline filed in v1.0.1 notes (per memory #13 SUBSTRATE-CORRECTION extension): closure clearance must probe BOTH the deliverable AND the TRUTH-DELIVERED paths on SR main before authoring. Semver: PATCH (lifecycle reconcile + audit-trail completion; no behavior change to deliverable goal or scope).",
+  "mergeCommitSha": "0d1736e5e4f6153b02d57bd555204fb602431231",
+  "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/313"
 }
