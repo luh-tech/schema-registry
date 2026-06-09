@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "chore/node-24-full-migration-2026-06-09",
@@ -145,6 +145,20 @@
       "to": "S4-authored",
       "date": "2026-06-09",
       "trigger": "v1.0.1 amendment per L4 named-step in EB-chat 2026-06-09. OUT-6 substrate-correction: v1.0.0 referenced PR #320 plus branch chore/node-24-workflow-bump-2026-06-09 which were already handled by prior arc execution; actual outstanding stale state is PR #321 plus branch chore/node-24-bump-pnpm-canonical-2026-06-09 created by prior arc tarball PHASES 1-4. Memory #1 confident-then-retract pattern, fourth occurrence in this arc, surfaced and corrected before tarball authoring per memory #5 REFUSE-AND-SURFACE."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S7-merged",
+      "date": "2026-06-09",
+      "commitSha": "b9b4141511f806b6746cc8bba0192253b3c06793",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/322",
+      "trigger": "EB PR #322 squash-merged. All 7 OUTs delivered against 24-file declared scope (no scope bleed). Required ruleset checks (NV-03, vestigial .js, patterns.yml) all PASS. Docker builds api-gateway/web-dashboard/mcp-server all GREEN (root failure mechanism resolved by axis 3+4 alignment confirmed). Pre-existing CI rot at validate (24.x) classified per memory #16 diff-vs-baseline, tracked separately as carry-forward FU-EB-CI-INFRASTRUCTURE-ROT-1."
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-09",
+      "trigger": "TRUTH-DELIVERED instance landed at schemas/_instances/truth-delivered/d-2026-06-09-eb-node-24-full-migration.json. Closure status: closed-clean. Cross-repo doctrine F0B85LNSTC4 cycle complete."
     }
   ],
   "relatedFollowUps": [

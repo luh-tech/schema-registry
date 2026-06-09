@@ -1,0 +1,91 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-09-eb-node-24-full-migration",
+  "deliveredAt": "2026-06-09T18:37:06Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "b9b4141511f806b6746cc8bba0192253b3c06793",
+      "prNumber": 322,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/322",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "b9b4141511f806b6746cc8bba0192253b3c06793",
+      "prNumber": 322,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/322",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "b9b4141511f806b6746cc8bba0192253b3c06793",
+      "prNumber": 322,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/322",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "b9b4141511f806b6746cc8bba0192253b3c06793",
+      "prNumber": 322,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/322",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "b9b4141511f806b6746cc8bba0192253b3c06793",
+      "prNumber": 322,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/322",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "b9b4141511f806b6746cc8bba0192253b3c06793",
+      "prNumber": 322,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/322",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-7",
+      "mergeCommit": "b9b4141511f806b6746cc8bba0192253b3c06793",
+      "prNumber": 322,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/322",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Node 24 full migration across EB stack delivered in EB PR #322. 24 files transformed across 5 axes (9 CI workflows + 3 package.json engines + 7 Dockerfiles + 2 runtime pins + 3 k8s manifests). Root failure mechanism (.npmrc engine-strict=true x engines.node>=24 x Dockerfile FROM node:20-alpine -> ERR_PNPM_UNSUPPORTED_ENGINE in every Docker pnpm install layer) resolved by Axis 3+4 alignment. Build & Push api-gateway/web-dashboard/mcp-server all GREEN post-merge. OUT-6 idempotent verifications confirmed: PR #320 + legacy branch already-cleared from prior arc (v1.0.1 amendment captured this correction before tarball authoring). FU-NODE20-DEPRECATION-1 (P3, past GitHub-forced 2026-06-02 deadline) target satisfied; status flip to closed deferred to next FU hygiene cycle per EB-chat report. Carry-forward observations (NOT in this Stage 5 scope, to be filed in next hygiene cycle): (1) doctrine question about .dlp/ SPEC.md track-vs-gitignore; (2) pre-existing CI infrastructure rot at validate (24.x) failure (web-dashboard @/lib undeclared dep, on main since 2026-04-21, confirmed via diff-vs-baseline per memory #16, not introduced by this PR) and E2E staging shards rot; (3) cosmetically-redundant actions/cache@v4 ~/.pnpm-store steps now superseded by setup-node@v5 cache: 'pnpm'.",
+    "overrideRecord": "No --admin override invoked. CI override not required: all 3 required ruleset checks (NV-03, vestigial .js, patterns.yml) and all Docker builds were GREEN at merge time. The validate (24.x) failure is pre-existing rot (baseline confirmed 2026-04-21) and is not a required check on the EB ruleset, so its red state did not block standard squash-merge. No L4 override-policy invocation per memory #15.",
+    "spikeOutcome": "SPIKE spike/node-24-full-migration-surface-2026-06-09 (entered EB-chat 2026-06-09 by L4) terminal DELETE-AND-NEW-DELIVERABLE. SPIKE PHASE S0 read-only substrate dispatch mapped the 5-axis surface to 24 files; PHASE S1 named-step authorized the new deliverable spec. Held EB execution tarball (SHA bb9f54c5d774163fb1236a7f2428e8e0cebf48e375305d757c9a0a50e6fe506a) from the prior 12-file-scope arc was officially abandoned-on-terminal via the supersession transition on d-2026-06-09-eb-node-24-bump-pnpm-canonical landed in SR PR #162. Four memory #1 confident-then-retract patterns surfaced and corrected during the arc: (a) misclassification of Build Staging Docker failure as 'pre-existing rot' instead of the actual axis-3 root cause, (b) 'pattern is canonical-correct' mis-read on Dockerfile FROM nodes, (c) single-repo-housekeeping framing of what was actually a 5-axis migration, (d) OUT-6 reference to PR #320 (already-cleared) instead of actual stale PR #321 from prior tarball execution. All four corrections preserved in audit trail per memory #1 + memory #5 REFUSE-AND-SURFACE."
+  },
+  "relatedFollowUps": [
+    "FU-NODE20-DEPRECATION-1"
+  ],
+  "rulePipelineEvidence": [],
+  "transitions": [
+    {
+      "timestamp": "2026-06-09T18:37:06Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-322-squash-merged-Stage-4-complete"
+    },
+    {
+      "timestamp": "2026-06-09T20:30:00Z",
+      "actor": "Claude (SR-chat), L1",
+      "event": "TRUTH-DELIVERED-instance-authored-Stage-5-closure"
+    }
+  ]
+}
