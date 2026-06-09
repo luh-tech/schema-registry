@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-09-eb-node-24-full-migration",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "Node 24 full migration across EB stack (supersedes d-2026-06-09-eb-node-24-bump-pnpm-canonical)",
   "description": "Full Node 24 migration across the EB stack: CI workflows (9), package.json engines (3), container Dockerfiles (7), runtime pins (.nvmrc and devcontainer.json), inline image references in Kubernetes manifests (3). 24 files total across 5 axes. Supersedes d-2026-06-09-eb-node-24-bump-pnpm-canonical (v1.0.0) which had 12-file scope insufficient for the failure mechanism. Closes FU-NODE20-DEPRECATION-1 (P3, past GitHub-forced 2026-06-02 deadline). DELETE-AND-NEW-DELIVERABLE terminal per SPIKE spike/node-24-full-migration-surface-2026-06-09 authorized 2026-06-09 by L4.",
   "authority": {
@@ -96,11 +96,13 @@
     },
     {
       "id": "OUT-6",
-      "description": "PR #320 closed without merge with audit comment naming the supersession reason and referencing this new deliverable id. Prior branch chore/node-24-workflow-bump-2026-06-09 deleted from local and remote (idempotent if already cleaned).",
+      "description": "Both stale PRs from prior arc executions handled. PR #321 (12-file canonical-pnpm scope on branch chore/node-24-bump-pnpm-canonical-2026-06-09, created by prior arc tarball PHASES 1-4 between SPIKE direction and Dockerfile substrate reveal) closed without merge with audit comment referencing this superseding deliverable id. Branch chore/node-24-bump-pnpm-canonical-2026-06-09 deleted local plus remote. PR #320 plus branch chore/node-24-workflow-bump-2026-06-09 already cleared in prior arc execution (idempotent verify-only).",
       "acceptanceCriteria": [
-        "PR #320 state is CLOSED (not MERGED)",
-        "Branch chore/node-24-workflow-bump-2026-06-09 is absent from git ls-remote origin output",
-        "PR #320 audit comment names this new deliverable id d-2026-06-09-eb-node-24-full-migration and the SPIKE that authorized supersession"
+        "PR #321 state is CLOSED (not MERGED)",
+        "Branch chore/node-24-bump-pnpm-canonical-2026-06-09 is absent from git ls-remote origin output",
+        "PR #321 audit comment names this new deliverable id d-2026-06-09-eb-node-24-full-migration and references the SPIKE that authorized supersession plus the v1.0.1 amendment that corrected the PR reference",
+        "Idempotent verification: PR #320 confirmed CLOSED (already from prior arc)",
+        "Idempotent verification: Branch chore/node-24-workflow-bump-2026-06-09 confirmed absent (already deleted in prior arc)"
       ]
     },
     {
@@ -137,10 +139,16 @@
       "to": "S4-authored",
       "date": "2026-06-09",
       "trigger": "EB-chat authored post SPIKE PHASE S0 substrate-capture (5 axes surface mapped to 24 files). Supersedes d-2026-06-09-eb-node-24-bump-pnpm-canonical per DELETE-AND-NEW-DELIVERABLE SPIKE terminal authorized by L4 in EB-chat 2026-06-09."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S4-authored",
+      "date": "2026-06-09",
+      "trigger": "v1.0.1 amendment per L4 named-step in EB-chat 2026-06-09. OUT-6 substrate-correction: v1.0.0 referenced PR #320 plus branch chore/node-24-workflow-bump-2026-06-09 which were already handled by prior arc execution; actual outstanding stale state is PR #321 plus branch chore/node-24-bump-pnpm-canonical-2026-06-09 created by prior arc tarball PHASES 1-4. Memory #1 confident-then-retract pattern, fourth occurrence in this arc, surfaced and corrected before tarball authoring per memory #5 REFUSE-AND-SURFACE."
     }
   ],
   "relatedFollowUps": [
     "FU-NODE20-DEPRECATION-1"
   ],
-  "notes": "Supersedes d-2026-06-09-eb-node-24-bump-pnpm-canonical (v1.0.0) which had 12-file scope insufficient for full Node 24 migration. SPIKE spike/node-24-full-migration-surface-2026-06-09 (L4-authorized entry 2026-06-09) mapped surface to 24 files across 5 axes via SPIKE PHASE S0 read-only substrate dispatch. Failure mechanism root cause: .npmrc engine-strict=true plus root package.json engines.node bumped to >=24.0.0 plus Dockerfiles still FROM node:20-alpine causes ERR_PNPM_UNSUPPORTED_ENGINE in every Docker pnpm install layer. My prior session classification of Build Staging Images Docker failure as 'pre-existing rot' was incorrect (memory #1 confident-then-retract pattern, third occurrence in this arc). Prior spec d-2026-06-09-eb-node-24-bump-pnpm-canonical transitions to lifecycleState S6-superseded referencing this new spec id; prior held EB tarball SHA bb9f54c5d774163fb1236a7f2428e8e0cebf48e375305d757c9a0a50e6fe506a is abandoned-on-terminal. SR-chat handles supersession transition plus landing of this new spec in the same SR PR per scope-lock exception precedent (cycle 7 SR PR #159 pattern). Risk flag: Nx 21.5.3 official Node 24 verification absent; preMerge smoke test required. DEC authoring for the architectural Node 24 migration decision is not in this deliverable scope and may be authored by SR-chat as a parallel artifact."
+  "notes": "Supersedes d-2026-06-09-eb-node-24-bump-pnpm-canonical (v1.0.0) which had 12-file scope insufficient for full Node 24 migration. SPIKE spike/node-24-full-migration-surface-2026-06-09 (L4-authorized entry 2026-06-09) mapped surface to 24 files across 5 axes via SPIKE PHASE S0 read-only substrate dispatch. Failure mechanism root cause: .npmrc engine-strict=true plus root package.json engines.node bumped to >=24.0.0 plus Dockerfiles still FROM node:20-alpine causes ERR_PNPM_UNSUPPORTED_ENGINE in every Docker pnpm install layer. My prior session classification of Build Staging Images Docker failure as 'pre-existing rot' was incorrect (memory #1 confident-then-retract pattern, third occurrence in this arc). Prior spec d-2026-06-09-eb-node-24-bump-pnpm-canonical transitions to lifecycleState S6-superseded referencing this new spec id; prior held EB tarball SHA bb9f54c5d774163fb1236a7f2428e8e0cebf48e375305d757c9a0a50e6fe506a is abandoned-on-terminal. SR-chat handles supersession transition plus landing of this new spec in the same SR PR per scope-lock exception precedent (cycle 7 SR PR #159 pattern). Risk flag: Nx 21.5.3 official Node 24 verification absent; preMerge smoke test required. DEC authoring for the architectural Node 24 migration decision is not in this deliverable scope and may be authored by SR-chat as a parallel artifact. v1.0.1 amendment (2026-06-09): OUT-6 description plus acceptanceCriteria updated to reference PR #321 + branch chore/node-24-bump-pnpm-canonical-2026-06-09 as the actual outstanding stale state from prior arc execution. PR #320 and original CLI-improvised branch chore/node-24-workflow-bump-2026-06-09 are idempotent verify-only (already handled in prior arc). Semver: PATCH (clarification of which PR is actually stale; no behavioral change to deliverable goal of closing prior-arc residue)."
 }
