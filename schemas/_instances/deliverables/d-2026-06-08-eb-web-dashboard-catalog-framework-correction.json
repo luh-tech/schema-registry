@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-08-eb-web-dashboard-catalog-framework-correction",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "Retroactive: web-dashboard catalog framework correction (Vite + React 18 + MUI 6)",
   "description": "Retroactive deliverable spec authored after EB PR #319 doctrine non-conformance. EB-chat session authored an inline-bash heredoc dispatch and merged PR #319 (84e2b0406ef54602cbf02ec0da5383b6fb7886a8) without filing this canonical spec or routing through the SR anchor leg per memory #10/#24. This spec is the doctrine-honest record of what was actually delivered: infrastructure-catalog.json services[].type corrected for the web-dashboard service. Schema substrate corrections that EB-CLI silently applied during execution are captured in TRUTH-DELIVERED overrideRecord. Filed 2026-06-08 as L4-named-step retroactive backfill per process-error correction in C0B9384MTLM channel; substrate-correction cycle 7.",
   "authority": {
@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "fix/web-dashboard-catalog-framework-2026-06-08",
@@ -49,11 +49,27 @@
       "to": "S4-authored",
       "date": "2026-06-08",
       "trigger": "L4 named-step approval in C0B9384MTLM process-error correction: 'proceed with your enterprise path'. Retroactive backfill of PR #319 (already merged at 84e2b0406ef54602cbf02ec0da5383b6fb7886a8) for doctrine audit trail restoration."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S7-merged",
+      "date": "2026-06-08",
+      "commitSha": "84e2b0406ef54602cbf02ec0da5383b6fb7886a8",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/319",
+      "trigger": "EB PR #319 squash-merged 2026-06-08T18:22:00Z at commit 84e2b0406ef54602cbf02ec0da5383b6fb7886a8. All 1 outputs delivered. Closure status: closed-with-debt — see TRUTH-DELIVERED.closureNotes.debt for the 2 carry-forward follow-ups. rulePipelineEvidence captured: 2 entries."
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-08",
+      "trigger": "TRUTH-DELIVERED instance authored 2026-06-09T02:35:00Z at schemas/_instances/truth-delivered/d-2026-06-08-eb-web-dashboard-catalog-framework-correction.json. closureStatus: closed-with-debt. relatedFollowUps (2): FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1, FU-EB-DISPATCH-AUTHORING-SCHEMA-PREFETCH-DISCIPLINE-1. Cross-repo doctrine F0B85LNSTC4 cycle complete on this arc."
     }
   ],
   "relatedFollowUps": [
     "FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1",
     "FU-EB-DISPATCH-AUTHORING-SCHEMA-PREFETCH-DISCIPLINE-1"
   ],
-  "notes": "Retroactive doctrine-honest deliverable for EB PR #319. Authored AFTER the EB merge already landed at 84e2b0406ef54602cbf02ec0da5383b6fb7886a8 (2026-06-08 18:22 PDT). Doctrine sequence violated by EB-chat: this spec, this SR anchor, and execution tarball did not exist before the merge. L4 named-step in process-error channel directed retroactive backfill rather than skip-and-FU; this spec restores the canonical audit trail.\n\nSubstrate-correction trajectory context: cycle 7 of 7. EB-chat session had all 4 organization skills loaded (cold-start-discipline, substrate-before-write, canonical-schema-authoring, cross-repo-execution-shape) but only cold-start-discipline fired. Pull-not-push skill discovery model: skill availability != skill invocation. Forward fix shipped as parallel SR amendment of cold-start-discipline skill instance v1.0.0 -> v1.0.1 mandating sibling-skill SKILL.md view at session-open AND before any write dispatch.\n\nSchema substrate corrections EB-CLI silently applied during execution (captured in TRUTH-DELIVERED overrideRecord, not failures of THIS spec which post-dates them):\n1. services[].type held at canonical 'web' enum (dispatch attempted free-form 'React 18 + Vite 5 + TypeScript + MUI')\n2. auditTrail[] held to canonical {version, author, changes[]} shape (dispatch authored {timestamp, change, pr, actor})\n\nMemory rules violated by the original (now-corrected) flow: #8 (TARBALL-DELIVERY V2), #9 (DELIVERABLE-FIRST), #10 (CROSS-REPO EXECUTION DOCTRINE), #12 (NO MD TERMINUS), #13 (SUBSTRATE-CORRECTION + DIFF-VS-BASELINE), #24 (ARTIFACT ROUTING). The retroactive backfill (this spec + TD) restores #9/#10/#12/#24. #8 and #13 cannot be retroactively restored — the inline-bash heredoc dispatch already executed; the schema corrections were silent. Those two stand as visible audit residue.\n\nEnterprise Excellence. Schema-First. No Shortcuts."
+  "notes": "Retroactive doctrine-honest deliverable for EB PR #319. Authored AFTER the EB merge already landed at 84e2b0406ef54602cbf02ec0da5383b6fb7886a8 (2026-06-08 18:22 PDT). Doctrine sequence violated by EB-chat: this spec, this SR anchor, and execution tarball did not exist before the merge. L4 named-step in process-error channel directed retroactive backfill rather than skip-and-FU; this spec restores the canonical audit trail.\n\nSubstrate-correction trajectory context: cycle 7 of 7. EB-chat session had all 4 organization skills loaded (cold-start-discipline, substrate-before-write, canonical-schema-authoring, cross-repo-execution-shape) but only cold-start-discipline fired. Pull-not-push skill discovery model: skill availability != skill invocation. Forward fix shipped as parallel SR amendment of cold-start-discipline skill instance v1.0.0 -> v1.0.1 mandating sibling-skill SKILL.md view at session-open AND before any write dispatch.\n\nSchema substrate corrections EB-CLI silently applied during execution (captured in TRUTH-DELIVERED overrideRecord, not failures of THIS spec which post-dates them):\n1. services[].type held at canonical 'web' enum (dispatch attempted free-form 'React 18 + Vite 5 + TypeScript + MUI')\n2. auditTrail[] held to canonical {version, author, changes[]} shape (dispatch authored {timestamp, change, pr, actor})\n\nMemory rules violated by the original (now-corrected) flow: #8 (TARBALL-DELIVERY V2), #9 (DELIVERABLE-FIRST), #10 (CROSS-REPO EXECUTION DOCTRINE), #12 (NO MD TERMINUS), #13 (SUBSTRATE-CORRECTION + DIFF-VS-BASELINE), #24 (ARTIFACT ROUTING). The retroactive backfill (this spec + TD) restores #9/#10/#12/#24. #8 and #13 cannot be retroactively restored — the inline-bash heredoc dispatch already executed; the schema corrections were silent. Those two stand as visible audit residue.\n\nEnterprise Excellence. Schema-First. No Shortcuts.\n\n[v1.0.1 RECONCILE AMENDMENT 2026-06-09] Deliverable lifecycleState reconciled with canonical TRUTH-DELIVERED already on SR main since 2026-06-09T02:35:00Z. Mixed-state substrate gap diagnosed by SR-chat substrate-before-write 2026-06-09 portfolio sweep: TRUTH-DELIVERED was authored on day-of-merge with full canonical shape (40-char mergeCommit 84e2b0406ef54602cbf02ec0da5383b6fb7886a8, S8-closed, 2 relatedFollowUps), but the deliverable instance was never updated from S4-authored to reflect the EB merge (2026-06-08T18:22:00Z). This v1.0.1 amendment brings the deliverable into agreement with the TRUTH-DELIVERED without touching the canonical TRUTH-DELIVERED file. Full 40-char merge SHA pulled chat-side directly from the existing TRUTH-DELIVERED on SR main — no gh-CLI fetch required. Part of portfolio-wide stale-deliverable audit clearance (Batch 3 of 3 — FINAL, per L4-approved enterprise scope-lock exception for closure-style atomic batching, precedent SR PR #162 + #164 + #167 + #168 + #169). With this batch, 14 / 14 stale deliverables canonical-closed on SR main. Closure-backlog discipline filed in notes (per memory #13 SUBSTRATE-CORRECTION extension): closure clearance must probe BOTH the deliverable AND the TRUTH-DELIVERED paths on SR main before authoring. Semver: PATCH (1.0.0 -> 1.0.1; lifecycle reconcile + audit-trail completion; no behavior change to deliverable goal or scope).",
+  "mergeCommitSha": "84e2b0406ef54602cbf02ec0da5383b6fb7886a8",
+  "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/319"
 }
