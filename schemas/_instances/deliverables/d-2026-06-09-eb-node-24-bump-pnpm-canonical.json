@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "superseded",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "chore/node-24-bump-pnpm-canonical-2026-06-09",
@@ -90,6 +90,12 @@
       "to": "S4-authored",
       "date": "2026-06-09",
       "trigger": "EB-chat authored spec post L4 named-step on Option 2 canonical pattern in #luhtech-agents-process-errors"
+    },
+    {
+      "from": "S4-authored",
+      "to": "superseded",
+      "date": "2026-06-09",
+      "trigger": "SPIKE terminal DELETE-AND-NEW-DELIVERABLE — 12-file scope insufficient for full Node 24 migration. Successor: d-2026-06-09-eb-node-24-full-migration (24-file scope across 5 axes). EB execution against this spec abandoned; held tarball bb9f54c5d774163fb1236a7f2428e8e0cebf48e375305d757c9a0a50e6fe506a not applied."
     }
   ],
   "relatedFollowUps": [
