@@ -1,0 +1,146 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-09-eb-node-24-full-migration",
+  "version": "1.0.0",
+  "title": "Node 24 full migration across EB stack (supersedes d-2026-06-09-eb-node-24-bump-pnpm-canonical)",
+  "description": "Full Node 24 migration across the EB stack: CI workflows (9), package.json engines (3), container Dockerfiles (7), runtime pins (.nvmrc and devcontainer.json), inline image references in Kubernetes manifests (3). 24 files total across 5 axes. Supersedes d-2026-06-09-eb-node-24-bump-pnpm-canonical (v1.0.0) which had 12-file scope insufficient for the failure mechanism. Closes FU-NODE20-DEPRECATION-1 (P3, past GitHub-forced 2026-06-02 deadline). DELETE-AND-NEW-DELIVERABLE terminal per SPIKE spike/node-24-full-migration-surface-2026-06-09 authorized 2026-06-09 by L4.",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "chore/node-24-full-migration-2026-06-09",
+    "scopeFiles": [
+      ".github/workflows/build-production-images.yml",
+      ".github/workflows/deploy-staging.yml",
+      ".github/workflows/e2e-tests.yml",
+      ".github/workflows/enterprise-test-suite.yml",
+      ".github/workflows/foundation.yml",
+      ".github/workflows/production-validation.yml",
+      ".github/workflows/publish-crm-package.yml",
+      ".github/workflows/roadmap-v3-validation.yml",
+      ".github/workflows/security.yml",
+      "package.json",
+      "apps/ectropy-console/package.json",
+      "apps/mcp-server/package.json",
+      "apps/api-gateway/Dockerfile",
+      "apps/web-dashboard/Dockerfile",
+      "apps/mcp-server/Dockerfile",
+      "apps/ectropy-console/Dockerfile",
+      "apps/ectropy-console/Dockerfile.standalone",
+      "apps/edge-server/Dockerfile",
+      ".devcontainer/Dockerfile.dev",
+      ".nvmrc",
+      ".devcontainer/devcontainer.json",
+      "infrastructure/kubernetes/ai-agents/ai-agents-deployment.yaml",
+      "infrastructure/kubernetes/iot/iot-integration-deployment.yaml",
+      "infrastructure/kubernetes/backup/disaster-recovery-deployment.yaml"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "9 CI workflows transformed to canonical Option 2 pattern. pnpm-using workflows get pnpm/action-setup@v6 inserted before setup-node@v5 with cache pnpm; npm-only workflows get cache npm; redundant Enable Corepack and Install pnpm steps removed; production-validation.yml gets pnpm/action-setup v4 to v6 sync.",
+      "acceptanceCriteria": [
+        "No setup-node@v4 reference remains in any of the 9 scoped workflow files",
+        "No node-version with value 20 or 20.x array remains in any of the 9 scoped workflow files",
+        "Every setup-node@v5 step has either cache pnpm (with pnpm/action-setup@v6 step preceding it) or cache npm (for npm-only workflows publish-crm-package.yml and roadmap-v3-validation.yml)",
+        "production-validation.yml pnpm/action-setup version bumped from v4 to v6",
+        "speckle-env-schema.yml verified untouched (still on node-version 22, out of scope)"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "engines.node version constraint bumped from >=20.0.0 to >=24.0.0 in 3 package.json files.",
+      "acceptanceCriteria": [
+        "package.json (root) engines.node equals >=24.0.0",
+        "apps/ectropy-console/package.json engines.node equals >=24.0.0",
+        "apps/mcp-server/package.json engines.node equals >=24.0.0"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "7 Dockerfile FROM lines bumped from node:20-* to node:24-*. 6 alpine-based Dockerfiles use node:24-alpine in both builder and runner stages; .devcontainer/Dockerfile.dev uses node:24-bullseye.",
+      "acceptanceCriteria": [
+        "apps/api-gateway/Dockerfile lines 2 and 138 use node:24-alpine",
+        "apps/web-dashboard/Dockerfile lines 2 and 124 use node:24-alpine",
+        "apps/mcp-server/Dockerfile lines 2 and 104 use node:24-alpine",
+        "apps/ectropy-console/Dockerfile lines 3 and 88 use node:24-alpine",
+        "apps/ectropy-console/Dockerfile.standalone lines 1 and 17 use node:24-alpine",
+        "apps/edge-server/Dockerfile lines 8 and 63 use node:24-alpine",
+        ".devcontainer/Dockerfile.dev line 3 uses node:24-bullseye",
+        "No FROM node:20-* directive remains in any of the 7 in-scope Dockerfiles",
+        "Docker build smoke test for api-gateway and web-dashboard completes pnpm install without ERR_PNPM_UNSUPPORTED_ENGINE"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Runtime and dev environment Node version pins bumped to Node 24.",
+      "acceptanceCriteria": [
+        ".nvmrc file content equals 24",
+        ".devcontainer/devcontainer.json features ghcr.io/devcontainers/features/node:1 version field equals 24"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "Kubernetes manifest inline image: node:20 references bumped to image: node:24.",
+      "acceptanceCriteria": [
+        "infrastructure/kubernetes/ai-agents/ai-agents-deployment.yaml inline node image reference equals node:24",
+        "infrastructure/kubernetes/iot/iot-integration-deployment.yaml inline node image reference equals node:24",
+        "infrastructure/kubernetes/backup/disaster-recovery-deployment.yaml inline node image reference equals node:24",
+        "No image: node:20 directive remains in any of the 3 in-scope k8s manifest files"
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "PR #320 closed without merge with audit comment naming the supersession reason and referencing this new deliverable id. Prior branch chore/node-24-workflow-bump-2026-06-09 deleted from local and remote (idempotent if already cleaned).",
+      "acceptanceCriteria": [
+        "PR #320 state is CLOSED (not MERGED)",
+        "Branch chore/node-24-workflow-bump-2026-06-09 is absent from git ls-remote origin output",
+        "PR #320 audit comment names this new deliverable id d-2026-06-09-eb-node-24-full-migration and the SPIKE that authorized supersession"
+      ]
+    },
+    {
+      "id": "OUT-7",
+      "description": "Replacement PR opens on chore/node-24-full-migration-2026-06-09 with explicit 24-file scope (no .dlp/ bleed, no unrelated drift).",
+      "acceptanceCriteria": [
+        "New PR opens against main from branch chore/node-24-full-migration-2026-06-09",
+        "Single commit on the new branch touches exactly the 24 files declared in scopeFiles (no .dlp/ or other unexpected paths)",
+        "All 3 required ruleset checks pass on PR CI (NV-03, vestigial .js, patterns.yml)",
+        "Foundation Health and Enterprise Test Suite and Build Staging Images workflows pass on PR CI (no ERR_PNPM_UNSUPPORTED_ENGINE)"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Tarball applier sandbox-validated chat-side against representative fixtures for each file class (workflow YAML, package.json JSON, Dockerfile FROM, .nvmrc plaintext, devcontainer.json JSON features block, k8s YAML inline image)",
+      "Idempotent re-apply produces 0 changes on already-transformed fixtures",
+      "SHA-drift refusal triggers exit code 1 on mismatched HEAD",
+      "Post-write verify confirms no setup-node@v4, no node-version 20 or 20.x, no FROM node:20-*, no image: node:20 in scoped files",
+      "All 3 required ruleset checks pass on PR CI",
+      "Pre-merge Nx 21.5.3 plus Node 24 compatibility smoke test (pnpm nx run-many --target=lint dry-run from CI on PR branch) completes without engine error",
+      "commit_and_merge.sh PHASE 3 stages explicit 24-file list and aborts if any unexpected file would be staged"
+    ],
+    "postMerge": [
+      "Main HEAD advances to squash-merge commit SHA",
+      "Foundation Health and Build Staging Images and Enterprise Test Suite workflows turn green on main",
+      "FU-NODE20-DEPRECATION-1 register status flipped to closed in next hygiene cycle",
+      "EB-chat posts merge notice to #luhtech-agents-comms with full 40-char SHA per memory #27"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-09",
+      "trigger": "EB-chat authored post SPIKE PHASE S0 substrate-capture (5 axes surface mapped to 24 files). Supersedes d-2026-06-09-eb-node-24-bump-pnpm-canonical per DELETE-AND-NEW-DELIVERABLE SPIKE terminal authorized by L4 in EB-chat 2026-06-09."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-NODE20-DEPRECATION-1"
+  ],
+  "notes": "Supersedes d-2026-06-09-eb-node-24-bump-pnpm-canonical (v1.0.0) which had 12-file scope insufficient for full Node 24 migration. SPIKE spike/node-24-full-migration-surface-2026-06-09 (L4-authorized entry 2026-06-09) mapped surface to 24 files across 5 axes via SPIKE PHASE S0 read-only substrate dispatch. Failure mechanism root cause: .npmrc engine-strict=true plus root package.json engines.node bumped to >=24.0.0 plus Dockerfiles still FROM node:20-alpine causes ERR_PNPM_UNSUPPORTED_ENGINE in every Docker pnpm install layer. My prior session classification of Build Staging Images Docker failure as 'pre-existing rot' was incorrect (memory #1 confident-then-retract pattern, third occurrence in this arc). Prior spec d-2026-06-09-eb-node-24-bump-pnpm-canonical transitions to lifecycleState S6-superseded referencing this new spec id; prior held EB tarball SHA bb9f54c5d774163fb1236a7f2428e8e0cebf48e375305d757c9a0a50e6fe506a is abandoned-on-terminal. SR-chat handles supersession transition plus landing of this new spec in the same SR PR per scope-lock exception precedent (cycle 7 SR PR #159 pattern). Risk flag: Nx 21.5.3 official Node 24 verification absent; preMerge smoke test required. DEC authoring for the architectural Node 24 migration decision is not in this deliverable scope and may be authored by SR-chat as a parallel artifact."
+}
