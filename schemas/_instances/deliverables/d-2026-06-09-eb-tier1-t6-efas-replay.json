@@ -1,0 +1,232 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-09-eb-tier1-t6-efas-replay",
+  "version": "1.0.0",
+  "title": "URO Tier 1 \u2014 T6: EFAS engine (Phase 1) + replay UI + scenario library",
+  "description": "Sixth and final child deliverable of URO Tier 1 parent arc d-2026-06-05-eb-tier1-ros-overlay-foundation per LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-07 \u00a75 + \u00a78.T6. Implements EFAS Spec v1.0 Phase 1 (Foundation) ONLY \u2014 Phases 2/3/4 (transform library expansion + integration + learning loop) are F2-class follow-on per R8 + R9. Adds efas_engine_node.py: PCA projection from 374-factor state vector to k=12 eigenmode space, bounded path enumeration for SDI = log\u2081\u2080(count of valid paths reaching goal region), 16 starter transforms surfaced via lookup table. Publishes /efas/state at 0.2 Hz (luhtech_msgs/EFASState; 12 eigenmode values + SDI scalar + current factor vector) and /efas/alerts on threshold cross (luhtech_msgs/EFASAlert; tier per SDI cascade thresholds >10\u2076\u2192T1 ... \u226410\u00b9\u2192T7). Adds EFASOverlay browser extension: alert beam visualization at affected voxels + SDI corner widget + 12 eigenmode bar chart. Adds browser replay UI (play/pause/scrub/speed) using @mcap/core + @mcap/browser libraries for client-side .mcap consumption (NOT server-side ros2 bag play). Authors 4 scenarios: worker_walks_l2, crane_failure, inspection_fail, wagon_progression (YAML files consumed by scenario_controller_node from T2). Validation proof-point: SDI gauge visibly responds to scripted events (crane_failure shows SDI dip below 10\u2075, triggers Tier 2 alert), .mcap files downloadable + playable in stock Foxglove desktop. Closes URO Tier 1 parent arc \u2014 all 6 children S7-merged. Full dev \u2192 staging \u2192 prod escalation procedural embedded in validation.postMerge[].",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/tier1-t6-efas-replay-2026-06-09",
+    "scopeFiles": [
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/efas_engine_node.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/efas/__init__.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/efas/projection_matrix.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/efas/sdi_path_enumerator.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/efas/transforms.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/efas/transforms_v1_0.yaml",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/setup.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/launch/uro_sim.launch.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/test/test_efas_engine.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/test/test_efas_projection.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/test/test_efas_sdi.py",
+      "infrastructure/uro-sim/scenarios/worker_walks_l2.yaml",
+      "infrastructure/uro-sim/scenarios/crane_failure.yaml",
+      "infrastructure/uro-sim/scenarios/inspection_fail.yaml",
+      "infrastructure/uro-sim/scenarios/wagon_progression.yaml",
+      "apps/web-dashboard/src/lib/uro/efas-overlay.ts",
+      "apps/web-dashboard/src/lib/uro/replay-controller.ts",
+      "apps/web-dashboard/src/lib/uro/mcap-client.ts",
+      "apps/web-dashboard/src/components/uro/EFASCornerWidget.tsx",
+      "apps/web-dashboard/src/components/uro/EigenmodeBars.tsx",
+      "apps/web-dashboard/src/components/uro/ReplayControls.tsx",
+      "apps/web-dashboard/src/components/uro/ScenarioSelector.tsx",
+      "apps/web-dashboard/src/routes/uro/replay/page.tsx",
+      "apps/web-dashboard/src/lib/uro/__tests__/efas-overlay.test.ts",
+      "apps/web-dashboard/src/lib/uro/__tests__/replay-controller.test.ts",
+      "apps/web-dashboard/src/lib/uro/__tests__/mcap-client.test.ts",
+      "apps/web-dashboard/tests/uro/efas-scenario.spec.ts",
+      ".roadmap/follow-up-register.json",
+      ".roadmap/decision-log.json",
+      ".dlp/deliverables/d-2026-06-09-eb-tier1-t6-efas-replay/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "efas_engine_node.py \u2014 ROS 2 node implementing EFAS Spec v1.0 Phase 1 Foundation. State vector: 374 discrete factors (100 tasks \u00d7 3 + 10 resource types \u00d7 3 + 20 risks \u00d7 2 + 4 global constraints) sourced from voxel_groups + pm_decisions + project state. Projection: hardcoded PCA matrix W (12 \u00d7 374) projecting to 12-mode eigenspace per EFAS Spec v1.0 \u00a73.2. Named modes: \u03bb\u2081 Progress, \u03bb\u2082 Critical Path, \u03bb\u2083 Resource Balance, \u03bb\u2084 Cost Trajectory, \u03bb\u2085 Quality Trend, \u03bb\u2086 Risk Exposure, \u03bb\u2087\u2013\u03bb\u2081\u2082 subsystem modes. Publishes /efas/state at 0.2 Hz (luhtech_msgs/EFASState) and /efas/alerts on threshold cross (luhtech_msgs/EFASAlert) per SDI cascade thresholds in \u00a74 strategy doc. Subscribes /box/groups/snapshot + /box/groups/deltas from T5 box_simulator; consumes simulator events from hsx/rsx/msx/isx/esx nodes (T2).",
+      "acceptanceCriteria": [
+        "efas_engine_node registered in luhtech_uro_sim/setup.py entry_points (ros2 run luhtech_uro_sim efas_engine_node succeeds)",
+        "ros2 topic list shows /efas/state and /efas/alerts",
+        "ros2 interface show on /efas/state matches luhtech_msgs/EFASState landed at T1 (eigenmodes[12] + sdi + factor_vector[374] + timestamp)",
+        "ros2 interface show on /efas/alerts matches luhtech_msgs/EFASAlert landed at T1 (tier 1-7 + affected_voxel_urn + transform_id + threshold + timestamp + reason)",
+        "ros2 topic hz /efas/state reads 0.2 Hz \u00b110% during scenario playback",
+        "Node respects ROS_DOMAIN_ID isolation; foxglove_bridge surfaces topics to browser",
+        "Unit test test_efas_engine.py covers cold-start factor vector load + steady-state cycle + alert threshold cross"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "EFAS PCA projection matrix W (12 \u00d7 374) implementation in projection_matrix.py. Matrix is HARDCODED per Phase 1 boundary (NOT learned from data \u2014 that is Phase 4 learning loop scope per R9). Sourced from EFAS Spec v1.0 Appendix B projection matrix or computed once from canonical seed data and committed verbatim. Documented: each row of W corresponds to one named eigenmode; column ordering matches state-vector documented in efas_engine_node.py header.",
+      "acceptanceCriteria": [
+        "projection_matrix.py exports a single constant W: np.ndarray of shape (12, 374), dtype=float64",
+        "W is committed verbatim (not computed at import time); docstring explains source (EFAS Spec v1.0 Appendix B or seed computation)",
+        "Test test_efas_projection.py: W @ test_state_vector returns shape (12,) within expected eigenmode bounds; row-norm sanity check (rows are orthonormal per PCA construction)",
+        "No external data dependencies at import (no Spaces fetch, no DB query) \u2014 Phase 1 boundary preserved",
+        "DEC entry in decision-log.json: 'd-2026-06-09-efas-projection-matrix-hardcoded-phase-1' locks the matrix source + rationale (Phase 1 NOT learning loop)"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "SDI bounded-path enumeration in sdi_path_enumerator.py. SDI = log\u2081\u2080(count of valid paths reaching goal region from current eigenmode state). Bounded per Phase 1: max path depth = 8 steps; max enumeration time = 50ms per cycle (0.2 Hz tick has 5000ms budget, conservative). Goal region defined per scenario YAML (target eigenmode values + acceptable tolerance). Returns count + log\u2081\u2080 scalar.",
+      "acceptanceCriteria": [
+        "sdi_path_enumerator.py exports compute_sdi(eigenmode_state, goal_region, max_depth=8, max_time_ms=50) -> tuple[int, float]",
+        "Test test_efas_sdi.py: known small scenario returns deterministic count (no random); SDI matches log\u2081\u2080(count)",
+        "Max time budget respected: timer-bounded enumeration returns partial count on overrun with warning logged",
+        "Goal region schema documented (target_eigenmodes[12] + tolerance_per_mode[12])",
+        "DEC entry in decision-log.json: 'd-2026-06-09-sdi-bounded-enumeration-phase-1' locks max_depth=8 + max_time_ms=50 as Phase 1 bounds"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "16 starter transforms in transforms_v1_0.yaml + Python loader in transforms.py. Per EFAS Spec v1.0 Appendix A: 5 categories (Resource, Schedule, Scope, Risk, Quality) \u00d7 averaging 3-4 each = 16 transforms. Each transform: id + name + category + characteristic_eigenvalue_effects (sparse vector of which eigenmodes shift and by how much) + applicability_condition (which factor patterns trigger transform). Multiplicative composition supported: T_collapsed = T\u2081 \u00b7 T\u2082 \u00b7 ... \u00b7 T\u2096 in eigenspace. transforms.py exposes lookup_transform(transform_id) and compose_transforms(transform_ids[]).",
+      "acceptanceCriteria": [
+        "transforms_v1_0.yaml contains exactly 16 entries spanning 5 categories (no category empty)",
+        "Each entry has required fields: id, name, category, eigenvalue_effects (12-element sparse vector), applicability_condition",
+        "transforms.py loads YAML at module init; lookup_transform(id) returns transform object",
+        "compose_transforms([id1, id2, id3]) returns multiplicative composition with correct eigenvalue arithmetic",
+        "ajv canonical 3-flag validation passes against efas-transforms.schema.json (new schema authored as part of T6 \u2014 surface for SR-chat catalog add if not already present, or use generic JSON schema validation)",
+        "DEC entry in decision-log.json: 'd-2026-06-09-efas-transforms-v1-0-16-starters' locks the 16-transform set as Phase 1 boundary; Phase 2 expansion captured as FU"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "EFASOverlay browser extension on Speckle Viewer 2.0 OVERLAY layer. Subscribes to /efas/state + /efas/alerts via foxglove_bridge WS. Renders: alert beam at affected_voxel_urn coordinates (vertical light beam with tier color: T1 red, T2 orange, T3 yellow, T4-T7 progressive), SDI corner widget (gauge + current value with log scale), 12 eigenmode bars (horizontal bar chart of current eigenmode magnitudes). Decay-out animation on alert dismissal (transform applied, threshold cleared). Integrates with T4 raycaster click selection (clicking alert beam shows detail panel with transform recommendations).",
+      "acceptanceCriteria": [
+        "efas-overlay.ts exports EFASOverlay class extending Speckle Extension pattern (constructor takes viewer + WS client)",
+        "Subscribes to /efas/state + /efas/alerts via T3 browser WS client (@foxglove/ws-protocol)",
+        "Alert beam renders at world-space coords resolved from affected_voxel_urn (lookup against voxel_groups data from T5)",
+        "SDI corner widget reads /efas/state.sdi and renders log-scale gauge; color shifts at tier thresholds (>10\u2076 red, 10\u2075-10\u2076 orange, etc.)",
+        "12 eigenmode bars render with named labels (\u03bb\u2081 Progress, \u03bb\u2082 Critical Path, ...); update at 0.2 Hz",
+        "Alert decay-out animation: 1s fade-out on alert resolution event",
+        "Vitest covers state update + alert add/remove + decay timing in efas-overlay.test.ts",
+        "Playwright e2e in tests/uro/efas-scenario.spec.ts asserts alert beam visible within 1s of crane_failure event injection"
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "Browser replay UI (play/pause/scrub/speed) using @mcap/core + @mcap/browser. Client-side .mcap consumption (NOT server-side ros2 bag play per R5 + strategy doc \u00a72 'Browser scrub UX: client-side via @mcap/core'). ReplayControls component: play/pause toggle, scrub bar (current_time + duration), speed selector (0.25x, 0.5x, 1x, 2x, 4x). ReplayController class: loads .mcap file from URL, decodes messages, dispatches into existing overlay update pathways (replaces live WS messages while replay active). Mode toggle: live (WS) \u2194 replay (mcap).",
+      "acceptanceCriteria": [
+        "replay-controller.ts exports ReplayController class with load(url), play(), pause(), seek(time), setSpeed(rate), dispose()",
+        "mcap-client.ts wraps @mcap/core + @mcap/browser for browser-side decoding; exposes streaming iterator over messages",
+        "ReplayControls component (React) wires to ReplayController; renders play/pause + scrub slider + speed dropdown",
+        "Scrub rewind reproduces prior state: seek backward, current overlay state matches what was rendered at that timestamp",
+        ".mcap file downloadable via UI 'Download bag' button; downloaded file plays in stock Foxglove desktop (manual verification, screenshot in _msg/SCREENSHOTS/)",
+        "Mode toggle: switching live\u2194replay disconnects WS / disconnects replay correctly; no message-source overlap",
+        "Vitest covers ReplayController state machine in replay-controller.test.ts + mcap-client.test.ts"
+      ]
+    },
+    {
+      "id": "OUT-7",
+      "description": "4 scenarios authored as YAML files consumed by scenario_controller_node (T2). worker_walks_l2: HSX worker walks through Level 2 ROOM zone over 60s; benign baseline (no SDI dip expected). crane_failure: RSX crane fails mid-lift at 90s; affects DECISION_ZONE for Level 1 South MEP clash; SDI dips to <10\u2075, Tier 2 EFAS alert. inspection_fail: ISX inspection failure on Grid B3 at 45s; affects MEP system group; SDI dips to <10\u2076, Tier 3 alert. wagon_progression: ESX material wagon progression across Levels 0\u21921 over 120s; demonstrates resource interpolation; no SDI threshold cross.",
+      "acceptanceCriteria": [
+        "4 YAML files present at infrastructure/uro-sim/scenarios/ with valid scenario_controller_node schema",
+        "Each scenario produces an .mcap file when played via uro-sim entrypoint rosbag2 recording",
+        "Playback via /dev/uro replay UI: each scenario plays end-to-end (play button) without errors",
+        "crane_failure: SDI gauge drops below 10\u2075 within 1s of scripted event; EFAS alert beam appears at affected voxel within 1s",
+        "inspection_fail: SDI drops below 10\u2076 within 1s; Tier 3 alert tier color (yellow)",
+        "wagon_progression: no SDI threshold cross; smooth lerp interpolation of wagon position visible in browser",
+        "Each .mcap downloadable and playable in stock Foxglove desktop (manual verification per scenario)"
+      ]
+    },
+    {
+      "id": "OUT-8",
+      "description": "/dev/uro/replay page route in apps/web-dashboard/src/routes/uro/replay/page.tsx. Renders Speckle Viewer 2.0 substrate + locked Speckle backdrop (T3 substrate) + VoxelGroupOverlay (T4) + ResourcePresenceOverlay (T4) + EFASOverlay (T6 OUT-5) + ReplayControls (T6 OUT-6) + ScenarioSelector. ScenarioSelector lists 4 scenarios with metadata (name, duration, expected SDI behavior); selecting one loads the corresponding .mcap into ReplayController.",
+      "acceptanceCriteria": [
+        "/dev/uro/replay route registered + accessible from dev.ectropy.ai after authentication",
+        "Page renders Speckle backdrop + all overlays without console errors",
+        "ScenarioSelector lists 4 scenarios with correct metadata",
+        "Selecting a scenario loads .mcap + plays without errors; alert behaviors match per OUT-7 acceptance",
+        "Manual visual confirmation: dashboard captures all 4 scenarios in _msg/SCREENSHOTS/ (01-worker_walks_l2.png ... 04-wagon_progression.png)",
+        "Browser FPS reading >30 fps during replay with all overlays active (METRICS.txt)"
+      ]
+    },
+    {
+      "id": "OUT-9",
+      "description": "EB-local SPEC.md at .dlp/deliverables/d-2026-06-09-eb-tier1-t6-efas-replay/SPEC.md per F0B85LNSTC4 doctrine. Documents EFAS Phase 1 Foundation boundary explicitly (per R9 + R8); Phase 2/3/4 are F2-class follow-on. Captures projection matrix decision (hardcoded, NOT learned), SDI bounded enumeration parameters (max_depth=8, max_time_ms=50), 16-transform Phase 1 set, 4 scenarios + their expected behaviors. dev \u2192 staging \u2192 prod escalation procedural outlined. Dependency chain: T1 (luhtech_msgs EFAS message types) + T2 (scenario_controller_node + rosbag2 recording) + T3 (browser WS client) + T4 (VoxelGroupOverlay + display rules) + T5 (box_simulator + voxel_groups data).",
+      "acceptanceCriteria": [
+        "SPEC.md authored at the specified path",
+        "Phase 1 boundary explicitly documented (k=12 hardcoded projection; max_depth=8; 16 transforms; NO learning loop)",
+        "All 4 scenarios documented with expected SDI behavior + alert tier",
+        "Dependency chain on T1-T5 enumerated",
+        "Tracked by git per FU-EB-DLP-SPEC-MD-GITIGNORE-NEGATION-1 closure"
+      ]
+    },
+    {
+      "id": "OUT-10",
+      "description": "Closes URO Tier 1 parent arc. Once T6 reaches S7-merged at production, all 6 children (T1-T6) are S7-merged. Parent arc d-2026-06-05-eb-tier1-ros-overlay-foundation eligible for S7 TRUTH-DELIVERED authoring aggregating all 6 _msg/L4-CHECKLIST.md files as closure evidence. Parent's childDeliverables[] amended to include d-2026-06-09-eb-tier1-t5-groups-occupancy + d-2026-06-09-eb-tier1-t6-efas-replay (currently lists T1-T4 only). Parent TRUTH-DELIVERED authoring is post-T6-PROD-merge step \u2014 separate L4 named-step at SR-chat scope per memory #4.",
+      "acceptanceCriteria": [
+        "After T6 reaches STAGE-PROD-7 (production verified), surface parent-arc closure as next L4 named-step",
+        "SR-chat amends parent childDeliverables[] to include T5 + T6 ids",
+        "SR-chat authors parent TRUTH-DELIVERED at schemas/_instances/truth-delivered/d-2026-06-05-eb-tier1-ros-overlay-foundation.json aggregating all 6 children L4-CHECKLIST.md evidence",
+        "URO Tier 1 Round 1 demo ready for technical/robotics-savvy audience (Dusty/Locus/6River/Boston Dynamics Orbit) per strategy doc \u00a71 mission statement"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "T5 (d-2026-06-09-eb-tier1-t5-groups-occupancy) must reach S7-merged at minimum (S8-closed preferred) before T6 STAGE-DEV-1 \u2014 T6 efas_engine subscribes to /box/groups/snapshot from T5 box_simulator; T6 can start spec-stage and ROS-node-stage in parallel with T5, but PR cannot merge until T5 PR is on main",
+      "TypeScript compile (tsc --noEmit --project tsconfig.app.json) passes with zero errors across web-dashboard + api-gateway",
+      "ESLint passes on all modified TypeScript files (web-dashboard EFAS components + replay controllers)",
+      "Vitest passes for efas-overlay.test.ts + replay-controller.test.ts + mcap-client.test.ts",
+      "Playwright e2e passes for tests/uro/efas-scenario.spec.ts (4 scenarios end-to-end)",
+      "colcon build --packages-select luhtech_uro_sim succeeds with efas_engine + projection + sdi + transforms modules; colcon test passes for test_efas_engine.py + test_efas_projection.py + test_efas_sdi.py",
+      "numpy + scipy added to luhtech_uro_sim package.xml + setup.py dependencies (PCA projection requires numpy.linalg)",
+      "Docker uro-sim image rebuild includes numpy/scipy; image size delta from T5 budget < +200 MB (total < 1.4 GB)",
+      "ros2 interface show on /efas/state + /efas/alerts matches luhtech_msgs EFASState + EFASAlert types from T1 (no message schema changes in T6)",
+      "ajv canonical 3-flag validation passes for 4 scenario YAML files against scenario.schema.yaml (or equivalent canonical schema if exists; otherwise document new schema as out-of-scope for T6)",
+      "ajv canonical 3-flag validation passes for transforms_v1_0.yaml against efas-transforms.schema.json (new schema if needed; or pass JSON Schema validation)",
+      "ajv canonical 3-flag validation passes for .roadmap/follow-up-register.json + .roadmap/decision-log.json (3 new DEC entries: projection-matrix-hardcoded + sdi-bounded + transforms-v1-0-16-starters)",
+      "n8n PostgreSQL pipeline canary (159.223.203.231) returns HTTP 200 pre-merge (Hard Constraint #1)",
+      "All 3 required ruleset checks pass on PR CI (NV-03, vestigial .js, patterns.yml)",
+      "Foundation Health + Enterprise Test Suite + Build Staging Images workflows pass on PR CI",
+      "Roadmap V3 Schema Validation CI gate passes",
+      "Required SR CI checks all GREEN; NO --admin merge",
+      "commit_and_merge.sh PHASE 3 stages explicit 30-file scopeFiles list and aborts if any unexpected file would be staged (memory #18 Tarball V2 scope-lock)",
+      "All OUT-1 through OUT-10 acceptance criteria met (OUT-10 deferred to post-merge per its description); _msg/L4-CHECKLIST.md authored with PASS/FAIL/EVIDENCE columns ticked for OUT-1..OUT-9"
+    ],
+    "postMerge": [
+      "[STAGE-DEV-1] Squash-merge to main on luh-tech/Ectropy-Business after T5 is on main; mergeCommitSha captured for SR closure",
+      "[STAGE-DEV-2] CI deploy-dev.yml auto-fires on main push; build-and-push web-dashboard + uro-sim images to DOCR with main SHA tag",
+      "[STAGE-DEV-3] Dev droplet deploy-agent HMAC (Zero-SSH per memory #20) pulls new images; docker compose up -d --no-deps web-dashboard uro-sim (NEVER down, NEVER restart)",
+      "[STAGE-DEV-4] Dev validation: curl https://dev.ectropy.ai/api/health returns 200; ros2 topic list inside uro-sim shows /efas/state + /efas/alerts; ros2 topic hz /efas/state reads 0.2 Hz \u00b110%",
+      "[STAGE-DEV-5] Dev /dev/uro/replay page loads; 4 scenarios listed; each scenario plays end-to-end; crane_failure SDI dip + Tier 2 alert visible within 1s",
+      "[STAGE-DEV-6] Dev .mcap download \u2192 stock Foxglove desktop playback (manual verification, screenshot in _msg/SCREENSHOTS/)",
+      "[STAGE-DEV-7] n8n PostgreSQL canary on 159.223.203.231 returns HTTP 200 post-dev-deploy (Hard Constraint #1)",
+      "[STAGE-STAGING-1] L4 review of dev _msg/L4-CHECKLIST.md; on PASS, L4 names explicit step to promote to staging (per memory #4)",
+      "[STAGE-STAGING-2] Manual workflow_dispatch on deploy-staging.yml with main SHA; canary-pre n8n probe HTTP 200",
+      "[STAGE-STAGING-3] Build + push staging images; staging Watchtower picks up; docker compose up -d --no-deps web-dashboard uro-sim",
+      "[STAGE-STAGING-4] Staging E2E pre-flight gate (Speckle 502 long-standing condition NOT session-blocking per Erik calibration)",
+      "[STAGE-STAGING-5] Staging validation gates: staging /dev/uro/replay page loads; all 4 scenarios play; crane_failure SDI dip + alert; .mcap download + Foxglove desktop playback verified",
+      "[STAGE-STAGING-6] Staging external ROS subscriber proof (stock Nav2 + rviz2 against staging foxglove_bridge consuming /box/voxels/occupancy_grid/level_2 from T5 \u2014 verify T5 production data interop with T6 EFAS layered on top)",
+      "[STAGE-STAGING-7] Staging canary-post n8n probe HTTP 200; Hard Constraint #1 verified across deploy window",
+      "[STAGE-STAGING-8] L4 review of staging _msg/L4-CHECKLIST.md; staging soak \u226524h before prod (per DEC-032 cadence) unless L4 explicitly waives",
+      "[STAGE-PROD-1] L4 names explicit step to promote to prod (per memory #4); production gate per DEC-032: workflow_dispatch deploy-production-app.yml with confirm=DEPLOY-PRODUCTION + apply_confirm=APPLY-AFTER-PLAN-REVIEW",
+      "[STAGE-PROD-2] Production canary-pre n8n probe HTTP 200; production /api/health score 100 baseline captured",
+      "[STAGE-PROD-3] Build + push production images to DOCR with main SHA tag; production rollout via deploy-agent HMAC (Zero-SSH); docker compose up -d --no-deps web-dashboard uro-sim",
+      "[STAGE-PROD-4] Production /api/health 200/score 100 within 5 minutes of rollout; production /dev/uro/replay page loads; all 4 scenarios play end-to-end against production data",
+      "[STAGE-PROD-5] Production EFAS proof: crane_failure scenario triggers Tier 2 alert in production browser within 1s; full visual confirmation captured for L4",
+      "[STAGE-PROD-6] Production canary-post n8n probe HTTP 200; Hard Constraint #1 verified across production deploy window",
+      "[STAGE-PROD-7] L4 review of production _msg/L4-CHECKLIST.md; on PASS, SR-chat authors T6 TRUTH-DELIVERED at schemas/_instances/truth-delivered/d-2026-06-09-eb-tier1-t6-efas-replay.json with full 40-char mergeCommitSha + closureStatus closed-clean (or closed-with-debt)",
+      "[STAGE-PROD-8] Full 40-char EB merge SHA + prod-rollout SHA posted to #luhtech-agents-comms channel C0B7EPFCA85 with [EB-chat] prefix per memory #19 + #27",
+      "[STAGE-PROD-9] Parent arc d-2026-06-05-eb-tier1-ros-overlay-foundation closure: SR-chat amends childDeliverables[] to include T5 + T6 ids; SR-chat authors parent TRUTH-DELIVERED aggregating all 6 _msg/L4-CHECKLIST.md files (T1-T6) \u2014 separate fresh L4 named-step at SR-chat scope per memory #4",
+      "[STAGE-PROD-10] URO Tier 1 Round 1 demo-ready posture: technical/robotics-savvy audience demo can run end-to-end against ectropy.ai/dev/uro/replay \u2014 Round 1 closes, Round 2 (D2 + D3) planning unblocks per strategy doc \u00a713"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-09",
+      "trigger": "L4 named-step approval in EB-chat 2026-06-09: 'proceed with authoring full T5 - T6 substrate to complete the full scope of deliverables following strategy and aligned with enterprise tools and direction. full procedural to deploy onto dev for validation, then escalate through to staging > prod for final goal'. Substrate-read DISPATCH-EB-READ-T5-T6-SUBSTRATE-2026-06-09 at EB main b9b4141511f806b6746cc8bba0192253b3c06793 confirmed clean slate."
+    }
+  ],
+  "parentDeliverable": "d-2026-06-05-eb-tier1-ros-overlay-foundation",
+  "relatedFollowUps": [],
+  "notes": "T6 of URO Tier 1 Round 1 per LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-07 \u00a78.T6 + \u00a74 math foundation. Substrate-correct critical path: PR 1.1 \u2713 \u2192 PR 1.2 \u2713 \u2192 T1 \u2713 \u2192 T2 \u2713 \u2192 T3 \u2713 \u2192 T4 \u2713 \u2192 T5 (sibling, must reach S7 first) \u2192 T6 \u2190 this. Authored against EB main b9b4141511f806b6746cc8bba0192253b3c06793 + SR main cfcae53f00e394de155826df486ee163253ee382. EFAS Phase 1 Foundation boundary explicitly preserved per R9: hardcoded projection matrix W (NOT learned), max_depth=8 bounded path enumeration, 16 starter transforms (Phase 2 expansion is F2-class follow-on). Dual-process consumer (Success Stack, mediation layer) is F2-class follow-on per R8 \u2014 T6 produces EFAS state outputs only; consumer-side integration is post-Tier-1. Browser scrub UX: client-side @mcap/core + @mcap/browser per R5 + strategy doc \u00a72 'Browser scrub UX: client-side via @mcap/core + @mcap/browser; NOT server-side ros2 bag play'. Full dev \u2192 staging \u2192 prod escalation embedded in validation.postMerge[] with [STAGE-DEV-N] / [STAGE-STAGING-N] / [STAGE-PROD-N] prefixes; each escalation has explicit L4 named-step gates per memory #4. Per-tarball _msg/ audit bundle per strategy doc \u00a79: BUILD.log, TOPICS.txt, PROBES.txt, DB-STATE.txt, SCREENSHOTS/, METRICS.txt, CANARY.txt, BAG-VALIDATION.txt, L4-CHECKLIST.md. L4-CHECKLIST.md maps to OUT-1 through OUT-9 (OUT-10 is post-merge parent-arc closure scope, separate L4). Hard Constraint #1 (n8n PostgreSQL pipeline live) addressed via canary checks at every escalation stage (DEV/STAGING/PROD). T6 explicit dependencies: T1 (luhtech_msgs EFASState + EFASAlert message types), T2 (scenario_controller_node + rosbag2 recording), T3 (browser WS client + ws-protocol), T4 (VoxelGroupOverlay + display-rules + raycaster click selection), T5 (box_simulator publishing /box/groups/snapshot + voxel_groups data layer that EFAS state-vector reads). T6 PR cannot merge until T5 PR is on main (declared in validation.preMerge[0]); chat can author T6 spec + ROS node code in parallel with T5 execution. T6 closes URO Tier 1 parent arc: OUT-10 triggers parent-arc closure scope (SR-chat amends childDeliverables[] + authors parent TRUTH-DELIVERED \u2014 separate L4 named-step). Round 1 demo-ready posture per strategy doc \u00a71 mission: technical/robotics-savvy audience (Dusty Robotics, Locus, 6 River, Boston Dynamics Orbit) sees genuine ROS architecture with real .mcap artifacts, standard topic conventions, voxel-as-spatial-primitive in nav_msgs/OccupancyGrid format their Nav2 stacks consume natively, EFAS/SDI as predictive optionality measurement. Round 2 (D2 warehouse polish + D3 drill-down) unblocks at parent-arc S7; F1 (Stage 8 auto-enrichment) + F2 (allocation engine + operator command surface + EFAS Phases 2/3/4) follow after Round 2. Cross-repo doctrine F0B85LNSTC4: this spec posted to #luhtech-agents-comms with file SHA256 + bytes + validation status; SR-chat lands anchor PR at schemas/_instances/deliverables/d-2026-06-09-eb-tier1-t6-efas-replay.json. Enterprise Excellence. Schema-First. No Shortcuts."
+}
