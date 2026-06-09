@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-08-eb-web-dashboard-catalog-framework-correction",
+  "deliveredAt": "2026-06-08T18:22:00Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-with-debt",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "84e2b0406ef54602cbf02ec0da5383b6fb7886a8",
+      "prNumber": 319,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/319",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "EB PR #319 merged at 84e2b0406ef54602cbf02ec0da5383b6fb7886a8 (2026-06-08 18:22 PDT). Web-dashboard catalog framework correction: Vite + React 18 + MUI 6 metadata recorded in infrastructure-catalog.json description field; services[].type held at canonical 'web' enum. FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1 closed pre-emptively (T3 OUT-9 no longer needs to file it). CI all GREEN. Functional outcome correct.\n\nDoctrine outcome closed-with-debt: PR #319 was authored and merged WITHOUT following cross-repo doctrine. Inline-bash heredoc dispatch instead of canonical tarball-delivery V2. No deliverable spec authored or routed to SR-chat. No SR anchor landed before EB execution. Schema substrate not prefetched. This TRUTH-DELIVERED is the doctrine-honest closure: deliverable spec d-2026-06-08-eb-web-dashboard-catalog-framework-correction authored retroactively in same SR batch as this TD per L4 named-step in C0B9384MTLM process-error channel.",
+    "overrideRecord": "Closed-with-debt rather than closed-clean because the doctrine path was not followed at execution time. Specific deviations preserved as audit residue:\n\n1. Memory #8 (TARBALL-DELIVERY V2) violated. EB-chat authored inline-bash heredoc dispatch rather than tarball with _apply/apply.py SHA-drift refusal + idempotent NO-OP + post-write verify. Cannot be retroactively restored; the heredoc already executed.\n\n2. Memory #10 (CROSS-REPO EXECUTION DOCTRINE) violated at execution time, restored retroactively via this SR batch (spec + TD in single PR per L4 direction).\n\n3. Memory #12 (NO MD TERMINUS - SCHEMA-BOUND) violated at execution time, restored retroactively via this schema-bound deliverable + TD pair.\n\n4. Memory #13 (SUBSTRATE-CORRECTION + DIFF-VS-BASELINE) violated. Schema substrate not prefetched; EB-CLI silently corrected 2 violations mid-execution: (a) services[].type held at canonical 'web' enum vs dispatch free-form string 'React 18 + Vite 5 + TypeScript + MUI'; (b) auditTrail[] held to canonical {version, author, changes[]} shape vs dispatch {timestamp, change, pr, actor}. Cannot be retroactively restored; the silent corrections already shipped.\n\n5. Memory #24 (ARTIFACT ROUTING) violated at execution time, restored retroactively via this SR batch.\n\nSubstrate-correction cycle 7 of 7 in cumulative arc. EB-chat self-disclosed in C0B7EPFCA85 at 18:25:47 PDT and provided full diagnostic in C0B9384MTLM at 19:17:16 PDT. Verified root cause: all 4 organization skills (cold-start-discipline, substrate-before-write, canonical-schema-authoring, cross-repo-execution-shape) were LOADED in EB-chat session, but only cold-start-discipline fired. Skill discovery is pull-not-push — discipline-availability != discipline-invocation. The other 3 sibling skills sat available-but-dormant on dispatch-authoring events.\n\nStructural fix shipped in same arc as this backfill: cold-start-discipline skill instance amended v1.0.0 -> v1.0.1 (SHA d08bf815126b8af4ce5bd9e5549d32d82df9d70e70280f9c7012c23164d49322 / 12574 bytes). Amendment adds directive #7 mandating view of substrate-before-write + canonical-schema-authoring + cross-repo-execution-shape SKILL.md files at session-open AND before any write dispatch authoring. Anti-pattern #6 names the available-but-dormant failure mode. boundaryConditions extended to per-dispatch sibling-skill consultation."
+  },
+  "relatedFollowUps": [
+    "FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1",
+    "FU-EB-DISPATCH-AUTHORING-SCHEMA-PREFETCH-DISCIPLINE-1"
+  ],
+  "rulePipelineEvidence": [
+    {
+      "ruleId": "RULE-PIPELINE-COLD-START-VERIFICATION-1",
+      "evidenceClass": "pull-not-push-skill-discovery-gap-only-cold-start-fired-3-sibling-skills-dormant"
+    },
+    {
+      "ruleId": "RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1",
+      "evidenceClass": "schema-substrate-prefetch-skipped-cli-silent-corrections-on-services-type-enum-and-audittrail-shape"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-08T18:22:00Z",
+      "actor": "Erik Luhtala (L4)",
+      "event": "EB-PR-319-squash-merged-doctrine-non-conformance-self-disclosed-by-EB-chat"
+    },
+    {
+      "timestamp": "2026-06-09T02:35:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "TRUTH-DELIVERED-retroactive-authored-per-L4-named-step-process-error-correction"
+    }
+  ]
+}

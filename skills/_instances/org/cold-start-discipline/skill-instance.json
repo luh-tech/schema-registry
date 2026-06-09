@@ -1,9 +1,9 @@
 {
   "$schema": "https://schemas.luh.tech/skill.schema.json",
-  "$id": "urn:luhtech:skill:org:cold-start-discipline:1.0.0",
+  "$id": "urn:luhtech:skill:org:cold-start-discipline:1.0.1",
   "name": "cold-start-discipline",
-  "description": "FIRES on session opening when no prior assistant turn exists or operator says fresh chat, new session, pick up, resume, cold start, ground truth pass. Forces 4 mandatory tool calls before any prose state claim and enforces credential-echo prohibition with redaction substitution. Filed 2026-06-07 after three consecutive cold-start failures: two agents fabricated state from handoff documents, the third echoed credential references from project knowledge and panicked.",
-  "version": "1.0.0",
+  "description": "FIRES on session opening (no prior assistant turn, or operator says fresh chat / new session / pick up / resume / cold start / ground truth pass). Forces 4 verification tool calls before any prose state claim, enforces credential-echo redaction, and mandates viewing the 3 sibling org SKILL.md files (substrate-before-write, canonical-schema-authoring, cross-repo-execution-shape) before any write dispatch. Skill discovery is pull-not-push. v1.0.1 amended 2026-06-08 after EB PR #319 cycle 7.",
+  "version": "1.0.1",
   "category": "org",
   "lifecycleStatus": "working-model",
   "triggerMode": "pushy",
@@ -67,6 +67,10 @@
       {
         "action": "Do not summarize the memory rules just read, the handoff document, the eb-agent results in their entirety, or the Slack channel history. Produce at most 10 lines of substrate findings, each pointing to its verifying tool call by name. Then hold for L4 named-step.",
         "rationale": "Summary-as-output is fabrication-adjacent and consumes turn budget. Operator needs verified findings, not recitation. Memory rule for DENSE communication: one-line state changes, single next action, stop."
+      },
+      {
+        "action": "After the 4 cold-start verification tool calls return, AND before authoring any write dispatch (deliverable spec, execution tarball, SR anchor, or any cross-repo artifact), view the SKILL.md files for the other three organization skills if not yet viewed in this session: substrate-before-write, canonical-schema-authoring, cross-repo-execution-shape. Skill discovery is pull, not push \u2014 these skills do not auto-invoke. The session must actively consult them before write authoring.",
+        "rationale": "Cold-start failure cycle 7 (2026-06-08 EB PR #319 doctrine non-conformance): all 4 organization skills were loaded in the EB-chat session but only cold-start-discipline fired. The other 3 organization skills (substrate-before-write, canonical-schema-authoring, cross-repo-execution-shape) sat available-but-dormant and did not invoke on dispatch-authoring events. Result: inline-bash heredoc dispatch (memory #8 violation), no SR anchor (memory #10/#24 violation), 2 schema substrate corrections silently applied by EB-CLI mid-execution. Discipline-availability is not discipline-invocation. This directive forces invocation."
       }
     ],
     "antiPatterns": [
@@ -89,6 +93,10 @@
       {
         "pattern": "Panicking on detected credential-echo mid-output: deleting partial response, apologizing at length, requesting the chat be deleted",
         "instead": "Substitute the matched value with the redaction marker retroactively, note the substitution in one sentence, continue the work."
+      },
+      {
+        "pattern": "Cold-start verification fires correctly, then dispatch-authoring proceeds without consulting substrate-before-write / canonical-schema-authoring / cross-repo-execution-shape SKILL.md files",
+        "instead": "View all three sibling organization SKILL.md files before authoring any write dispatch. Memory #8 (tarball-delivery V2), #10 (cross-repo execution doctrine), and #24 (artifact routing) all depend on those skills firing \u2014 if the skills do not fire, those memory rules do not enforce."
       }
     ]
   },
@@ -103,24 +111,38 @@
       "to": "working-model",
       "trigger": "Three consecutive cold-start failures 2026-06-07 in operator EB chats: two agents fabricated portfolio state from handoff documents (operator hours lost), third echoed credential references from project knowledge and panicked (chat deleted). Authored in EB-chat against research deliverable LUHTECH-COLD-START-DISCIPLINE-RESEARCH-2026-06-07.",
       "transitionedAt": "2026-06-07T00:00:00Z"
+    },
+    {
+      "from": "working-model",
+      "to": "working-model",
+      "trigger": "v1.0.0 -> v1.0.1 amendment 2026-06-08 after EB PR #319 substrate-correction cycle 7 demonstrated pull-not-push skill discovery gap. New directive #7 mandates sibling-skill SKILL.md view at session-open AND before any write dispatch authoring. New anti-pattern #6 names the available-but-dormant failure mode.",
+      "transitionedAt": "2026-06-09T02:30:00Z"
     }
   ],
   "pairedRule": "urn:luhtech:rule:pipeline:cold-start-verification:1.0.0",
   "compatibility": {
-    "environments": ["claude-chat", "any"],
-    "requiredTools": ["memory_user_edits", "eb-agent", "slack_read_channel"]
+    "environments": [
+      "claude-chat",
+      "any"
+    ],
+    "requiredTools": [
+      "memory_user_edits",
+      "eb-agent",
+      "slack_read_channel"
+    ]
   },
   "boundaryConditions": [
-    "Does NOT fire mid-session once the verification chain is established and operator has named the first action",
-    "Does NOT fire on greetings or conversational replies that do not require state claims",
-    "Does NOT replace substrate-before-write skill (per-action discipline); cold-start-discipline is per-session discipline that ENFORCES substrate-before-write at the moment of highest fabrication risk",
-    "Does NOT apply to chats that have already established verification via tool calls earlier in the session"
+    "Does NOT fire mid-session once the verification chain is established and the dispatch-authoring skill-chain has been invoked once",
+    "Does NOT fire on greetings or conversational replies that do not require state claims or write authoring",
+    "DOES extend to per-dispatch sibling-skill consultation: even after cold-start verification completes, BEFORE any write dispatch authoring the agent must view the other 3 organization SKILL.md files if not yet viewed this session",
+    "Does NOT replace substrate-before-write skill \u2014 cold-start-discipline ENFORCES that substrate-before-write be invoked at session-open and before any write dispatch",
+    "Does NOT apply to chats that have already established verification AND consulted all 4 organization skills earlier in the session"
   ],
   "references": [
     {
       "type": "memory-rule",
       "location": "10",
-      "purpose": "TRUTH ONLY foundation — never state as fact anything not verified this session"
+      "purpose": "TRUTH ONLY foundation \u2014 never state as fact anything not verified this session"
     },
     {
       "type": "memory-rule",
@@ -141,6 +163,11 @@
       "type": "closure-doc",
       "location": "LUHTECH-COLD-START-DISCIPLINE-RESEARCH-2026-06-07.md",
       "purpose": "Research deliverable that grounded this skill authoring"
+    },
+    {
+      "type": "closure-doc",
+      "location": "EB PR #319 (84e2b0406ef54602cbf02ec0da5383b6fb7886a8) substrate-correction cycle 7",
+      "purpose": "Primary evidence for v1.0.0 -> v1.0.1 amendment: 4 organization skills loaded but only 1 fired; 6 of 28 memory rules violated; discipline-availability gap"
     }
   ]
 }

@@ -1,7 +1,7 @@
 ---
 name: cold-start-discipline
-description: "FIRES on session opening when no prior assistant turn exists or operator says fresh chat, new session, pick up, resume, cold start, ground truth pass. Forces 4 mandatory tool calls before any prose state claim and enforces credential-echo prohibition with redaction substitution. Filed 2026-06-07 after three consecutive cold-start failures: two agents fabricated state from handoff documents, the third echoed credential references from project knowledge and panicked."
-version: 1.0.0
+description: "FIRES on session opening (no prior assistant turn, or operator says fresh chat / new session / pick up / resume / cold start / ground truth pass). Forces 4 verification tool calls before any prose state claim, enforces credential-echo redaction, and mandates viewing the 3 sibling org SKILL.md files (substrate-before-write, canonical-schema-authoring, cross-repo-execution-shape) before any write dispatch. Skill discovery is pull-not-push. v1.0.1 amended 2026-06-08 after EB PR #319 cycle 7."
+version: 1.0.1
 category: org
 lifecycleStatus: working-model
 triggerMode: pushy
@@ -70,6 +70,9 @@ Example cues:
 6. **Do not summarize the memory rules just read, the handoff document, the eb-agent results in their entirety, or the Slack channel history. Produce at most 10 lines of substrate findings, each pointing to its verifying tool call by name. Then hold for L4 named-step.**
    Summary-as-output is fabrication-adjacent and consumes turn budget. Operator needs verified findings, not recitation. Memory rule for DENSE communication: one-line state changes, single next action, stop.
 
+7. **After the 4 cold-start verification tool calls return, AND before authoring any write dispatch (deliverable spec, execution tarball, SR anchor, or any cross-repo artifact), view the SKILL.md files for the other three organization skills if not yet viewed in this session: substrate-before-write, canonical-schema-authoring, cross-repo-execution-shape. Skill discovery is pull, not push — these skills do not auto-invoke. The session must actively consult them before write authoring.**
+   Cold-start failure cycle 7 (2026-06-08 EB PR #319 doctrine non-conformance): all 4 organization skills were loaded in the EB-chat session but only cold-start-discipline fired. The other 3 organization skills (substrate-before-write, canonical-schema-authoring, cross-repo-execution-shape) sat available-but-dormant and did not invoke on dispatch-authoring events. Result: inline-bash heredoc dispatch (memory #8 violation), no SR anchor (memory #10/#24 violation), 2 schema substrate corrections silently applied by EB-CLI mid-execution. Discipline-availability is not discipline-invocation. This directive forces invocation.
+
 ## Anti-patterns
 
 - DO NOT: Producing prose claiming EB SHA, FU state, or any portfolio state on session open without an immediately-preceding tool call returning that state
@@ -82,13 +85,16 @@ Example cues:
   INSTEAD: Pick the obvious next action from verified state. Hold for L4 approval. Memory rule 20.
 - DO NOT: Panicking on detected credential-echo mid-output: deleting partial response, apologizing at length, requesting the chat be deleted
   INSTEAD: Substitute the matched value with the redaction marker retroactively, note the substitution in one sentence, continue the work.
+- DO NOT: Cold-start verification fires correctly, then dispatch-authoring proceeds without consulting substrate-before-write / canonical-schema-authoring / cross-repo-execution-shape SKILL.md files
+  INSTEAD: View all three sibling organization SKILL.md files before authoring any write dispatch. Memory #8 (tarball-delivery V2), #10 (cross-repo execution doctrine), and #24 (artifact routing) all depend on those skills firing — if the skills do not fire, those memory rules do not enforce.
 
 ## Boundary conditions (when this skill does NOT fire)
 
-- Does NOT fire mid-session once the verification chain is established and operator has named the first action
-- Does NOT fire on greetings or conversational replies that do not require state claims
-- Does NOT replace substrate-before-write skill (per-action discipline); cold-start-discipline is per-session discipline that ENFORCES substrate-before-write at the moment of highest fabrication risk
-- Does NOT apply to chats that have already established verification via tool calls earlier in the session
+- Does NOT fire mid-session once the verification chain is established and the dispatch-authoring skill-chain has been invoked once
+- Does NOT fire on greetings or conversational replies that do not require state claims or write authoring
+- DOES extend to per-dispatch sibling-skill consultation: even after cold-start verification completes, BEFORE any write dispatch authoring the agent must view the other 3 organization SKILL.md files if not yet viewed this session
+- Does NOT replace substrate-before-write skill — cold-start-discipline ENFORCES that substrate-before-write be invoked at session-open and before any write dispatch
+- Does NOT apply to chats that have already established verification AND consulted all 4 organization skills earlier in the session
 
 ## Paired rule
 
@@ -101,6 +107,7 @@ This skill pairs with rule instance: `urn:luhtech:rule:pipeline:cold-start-verif
 - [rule-instance] RULE-PIPELINE-COLD-START-VERIFICATION-1 — Paired mechanical enforcement of the 4-tool-call verification ritual
 - [rule-instance] RULE-COMMS-CREDENTIAL-PATTERN-REDACTION-1 — Portfolio-wide credential-echo prohibition referenced by this skill but applying beyond cold-start
 - [closure-doc] LUHTECH-COLD-START-DISCIPLINE-RESEARCH-2026-06-07.md — Research deliverable that grounded this skill authoring
+- [closure-doc] EB PR #319 (84e2b0406ef54602cbf02ec0da5383b6fb7886a8) substrate-correction cycle 7 — Primary evidence for v1.0.0 -> v1.0.1 amendment: 4 organization skills loaded but only 1 fired; 6 of 28 memory rules violated; discipline-availability gap
 
 ## Governance
 
@@ -108,4 +115,4 @@ This skill pairs with rule instance: `urn:luhtech:rule:pipeline:cold-start-verif
 - Approver: Erik Luhtala (L4)
 - Revert authority: Erik Luhtala (L4)
 
-<!-- generated by luhtech-skill-generate v1.0.0 from sha256:566b3c3eba427061fe62e904a05b7b696e2734cb67811669984b2d265bbdb219 at 2026-06-07T00:00:00Z -->
+<!-- generated by luhtech-skill-generate v1.0.0 from sha256:3f8a6a3523b7acccd678975a431447c3bf062d96a2f54ba0a37e456a8f95c14b at 2026-06-09T02:30:00Z -->

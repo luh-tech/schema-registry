@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-08-eb-web-dashboard-catalog-framework-correction",
+  "version": "1.0.0",
+  "title": "Retroactive: web-dashboard catalog framework correction (Vite + React 18 + MUI 6)",
+  "description": "Retroactive deliverable spec authored after EB PR #319 doctrine non-conformance. EB-chat session authored an inline-bash heredoc dispatch and merged PR #319 (84e2b0406ef54602cbf02ec0da5383b6fb7886a8) without filing this canonical spec or routing through the SR anchor leg per memory #10/#24. This spec is the doctrine-honest record of what was actually delivered: infrastructure-catalog.json services[].type corrected for the web-dashboard service. Schema substrate corrections that EB-CLI silently applied during execution are captured in TRUTH-DELIVERED overrideRecord. Filed 2026-06-08 as L4-named-step retroactive backfill per process-error correction in C0B9384MTLM channel; substrate-correction cycle 7.",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "fix/web-dashboard-catalog-framework-2026-06-08",
+    "scopeFiles": [
+      ".roadmap/infrastructure-catalog.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Correct web-dashboard service entry in .roadmap/infrastructure-catalog.json: framework metadata Vite + React 18 + MUI 6 stored in description field with services[].type held at canonical 'web' enum value. auditTrail[] entry appended in canonical {version, author, changes[]} shape (v2.1.2).",
+      "acceptanceCriteria": [
+        "infrastructure-catalog.json services[].type remains 'web' (enum-constrained, did not break)",
+        "Vite + React 18 + MUI 6 framework metadata present in description field",
+        "auditTrail[] v2.1.2 entry in {version, author, changes[]} shape (NOT {timestamp, change, pr, actor})",
+        "ajv canonical 3-flag validation passes against infrastructure-catalog.schema.json",
+        "FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1 closed pre-emptively (T3 OUT-9 no longer files it)"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv canonical 3-flag validation against infrastructure-catalog.schema.json passes",
+      "Baseline-diff per memory #13: zero NEW schema violations vs main",
+      "Hard Constraint #1 trivially preserved: catalog metadata only, no source code, no migrations, no DB writes",
+      "Required EB CI checks all GREEN; NO --admin merge"
+    ],
+    "postMerge": [
+      "FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1 reflects closed status (was closed pre-emptively by PR #319 merge)",
+      "Cross-repo doctrine retroactive closure: SR-chat lands this deliverable spec + TRUTH-DELIVERED in single batch (memory #10/#24 retroactive backfill)",
+      "Substrate-correction cycle 7 captured in TRUTH-DELIVERED rulePipelineEvidence with pull-not-push skill discovery diagnosis"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-08",
+      "trigger": "L4 named-step approval in C0B9384MTLM process-error correction: 'proceed with your enterprise path'. Retroactive backfill of PR #319 (already merged at 84e2b0406ef54602cbf02ec0da5383b6fb7886a8) for doctrine audit trail restoration."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1",
+    "FU-EB-DISPATCH-AUTHORING-SCHEMA-PREFETCH-DISCIPLINE-1"
+  ],
+  "notes": "Retroactive doctrine-honest deliverable for EB PR #319. Authored AFTER the EB merge already landed at 84e2b0406ef54602cbf02ec0da5383b6fb7886a8 (2026-06-08 18:22 PDT). Doctrine sequence violated by EB-chat: this spec, this SR anchor, and execution tarball did not exist before the merge. L4 named-step in process-error channel directed retroactive backfill rather than skip-and-FU; this spec restores the canonical audit trail.\n\nSubstrate-correction trajectory context: cycle 7 of 7. EB-chat session had all 4 organization skills loaded (cold-start-discipline, substrate-before-write, canonical-schema-authoring, cross-repo-execution-shape) but only cold-start-discipline fired. Pull-not-push skill discovery model: skill availability != skill invocation. Forward fix shipped as parallel SR amendment of cold-start-discipline skill instance v1.0.0 -> v1.0.1 mandating sibling-skill SKILL.md view at session-open AND before any write dispatch.\n\nSchema substrate corrections EB-CLI silently applied during execution (captured in TRUTH-DELIVERED overrideRecord, not failures of THIS spec which post-dates them):\n1. services[].type held at canonical 'web' enum (dispatch attempted free-form 'React 18 + Vite 5 + TypeScript + MUI')\n2. auditTrail[] held to canonical {version, author, changes[]} shape (dispatch authored {timestamp, change, pr, actor})\n\nMemory rules violated by the original (now-corrected) flow: #8 (TARBALL-DELIVERY V2), #9 (DELIVERABLE-FIRST), #10 (CROSS-REPO EXECUTION DOCTRINE), #12 (NO MD TERMINUS), #13 (SUBSTRATE-CORRECTION + DIFF-VS-BASELINE), #24 (ARTIFACT ROUTING). The retroactive backfill (this spec + TD) restores #9/#10/#12/#24. #8 and #13 cannot be retroactively restored — the inline-bash heredoc dispatch already executed; the schema corrections were silent. Those two stand as visible audit residue.\n\nEnterprise Excellence. Schema-First. No Shortcuts."
+}
