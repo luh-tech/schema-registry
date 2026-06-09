@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-05-eb-tier1-t3-browser-bridge",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "URO Tier 1 T3 — Browser WebSocket subscriber + locked Speckle backdrop + /dev/uro page",
   "description": "Third child of the URO Tier 1 multi-tarball arc. Builds on T1 (foxglove_bridge + viewer JWT route + nginx subrequest, PR #307 EB main c356d81) and T2 (3 simulator nodes publishing canonical Sx topics, PR #308 EB main 2bf6a4a). Lands the browser-side bridge: a TypeScript WebSocket client wrapping @foxglove/ws-protocol, a normalized state store consuming VoxelPose + ResourceStatus messages, a /dev/uro debug page rendering a locked Speckle commit as a low-opacity glTF backdrop plus a live JSON message panel, and the snapshot-speckle-to-gltf.ts script that produces the static backdrop. No overlays yet (T4 owns Speckle Extensions on OVERLAY layer). No voxel groups DB materialization (T5 owns). No EFAS state or replay UI (T6 owns). T3 proves the live data plane end-to-end: ROS 2 nodes → foxglove_bridge → nginx auth_request → browser WS client → state store → page renders.",
   "authority": {
@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "feat/tier1-t3-browser-bridge-2026-06-05",
@@ -178,6 +178,20 @@
       "to": "S4-authored",
       "date": "2026-06-05",
       "trigger": "L4 approval ('excellent. lets proceed with T3') after T2 close-clean (SR PR #137 ac3d6aa) + memory #20 (CHAT↔CLI↔EL LOOP) locked"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S7-merged",
+      "date": "2026-06-05",
+      "commitSha": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309",
+      "trigger": "EB PR #309 squash-merged 2026-06-05T23:36:21Z at commit 9d1631281312e6ecf4c3ae181355d3703e06d5c4. All 10 outputs delivered. Closure status: closed-with-debt — see TRUTH-DELIVERED.closureNotes.debt for the 2 carry-forward follow-ups. rulePipelineEvidence captured: 2 entries — see TRUTH-DELIVERED."
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-05",
+      "trigger": "TRUTH-DELIVERED instance authored 2026-06-06T00:05:00Z at schemas/_instances/truth-delivered/d-2026-06-05-eb-tier1-t3-browser-bridge.json. closureStatus: closed-with-debt. relatedFollowUps (2): FU-EB-URO-T1-ROUTE-MOUNTING-1, FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1. Cross-repo doctrine F0B85LNSTC4 cycle complete on this arc."
     }
   ],
   "parentDeliverable": "d-2026-06-05-eb-tier1-ros-overlay-foundation",
@@ -185,5 +199,7 @@
     "FU-EB-URO-T1-ROUTE-MOUNTING-1",
     "FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1"
   ],
-  "notes": "Cross-repo doctrine (memory #10): SR-chat anchors this child instance at schemas/_instances/deliverables/d-2026-06-05-eb-tier1-t3-browser-bridge.json on luh-tech/schema-registry BEFORE EB authors the T3 execution tarball. Substrate-correction discipline (memory #13) applied pre-authoring: eb-agent:trace-service web-dashboard surfaced a substrate inconsistency — architecture.json describes the dashboard as 'React 18 + Vite 5 + TypeScript + MUI' while infrastructure-catalog.json says 'Next.js 14 application'. Both are canonical files; one is wrong. T3 spec resolves the ambiguity by making the framework-dependent surface (route registration file) substrate-verified at EB CLI execution time — OUT-6 acceptance criteria explicitly require EB CLI to read source-of-truth from EB main and choose between Vite+react-router (router config registration) vs Next.js App Router (file-system route) vs Pages Router. The component module path itself (src/components/uro/DevUroPage.tsx) is framework-agnostic. The inconsistency is filed as P3 FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1 in OUT-9 — its resolution is a separate small PR after T3, not bundled into this scope. T3 depends on T1 (foxglove_bridge running in uro-sim container, viewer-token route on api-gateway, nginx auth_request configured at /ws/uro/) and T2 (3 simulator nodes publishing canonical /hsx/, /rsx/, /esx/ topics). Without T1+T2 running, T3's smoke test cannot pass — but T3's unit tests run independently (mock WS server, mock store ingest). Speckle backdrop file (.glb) generation strategy: snapshot-speckle-to-gltf.ts is shipped in T3; the actual maple-ridge.glb production is a one-off manual run by Erik against a real Speckle commit. T3 ships a .gitkeep placeholder under public/backdrops/ — the real .glb lands via a separate small commit after Erik runs the snapshot script (this avoids committing a multi-MB binary asset blindly in T3's PR). If T3 PR-time .glb generation is preferred, escalate via SPIKE per memory #9. Naming compliance (memory #18 acronyms ref): no XaaS-form node names, no /haas/-style topic prefixes — all browser-side topic constants use canonical Sx forms (/hsx/, /rsx/, /esx/). URN validation regex in OUT-2 matches the canonical pattern. No localStorage/sessionStorage usage in any T3 code per artifact-creation rules. T3 files one new FU (FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1) — substrate discovery during authoring, not T3-created tech debt."
+  "notes": "Cross-repo doctrine (memory #10): SR-chat anchors this child instance at schemas/_instances/deliverables/d-2026-06-05-eb-tier1-t3-browser-bridge.json on luh-tech/schema-registry BEFORE EB authors the T3 execution tarball. Substrate-correction discipline (memory #13) applied pre-authoring: eb-agent:trace-service web-dashboard surfaced a substrate inconsistency — architecture.json describes the dashboard as 'React 18 + Vite 5 + TypeScript + MUI' while infrastructure-catalog.json says 'Next.js 14 application'. Both are canonical files; one is wrong. T3 spec resolves the ambiguity by making the framework-dependent surface (route registration file) substrate-verified at EB CLI execution time — OUT-6 acceptance criteria explicitly require EB CLI to read source-of-truth from EB main and choose between Vite+react-router (router config registration) vs Next.js App Router (file-system route) vs Pages Router. The component module path itself (src/components/uro/DevUroPage.tsx) is framework-agnostic. The inconsistency is filed as P3 FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1 in OUT-9 — its resolution is a separate small PR after T3, not bundled into this scope. T3 depends on T1 (foxglove_bridge running in uro-sim container, viewer-token route on api-gateway, nginx auth_request configured at /ws/uro/) and T2 (3 simulator nodes publishing canonical /hsx/, /rsx/, /esx/ topics). Without T1+T2 running, T3's smoke test cannot pass — but T3's unit tests run independently (mock WS server, mock store ingest). Speckle backdrop file (.glb) generation strategy: snapshot-speckle-to-gltf.ts is shipped in T3; the actual maple-ridge.glb production is a one-off manual run by Erik against a real Speckle commit. T3 ships a .gitkeep placeholder under public/backdrops/ — the real .glb lands via a separate small commit after Erik runs the snapshot script (this avoids committing a multi-MB binary asset blindly in T3's PR). If T3 PR-time .glb generation is preferred, escalate via SPIKE per memory #9. Naming compliance (memory #18 acronyms ref): no XaaS-form node names, no /haas/-style topic prefixes — all browser-side topic constants use canonical Sx forms (/hsx/, /rsx/, /esx/). URN validation regex in OUT-2 matches the canonical pattern. No localStorage/sessionStorage usage in any T3 code per artifact-creation rules. T3 files one new FU (FU-EB-WEB-DASHBOARD-FRAMEWORK-DISCREPANCY-1) — substrate discovery during authoring, not T3-created tech debt.\n\n[v1.0.1 RECONCILE AMENDMENT 2026-06-09] Deliverable lifecycleState reconciled with canonical TRUTH-DELIVERED already on SR main since 2026-06-06T00:05:00Z. Mixed-state substrate gap diagnosed by SR-chat substrate-before-write 2026-06-09 portfolio sweep: TRUTH-DELIVERED was authored on day-of-merge with full canonical shape (40-char mergeCommit 9d1631281312e6ecf4c3ae181355d3703e06d5c4, S8-closed, 2 relatedFollowUps), but the deliverable instance was never updated from S4-authored to reflect the EB merge (2026-06-05). This v1.0.1 amendment brings the deliverable into agreement with the TRUTH-DELIVERED without touching the canonical TRUTH-DELIVERED file. Full 40-char merge SHA pulled chat-side directly from the existing TRUTH-DELIVERED on SR main — no gh-CLI fetch required. Part of URO Tier 1 closure batch (T2/T3/T4 reconciled together per L4-approved enterprise scope-lock exception for closure-style atomic batching, precedent SR PR #162 + #164). Closure-backlog discovery doctrine: closure probes BOTH deliverable AND TRUTH-DELIVERED paths on SR main before authoring (memory #13 SUBSTRATE-CORRECTION addendum). Semver: PATCH (lifecycle reconcile + audit-trail completion; no behavior change to deliverable goal or scope).",
+  "mergeCommitSha": "9d1631281312e6ecf4c3ae181355d3703e06d5c4",
+  "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/309"
 }

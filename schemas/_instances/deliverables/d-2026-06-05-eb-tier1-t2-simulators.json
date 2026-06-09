@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-05-eb-tier1-t2-simulators",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "URO Tier 1 T2 — Simulator nodes (humsx + robsx + eqpsx) + scenario controller + rosbag2 .mcap recording",
   "description": "Second child of the URO Tier 1 multi-tarball arc. Builds on T1 foundation (PR #307, EB main c356d81). Lands the simulator layer inside the uro-sim container: 3 resource-type simulator nodes publishing on canonical Sx-prefixed topics, a scenario controller that orchestrates simulator behaviors from declarative YAML scenarios, the first scripted scenario (worker_walks_through_l2), and rosbag2 .mcap recording wired into the container entrypoint. No browser receiving yet (T3 owns). No overlays yet (T4 owns). No production data (T5 owns Maple Ridge bundle). Simulator infrastructure only — proves the topic-publishing layer and replay capability end-to-end at the ROS 2 layer.",
   "authority": {
@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "feat/tier1-t2-simulators-2026-06-05",
@@ -168,11 +168,27 @@
       "to": "S4-authored",
       "date": "2026-06-05",
       "trigger": "L4 approval ('excellent, proceed') to author T2 child deliverable spec post T1 closure (EB main c356d81) + SR amend land (e59a567) + memory consolidation (slots 18-19 acronyms + slack identity)"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S7-merged",
+      "date": "2026-06-05",
+      "commitSha": "2bf6a4a827ddc389da2bc4f4bb35e07d836f2880",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/308",
+      "trigger": "EB PR #308 squash-merged 2026-06-05T20:36:22Z at commit 2bf6a4a827ddc389da2bc4f4bb35e07d836f2880. All 9 outputs delivered."
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-05",
+      "trigger": "TRUTH-DELIVERED instance authored 2026-06-05T20:45:00Z at schemas/_instances/truth-delivered/d-2026-06-05-eb-tier1-t2-simulators.json. closureStatus: closed-clean. relatedFollowUps (1): FU-EB-URO-T1-ROUTE-MOUNTING-1. Cross-repo doctrine F0B85LNSTC4 cycle complete on this arc."
     }
   ],
   "parentDeliverable": "d-2026-06-05-eb-tier1-ros-overlay-foundation",
   "relatedFollowUps": [
     "FU-EB-URO-T1-ROUTE-MOUNTING-1"
   ],
-  "notes": "Cross-repo doctrine (memory #10): SR-chat anchors this child instance at schemas/_instances/deliverables/d-2026-06-05-eb-tier1-t2-simulators.json on luh-tech/schema-registry BEFORE EB authors the T2 execution tarball. T1 substrate confirmed via eb-agent:trace-service: api-gateway = Express + Passport.js (T1 violated this discipline by assuming Fastify — memory #13 substrate-correction discipline applies; T2 verified first this time). service-uro-sim is live in catalog + architecture from T1; T2 extends the container internals only (no new service registration). Topic naming uses canonical Sx-suffix per acronyms catalog v1.2.0 (memory #18): /hsx/ /rsx/ /esx/ — strategy doc §8 uses deprecated XaaS form (haas_simulator, /eaas/) which is pre-known drift captured in LUHTECH-EB-TIER1-RECONCILIATION-ADDENDUM-2026-06-05 and amended in this T2 implementation. URN composition follows canonical pattern urn:luhtech:ectropy:resource:{type}:{id} from memory #18. T2 lands the simulator infrastructure that T3 (browser bridge), T4 (overlays), and T6 (replay UI) depend on. matsx + inssx simulators deferred — not required at T2 since T4 overlay validation gate works with 3 resource types; if T4 surfaces a need, file a small follow-up. T2 files one new FU (FU-EB-URO-T1-ROUTE-MOUNTING-1) flagged in T1 closure as the unmounted-routes follow-up — this is housekeeping carry-forward, not new T2-created tech debt."
+  "notes": "Cross-repo doctrine (memory #10): SR-chat anchors this child instance at schemas/_instances/deliverables/d-2026-06-05-eb-tier1-t2-simulators.json on luh-tech/schema-registry BEFORE EB authors the T2 execution tarball. T1 substrate confirmed via eb-agent:trace-service: api-gateway = Express + Passport.js (T1 violated this discipline by assuming Fastify — memory #13 substrate-correction discipline applies; T2 verified first this time). service-uro-sim is live in catalog + architecture from T1; T2 extends the container internals only (no new service registration). Topic naming uses canonical Sx-suffix per acronyms catalog v1.2.0 (memory #18): /hsx/ /rsx/ /esx/ — strategy doc §8 uses deprecated XaaS form (haas_simulator, /eaas/) which is pre-known drift captured in LUHTECH-EB-TIER1-RECONCILIATION-ADDENDUM-2026-06-05 and amended in this T2 implementation. URN composition follows canonical pattern urn:luhtech:ectropy:resource:{type}:{id} from memory #18. T2 lands the simulator infrastructure that T3 (browser bridge), T4 (overlays), and T6 (replay UI) depend on. matsx + inssx simulators deferred — not required at T2 since T4 overlay validation gate works with 3 resource types; if T4 surfaces a need, file a small follow-up. T2 files one new FU (FU-EB-URO-T1-ROUTE-MOUNTING-1) flagged in T1 closure as the unmounted-routes follow-up — this is housekeeping carry-forward, not new T2-created tech debt.\n\n[v1.0.1 RECONCILE AMENDMENT 2026-06-09] Deliverable lifecycleState reconciled with canonical TRUTH-DELIVERED already on SR main since 2026-06-05T20:45:00Z. Mixed-state substrate gap diagnosed by SR-chat substrate-before-write 2026-06-09 portfolio sweep: TRUTH-DELIVERED was authored on day-of-merge with full canonical shape (40-char mergeCommit 2bf6a4a827ddc389da2bc4f4bb35e07d836f2880, S8-closed, 1 relatedFollowUps), but the deliverable instance was never updated from S4-authored to reflect the EB merge (2026-06-05). This v1.0.1 amendment brings the deliverable into agreement with the TRUTH-DELIVERED without touching the canonical TRUTH-DELIVERED file. Full 40-char merge SHA pulled chat-side directly from the existing TRUTH-DELIVERED on SR main — no gh-CLI fetch required. Part of URO Tier 1 closure batch (T2/T3/T4 reconciled together per L4-approved enterprise scope-lock exception for closure-style atomic batching, precedent SR PR #162 + #164). Closure-backlog discovery doctrine: closure probes BOTH deliverable AND TRUTH-DELIVERED paths on SR main before authoring (memory #13 SUBSTRATE-CORRECTION addendum). Semver: PATCH (lifecycle reconcile + audit-trail completion; no behavior change to deliverable goal or scope).",
+  "mergeCommitSha": "2bf6a4a827ddc389da2bc4f4bb35e07d836f2880",
+  "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/308"
 }
