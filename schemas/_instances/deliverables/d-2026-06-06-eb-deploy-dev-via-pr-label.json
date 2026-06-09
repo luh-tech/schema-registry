@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-06-eb-deploy-dev-via-pr-label",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "title": "Deploy ladder — feat-branch → dev via PR label, mirroring production IMAGE_TAG → Spaces → config-sync pull pattern (NOT Watchtower)",
   "description": "Closes the third lane of the canonical trunk deploy ladder. main → staging is wired today via build-staging-images.yml + workflow_run + deploy-staging.yml + Watchtower polling :staging. Production app uses build-production-images.yml + deploy-production-app.yml with workflow_dispatch + dual typed confirms + TF apply targeted on local_file.production_env + module.production_env_upload (IMAGE_TAG → Spaces config-sync, NO Watchtower). The feat-branch → dev lane does not exist: dev compose has hardcoded SHAs (411dd568 at substrate-read time), no IMAGE_TAG substitution, no auto-build on feat branches, no auto-deploy. Erik's design: PR label `deploy-to-dev` triggers the lane (sparse opt-in, not every commit). Build mirrors staging build shape. Deploy mirrors production app shape (TF apply IMAGE_TAG; NO Watchtower on dev — matches prod pull doctrine). Validation chain stripped to health + smoke + non-blocking DOCR GC (per Erik strip-down decision; full integration/e2e remains a staging concern). Resolves the open DEC-NN watchtower-on-dev question from LUHTECH-PLATFORM-CLOSURE-STRATEGY-2026-04-27.md §5: dev follows production pull model, not staging Watchtower model. Substrate verified: development TF env has local_file.development_env + module.development_env_upload (same shape as production); image_tag variable absent; terraform-development.yml accepts an image-tag input that is currently a dead input not wired into the .env. Scope corrects all three.",
   "authority": {
@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "feat/deploy-dev-via-pr-label-2026-06-06",
@@ -133,10 +133,26 @@
       "to": "S4-authored",
       "date": "2026-06-06",
       "trigger": "L4 named-step approval ('approved author_deploy_dev_spec') after Erik substrate-read confirmed dev TF env has local_file.development_env + module.development_env_upload + no image_tag wiring + docker-compose.development.yml has hardcoded SHAs + 8 workflow YAML patterns read + DEC d-2026-05-07-trunk-based-development + DEC-032 Zero-SSH Watchtower architecture pre-authoring."
+    },
+    {
+      "from": "S4-authored",
+      "to": "S7-merged",
+      "date": "2026-06-06",
+      "commitSha": "5817cc44c5f8d78eb2a3e8e07effec44ce916cee",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/311",
+      "trigger": "EB PR #311 squash-merged 2026-06-06T21:32:58Z at commit 5817cc44c5f8d78eb2a3e8e07effec44ce916cee. All 6 outputs delivered. closed-clean with 1 carry-forward follow-ups noted in TRUTH-DELIVERED. rulePipelineEvidence captured: 2 entries."
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-06",
+      "trigger": "TRUTH-DELIVERED instance authored 2026-06-06T21:49:47Z at schemas/_instances/truth-delivered/d-2026-06-06-eb-deploy-dev-via-pr-label.json. closureStatus: closed-clean. relatedFollowUps (1): FU-EB-DEPLOY-CONSOLE-SSH-OUTLIER-1. Cross-repo doctrine F0B85LNSTC4 cycle complete on this arc."
     }
   ],
   "relatedFollowUps": [
     "FU-EB-DEPLOY-CONSOLE-SSH-OUTLIER-1"
   ],
-  "notes": "Cross-repo doctrine F0B85LNSTC4: EB chat authors spec + sandbox-validates; SR-chat anchors at schemas/_instances/deliverables/d-2026-06-06-eb-deploy-dev-via-pr-label.json; EB CLI executes from tarball; EB opens PR + posts merge SHA; SR closes with TRUTH-DELIVERED. No --admin per memory #6. Squash-merge only. Branch `feat/deploy-dev-via-pr-label-2026-06-06` scope-locked to declared scopeFiles. Erik L4 named-step approval required at: spec authoring (already given), tarball execution PHASE_1 APPLY, PHASE_2 COMMIT, PHASE_3 PUSH-PR, PHASE_4 SQUASH-MERGE."
+  "notes": "Cross-repo doctrine F0B85LNSTC4: EB chat authors spec + sandbox-validates; SR-chat anchors at schemas/_instances/deliverables/d-2026-06-06-eb-deploy-dev-via-pr-label.json; EB CLI executes from tarball; EB opens PR + posts merge SHA; SR closes with TRUTH-DELIVERED. No --admin per memory #6. Squash-merge only. Branch `feat/deploy-dev-via-pr-label-2026-06-06` scope-locked to declared scopeFiles. Erik L4 named-step approval required at: spec authoring (already given), tarball execution PHASE_1 APPLY, PHASE_2 COMMIT, PHASE_3 PUSH-PR, PHASE_4 SQUASH-MERGE.\n\n[v1.0.1 RECONCILE AMENDMENT 2026-06-09] Deliverable lifecycleState reconciled with canonical TRUTH-DELIVERED already on SR main since 2026-06-06T21:49:47Z. Mixed-state substrate gap diagnosed by SR-chat substrate-before-write 2026-06-09 portfolio sweep: TRUTH-DELIVERED was authored on day-of-merge with full canonical shape (40-char mergeCommit 5817cc44c5f8d78eb2a3e8e07effec44ce916cee, S8-closed, 1 relatedFollowUps), but the deliverable instance was never updated from S4-authored to reflect the EB merge (2026-06-06T21:32:58Z). This v1.0.1 amendment brings the deliverable into agreement with the TRUTH-DELIVERED without touching the canonical TRUTH-DELIVERED file. Full 40-char merge SHA pulled chat-side directly from the existing TRUTH-DELIVERED on SR main — no gh-CLI fetch required. Part of portfolio-wide stale-deliverable audit clearance (Batch 2 of 3 per L4-approved enterprise scope-lock exception for closure-style atomic batching, precedent SR PR #162 + #164 + #168). T1 reconcile landed via SR PR #167; URO Tier 1 T2/T3/T4 batch landed via SR PR #168; this batch covers the 2026-06-05/06 portfolio reconciles. Closure-backlog discipline filed in v1.0.1 notes (per memory #13 SUBSTRATE-CORRECTION extension): closure clearance must probe BOTH the deliverable AND the TRUTH-DELIVERED paths on SR main before authoring. Semver: PATCH (lifecycle reconcile + audit-trail completion; no behavior change to deliverable goal or scope).",
+  "mergeCommitSha": "5817cc44c5f8d78eb2a3e8e07effec44ce916cee",
+  "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/311"
 }
