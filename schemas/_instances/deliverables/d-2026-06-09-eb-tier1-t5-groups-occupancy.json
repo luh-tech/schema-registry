@@ -1,0 +1,208 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-09-eb-tier1-t5-groups-occupancy",
+  "version": "1.0.0",
+  "title": "URO Tier 1 \u2014 T5: Voxel group materialization + box_simulator + OccupancyGrid + Maple Ridge bundle v1.0.0",
+  "description": "Fifth child deliverable of URO Tier 1 parent arc d-2026-06-05-eb-tier1-ros-overlay-foundation per LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-07 \u00a75 + \u00a78.T5. Extends Project Intake Stages 4/5/6 (per DEC-010) to materialize ROOM, LEVEL, SYSTEM, TAKT_ZONE, and DECISION_ZONE voxel groups into the voxel_groups table landed at T1. Adds box_simulator_node.py ROS 2 node reading from Postgres and publishing /box/groups/snapshot (latched, occasional deltas) + per-level /box/voxels/occupancy_grid/<level> as standard nav_msgs/OccupancyGrid. Authors Maple Ridge curated bundle v1.0.0 (bundle.json + decisions.json + staff.json + takt-schedule.json + seppa-context.json) with explicit group definitions, served from DO Spaces under demo-library/maple-ridge/. Validation proof-point: external ROS subscriber (stock Nav2 stack or test harness) consumes /box/voxels/occupancy_grid/level_2 and reports valid map metadata \u2014 'robots can use our voxel data'. Closes T5's two original P1 preconditions (already cleared: FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 closed via PR 1.2 EB c32c7b14 2026-06-08; FU-EB-USER-WALK-2026-05-22-VOXEL-WRONG-LEVELS-DECISIONS-ORPHANED-1 closed). Full dev \u2192 staging \u2192 prod escalation procedural embedded in validation.postMerge[].",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/tier1-t5-groups-occupancy-2026-06-09",
+    "scopeFiles": [
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/luhtech_uro_sim/box_simulator_node.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/setup.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/launch/uro_sim.launch.py",
+      "infrastructure/uro-sim/colcon_ws/src/luhtech_uro_sim/test/test_box_simulator.py",
+      "infrastructure/uro-sim/scenarios/maple_ridge_baseline.yaml",
+      "apps/api-gateway/src/services/intake/stage4-ifc.service.ts",
+      "apps/api-gateway/src/services/intake/stage5-takt.service.ts",
+      "apps/api-gateway/src/services/intake/stage6-decision.service.ts",
+      "apps/api-gateway/src/services/intake/voxel-groups-materializer.service.ts",
+      "apps/api-gateway/src/services/intake/__tests__/voxel-groups-materializer.service.test.ts",
+      "apps/api-gateway/src/routes/uro/voxel-groups.route.ts",
+      "apps/api-gateway/src/routes/uro/__tests__/voxel-groups.route.test.ts",
+      "demo-library/maple-ridge/bundle.json",
+      "demo-library/maple-ridge/seed/decisions.json",
+      "demo-library/maple-ridge/seed/staff.json",
+      "demo-library/maple-ridge/contract/takt-schedule.json",
+      "demo-library/maple-ridge/seed/seppa-context.json",
+      "demo-library/maple-ridge/seed/group-definitions.json",
+      ".roadmap/follow-up-register.json",
+      ".roadmap/decision-log.json",
+      ".dlp/deliverables/d-2026-06-09-eb-tier1-t5-groups-occupancy/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "box_simulator_node.py \u2014 ROS 2 node in luhtech_uro_sim package. Subscribes to Postgres voxel_groups table (via psycopg2 or async pool). Publishes /box/groups/snapshot (latched QoS, full group set on connect) at scenario start, deltas on group status changes. Publishes /box/voxels/occupancy_grid/<level_id> for each LEVEL group at 0.5 Hz (configurable). Each topic uses nav_msgs/OccupancyGrid stock message type. Reads rolled_up_status from voxel_groups + computes occupancy map per the opinionated mapping authored in T1 strategy: PLANNED\u21920, IN_PROGRESS\u219250, BLOCKED\u2192100, COMPLETE\u21920. Logged to rosbag2 via existing scenario_controller_node tie-in (T2 substrate).",
+      "acceptanceCriteria": [
+        "box_simulator_node.py registered in luhtech_uro_sim/setup.py entry_points (ros2 run luhtech_uro_sim box_simulator_node succeeds)",
+        "ros2 topic list shows /box/groups/snapshot, /box/groups/deltas, /box/voxels/occupancy_grid/<level_id> for each materialized LEVEL group",
+        "ros2 interface show on /box/groups/snapshot matches luhtech_msgs/VoxelGroupArray landed at T1",
+        "ros2 topic echo /box/voxels/occupancy_grid/level_2 returns valid nav_msgs/OccupancyGrid with non-zero data array and valid info.resolution, info.width, info.height, info.origin",
+        "ros2 bag info on a recorded .mcap shows /box/groups/snapshot + /box/voxels/occupancy_grid/* topics",
+        "Node respects ROS_DOMAIN_ID isolation; foxglove_bridge surfaces these topics to browser WS client"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Project Intake Pipeline (DEC-010 Stages 4/5/6) extended to materialize voxel groups into voxel_groups table at intake time. Stage 4 IFC service materializes ROOM and LEVEL groups from IFC building storeys + spaces. Stage 5 takt service materializes TAKT_ZONE groups from takt-schedule.json zone definitions (coordinate-range UPDATEs). Stage 6 decision service materializes DECISION_ZONE groups from decisions.json clash zones. SYSTEM groups materialized from IFC system classifications (MEP discipline) at Stage 4. All stages idempotent (upsert on (project_id, group_type, group_key)).",
+      "acceptanceCriteria": [
+        "voxel-groups-materializer.service.ts handles ROOM, LEVEL, SYSTEM, TAKT_ZONE, DECISION_ZONE materialization with type-routed strategy",
+        "Stage 4/5/6 services call voxel-groups-materializer.service at the documented pipeline hook points (per DEC-010)",
+        "Materialization is idempotent: running provision against the same bundle twice produces identical voxel_groups row counts",
+        "SELECT COUNT(*) FROM voxel_groups WHERE project_id = dc1eaa5b-7553-46ec-92a5-e20762a60c71 GROUP BY group_type returns expected counts matching Maple Ridge bundle group-definitions.json",
+        "Unit tests in voxel-groups-materializer.service.test.ts cover all 5 group types + idempotency case + empty bundle case",
+        "TypeScript compile passes; ESLint passes; vitest passes for new + modified files"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Read API at /api/uro/voxel-groups for box_simulator_node consumption (and future SEPPA/UI consumers). GET /api/uro/voxel-groups?project_id=<uuid> returns full group set with rolled_up_status. GET /api/uro/voxel-groups?project_id=<uuid>&since=<timestamp> returns deltas. Server-Sent Events on /api/uro/voxel-groups/stream for live updates (Redis pub/sub backed). Authenticated via existing api-gateway JWT middleware (not viewer-token \u2014 this is internal service-to-service).",
+      "acceptanceCriteria": [
+        "voxel-groups.route.ts exposes GET / + GET ?since= + GET /stream (SSE)",
+        "Authenticated curl returns 200 + valid JSON matching voxel_groups Prisma schema shape (group_id, project_id, group_type, group_key, rolled_up_status, geometry, materialized_at)",
+        "Unauthenticated curl returns 401",
+        "SSE stream emits update events on voxel_groups row mutations (NOTIFY/LISTEN or Redis pub/sub bridge)",
+        "Vitest covers happy path + auth-failure path + delta path",
+        "Route registered in apps/api-gateway/src/routes/uro/index.ts router list"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "nav_msgs/OccupancyGrid producer logic in box_simulator_node.py. Per-level: query voxel_groups for LEVEL = <level_id> + child voxels with rolled_up_status. Compute opinionated occupancy map per pre-spec decision: PLANNED\u21920 (free), IN_PROGRESS\u219250 (partial), BLOCKED\u2192100 (occupied), COMPLETE\u21920 (free). Header.frame_id set to building local frame; info.resolution = 0.1m (COARSE tier per BOX Architecture); info.origin set from voxel_grid bbox_min. Documented explicitly: no published Nav2-vs-rolled_up_status convention exists; this mapping is authored opinion per LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-07 \u00a72.",
+      "acceptanceCriteria": [
+        "occupancy_grid_producer logic in box_simulator_node.py is unit-tested in test_box_simulator.py with synthetic voxel_groups inputs",
+        "Output OccupancyGrid satisfies nav_msgs/OccupancyGrid: data[] length == info.width \u00d7 info.height, values in {-1, 0..100}",
+        "info.resolution = 0.1, info.width and info.height derived from voxel_grid bbox at COARSE tier",
+        "info.origin populated from voxel_grids.bbox_min with quaternion identity orientation",
+        "Status mapping documented in box_simulator_node.py docstring + .dlp/deliverables/.../SPEC.md (cites strategy doc as authored opinion)",
+        "Per-level topics use frame_id pattern 'building/level_<n>' for downstream tf2 chain consumption"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "Maple Ridge curated bundle v1.0.0 authored. demo-library/maple-ridge/bundle.json: bundle_type=DEMO, bundle_version=1.0.0, references existing IFC files at ifc/ + decisions.json + staff.json + takt-schedule.json + seppa-context.json + group-definitions.json. decisions.json: 5 canonical decisions with pre-computed ai_analysis (per Q6 ECTROPY-PROJECT-INTAKE-ARCHITECTURE), each anchored to specific clash coords mapped to primary_voxel_urn (canonical urn:luhtech:ectropy:voxel:* form post-PR-1.1). staff.json: 10 staff with L1\u2013L6 authority levels per DEC-005 cascade. takt-schedule.json: zone definitions matching Maple Ridge IPD takt (week 4, Level 0 complete, Level 1 active with MEP clash at Grid B3, Level 2 planned). seppa-context.json: project_context JSONB shape for SEPPA session init (per Q1 architecture). group-definitions.json: explicit ROOM/LEVEL/SYSTEM/TAKT_ZONE/DECISION_ZONE definitions consumed by Stage 4/5/6 materializer.",
+      "acceptanceCriteria": [
+        "demo-library/maple-ridge/bundle.json validates against canonical bundle.schema.json (per schemas-refs)",
+        "decisions.json contains 5 entries; each has primary_voxel_urn in canonical urn:luhtech:ectropy:voxel:* form",
+        "Each decision's ai_analysis JSONB has the documented shape (per SEPPA template at PART VI of ECTROPY-PROJECT-INTAKE-ARCHITECTURE)",
+        "staff.json contains 10 entries spanning L1\u2013L6 authority levels (no L7 since L7 = stakeholder assembly, not staff)",
+        "takt-schedule.json zone coordinates align with Maple Ridge IFC voxel_grids bbox",
+        "group-definitions.json produces deterministic group materialization (running provision twice produces identical voxel_groups counts)",
+        "Bundle SHA256 + bytes captured in bundle.json metadata block; IFC file SHA256s populated from existing ifc-extraction-cache/maple-ridge/*.json manifests",
+        "All bundle JSON files ajv-validated against their respective canonical schemas with 3-flag form (per memory #14)"
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "End-to-end integration test: provision Maple Ridge bundle v1.0.0 against dev DB; verify voxel_groups materialized; launch uro-sim container; verify /box/groups/snapshot + /box/voxels/occupancy_grid/level_2 published; verify browser WS client (from T3) receives messages and renders groups. Captures _msg/ audit bundle per LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-07 \u00a79: BUILD.log, TOPICS.txt, PROBES.txt, DB-STATE.txt, SCREENSHOTS/, METRICS.txt, CANARY.txt, BAG-VALIDATION.txt, L4-CHECKLIST.md.",
+      "acceptanceCriteria": [
+        "POST /api/admin/provision-demo-user with bundle_id=maple-ridge-commerce-centre, bundle_version=1.0.0, user_email=t5-validation@luh.tech returns 201",
+        "SELECT COUNT(*) FROM voxel_groups WHERE project_id = <returned project_id> returns expected count matching group-definitions.json",
+        "uro-sim container starts on dev; docker exec uro-sim ros2 topic list shows expected topics",
+        "Browser /dev/uro page renders group boundaries at building scale with colors matching rolled_up_status; manual screen capture",
+        "Provision duration <8 minutes (target per PART VI architecture, Demo bundle)",
+        "_msg/ audit bundle artifacts present per \u00a79 canonical structure"
+      ]
+    },
+    {
+      "id": "OUT-7",
+      "description": "External ROS subscriber proof-point: stock Nav2 map_server or rviz2 instance subscribes to /box/voxels/occupancy_grid/level_2 from cloud foxglove_bridge (via authenticated WS) and reports valid map metadata. Proves the 'robots can use our voxel data' claim for technical/robotics-savvy audience (Dusty/Locus/6River/Boston Dynamics Orbit). Test harness: docker-compose run stock ros:jazzy-ros-base container with rviz2 + nav2_map_server; subscribe to the cloud topic via foxglove_bridge_ros2_client; capture screenshot + map_server log.",
+      "acceptanceCriteria": [
+        "Stock ros:jazzy container connects to foxglove_bridge on dev via @foxglove/ws-protocol with valid viewer JWT (LuhTechViewerToken shape per T1)",
+        "rviz2 OccupancyGrid display renders the published grid without errors",
+        "nav2_map_server reports valid map metadata (resolution + dimensions + origin + frame_id) in its log",
+        "Screenshot of rviz2 + map_server log captured in _msg/SCREENSHOTS/ + _msg/PROBES.txt",
+        "L4-CHECKLIST.md item 'External ROS subscriber consumes occupancy_grid' marked PASS with evidence link"
+      ]
+    },
+    {
+      "id": "OUT-8",
+      "description": "Browser viewer renders Maple Ridge groups at building scale with correct colors. Uses T4 VoxelGroupOverlay extension + display-rules.json. All 5 group types (ROOM, LEVEL, SYSTEM, TAKT_ZONE, DECISION_ZONE) render with type-priority overlap resolution per T4 display rules (highest-priority-wins). Manual + Playwright e2e test capture.",
+      "acceptanceCriteria": [
+        "Playwright test in apps/web-dashboard/tests/uro/groups-render.spec.ts navigates to /dev/uro, waits for groups to load, asserts visible group boundaries at expected world-space positions",
+        "Color matches rolled_up_status per display-rules.json: PLANNED green, IN_PROGRESS orange, BLOCKED red, COMPLETE neutral",
+        "Display rule overlap resolution correct: DECISION_ZONE rendered on top of TAKT_ZONE when both contain same voxel (DECISION_ZONE has higher base priority)",
+        "Manual browser FPS reading >30 fps with all 5 group types rendered (METRICS.txt)",
+        "Screenshot captured in _msg/SCREENSHOTS/ for L4 visual review"
+      ]
+    },
+    {
+      "id": "OUT-9",
+      "description": "EB-local SPEC.md at .dlp/deliverables/d-2026-06-09-eb-tier1-t5-groups-occupancy/SPEC.md documents the deliverable per F0B85LNSTC4 doctrine: mission, scope, group materialization architecture (Stages 4/5/6), opinionated occupancy mapping decision, Maple Ridge bundle authoring rationale (DEMO tier per ECTROPY-DEMO-LIBRARY-GOVERNANCE), dev \u2192 staging \u2192 prod escalation procedural, dependency on T1 (voxel_groups table) + T2 (luhtech_uro_sim package) + T3 (browser WS client) + T4 (VoxelGroupOverlay extension), n8n integrity (Hard Constraint #1) addressed at validation.postMerge canary checks.",
+      "acceptanceCriteria": [
+        "SPEC.md authored at the specified path",
+        "Includes mission + scope summary + opinionated mapping decision rationale + dependency chain + dev/staging/prod escalation outline",
+        "Ends with mantra (in spec text, not as ceremonial closing): 'Enterprise Excellence. Schema-First. No Shortcuts.'",
+        "Tracked by git per FU-EB-DLP-SPEC-MD-GITIGNORE-NEGATION-1 closure (no longer gitignored, .gitignore negation in place)"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "TypeScript compile (tsc --noEmit --project tsconfig.app.json) passes with zero errors across api-gateway",
+      "ESLint passes on all modified TypeScript files",
+      "Vitest passes for all modified + new test files (voxel-groups-materializer + voxel-groups.route + downstream)",
+      "Playwright e2e passes for apps/web-dashboard/tests/uro/groups-render.spec.ts on dev fixture",
+      "colcon build --packages-select luhtech_uro_sim succeeds; colcon test passes for test_box_simulator.py",
+      "Docker uro-sim image builds; image size < 1.2 GB (T1 base image is < 800 MB; T5 adds box_simulator + numpy/scipy for occupancy_grid computation, budget +400 MB)",
+      "ros2 interface show on luhtech_msgs unchanged (no new message types added in T5; T6 adds EFAS types)",
+      "ajv canonical 3-flag validation passes for all bundle JSON files against their canonical schemas (bundle.schema.json, decisions.schema.json, staff.schema.json, takt-schedule.schema.json, seppa-context.schema.json, group-definitions.schema.json) \u2014 per memory #14 ajv-cli@5.0.0 -r flags",
+      "ajv canonical 3-flag validation passes for .roadmap/follow-up-register.json against follow-up-register.schema.json and .roadmap/decision-log.json against decision-log.schema.v2.json",
+      "Prisma schema unchanged (voxel_groups table landed at T1; T5 is data-layer + ROS-node + bundle authoring, no DDL changes)",
+      "n8n PostgreSQL pipeline canary (159.223.203.231) returns HTTP 200 pre-merge (Hard Constraint #1)",
+      "All 3 required ruleset checks pass on PR CI (NV-03, vestigial .js, patterns.yml)",
+      "Foundation Health + Enterprise Test Suite + Build Staging Images workflows pass on PR CI",
+      "Roadmap V3 Schema Validation CI gate passes",
+      "Required SR CI checks all GREEN; NO --admin merge",
+      "commit_and_merge.sh PHASE 3 stages explicit 21-file scopeFiles list and aborts if any unexpected file would be staged (memory #18 Tarball V2 scope-lock)",
+      "All OUT-1 through OUT-9 acceptance criteria met; _msg/L4-CHECKLIST.md authored with PASS/FAIL/EVIDENCE columns ticked"
+    ],
+    "postMerge": [
+      "[STAGE-DEV-1] Squash-merge to main on luh-tech/Ectropy-Business; mergeCommitSha captured for SR closure",
+      "[STAGE-DEV-2] CI deploy-dev.yml workflow auto-fires on main push; build-and-push api-gateway + uro-sim images to DOCR with main SHA tag",
+      "[STAGE-DEV-3] Dev droplet Watchtower (or equivalent deploy-agent HMAC path on cis-services-1 \u2014 Zero-SSH per memory #20) pulls new images; docker compose up -d --no-deps api-gateway uro-sim (NEVER down, NEVER restart)",
+      "[STAGE-DEV-4] Dev validation gates: curl https://dev.ectropy.ai/api/health returns 200 with score 100; ros2 topic list inside uro-sim container shows /box/groups/snapshot + /box/voxels/occupancy_grid/*; SELECT COUNT(*) FROM voxel_groups WHERE project_id = dc1eaa5b-... returns expected count",
+      "[STAGE-DEV-5] Browser /dev/uro page on dev.ectropy.ai renders groups at building scale; manual visual confirmation; Playwright e2e against dev passes",
+      "[STAGE-DEV-6] External ROS subscriber proof: stock ros:jazzy container connects to dev foxglove_bridge, rviz2 + nav2_map_server consume occupancy_grid successfully; capture _msg/PROBES.txt entry",
+      "[STAGE-DEV-7] n8n PostgreSQL canary on 159.223.203.231 returns HTTP 200 post-dev-deploy (Hard Constraint #1)",
+      "[STAGE-STAGING-1] L4 review of dev _msg/L4-CHECKLIST.md; on PASS, L4 names explicit step to promote to staging (per memory #4)",
+      "[STAGE-STAGING-2] Manual workflow_dispatch on deploy-staging.yml with main SHA; canary-pre n8n probe HTTP 200",
+      "[STAGE-STAGING-3] Build + push staging images; staging Watchtower picks up; docker compose up -d --no-deps api-gateway uro-sim",
+      "[STAGE-STAGING-4] Staging E2E pre-flight gate (Speckle 502 readiness probe \u2014 long-standing condition per LUHTECH-ECTROPY-CANONICAL-STATE-CAPTURE-2026-05-26 \u00a73, NOT session-blocking per Erik calibration)",
+      "[STAGE-STAGING-5] Staging validation gates: curl https://staging.ectropy.ai/api/health 200/score 100; provision-demo-user against staging with maple-ridge bundle returns 201 within <8 min; staging /dev/uro page renders groups; staging external ROS subscriber proof captured",
+      "[STAGE-STAGING-6] Staging canary-post n8n probe HTTP 200; Hard Constraint #1 verified across deploy window",
+      "[STAGE-STAGING-7] L4 review of staging _msg/L4-CHECKLIST.md; staging soak \u226524h before prod (per DEC-032 cadence) unless L4 explicitly waives",
+      "[STAGE-PROD-1] L4 names explicit step to promote to prod (per memory #4); production gate per DEC-032: workflow_dispatch deploy-production-app.yml with confirm=DEPLOY-PRODUCTION + apply_confirm=APPLY-AFTER-PLAN-REVIEW",
+      "[STAGE-PROD-2] Production canary-pre n8n probe HTTP 200; production /api/health score 100 baseline captured",
+      "[STAGE-PROD-3] Build + push production images to DOCR with main SHA tag; production rollout via deploy-agent HMAC (Zero-SSH per memory #20); docker compose up -d --no-deps api-gateway uro-sim",
+      "[STAGE-PROD-4] Production /api/health 200/score 100 within 5 minutes of rollout; ros2 topic list inside production uro-sim container matches expected; SELECT COUNT(*) FROM voxel_groups WHERE project_id = production-maple-ridge-uuid returns expected (matches dev baseline)",
+      "[STAGE-PROD-5] Production browser ectropy.ai/dev/uro renders groups; production external ROS subscriber proof captured",
+      "[STAGE-PROD-6] Production canary-post n8n probe HTTP 200; Hard Constraint #1 verified across production deploy window",
+      "[STAGE-PROD-7] L4 review of production _msg/L4-CHECKLIST.md; on PASS, SR-chat authors T5 TRUTH-DELIVERED at schemas/_instances/truth-delivered/d-2026-06-09-eb-tier1-t5-groups-occupancy.json with full 40-char mergeCommitSha + closureStatus closed-clean (or closed-with-debt if any acceptance criterion failed at staging or prod)",
+      "[STAGE-PROD-8] Full 40-char EB merge SHA + prod-rollout SHA posted to #luhtech-agents-comms channel C0B7EPFCA85 with [EB-chat] prefix per memory #19 + #27",
+      "[STAGE-PROD-9] Parent arc d-2026-06-05-eb-tier1-ros-overlay-foundation childDeliverables[] amendment to include d-2026-06-09-eb-tier1-t5-groups-occupancy (SR-chat scope; separate fresh L4 named-step per memory #4)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-09",
+      "trigger": "L4 named-step approval in EB-chat 2026-06-09: 'proceed with authoring full T5 - T6 substrate to complete the full scope of deliverables following strategy and aligned with enterprise tools and direction. full procedural to deploy onto dev for validation, then escalate through to staging > prod for final goal'. Substrate-read DISPATCH-EB-READ-T5-T6-SUBSTRATE-2026-06-09 at EB main b9b4141511f806b6746cc8bba0192253b3c06793 confirmed clean slate (no T5/T6 predecessor work)."
+    }
+  ],
+  "parentDeliverable": "d-2026-06-05-eb-tier1-ros-overlay-foundation",
+  "relatedFollowUps": [
+    "FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1",
+    "FU-EB-USER-WALK-2026-05-22-VOXEL-WRONG-LEVELS-DECISIONS-ORPHANED-1"
+  ],
+  "notes": "T5 of URO Tier 1 Round 1 per LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-07 \u00a78.T5. Substrate-correct critical path: PR 1.1 \u2713 \u2192 PR 1.2 \u2713 \u2192 T1 \u2713 \u2192 T2 \u2713 \u2192 T3 \u2713 \u2192 T4 \u2713 \u2192 T5 \u2190 this \u2192 T6. Authored against EB main b9b4141511f806b6746cc8bba0192253b3c06793 + SR main cfcae53f00e394de155826df486ee163253ee382 (post-SR-PR-#170 audit-backlog clearance). Both T5 P1 preconditions cleared: FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 closed via PR 1.2 (EB c356d81... wait \u2014 c32c7b14 per substrate, 2026-06-08); FU-EB-USER-WALK-2026-05-22-VOXEL-WRONG-LEVELS-DECISIONS-ORPHANED-1 closed. Full dev \u2192 staging \u2192 prod escalation embedded in validation.postMerge[] with [STAGE-DEV-N] / [STAGE-STAGING-N] / [STAGE-PROD-N] prefixes; each stage carries explicit L4 named-step gates per memory #4 (no implicit auto-promotion). Per-tarball _msg/ audit bundle structure per strategy doc \u00a79: BUILD.log, TOPICS.txt, PROBES.txt, DB-STATE.txt, SCREENSHOTS/, METRICS.txt, CANARY.txt, BAG-VALIDATION.txt, L4-CHECKLIST.md. L4-CHECKLIST.md maps to OUT-1 through OUT-9 acceptance criteria with PASS/FAIL/EVIDENCE columns. Hard Constraint #1 (n8n PostgreSQL pipeline live) addressed via canary checks pre+post at every escalation stage (DEV, STAGING, PROD). T5 has explicit dependencies on T1 (voxel_groups table + luhtech_msgs base), T2 (luhtech_uro_sim package + rosbag2 wiring), T3 (browser WS client + /dev/uro page), T4 (VoxelGroupOverlay extension + display-rules.json). All four are S8-closed per SR PR #167 + #168 closures. Opinionated occupancy mapping decision (PLANNED\u21920, IN_PROGRESS\u219250, BLOCKED\u2192100, COMPLETE\u21920) is authored opinion per strategy doc \u00a72 'no published convention exists; document explicitly' \u2014 DEC entry in decision-log.json captures rationale. Maple Ridge bundle v1.0.0 follows ECTROPY-DEMO-LIBRARY-GOVERNANCE-2026-03-28 RULES 1 + 2 (DB is not library; canonical demo records ID-stable). Canonical project id dc1eaa5b-7553-46ec-92a5-e20762a60c71 preserved per registry. Parent arc d-2026-06-05-eb-tier1-ros-overlay-foundation childDeliverables[] currently lists T1-T4 only (SR hygiene item flagged in SR PR #170 comms); amendment to add T5 + T6 references is in-scope of post-T6 parent-arc closure step, not T5 STAGE-PROD scope. Cross-repo doctrine F0B85LNSTC4: this spec posted to #luhtech-agents-comms with file SHA256 + bytes + validation status; SR-chat lands anchor PR at schemas/_instances/deliverables/d-2026-06-09-eb-tier1-t5-groups-occupancy.json against canonical deliverable.schema.json v1.2.0; squash-merge fresh L4 named-step. T6 (next sibling) depends on T5 box_simulator (EFAS reads /box/groups/snapshot to compute SDI input vectors); T6 execution gate after T5 reaches S7-merged at minimum, S8-closed preferred. Enterprise Excellence. Schema-First. No Shortcuts."
+}
