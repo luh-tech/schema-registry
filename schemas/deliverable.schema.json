@@ -2,8 +2,8 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/deliverable.schema.json",
   "title": "Deliverable",
-  "version": "1.1.0",
-  "description": "The DELIVERABLE contract \u2014 schema-bound work unit per DLP-STRATEGY. A deliverable is the canonical unit of work: declared scope, acceptance criteria, authority, lifecycle state, and audit trail. Replaces prose-in-markdown deliverable specs. Agent enters at S4-authored, transitions through S5-in-progress and S6-staged, terminates at S7-merged or S8-closed (or reverted). Instance files live at schemas/_instances/deliverables/. This schema applies the forbidden-audit-paint-names constraint via allOf \u2014 instances MUST NOT contain field names matching the audit-paint pattern. Per RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1.",
+  "version": "1.2.0",
+  "description": "The DELIVERABLE contract \u2014 schema-bound work unit per DLP-STRATEGY. A deliverable is the canonical unit of work: declared scope, acceptance criteria, authority, lifecycle state, and audit trail. Replaces prose-in-markdown deliverable specs. Agent enters at S4-authored, transitions through S5-in-progress and S6-staged, terminates at S7-merged or S8-closed. Off-ramps: reverted (rolled back post-application) or superseded (retired pre-execution because a successor deliverable replaces this intent). Instance files live at schemas/_instances/deliverables/. This schema applies the forbidden-audit-paint-names constraint via allOf \u2014 instances MUST NOT contain field names matching the audit-paint pattern. Per RULE-CI-DOCUMENTED-OVERRIDE-NOT-COMPLIANCE-1.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -80,9 +80,10 @@
         "S6-staged",
         "S7-merged",
         "S8-closed",
-        "reverted"
+        "reverted",
+        "superseded"
       ],
-      "description": "DLP-STRATEGY lifecycle state. S4 = spec authored, awaiting approval to begin. S5 = execution underway. S6 = work staged for merge. S7 = merged to main. S8 = closed (post-merge follow-ups complete). reverted = rolled back."
+      "description": "DLP-STRATEGY lifecycle state. S4 = spec authored, awaiting approval to begin. S5 = execution underway. S6 = work staged for merge. S7 = merged to main. S8 = closed (post-merge follow-ups complete). reverted = rolled back post-application. superseded = retired pre-execution because a successor deliverable replaces this intent; successor referenced via notes or parentDeliverable/childDeliverables."
     },
     "scope": {
       "type": "object",
@@ -192,7 +193,8 @@
               "S6-staged",
               "S7-merged",
               "S8-closed",
-              "reverted"
+              "reverted",
+              "superseded"
             ],
             "description": "Prior lifecycle state. Empty string for initial S4-authored transition."
           },
@@ -204,7 +206,8 @@
               "S6-staged",
               "S7-merged",
               "S8-closed",
-              "reverted"
+              "reverted",
+              "superseded"
             ]
           },
           "date": {
