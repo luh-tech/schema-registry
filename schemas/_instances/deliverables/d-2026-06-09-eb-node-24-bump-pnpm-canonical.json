@@ -1,0 +1,99 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-09-eb-node-24-bump-pnpm-canonical",
+  "version": "1.0.0",
+  "title": "Canonical pnpm + Node 24 bump (supersedes PR #320)",
+  "description": "Full enterprise canonical Option 2 pattern: pnpm/action-setup@v6 inserted before actions/setup-node@v5 with cache parameter, across 9 EB CI workflows. Plus Node 20->24 version pins, setup-node@v4->@v5, and engines.node bump in 3 package.json files. Supersedes failed PR #320 (scope bleed + incomplete v5 upgrade). Closes FU-NODE20-DEPRECATION-1 (P3, past 2026-06-02 GitHub-forced deadline).",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "chore/node-24-bump-pnpm-canonical-2026-06-09",
+    "scopeFiles": [
+      ".github/workflows/build-production-images.yml",
+      ".github/workflows/deploy-staging.yml",
+      ".github/workflows/e2e-tests.yml",
+      ".github/workflows/enterprise-test-suite.yml",
+      ".github/workflows/foundation.yml",
+      ".github/workflows/production-validation.yml",
+      ".github/workflows/publish-crm-package.yml",
+      ".github/workflows/roadmap-v3-validation.yml",
+      ".github/workflows/security.yml",
+      "package.json",
+      "apps/ectropy-console/package.json",
+      "apps/mcp-server/package.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "All 9 affected CI workflows transformed to canonical Option 2 pattern. pnpm-using workflows get pnpm/action-setup@v6 inserted before setup-node@v5 with cache pnpm; npm-only workflows get cache npm to override v5 packageManager auto-detection; redundant Enable Corepack and Install pnpm steps removed; production-validation.yml gets pnpm/action-setup v4 to v6 sync for consistency.",
+      "acceptanceCriteria": [
+        "No setup-node@v4 reference remains in any of the 9 scoped workflow files",
+        "No node-version with value 20 or 20.x array remains in any of the 9 scoped workflow files",
+        "Every setup-node@v5 step has either cache pnpm (with pnpm/action-setup@v6 step preceding it) or cache npm (for npm-only workflows publish-crm-package.yml and roadmap-v3-validation.yml)",
+        "production-validation.yml pnpm/action-setup version bumped from v4 to v6",
+        "speckle-env-schema.yml verified untouched (still on node-version 22)"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "engines.node version constraint bumped from >=20.0.0 to >=24.0.0 in 3 package.json files (root and two workspace apps).",
+      "acceptanceCriteria": [
+        "package.json (root) engines.node equals >=24.0.0",
+        "apps/ectropy-console/package.json engines.node equals >=24.0.0",
+        "apps/mcp-server/package.json engines.node equals >=24.0.0"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "PR #320 closed without merge with audit comment naming the supersession reason. Branch chore/node-24-workflow-bump-2026-06-09 deleted from local and remote.",
+      "acceptanceCriteria": [
+        "PR #320 state is CLOSED (not MERGED)",
+        "Branch chore/node-24-workflow-bump-2026-06-09 is absent from git ls-remote origin output",
+        "PR #320 audit comment names the two failures (scope bleed plus incomplete v5 upgrade) and references this deliverable spec id"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "Replacement PR opens on fresh branch chore/node-24-bump-pnpm-canonical-2026-06-09 with explicit 12-file scope (no .dlp/ scope bleed).",
+      "acceptanceCriteria": [
+        "New PR opens against main from branch chore/node-24-bump-pnpm-canonical-2026-06-09",
+        "Single commit on the new branch touches exactly the 12 files declared in scopeFiles (no .dlp/ or other unexpected paths)",
+        "All 3 required ruleset checks pass on PR CI (NV-03, vestigial .js, patterns.yml)"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Tarball applier sandbox-validated chat-side against 3 template patterns (corepack-pnpm, npm-only with registry-url plus scope, already-canonical pnpm/action-setup)",
+      "Idempotent re-apply produces 0 changes on already-transformed fixtures",
+      "SHA-drift refusal triggers exit code 1 on mismatched HEAD",
+      "Post-write verify confirms no setup-node@v4, no node-version 20, no 20.x array, no orphan corepack-pnpm steps in scoped files",
+      "All 3 required ruleset checks pass on PR CI",
+      "commit_and_merge.sh PHASE 3 stages explicit 12-file list and aborts if any unexpected file would be staged"
+    ],
+    "postMerge": [
+      "Main HEAD advances to squash-merge commit SHA",
+      "FU-NODE20-DEPRECATION-1 register status flipped to closed in next hygiene cycle",
+      "Three carry-forward FUs filed in next hygiene cycle (FU-EB-DLP-SPECMD-TRACKING-DOCTRINE-1, FU-EB-CI-INFRASTRUCTURE-ROT-1, FU-EB-WORKFLOW-CACHE-CLEANUP-RESIDUE-1)",
+      "EB-chat posts merge notice to #luhtech-agents-comms with full 40-char SHA per memory #27"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-09",
+      "trigger": "EB-chat authored spec post L4 named-step on Option 2 canonical pattern in #luhtech-agents-process-errors"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-NODE20-DEPRECATION-1"
+  ],
+  "notes": "Supersedes PR #320 which failed via two stacked issues: (1) scope bleed (5 .dlp/d-2026-06-06-*/SPEC.md files via git add -A in commit_and_merge.sh PHASE 3, memory #6 + #13 violation); (2) incomplete setup-node@v5 upgrade (v5 default package-manager-cache true triggered pnpm-not-found before downstream corepack enable could fire, v4 to v5 breaking change for monorepos with packageManager field). Cycle 7 lesson re-applied: discipline-availability != discipline-invocation. Substrate-before-write fired this time (3 template workflow files read verbatim before authoring transformation logic) after two prior turn confident-then-retract failures in this same arc. Initial framing of this deliverable as single-repo housekeeping per cross-repo-execution-shape skill line 71 boundary was substrate-honest correction-after-the-fact: Option 2 canonical pnpm IS an architectural pattern change (replaces corepack scaffolding across 9 workflows), warranting SR audit-trail per past chat dfd26675 precedent (PR #311 deploy-dev-via-pr-label workflow change had SR deliverable spec). This spec restores that audit-trail."
+}
