@@ -1,0 +1,120 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-09-eb-voxel-decision-aggregation-fix",
+  "version": "1.0.0",
+  "title": "Voxel decision aggregation join fix at voxels.routes.ts:858 (PR 1.2 of URO Tier 1 Round 1)",
+  "description": "Fix the decision aggregation query at apps/api-gateway/src/routes/voxels.routes.ts:858 so it correctly joins pm_decisions.primary_voxel_urn against voxels.urn now that both columns carry canonical type-first URN form per PR 1.1 (d-2026-06-06-eb-urn-namespace-reconcile merged at EB f81f7b6 2026-06-06, per LUHTECH-EB-TIER1-ROS-OVERLAY-STRATEGY-2026-06-07 §2 row 2). Aggregation currently returns decisionCount=0 for Maple Ridge data (known state per PR 1.1 OUT-5 postMerge note); this PR makes it return correct counts. Closes the aggregation half of substrate-corrected FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 (already closed in register post-PR-1.1 substrate correction; this PR is the underlying work). Files new FU for Maple Ridge IFC source storey-name cleanup as Arc 2 scope (separate L4 named-step) per PR 1.1 OUT-3 framing. Closes the second of two T5 P1 preconditions per strategy doc §8 T5; unblocks T1 child deliverable authoring (Option B) per memory #22 critical path.",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/voxel-decision-aggregation-fix-2026-06-09",
+    "scopeFiles": [
+      "apps/api-gateway/src/routes/voxels.routes.ts",
+      "apps/api-gateway/src/routes/__tests__/voxels.routes.test.ts",
+      ".roadmap/follow-up-register.json",
+      ".roadmap/decision-log.json",
+      ".dlp/deliverables/d-2026-06-09-eb-voxel-decision-aggregation-fix/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Aggregation query at apps/api-gateway/src/routes/voxels.routes.ts:858 corrected. Join condition reads pd.primary_voxel_urn = v.urn (both columns now in canonical type-first urn:luhtech:ectropy:voxel:<projectId>:<voxelId> form after PR 1.1). Aggregation handler returns correct decisionCount for any project whose decisions are anchored on canonical voxel URNs. If the existing query is using the wrong table (per FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 substrate-corrected title 'queries wrong table'), correct it to query pm_decisions joined against voxels. Pre-existing query body and surrounding code unchanged outside the join condition + any minimal cleanup. Substrate-before-write note: line number 858 is per PR 1.1 OUT-5 reference at authoring time; execution-time substrate-read at EB main b9b4141 may discover slight drift, addressable via v1.0.1 amendment per the d-2026-06-05-eb-tier1-t1-foundation amendment-chain precedent.",
+      "acceptanceCriteria": [
+        "voxels.routes.ts aggregation query at the decision-count handler joins pm_decisions.primary_voxel_urn = voxels.urn (or equivalent canonical join condition)",
+        "Manual SELECT against dev DB Maple Ridge data (project_id dc1eaa5b-7553-46ec-92a5-e20762a60c71) returns decisionCount > 0 (was 0 pre-PR-1.2)",
+        "TypeScript compile (tsc --noEmit --project tsconfig.app.json) passes with zero errors",
+        "ESLint passes on voxels.routes.ts",
+        "No scope bleed: only the aggregation-handler region of voxels.routes.ts modified; other URN-emitter sites (line 704 et al, already corrected in PR 1.1) remain unchanged"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Regression test coverage in apps/api-gateway/src/routes/__tests__/voxels.routes.test.ts (test path verified at execution-time substrate-read; co-located *.test.ts vs __tests__/ subdir convention noted as known-unknown per PR 1.1 OUT-5 substrate-honesty pattern). New test asserts: (a) aggregation query against fixture matching Maple Ridge canonical-URN shape returns decisionCount > 0, (b) decisionCount equals expected value for the fixture (deterministic), (c) join correctness across the urn:luhtech:ectropy:voxel:<projectId>:<voxelId> shape. Pre-existing tests continue to PASS unchanged.",
+      "acceptanceCriteria": [
+        "New test in voxels.routes.test.ts (or equivalent co-located test file discovered at substrate-read) asserts decisionCount > 0 for canonical-URN fixture",
+        "New test asserts decisionCount equals deterministic expected value for the fixture",
+        "Vitest runs PASS for the modified test file",
+        "Existing tests in the same file continue to PASS unchanged (no regression)"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "New FU filed in .roadmap/follow-up-register.json scoped to Maple Ridge IFC source storey-name cleanup (Arc 2 scope per PR 1.1 OUT-3 framing). FU id 'FU-EB-MAPLE-RIDGE-IFC-STOREY-NAMING-CLEANUP-1'. Priority P2. Description names the concrete issue: 'Level 1 Living Rm.' and other residential-level names polluting commercial intake at the source IFC layer (Maple Ridge Ifc4_Revit_ARC.ifc), causing voxelizer to surface residential names in commercial project group output. Scope: source IFC storey-name rename or aggregation-side filter; not in current PR 1.2 scope. Status: open. Register version patch-bumps; meta.totalCount increments by one.",
+      "acceptanceCriteria": [
+        "New FU FU-EB-MAPLE-RIDGE-IFC-STOREY-NAMING-CLEANUP-1 present in follow-up-register.json with priority P2, status open",
+        "FU description references Maple Ridge Ifc4_Revit_ARC.ifc as the source artifact and 'Level 1 Living Rm.' as the named example",
+        "follow-up-register meta.totalCount increments by one",
+        "follow-up-register version increments by patch level",
+        "ajv canonical 3-flag validation against follow-up-register.schema.json passes (per memory #14 ajv-cli@5.0.0 -r flags)",
+        "FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 status remains 'closed' (already closed in register; no reopen)"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "DEC entry 'd-2026-06-09-voxel-decision-aggregation-join-canonical' appended to .roadmap/decision-log.json per decision-log.schema.v2.json. Locks the canonical decision-to-voxel aggregation join condition (pm_decisions.primary_voxel_urn = voxels.urn) and the dependency on PR 1.1 d-2026-06-06-urn-canonical-shape-type-first as predecessor. Provides context (PR 1.1 substrate-corrected FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 into aggregation-vs-IFC-storey halves; aggregation half is this PR), constraints (n8n PostgreSQL pipeline must remain live, Hard Constraint #1), alternatives considered (filter-side workaround vs join-side fix; join-side chosen as canonical-correct), decision (correct the join condition), rationale (PR 1.1 made canonical-URN shape available on both columns; join-side fix is the substrate-honest path), consequences (positive: decisionCount returns correct values for all canonical projects; negative: none expected if PR 1.1 production-deployed; risks: n8n pipeline transient if migration not yet applied at deploy, mitigated by ordering deploy after PR 1.1 production verification), category=architecture, status=approved, impact per impactLevel enum, approvedBy includes 'erik-luh'. References relatedDecisions d-2026-06-06-urn-canonical-shape-type-first and impactedDeliverables d-2026-06-09-eb-voxel-decision-aggregation-fix.",
+      "acceptanceCriteria": [
+        "DEC entry decisionId matches pattern '^d-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$'",
+        "DEC entry includes all 9 required fields per decision-log v2 schema: decisionId, timestamp, title, context, decision, rationale, status, category, impact",
+        "category set to 'architecture'",
+        "status set to 'approved'",
+        "approvedBy is array containing 'erik-luh' (memory #13 canonical 15-field shape)",
+        "relatedDecisions array includes 'd-2026-06-06-urn-canonical-shape-type-first'",
+        "impactedDeliverables array includes 'd-2026-06-09-eb-voxel-decision-aggregation-fix'",
+        "ajv canonical 3-flag validation against decision-log.schema.v2.json passes",
+        "decision-log meta.lastUpdated touched to authoring date 2026-06-09",
+        "decision-log meta.totalDecisions counter increments by one (memory #14 discipline)"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "EB-local SPEC.md at .dlp/deliverables/d-2026-06-09-eb-voxel-decision-aggregation-fix/SPEC.md documents the deliverable per F0B85LNSTC4 doctrine. Cites the substrate research (PR 1.1 OUT-3 + OUT-5 notes, strategy doc §13 [NEXT] PR 1.2 framing), the join condition mechanics, the dependency chain (PR 1.1 must be production-deployed; T1 child deliverable unblocks after this PR), the n8n integrity constraint (Hard Constraint #1), and the Arc 2 scope boundary (IFC storey-name cleanup explicitly out of scope).",
+      "acceptanceCriteria": [
+        "SPEC.md authored at .dlp/deliverables/d-2026-06-09-eb-voxel-decision-aggregation-fix/SPEC.md",
+        "SPEC.md includes: mission, scope summary, join condition mechanics, dependency chain (PR 1.1 → PR 1.2 → T1), n8n integrity note (Hard Constraint #1), Arc 2 scope boundary statement",
+        "SPEC.md ends with mantra: Enterprise Excellence. Schema-First. No Shortcuts.",
+        "SPEC.md file path tracked by git per FU-EB-DLP-SPEC-MD-GITIGNORE-CONFLICT-1 closure (no longer gitignored)"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv canonical 3-flag validation passes against follow-up-register.schema.json for the FU register update (per memory #14: ajv-cli@5.0.0 with -r for both luhtech-enums.schema.json and definitions.schema.json)",
+      "ajv canonical 3-flag validation passes against decision-log.schema.v2.json for the DEC entry",
+      "TypeScript compile (tsc --noEmit --project tsconfig.app.json) passes with zero errors across api-gateway",
+      "ESLint passes on voxels.routes.ts (sole production file modified)",
+      "Vitest passes for voxels.routes.test.ts (or equivalent test path) including new aggregation assertion",
+      "grep -n 'urn:ectropy:' apps/api-gateway/src/routes/voxels.routes.ts returns ZERO matches (PR 1.1 invariant preserved)",
+      "All 3 required ruleset checks pass on PR CI (NV-03, vestigial .js, patterns.yml)",
+      "Foundation Health and Enterprise Test Suite and Build Staging Images workflows pass on PR CI",
+      "Roadmap V3 Schema Validation CI gate passes",
+      "Required SR CI checks all GREEN; NO --admin merge",
+      "commit_and_merge.sh PHASE 3 stages explicit 5-file scopeFiles list and aborts if any unexpected file would be staged (memory #18 Tarball V2 scope-lock)"
+    ],
+    "postMerge": [
+      "Dev DB query: SELECT COUNT(*) joined query for Maple Ridge project_id dc1eaa5b-7553-46ec-92a5-e20762a60c71 returns decisionCount > 0 (was 0 pre-PR-1.2)",
+      "n8n PostgreSQL pipeline canary (159.223.203.231) remains 200 throughout deploy and post-merge window (Hard Constraint #1)",
+      "Staging Watchtower picks up new image on main merge; staging Maple Ridge endpoint shows correct decisionCount after Watchtower cycle",
+      "Cross-repo doctrine F0B85LNSTC4: SR-chat lands TRUTH-DELIVERED at schemas/_instances/truth-delivered/d-2026-06-09-eb-voxel-decision-aggregation-fix.json referencing EB merge SHA with closureStatus closed-clean",
+      "Full 40-char EB merge SHA posted to #luhtech-agents-comms channel C0B7EPFCA85 with [EB-chat] prefix per memory #19 + #27"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-09",
+      "trigger": "L4 named-step approval in EB-chat 2026-06-09: 'approved, author 1.2 spec as written, proceed incorporating recent substrate learnings'"
+    }
+  ],
+  "parentDeliverable": "d-2026-06-05-eb-tier1-ros-overlay-foundation",
+  "relatedFollowUps": [
+    "FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1"
+  ],
+  "notes": "PR 1.2 of URO Tier 1 Round 1 critical path per memory #22 (PR 1.1 URN reconcile [CLOSED at EB f81f7b6 2026-06-06 PR #315] → PR 1.2 aggregation fix [this spec] → T1 child deliverable spec [Option B] → T2-T6). Substrate-correct successor to PR 1.1 per strategy doc §13 [NEXT]. Authored against current EB main b9b4141511f806b6746cc8bba0192253b3c06793 (post-Node-24-migration PR #322 merged 2026-06-09). No scope conflict with Node 24 migration scope (CI/Dockerfile/k8s, no overlap with TypeScript route files). FU-EB-VOXELIZER-LEVEL-EXTRACTION-FIX-1 already closed in register per substrate-corrected title 'Decision aggregation handler queries wrong table + Maple Ridge source IFC storey naming (PR 1.2 fixes aggregation, Arc 2 cleans IFC)' — this PR is the underlying work; the closed FU is preserved as the substrate-correction audit-trail event from PR 1.1. New FU OUT-3 files the Arc 2 scope (IFC storey-name cleanup) cleanly. Recent substrate learnings incorporated: (a) memory #1 substrate-honesty — line number 858 marked as substrate-honest reference per PR 1.1 OUT-5; execution-time substrate-read may discover drift addressable via v1.0.1 amendment per the d-2026-06-05-eb-tier1-t1-foundation v1.0.1->v1.0.4 amendment-chain precedent; (b) memory #20 enterprise-complete — Arc 2 IFC storey cleanup explicitly scoped out, filed as a fresh tracked FU rather than expanded into this PR; (c) memory #18 Tarball V2 — commit_and_merge.sh PHASE 3 scope-lock against the 5-file declaration; (d) memory #19 + #27 — Slack notice carries [EB-chat] prefix and full 40-char SHA; (e) memory #14 — ajv canonical 3-flag form for both FU register and decision-log validation. Hard Constraint #1: n8n PostgreSQL pipeline (159.223.203.231) MUST remain live throughout deploy; aggregation handler change is a read-path SQL fix, no schema/data-side mutation, no row-lock pressure. Cross-repo doctrine F0B85LNSTC4: this spec posted to Slack channel C0B7EPFCA85 with file SHA256 + bytes + validation status; SR-chat picks up from channel and lands SR anchor at schemas/_instances/deliverables/d-2026-06-09-eb-voxel-decision-aggregation-fix.json on luh-tech/schema-registry. parentDeliverable set to d-2026-06-05-eb-tier1-ros-overlay-foundation per strategy doc parent-arc shape. Schema version note: spec validated against deliverable.schema.json v1.2.0 (canonical at https://schemas.luh.tech/deliverable.schema.json fetched 2026-06-09); memory note referencing 1.1.0 is a minor-version drift, surface for next memory hygiene.\n\nEnterprise Excellence. Schema-First. No Shortcuts."
+}
