@@ -1,7 +1,7 @@
 {
   "$schema": "https://schemas.luh.tech/deliverable.schema.json",
   "id": "d-2026-06-05-eb-tier1-t1-foundation",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "title": "URO Tier 1 — T1 Foundation: ROS 2 base + luhtech_msgs + viewer-JWT + voxel_groups table",
   "description": "First child of URO Tier 1 multi-tarball arc. Lands the foundation building blocks for the URO viewer demo: ROS 2 Jazzy base image, colcon workspace with luhtech_msgs package (canonical 9 .msg files per strategy doc §6.A — VoxelPose, ResourceStatus, VoxelGroup, VoxelGroupArray, VoxelGroupEvent, VoxelStateArray, VoxelStateEvent, EFASState, EFASAlert), foxglove_bridge launch config, /api/uro/viewer-token + /internal/uro-ws-auth API routes, nginx /ws/uro/ subrequest auth config, and voxel_groups table migration (with GIN + B-tree indexes per strategy doc §6.D). No simulator nodes run yet (those land in T2). No production data load (production URN migration tracked separately). Foundation only.",
   "authority": {
@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "feat/tier1-t1-foundation-2026-06-05",
@@ -141,6 +141,20 @@
       "to": "S4-authored",
       "date": "2026-06-05",
       "trigger": "L4 approval to author T1 child deliverable spec post parent arc EB anchor landing (PR #305 cc5530f) and STRATEGY.md correction (PR #306 cc5530f)"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S7-merged",
+      "date": "2026-06-05",
+      "commitSha": "c356d81cc40091b24abfcc829d5e1f0fced4680e",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/307",
+      "trigger": "EB PR #307 squash-merged 2026-06-05T19:22:35Z at commit c356d81cc40091b24abfcc829d5e1f0fced4680e. All 7 outputs (OUT-1..OUT-7) delivered: ROS 2 Jazzy base + luhtech_msgs (9 .msg files), URO viewer-token + internal WS auth endpoints, nginx /ws/uro/ subrequest auth, voxel_groups Prisma migration 20260605120000_add_voxel_groups, foxglove_bridge launch + entrypoint, service-uro-sim catalog + architecture entries, EB-local SPEC.md. In-execution framework substrate-correction at commit a7c6e94 within PR #307: route files refactored from Fastify imports to Express Router + handler exports (api-gateway is Express, not Fastify). Captured in TRUTH-DELIVERED.closureNotes.overrideRecord at canonical path."
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-05",
+      "trigger": "TRUTH-DELIVERED instance authored 2026-06-05T19:35:00Z at schemas/_instances/truth-delivered/d-2026-06-05-eb-tier1-t1-foundation.json by SR-chat. closureStatus: closed-with-debt. relatedFollowUps: FU-EB-USER-JWT-JTI-CLAIM-1, FU-EB-URN-NAMESPACE-RECONCILE-1, FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1, FU-EB-URO-T1-ROUTE-MOUNTING-1 (added during execution). rulePipelineEvidence: RULE-PIPELINE-AMENDMENT-SUBSTRATE-RECHECK-1 (framework-import substrate-correction via CI catch). Cross-repo doctrine F0B85LNSTC4 cycle complete on this arc."
     }
   ],
   "parentDeliverable": "d-2026-06-05-eb-tier1-ros-overlay-foundation",
@@ -149,5 +163,7 @@
     "FU-EB-URN-NAMESPACE-RECONCILE-1",
     "FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1"
   ],
-  "notes": "Cross-repo doctrine (memory #24): SR-chat amends the existing anchored T1 instance (currently at v1.0.1 SHA f6f2f59... from PR #132 bb98acd on schema-registry main) to this v1.0.4 spec before EB executes the T1 tarball PHASE_3 (PR open). The execution tarball (separate artifact, authored chat-side, sandbox-tested) is a v2 tarball landing 23 scope files via applier + commit_and_merge.sh phased ops. v1.0.4 fixes forward against the schema substrate Erik provided (infrastructure-catalog.schema.json v1.2.0, architecture-roadmap.schema.v1.json) — catalog + architecture entries land in this PR per their schemas rather than being deferred. P1 prerequisite handling — both FU-EB-USER-JWT-JTI-CLAIM-1 and FU-EB-URN-NAMESPACE-RECONCILE-1 (parent arc OUT-4 P1 prereqs) will be captured as overrideRecord entries on T1's TRUTH-DELIVERED.json at SR closure (S7 post-merge). Rationale: (a) T1's viewer-token endpoint mints with its own jti for endpoint-level tracking; parent_jti binding requires user JWTs to have jti and is deferred to follow-up FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1 (P2, filed during T1, status open, blocked by FU-EB-USER-JWT-JTI-CLAIM-1) — security hardening, not a functional blocker for the viewer demo; (b) T1 creates voxel_groups table empty; no production data loaded in T1 (Maple Ridge bundle loads in T5), so production URN format does not affect T1 — URN reconcile remains tracked for completion before T5 production data load. T1 new code uses canonical urn:luhtech:ectropy:* from day one. SPEC.md (scope file #23 of 23) summarizes this for EB main. STRATEGY.md (landed PR #305 25a1f02 + corrected PR #306 cc5530f) §4 + §4.A are the canonical source for the 9 luhtech_msgs types and the topic surface — T1 .msg files implement §4.A verbatim. infrastructure-catalog service.type 'worker' chosen as closest enum fit — none of (api|web|worker|database|cache|queue|proxy|gateway|mcp-server|storage|monitoring|logging|scheduler|bim-viewer|file-processor) perfectly fits a ROS 2 simulator container; worker fits the T2+ simulator nodes runtime. If a more accurate type ('ros2-service' or similar) becomes available in a future catalog schema version, T1 entry can be updated."
+  "notes": "Cross-repo doctrine (memory #24): SR-chat amends the existing anchored T1 instance (currently at v1.0.1 SHA f6f2f59... from PR #132 bb98acd on schema-registry main) to this v1.0.4 spec before EB executes the T1 tarball PHASE_3 (PR open). The execution tarball (separate artifact, authored chat-side, sandbox-tested) is a v2 tarball landing 23 scope files via applier + commit_and_merge.sh phased ops. v1.0.4 fixes forward against the schema substrate Erik provided (infrastructure-catalog.schema.json v1.2.0, architecture-roadmap.schema.v1.json) — catalog + architecture entries land in this PR per their schemas rather than being deferred. P1 prerequisite handling — both FU-EB-USER-JWT-JTI-CLAIM-1 and FU-EB-URN-NAMESPACE-RECONCILE-1 (parent arc OUT-4 P1 prereqs) will be captured as overrideRecord entries on T1's TRUTH-DELIVERED.json at SR closure (S7 post-merge). Rationale: (a) T1's viewer-token endpoint mints with its own jti for endpoint-level tracking; parent_jti binding requires user JWTs to have jti and is deferred to follow-up FU-EB-URO-VIEWER-TOKEN-PARENT-JTI-BINDING-1 (P2, filed during T1, status open, blocked by FU-EB-USER-JWT-JTI-CLAIM-1) — security hardening, not a functional blocker for the viewer demo; (b) T1 creates voxel_groups table empty; no production data loaded in T1 (Maple Ridge bundle loads in T5), so production URN format does not affect T1 — URN reconcile remains tracked for completion before T5 production data load. T1 new code uses canonical urn:luhtech:ectropy:* from day one. SPEC.md (scope file #23 of 23) summarizes this for EB main. STRATEGY.md (landed PR #305 25a1f02 + corrected PR #306 cc5530f) §4 + §4.A are the canonical source for the 9 luhtech_msgs types and the topic surface — T1 .msg files implement §4.A verbatim. infrastructure-catalog service.type 'worker' chosen as closest enum fit — none of (api|web|worker|database|cache|queue|proxy|gateway|mcp-server|storage|monitoring|logging|scheduler|bim-viewer|file-processor) perfectly fits a ROS 2 simulator container; worker fits the T2+ simulator nodes runtime. If a more accurate type ('ros2-service' or similar) becomes available in a future catalog schema version, T1 entry can be updated.\n\n[v1.0.5 RECONCILE AMENDMENT 2026-06-09] Deliverable lifecycleState reconciled with canonical TRUTH-DELIVERED already on SR main since 2026-06-05T19:35:00Z. Mixed-state substrate gap diagnosed by SR-chat substrate-before-write 2026-06-09: TRUTH-DELIVERED was authored on day-of-merge with full canonical shape (40-char mergeCommit c356d81cc40091b24abfcc829d5e1f0fced4680e, S8-closed, 4 relatedFollowUps including FU-EB-URO-T1-ROUTE-MOUNTING-1 added during execution, rulePipelineEvidence captured), but the deliverable instance was never updated from S4-authored to reflect the merge. This v1.0.5 amendment brings the deliverable into agreement with the TRUTH-DELIVERED without touching the canonical TRUTH-DELIVERED file. Full 40-char merge SHA pulled chat-side directly from the existing TRUTH-DELIVERED on SR main — no gh-CLI fetch required. Substrate-correction lesson: closure-backlog clearance must probe BOTH the deliverable AND the TRUTH-DELIVERED paths on SR main before authoring; otherwise risk of duplicate closure work and substrate regression. Memory #13 SUBSTRATE-CORRECTION addendum applies. Semver: PATCH (lifecycle reconcile + audit-trail completion; no behavior change to deliverable goal or scope).",
+  "mergeCommitSha": "c356d81cc40091b24abfcc829d5e1f0fced4680e",
+  "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/307"
 }
