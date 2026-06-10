@@ -1,0 +1,122 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-09-eb-uro-routes-main-mount",
+  "version": "1.0.0",
+  "title": "URO route mount — close FU-EB-URO-MAIN-MOUNT-1 (T5 STAGE-DEV-4 unblocker)",
+  "description": "Mount the URO route barrel at /api/uro in apps/api-gateway/src/main.ts so the voxel-groups route landed by T5 (d-2026-06-09-eb-tier1-t5-groups-occupancy) is reachable at GET /api/uro/voxel-groups. Files and closes FU-EB-URO-MAIN-MOUNT-1 in the same PR (filed-and-closed pattern). Mount-only diff: no route handler logic changes, no other refactors. Scope-locked per memory #18.",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "chore/uro-routes-main-mount-2026-06-09",
+    "scopeFiles": [
+      "apps/api-gateway/src/main.ts",
+      ".roadmap/follow-up-register.json",
+      ".dlp/deliverables/d-2026-06-09-eb-uro-routes-main-mount/SPEC.md"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "FU-EB-URO-MAIN-MOUNT-1 filed in .roadmap/follow-up-register.json per canonical follow-up-register.schema.json. Priority P1, status closed at PR merge (filed-and-closed pattern). Title: 'Mount /api/uro route barrel in apps/api-gateway/src/main.ts'. Resolution block references this deliverable id and the EB merge SHA.",
+      "acceptanceCriteria": [
+        "FU-EB-URO-MAIN-MOUNT-1 present in .roadmap/follow-up-register.json followUps[] array",
+        "Priority field set to P1",
+        "Status field set to closed",
+        "tracking_repo field set to luh-tech/Ectropy-Business",
+        "Resolution block populated with prUrl + commitSha + closesAt timestamp + deliverableId d-2026-06-09-eb-uro-routes-main-mount",
+        "ajv canonical 3-flag validation passes against follow-up-register.schema.json with -r enums + -r definitions"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Mount the URO route barrel in apps/api-gateway/src/main.ts via the existing Express app.use('/api/<prefix>', router) pattern. Substrate-confirmed framework: Express ^4.18 per eb-agent:query-tech-components category=frameworks 2026-06-09. Exact import + app.use line pattern lifted from a substrate-read peer mount in main.ts (not authored from memory).",
+      "acceptanceCriteria": [
+        "apps/api-gateway/src/main.ts contains import statement for the URO route barrel (apps/api-gateway/src/routes/uro/index.ts default or named export)",
+        "apps/api-gateway/src/main.ts contains app.use('/api/uro', uroRouter) (or substrate-confirmed equivalent shape) positioned consistently with existing /api/* mounts re: auth middleware ordering",
+        "No changes to apps/api-gateway/src/routes/uro/voxel-groups.route.ts (T5 scope; out of bounds for this PR)",
+        "No changes to apps/api-gateway/src/routes/uro/index.ts barrel (CLI authored at T5; out of bounds)",
+        "tsc --noEmit error count does not regress against pre-merge baseline (per memory #18 diff-vs-baseline; pre-existing main.ts errors documented in PR description)",
+        "eslint error count does not regress against pre-merge baseline for main.ts (per memory #18)"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "STAGE-DEV-4 acceptance probe: GET /api/uro/voxel-groups?project_id=dc1eaa5b-7553-46ec-92a5-e20762a60c71 returns 200 with valid JSON payload matching the shape T5 OUT-3 vitest covers in isolation. This deliverable is positioned as the T5 documented-debt resolver — T5 executed via EB PR #323 / 6924f97 on 2026-06-09T18:36:57 PDT; T5 TRUTH-DELIVERED has not yet been authored on SR main as of this anchor PR; the curl GET /api/uro/voxel-groups 404 condition that this PR closes is the unmounted-barrel consequence captured in T5 OUT-3 vitest (which covers the handler in isolation but cannot exercise the route via HTTP without main.ts mount). If T5 TRUTH-DELIVERED closes with debt citing FU-EB-URO-MAIN-MOUNT-1, this deliverable closes the cited gate; if T5 closes clean, this deliverable still files-and-closes the mount FU as a standalone post-T5-execution remediation.",
+      "acceptanceCriteria": [
+        "curl https://dev.ectropy.ai/api/uro/voxel-groups?project_id=dc1eaa5b-7553-46ec-92a5-e20762a60c71 returns HTTP 200",
+        "Response body is valid JSON with project_id + count + delta + groups[] fields per T5 OUT-3 contract",
+        "Unauthenticated request returns 401 per existing main.ts auth middleware (verifies mount honors auth ordering)",
+        "Invalid project_id format returns 400 per route handler validation (covered by vitest in T5; verified live)",
+        "Probe output captured in _msg/PROBES.txt at STAGE-DEV-4"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "EB-local SPEC.md at .dlp/deliverables/d-2026-06-09-eb-uro-routes-main-mount/SPEC.md per F0B85LNSTC4 doctrine. Documents: arc framing (T5 documented-debt closer), substrate verification chain (Express + IIntakeStage lessons), FU filed-and-closed pattern, the parallel viewer-token mount that stays deferred (blocked by FU-EB-USER-JWT-JTI-CLAIM-1), dev → staging → prod escalation procedural.",
+      "acceptanceCriteria": [
+        "SPEC.md authored at the canonical .dlp path",
+        "Includes substrate-verification block citing eb-agent:query-tech-components result + main.ts peer-mount line reference",
+        "Out-of-scope items explicit (viewer-token mount, lint cleanup, route handler logic)",
+        "Tracked by git (per FU-EB-DLP-SPEC-MD-GITIGNORE-NEGATION-1 closure; .gitignore negation in place)"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Substrate-read dispatch (.md) executed at EB-CLI capturing: apps/api-gateway/src/main.ts full content, apps/api-gateway/src/routes/uro/index.ts full content, ALL existing app.use('/api/...') mount lines for peer pattern match, tsc baseline error count, eslint baseline error count for main.ts",
+      "Framework substrate confirmed: eb-agent:query-tech-components category=frameworks returns Express ^4.18 (no Fastify assumption carried)",
+      "Open-FU baseline: eb-agent:query-followups confirms FU-EB-URO-MAIN-MOUNT-1 not present pre-arc (filed by this PR); FU-EB-URO-VIEWER-TOKEN-MINT-LAND-1 P1 open + blocked-by FU-EB-USER-JWT-JTI-CLAIM-1 confirmed (out of scope)",
+      "TypeScript compile (tsc --noEmit --project tsconfig.app.json) error count does not regress vs pre-merge baseline; new errors introduced by mount = 0",
+      "ESLint on apps/api-gateway/src/main.ts error count does not regress vs pre-merge baseline; new errors introduced by mount = 0",
+      "Vitest suite for api-gateway passes (existing tests; this arc adds no new tests — mount integration verified via STAGE-DEV-4 curl probe in postMerge)",
+      "ajv canonical 3-flag validation passes for .roadmap/follow-up-register.json against follow-up-register.schema.json with -r enums + -r definitions",
+      "n8n PostgreSQL pipeline canary (159.223.203.231) returns HTTP 200 pre-merge (Hard Constraint #1)",
+      "All 3 required ruleset checks pass on PR CI (NV-03, vestigial .js, patterns.yml)",
+      "Foundation Health + Enterprise Test Suite + Build Staging Images workflows pass on PR CI",
+      "Roadmap V3 Schema Validation CI gate passes",
+      "commit_and_merge.sh PHASE 3 stages exactly the 3 scopeFiles declared in scope.scopeFiles[]; aborts on unexpected staging (memory #18 scope-lock)",
+      "All OUT-1 through OUT-4 acceptance criteria pre-merge items met (OUT-3 deferred to STAGE-DEV postMerge)"
+    ],
+    "postMerge": [
+      "[STAGE-DEV-1] Squash-merge to main on luh-tech/Ectropy-Business; mergeCommitSha (full 40-char) captured for SR closure",
+      "[STAGE-DEV-2] CI deploy-dev.yml auto-fires on main push; build-and-push api-gateway image to DOCR with main SHA tag",
+      "[STAGE-DEV-3] Dev droplet deploy-agent HMAC pull (Zero-SSH per memory #20); docker compose up -d --no-deps api-gateway (NEVER down, NEVER restart)",
+      "[STAGE-DEV-4] curl https://dev.ectropy.ai/api/uro/voxel-groups?project_id=dc1eaa5b-7553-46ec-92a5-e20762a60c71 returns 200 with valid JSON (OUT-3 acceptance live); captured in _msg/PROBES.txt",
+      "[STAGE-DEV-5] Unauthenticated probe returns 401 (auth ordering verified)",
+      "[STAGE-DEV-6] n8n PostgreSQL canary on 159.223.203.231 returns HTTP 200 post-dev-deploy (Hard Constraint #1)",
+      "[STAGE-STAGING-1] L4 review of dev _msg/L4-CHECKLIST.md; on PASS, L4 names explicit step to promote to staging (per memory #4)",
+      "[STAGE-STAGING-2] Manual workflow_dispatch on deploy-staging.yml with main SHA; canary-pre n8n probe HTTP 200",
+      "[STAGE-STAGING-3] Build + push staging images; staging Watchtower picks up; docker compose up -d --no-deps api-gateway",
+      "[STAGE-STAGING-4] Staging E2E pre-flight gate (Speckle 502 long-standing condition NOT session-blocking per Erik calibration LUHTECH-ECTROPY-CANONICAL-STATE-CAPTURE-2026-05-26)",
+      "[STAGE-STAGING-5] curl https://staging.ectropy.ai/api/uro/voxel-groups?project_id=<staging-maple-ridge-uuid> returns 200; captured in _msg/PROBES.txt",
+      "[STAGE-STAGING-6] Staging canary-post n8n probe HTTP 200; Hard Constraint #1 verified across deploy window",
+      "[STAGE-STAGING-7] L4 review of staging _msg/L4-CHECKLIST.md; staging soak ≥24h before prod unless L4 explicitly waives (per DEC-032)",
+      "[STAGE-PROD-1] L4 names explicit step to promote to prod (per memory #4); production gate per DEC-032: workflow_dispatch deploy-production-app.yml with confirm=DEPLOY-PRODUCTION + apply_confirm=APPLY-AFTER-PLAN-REVIEW",
+      "[STAGE-PROD-2] Production canary-pre n8n probe HTTP 200; production /api/health score 100 baseline captured",
+      "[STAGE-PROD-3] Build + push production images to DOCR with main SHA tag; production rollout via deploy-agent HMAC (Zero-SSH)",
+      "[STAGE-PROD-4] curl https://ectropy.ai/api/uro/voxel-groups?project_id=<prod-maple-ridge-uuid> returns 200 within 5 minutes of rollout",
+      "[STAGE-PROD-5] Production canary-post n8n probe HTTP 200; Hard Constraint #1 verified across production deploy window",
+      "[STAGE-PROD-6] L4 review of production _msg/L4-CHECKLIST.md; on PASS, SR-chat authors TRUTH-DELIVERED at schemas/_instances/truth-delivered/d-2026-06-09-eb-uro-routes-main-mount.json with full 40-char mergeCommitSha + closureStatus closed-clean + closureNotes.closesFus ['FU-EB-URO-MAIN-MOUNT-1']",
+      "[STAGE-PROD-7] Full 40-char EB merge SHA + prod-rollout SHA posted to #luhtech-agents-comms channel C0B7EPFCA85 with [EB-chat] prefix per memory #19 + #27",
+      "[STAGE-PROD-8] Cross-arc cascade: if T5 (d-2026-06-09-eb-tier1-t5-groups-occupancy) S7 TRUTH-DELIVERED was authored with closureStatus=closed-with-debt citing FU-EB-URO-MAIN-MOUNT-1, surface as candidate for closure amendment (separate SR-chat L4 named-step); T5 closureStatus may now move to closed-clean post this deliverable"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-09",
+      "trigger": "L4 named-step approval in EB-chat 2026-06-09: 'create a prompt to address this tech debt following enterprise standards. this is key to address and close, document, and move fwd'. Reframed per L4 correction: canonical artifact for tech-debt closure is a schema-bound deliverable JSON instance, not a markdown prompt. Substrate-read FU baseline 2026-06-09 confirmed FU-EB-URO-MAIN-MOUNT-1 absent from register (filed-and-closed pattern applies). Framework confirmed Express ^4.18 via eb-agent:query-tech-components."
+    }
+  ],
+  "parentDeliverable": "d-2026-06-09-eb-tier1-t5-groups-occupancy",
+  "relatedFollowUps": [
+    "FU-EB-URO-MAIN-MOUNT-1"
+  ],
+  "notes": "Closes the URO mount tech-debt surfaced during T5 CLI execution 2026-06-09. T5 CLI noted: 'matches the existing viewer-token deferral pattern — both routes have \"Mount at /api/uro in main.ts\" comments but neither is wired yet.' Effect on T5 STAGE-DEV-4: curl /api/uro/voxel-groups returns 404 because barrel is unmounted in main.ts. This deliverable closes that gap. Filed-and-closed FU pattern: FU-EB-URO-MAIN-MOUNT-1 is filed and closed in the same PR that mounts the route. Verified pre-authoring substrate (lesson from T5 tarball failure 2026-06-09): (1) Framework: Express ^4.18 confirmed via eb-agent:query-tech-components category=frameworks 2026-06-09 (NOT Fastify — T5 lesson); (2) FU baseline: eb-agent:query-followups 2026-06-09 confirmed FU-EB-URO-MAIN-MOUNT-1 absent from 307-FU register; (3) Parallel deferral: viewer-token mint+land work blocked by FU-EB-USER-JWT-JTI-CLAIM-1 (P1 open in 307-FU register). The id FU-EB-URO-VIEWER-TOKEN-MINT-LAND-1 appears only as a dangling forward-reference in FU-EB-USER-JWT-JTI-CLAIM-1.blocks[]; no actual FU entry by that id exists in the register (substrate-correction observation per SR-chat landing-time substrate-read 2026-06-09; surfaced as separate FU-register hygiene item, out of scope for this arc). Viewer-token mount stays out of this arc; (4) Parent linkage: parentDeliverable d-2026-06-09-eb-tier1-t5-groups-occupancy (T5 — this is the documented-debt closure for T5). Out of scope (explicit per memory #18 scope-lock): (a) viewer-token route mount (blocked by jti claim work); (b) main.ts pre-existing ESLint errors (separate adjacent debt; diff-vs-baseline pattern applied so this arc does not regress, does not cleanup); (c) any change to voxel-groups.route.ts handler or routes/uro/index.ts barrel (T5 scope, already merged). Cross-repo flow per F0B85LNSTC4: SR-chat lands anchor PR at schemas/_instances/deliverables/d-2026-06-09-eb-uro-routes-main-mount.json against canonical deliverable.schema.json v1.2.0; squash-merge fresh L4 named-step. EB-CLI then receives execution dispatch from EB-chat (substrate-read first, then mount tarball). EB PR merges to EB main. SR-chat closes with TRUTH-DELIVERED post STAGE-PROD-6. Anti-pattern avoided (per L4 correction 2026-06-09): authoring a markdown PROMPT in place of a deliverable spec is anti-pattern. The canonical artifact for tech-debt closure is the schema-bound deliverable instance — this file. The substrate-read dispatch (.md) is the execution tool, not the deliverable. Enterprise Excellence. Schema-First. No Shortcuts.\n\n[SR-CHAT SUBSTRATE-CORRECTION at LANDING-TIME 2026-06-09] Per L4 named-step 'land with amend scope' authorized 2026-06-09 in SR-chat, three substrate-honesty corrections applied to EB-chat's authored draft (EB-chat draft SHA256 93a43107442da7ded1655db4688ea4f71456df0b98c8b9330d0ad897fc4c06c9 / 13517 bytes; verified at landing-time pre-amendment). (A) FU-EB-URO-VIEWER-TOKEN-MINT-LAND-1 is a dangling FK reference in FU-EB-USER-JWT-JTI-CLAIM-1.blocks[] — no FU entry by that id exists in the 307-FU register (eb-agent:query-followups limit=400 verified). Reframed in notes section (3) to substrate-honest form. (B) File-path observation: this spec correctly targets apps/api-gateway/src/main.ts per EB-chat's framework substrate-read (eb-agent:query-tech-components confirmed Express ^4.18 LTS). Adjacent open FU FU-EB-URO-T1-ROUTE-MOUNTING-1 (P2 open) references apps/api-gateway/src/server.ts — substrate may have evolved between T1 closure 2026-06-05 and this arc, or the FU has stale path. EB-CLI substrate-read at execution time will catch any actual file-not-found; the FU's potentially-stale path remains as separate adjacent FU-register hygiene item (out of scope for this arc per memory #18 scope-lock). (C) T5 forward-reference reframed in OUT-3 description: T5 deliverable is at S4-authored / v1.0.0 (SR PR #171 merged 2026-06-09 16:48 PDT); T5 execution merged at EB PR #323 / 6924f97 2026-06-09T18:36:57 PDT; T5 TRUTH-DELIVERED not yet authored on SR main — so 'T5 closed-with-debt cited this gate' was forward-referencing at authoring time. Reframed to anticipated-state framing that holds whether T5 closes clean or with-debt. These three corrections do not alter the scope, output set, or acceptance criteria of this deliverable; they only reconcile substrate claims with the verified state on SR main b4ef429862c20e14d4fcaa20b5320709e5d30a29 and the 307-FU register as of 2026-06-09. Schema validation re-passes post-amendment (Draft 7 + ajv canonical 3-flag set). Substrate-correction lesson per memory #13 SUBSTRATE-CORRECTION: when authoring chat-side, dangling FK references in the FU register's blocks[]/blocked_by[] arrays must be probed against the actual FU id set, not treated as live FUs. Filed for adjacent FU-register hygiene scope at next L4 named-step."
+}
