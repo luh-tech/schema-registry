@@ -1,0 +1,77 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-12-sr-bundle-schema-speckle-env-bindings",
+  "version": "1.0.0",
+  "title": "Bundle schema v1.1.0 \u2014 add SpeckleEnvBinding type + deprecate flat speckle_stream_id in IfcSeed",
+  "description": "Adds SpeckleEnvBinding interface and updates IfcSeed in @ectropy/schemas (Ectropy-ai/schemas, types/bundle.types.ts) to support per-environment Speckle stream binding tables. Deprecates ifc.speckle_stream_id as authoritative; promotes ifc.speckle_env_bindings as the canonical binding mechanism. Backwards-compatible (all new fields optional). Required by EB deliverable d-2026-06-12-eb-speckle-env-binding-amendment which amended bundle.json to schema 1.1.0 format, and by d-2026-06-12-eb-stage4-speckle-env-binding-d4 which introduced as-any casts pending this type publication.",
+  "authority": {
+    "author": "Claude (EB CLI), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "Ectropy-ai/schemas",
+    "branch": "chore/bundle-schema-speckle-env-bindings-2026-06-12",
+    "scopeFiles": [
+      "types/bundle.types.ts",
+      "package.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "New SpeckleEnvBinding interface exported from types/bundle.types.ts. Fields: environment (string), stream_id (string), provisioned_at (string \u2014 ISO date YYYY-MM-DD), bundle_version (string), content_hash (optional string \u2014 SHA256[:16] of JSON.stringify(speckle_objects)).",
+      "acceptanceCriteria": [
+        "SpeckleEnvBinding interface present in types/bundle.types.ts",
+        "SpeckleEnvBinding exported from the module (visible via `import type { SpeckleEnvBinding } from '@ectropy/schemas/types/bundle'`)",
+        "All fields typed correctly: environment string, stream_id string, provisioned_at string, bundle_version string, content_hash optional string",
+        "tsc --noEmit compiles without error on the schemas package"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "IfcSeed interface updated: speckle_stream_id remains as optional (deprecated hint only); new field speckle_env_bindings?: SpeckleEnvBinding[] added. Change is backwards-compatible \u2014 no existing consumers break.",
+      "acceptanceCriteria": [
+        "IfcSeed.speckle_stream_id remains typed as optional string (not removed \u2014 deprecation, not deletion)",
+        "IfcSeed.speckle_env_bindings typed as optional SpeckleEnvBinding[]",
+        "Existing IfcSeed consumers compile without changes required (all new fields optional)",
+        "tsc --noEmit on the schemas package: zero new errors"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Package version bumped (patch \u2014 additive backwards-compatible change). New version published so EB can reinstall and resolve the as-any casts introduced in d-2026-06-12-eb-stage4-speckle-env-binding-d4.",
+      "acceptanceCriteria": [
+        "package.json version incremented (patch bump from current)",
+        "Published tarball accessible at the GitHub tarball URL consumed by EB's package.json"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "tsc --noEmit on Ectropy-ai/schemas compiles without error",
+      "SpeckleEnvBinding interface present and exported",
+      "IfcSeed.speckle_env_bindings field present and typed SpeckleEnvBinding[]",
+      "IfcSeed.speckle_stream_id retained as optional string (deprecation, not removal)",
+      "No other files changed beyond types/bundle.types.ts and package.json"
+    ],
+    "postMerge": [
+      "EB reinstalls @ectropy/schemas (update package.json tarball ref + pnpm install)",
+      "as-any casts in apps/api-gateway/src/intake/stages/stage-4-ifc.ts for speckle_env_bindings replaced with typed access",
+      "EB tsc --noEmit passes with typed access (no regression)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-12",
+      "trigger": "EB CLI authored retroactive anchor per CANON-RECONCILE 2026-06-12. EB deliverables d-2026-06-12-eb-speckle-env-binding-amendment and d-2026-06-12-eb-stage4-speckle-env-binding-d4 executed with as-any casts before this SR anchor was filed (process error). This anchor closes the cross-repo sequencing gap."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-FOREIGN-ID-BINDING-CONVENTION-1"
+  ],
+  "notes": "Retroactive anchor: EB deliverables d-2026-06-12-eb-speckle-env-binding-amendment (bundle.json schema 1.1.0) and d-2026-06-12-eb-stage4-speckle-env-binding-d4 (stage-4-ifc as-any cast) were authored and PRed before this SR anchor was filed \u2014 violating R3 (SR anchors schema BEFORE EB consumes). The violation is captured in the process-error register (entries: forced-merge-on-red-CI and unauthorized-force-push-and-SR-sequencing). This anchor is retroactive; the as-any casts in stage-4-ifc.ts are the technical debt left by the sequencing inversion. Post-merge: EB should update the @ectropy/schemas tarball ref and replace as-any casts with typed SpeckleEnvBinding access. Enterprise Excellence. Schema-First. No Shortcuts."
+}
