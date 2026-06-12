@@ -1,0 +1,61 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-09-eb-uro-routes-main-mount",
+  "deliveredAt": "2026-06-10T02:57:13Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "b2528f0",
+      "prNumber": 324,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/324",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "b2528f0",
+      "prNumber": 324,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/324",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "b2528f0",
+      "prNumber": 324,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/324",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "b2528f0",
+      "prNumber": 324,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/324",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-12T16:55:00Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "authored"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "URO route barrel mounted on apps/api-gateway/src/main.ts via EB PR #324 squash-merged 2026-06-09 19:57:13 PDT at EB main b2528f006cd80c6c9f5f60d33dc5a07aa8aba924 (full 40-char confirmed at T6 tarball PHASE 0 baseline gate). 5 files on branch chore/uro-routes-main-mount-2026-06-09 (commit ec39100), lint-staged green. Landed: /api/uro mounted — viewer-token + voxel-groups routed through canonical try/catch peer-mount after createContractUploadRoutes (Express ^4.18 pattern, substrate-confirmed via eb-agent:query-tech-components); FU-EB-URO-T1-ROUTE-MOUNTING-1 (P2) closed + FU-EB-URO-MAIN-MOUNT-1 (P1) filed-and-closed in .roadmap/follow-up-register.json with meta recompute; TS2742 annotation pair on routes/uro/index.ts + voxel-groups.route.ts (net tsc improvement); SPEC.md at .dlp/deliverables/. STAGE-DEV-4 probe evidence: voxel-groups endpoint 200 at staging with buildSha-current image confirmed 2026-06-10 (EB-chat channel evidence) — this closed T5's STAGE-DEV-4 documented-debt and triggered the T5 closed-clean amendment landing in the same closure PR as this record. Cross-repo flow F0B85LNSTC4: SR anchor PR #173 (2026-06-09 19:03:24 PDT at SR main 295a9234c7002b3c6dd59ed6f14ebcc1b8f5f5a3, SR-chat amended at landing-time per L4); EB execution PR #324 (2026-06-09); SR closure (this record) 2026-06-12 under L4 backlog-closure named-step. Environment rollout beyond staging (STAGE-PROD) rides the URO Tier 1 parent arc ladder (T6 STAGE-PROD + DEC-032) and is not mount-specific debt. closesFus: FU-EB-URO-T1-ROUTE-MOUNTING-1 (P2, the real register entry, closed) + FU-EB-URO-MAIN-MOUNT-1 (P1, T5 commit-message orphan, filed-and-closed) — both closed in EB PR #324 register edit with meta version patch-bump and count recompute.",
+    "overrideRecord": "Three substrate-confirmed overrides vs anchored spec, per memory #15 documented-override-not-compliance discipline. (1) lint-staged-forced ESLint cleanup — the anchored spec's diff-vs-baseline-no-cleanup posture was impossible because lint-staged blocks staging main.ts while the 6 pre-existing no-empty-function errors exist; cleanup of those patterns was forced into scope. (2) TS2742 annotation pair — T5-introduced TS2742 on routes/uro/index.ts + voxel-groups.route.ts blocked tsc green; ReturnType<typeof Router> annotations (matching viewer-token.route.ts pattern) were required beyond spec prose. (3) 5-vs-6 count drift — apply.sh count-guard expected exactly 6 `.catch(() => {})` patterns per the eslint baseline report; EB-CLI grep found 5; count-guard corrected in-place by CLI, documented in commit. Minor substrate-count drift, no functional impact, net result lint-staged green."
+  },
+  "relatedFollowUps": [
+    "FU-EB-URO-T1-ROUTE-MOUNTING-1",
+    "FU-EB-URO-MAIN-MOUNT-1"
+  ]
+}
