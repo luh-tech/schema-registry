@@ -131,21 +131,15 @@
         "membership": "tag-based",
         "sshPosture": "standing-restricted",
         "sourceAddresses": [
-          "PENDING-RUNNER-IP",
-          "PENDING-STAGING-IP"
+          "165.232.132.224/32",
+          "143.198.154.94/32"
         ],
-        "exceptionRationale": "Standing SSH from two fixed IPs (CI runner + staging) is a blue-green cutover artifact. Firewall membership convergence ID->tag and SSH posture normalization are deferred to a deliberate prod convergence deliverable, never under demo pressure. NOTE: production firewall is currently ID-based in TF (not yet tag-based) — this instance declares the TARGET tag-based posture; the convergence deliverable closes the gap. The standing-restricted SSH is the genuine permanent exception."
+        "exceptionRationale": "Production firewalls are tag-based in reality as of EB PR #418 + terraform apply (Deploy Production Infrastructure, 2026-06-13): droplet_ids removed, tags=[\"environment:production\"] applied in-place, cutover-orthogonal (no droplet touch). The ONLY declared exception is the standing-restricted SSH posture: standing SSH from two fixed source IPs (CI runner 165.232.132.224/32 + staging 143.198.154.94/32) is a genuine permanent blue-green cutover artifact, not a convergence gap. The production_isolated firewall carries runner-only on port 22; the production firewall carries both. complianceStatus remains exception-declared for this SSH posture by design — honest parity, not a deficiency to close. Unheld luhtech-admin-1 dropped from prod TF this PR; removal on live droplets is rebuild-deferred."
       },
       "sshKeys": [
         {
-          "name": "luhtech-admin-1",
-          "credentialRef": "PENDING-RA-ITEMID-luhtech-admin-1",
-          "held": false,
-          "deprecated": true
-        },
-        {
           "name": "terraform-deploy-key",
-          "credentialRef": "PENDING-RA-ITEMID-terraform-deploy-key",
+          "credentialRef": "6aa99d94-b998-42c3-8d0e-b4690018f3e5",
           "held": true
         }
       ],
@@ -170,7 +164,12 @@
       "date": "2026-06-13",
       "actor": "Claude (SR chat), L1",
       "trigger": "Staging convergence (d-2026-06-13-eb-staging-convergence): EB PR #417 merged (resource-access.json v1.5.0, 2f6efcb7f317290c62520556aea1c6ef20a3af5c) registered both held keys. Removed unheld luhtech-admin-1 from staging sshKeys; resolved luhtech-enterprise (26d39af7) + terraform-deploy-key (6aa99d94) credentialRefs on staging AND dev; staging complianceStatus convergence-target -> compliant. admin-1 left untouched in production (its convergence child handles it)."
+    },
+    {
+      "date": "2026-06-13",
+      "actor": "Claude (SR chat), L1",
+      "trigger": "Production convergence (d-2026-06-13-eb-prod-convergence): EB PR #418 + terraform apply landed both prod firewalls genuinely tag-based (droplet_ids removed, tags=[environment:production], cutover-orthogonal, prod healthy buildSha 6189ce63d0ce761402c14c6a199c14096fd95f63). env-map prod entry: firewall rationale updated to reflect real tag-based state; sourceAddresses filled (runner 165.232.132.224/32 + staging 143.198.154.94/32); terraform-deploy-key credentialRef resolved (6aa99d94); unheld luhtech-admin-1 removed (dropped from prod TF, rebuild-deferred on live droplets). complianceStatus remains exception-declared (standing-restricted SSH = permanent blue-green artifact, honest). Env-parity arc fully converged: zero PENDING across the env-map."
     }
   ],
-  "notes": "Reference instance for environment-map.schema.json v1.0.0. dev is the compliant reference proven by the 2026-06-13 rebuild. staging and production are recorded at their CURRENT posture with complianceStatus reflecting outstanding convergence work — they are intentionally NOT painted as compliant. credentialRef values marked PENDING-RA-ITEMID-* require reconciliation against resource-access.json credentialStore itemIds at the staging/prod convergence deliverables (dev's luhtech-admin-dev-2026-06-13 itemId c01e11d1 is confirmed from d-2026-06-13 closure). production firewall is ID-based in live TF today; this instance declares the tag-based TARGET and the prod convergence deliverable closes the gap — the sourceAddresses PENDING-*-IP values are placeholders to be filled from prod TF at that deliverable. Honest parity: the map encodes the real divergence, not an aspirational uniform state."
+  "notes": "Reference instance for environment-map.schema.json v1.0.0. Env-parity arc fully converged 2026-06-13: all three environments resolved with real values, zero PENDING placeholders in any field. dev = compliant (reference, proven by d-2026-06-13-eb-dev-droplet-rebuild). staging = compliant (d-2026-06-13-eb-staging-convergence, EB PR #417: unheld luhtech-admin-1 removed, held keys registered resource-access.json v1.5.0). production = exception-declared by design (d-2026-06-13-eb-prod-convergence, EB PR #418 + terraform apply): firewalls now genuinely tag-based (droplet_ids removed, tags=[environment:production], cutover-orthogonal); the declared exception is the standing-restricted SSH posture (standing SSH from CI runner 165.232.132.224/32 + staging 143.198.154.94/32), a genuine permanent blue-green cutover artifact, NOT a convergence gap. Unheld luhtech-admin-1 dropped from prod TF; removal on live droplets is rebuild-deferred. Honest parity: the map encodes the real posture of each environment, including production's permanent SSH exception, rather than an aspirational uniform state."
 }
