@@ -1,0 +1,115 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-13-eb-dev-droplet-rebuild",
+  "version": "1.0.0",
+  "title": "Dev droplet Terraform reproducibility validation + SSH key lock + cloud-init reconciliation",
+  "description": "Prove the development droplet is reproducible from IaC (the destroy is the test, the clean rebuild is the pass), lock SSH access to a key Erik holds, convert dev to the canonical tag-based firewall + Zero-SSH + break-glass posture, and fix latent cloud-init/compose defects at source. Staging was the layout reference and acceptance bar.",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S8-closed",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "fix/dev-tf-rebuild-prereqs-2026-06-13",
+    "scopeFiles": [
+      "infrastructure/terraform/environments/development/variables.tf",
+      "infrastructure/terraform/environments/development/main.tf",
+      "docker-compose.development.yml",
+      "resource-access.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "PR #411 (squash 87bfcb05be0f088682a6259383a96f48b400c283, merged by erik-luh, CI green): TF rebuild prereqs: dev firewall converted droplet_ids -> tags=[\"environment:development\"] (self-healing, DEC-028 posture); ssh_keys set to held keys only (added luhtech-admin-dev-2026-06-13 + luhtech-enterprise, removed deprecated luhtech-admin-1, kept terraform-deploy-key); added var.admin_ssh_cidrs (default []) for break-glass; SPECKLE_SERVER_TOKEN var wiring verified (no-op, already correct).",
+      "acceptanceCriteria": [
+        "Gate 1 SSH proof: luhtech-admin-dev-2026-06-13 authenticated root@ectropy-development, uptime confirmed (key Erik holds, no runner)",
+        "Gate 6 DNS/LB: dev.ectropy.ai resolves via LB 209.38.117.84, HTTPS 200, tag-based LB membership live; firewall 87892c74 tags=[environment:development]",
+        "Zero-SSH steady state with break-glass via admin_ssh_cidrs (open -> SSH -> close), matching staging posture"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "PR #412 (squash c62ad26, merged by erik-luh, CI green): Compose fold fix: speckle-admin-bootstrap command: > -> | (literal block scalar) — unfolds if/then/fi that YAML folding had collapsed into one line (line-67 syntax error). The line-67 defect named in the original dispatch was real but located in docker-compose.development.yml, not the cloud-init tftpl.",
+      "acceptanceCriteria": [
+        "Bootstrap shell script reaches full body (no fold-collapse of if/then/fi)"
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "PR #413 (squash a608d6701e56afa51e7a3de37f204b2435acdd4c, merged by erik-luh, CI green): Compose jq quote fix: '.data.activeUser != null' -> \".data.activeUser != null\" on both jq expressions — single quotes inside the outer sh -c '...' wrapper terminated the wrapper early, truncating the 141-line script to 68 lines. Root cause of the gate-4 bootstrap crash-loop. bash -n OUTER+INNER PASS confirmed pre-merge.",
+      "acceptanceCriteria": [
+        "Gate 4 Speckle token: bootstrap mints PAT 5267d984af... to /shared-tokens volume, validated, db=speckle server=10.30.0.2/32 private VPC; authed Speckle 403->200 flip",
+        "Gate 2 roster match staging: api-gateway, mcp-server, nginx-dev, web-dashboard, redis, minio, uro-console, uro-sim, speckle-* (server/fileimport/frontend/webhook/preview), qdrant all healthy; bootstrap exits 0 (not restarting)",
+        "Gate 3 config-sync: timer active, fires every 60s, last sync logged success",
+        "Gate 5 endpoints: /api/health healthy, /speckle/graphql serverInfo 2.29.0, HTTPS 200",
+        "bash -n on full 141-line sh -c wrapper PASS (opens line 1, closes line 141, no truncation)"
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "PR #414 (squash 741ad2f, merged by erik-luh, CI green): resource-access.json v1.4.0: registered dev break-glass SSH key luhtech-admin-dev-2026-06-13 + server grant; closed the credentialRef:null gap on the ectropy-development droplet credential. DEC-028 dev-access contract satisfied.",
+      "acceptanceCriteria": [
+        "Dev droplet accessGrant credentialRef points at luhtech-admin-dev-2026-06-13 (was null)"
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "PR #415 (squash c6a8b41, merged by erik-luh, CI green): FU register: closed FU-EB-DEV-DROPLET-PROVISION-CREDS-STALE-1 (resolved by rebuild), FU-EB-DROPLET-SSH-KEY-NOT-IN-BW-1 (key now held + in BW + SSH-proven), FU-EB-DEV-SPECKLE-TOKEN-REFRESH-1 (obsolete — token volume-self-minted, not env-sourced); filed FU-EB-409-DEV-OPS-WORKFLOW-RETIRE-1 (P2, open).",
+      "acceptanceCriteria": [
+        "3 arc FUs closed, retire FU filed, DEC-028 marked satisfied"
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "PR #416 (squash 257c2b1b989b11777d76bf59d7e62f02ffa334f9, merged by erik-luh, CI green): Evidence artifact ev-dev-rebuild-2026-06-13: TF-reproducibility scaling evidence — dev built from zero, validated against staging layout, the template for staging/prod cloud-init reconciliation and the env-parity alignment arc.",
+      "acceptanceCriteria": [
+        "Reproducibility evidence recorded as a schema-bound artifact (not prose terminus)"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "terraform fmt -check PASS + terraform validate PASS (PR #411)",
+      "bash -n OUTER+INNER PASS on the bootstrap sh -c wrapper (PR #413)"
+    ],
+    "postMerge": [
+      "6/6 Phase 1 acceptance gates PASS on the rebuilt droplet (SSH proof, roster, config-sync, Speckle 403->200, endpoints, DNS/LB)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "S4-authored",
+      "to": "S5-in-progress",
+      "date": "2026-06-13",
+      "trigger": "L4 named-step authorized phased execution; Phase 0 pre-flight (substrate reads, BW-first keypair, cloud-init reconciliation PR #411, state capture, plan diff + cert restore) executed non-destructively"
+    },
+    {
+      "from": "S5-in-progress",
+      "to": "S6-staged",
+      "date": "2026-06-13",
+      "trigger": "L4 named-step 'destroy and rebuild dev, state-capture confirmed'; rebuild via terraform-development.yml replace_resource; gate 4 surfaced two compose defects, remediated via PR #412/#413; all 6 acceptance gates PASS"
+    },
+    {
+      "from": "S6-staged",
+      "to": "S7-merged",
+      "date": "2026-06-13",
+      "commitSha": "257c2b1b989b11777d76bf59d7e62f02ffa334f9",
+      "trigger": "PRs #411-#416 squash-merged to main by erik-luh"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-13",
+      "trigger": "TRUTH-DELIVERED authored; closed-clean (all 3 surfaced defects fixed in-arc, no deferred debt); one P2 follow-up FU-EB-409-DEV-OPS-WORKFLOW-RETIRE-1 filed"
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-EB-409-DEV-OPS-WORKFLOW-RETIRE-1"
+  ],
+  "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/411",
+  "mergeCommitSha": "257c2b1b989b11777d76bf59d7e62f02ffa334f9",
+  "notes": "Infra substrate (verbatim, for closure lineage): old droplet 576746191 / 143.198.66.57 DESTROYED -> new droplet 577474417 / 143.198.130.246 CREATED. Firewall 87892c74 droplet_ids=[576746191] -> tags=[\"environment:development\"] (DEC-028 self-healing posture live). Held key luhtech-admin-dev-2026-06-13: DO key ID 57089560, BW item c01e11d1-ec4b-4a1a-b02b-b468016223e5 (vault luhtechnology.com), fingerprint e9:1b:42:e9:80:54:44:34:9e:aa:9b:9e:3c:51:ac:76; SSH-proven; replaces deprecated luhtech-admin-1 (0a:b2:..., private half was write-only DEV_SSH_PRIVATE_KEY GH secret, not held). 2041 Cloudflare origin cert (ectropy-development-origin, SHA1 18:1D:51:03..., not_after 2041-05-05) PRESERVED — SSL_CERT_LEAF_DEVELOPMENT + SSL_CERT_PRIVATE_KEY_DEVELOPMENT restored to GH develop env from BW (CF_ORIGIN_CERT_DEVELOPMENT 73880f60 / CF_ORIGIN_KEY_DEVELOPMENT b7f48c0f). Speckle bootstrap volume-self-mints PAT from admin credentials (SPECKLE_ADMIN_PASSWORD) to the ectropy_speckle-tokens volume; api-gateway reads from volume; token is NOT env-sourced (this retired FU-EB-DEV-SPECKLE-TOKEN-REFRESH-1). buildSha 47fdc055 UNCHANGED BY DESIGN: replace_resource restored the IaC substrate, it did not push a new application image; the running image advances on the next CI push. A reader seeing '6/6 gates green' must NOT infer the app image advanced. Three latent defects surfaced by the clean rebuild and fixed at source (none improvised around): (1) firewall ID-based -> tag-based; (2) compose speckle-admin-bootstrap command: > fold collapsing if/then/fi; (3) compose jq single-quotes truncating the sh -c wrapper. The line-67 fold defect named in the original dispatch was real but had been cleared against the wrong file (cloud-init tftpl) in Phase 0.1b; the rebuild located it in docker-compose.development.yml. Scaling evidence: the DEC-028 tag-based firewall + Zero-SSH + break-glass + held-key posture is now proven on dev and is the input spec for environment-map.schema.json. The dormant d-2026-06-10-eb-env-parity-foundation should be SUPERSEDED by an env-map schema scoped from this prod-TF-derived convention — awaiting Erik's L4 naming of the supersede + new scope. || Follow-up FU-EB-409-DEV-OPS-WORKFLOW-RETIRE-1: Retire dev-speckle-ops.yml (#409); its key luhtech-admin-1 deprecated this arc when dev moved to held keys. P2, open."
+}
