@@ -35,12 +35,12 @@
         },
         {
           "name": "luhtech-enterprise",
-          "credentialRef": "PENDING-RA-ITEMID-luhtech-enterprise",
+          "credentialRef": "26d39af7-191c-49bd-b11e-b4690018d6b3",
           "held": true
         },
         {
           "name": "terraform-deploy-key",
-          "credentialRef": "PENDING-RA-ITEMID-terraform-deploy-key",
+          "credentialRef": "6aa99d94-b998-42c3-8d0e-b4690018f3e5",
           "held": true
         }
       ],
@@ -63,7 +63,7 @@
     {
       "environmentRef": "env-staging",
       "type": "staging",
-      "complianceStatus": "convergence-target",
+      "complianceStatus": "compliant",
       "tags": {
         "required": [
           "environment:staging",
@@ -87,18 +87,12 @@
       "sshKeys": [
         {
           "name": "luhtech-enterprise",
-          "credentialRef": "PENDING-RA-ITEMID-luhtech-enterprise",
+          "credentialRef": "26d39af7-191c-49bd-b11e-b4690018d6b3",
           "held": true
         },
         {
-          "name": "luhtech-admin-1",
-          "credentialRef": "PENDING-RA-ITEMID-luhtech-admin-1",
-          "held": false,
-          "deprecated": true
-        },
-        {
           "name": "terraform-deploy-key",
-          "credentialRef": "PENDING-RA-ITEMID-terraform-deploy-key",
+          "credentialRef": "6aa99d94-b998-42c3-8d0e-b4690018f3e5",
           "held": true
         }
       ],
@@ -171,6 +165,11 @@
       "date": "2026-06-13",
       "actor": "Claude (SR chat), L1",
       "trigger": "Initial environment-map authored from env-parity convention substrate (EB-chat 2026-06-13) proven by d-2026-06-13-eb-dev-droplet-rebuild. dev=compliant reference; staging=convergence-target (unheld luhtech-admin-1); production=exception-declared (standing-restricted SSH blue-green + firewall ID->tag convergence pending)."
+    },
+    {
+      "date": "2026-06-13",
+      "actor": "Claude (SR chat), L1",
+      "trigger": "Staging convergence (d-2026-06-13-eb-staging-convergence): EB PR #417 merged (resource-access.json v1.5.0, 2f6efcb7f317290c62520556aea1c6ef20a3af5c) registered both held keys. Removed unheld luhtech-admin-1 from staging sshKeys; resolved luhtech-enterprise (26d39af7) + terraform-deploy-key (6aa99d94) credentialRefs on staging AND dev; staging complianceStatus convergence-target -> compliant. admin-1 left untouched in production (its convergence child handles it)."
     }
   ],
   "notes": "Reference instance for environment-map.schema.json v1.0.0. dev is the compliant reference proven by the 2026-06-13 rebuild. staging and production are recorded at their CURRENT posture with complianceStatus reflecting outstanding convergence work — they are intentionally NOT painted as compliant. credentialRef values marked PENDING-RA-ITEMID-* require reconciliation against resource-access.json credentialStore itemIds at the staging/prod convergence deliverables (dev's luhtech-admin-dev-2026-06-13 itemId c01e11d1 is confirmed from d-2026-06-13 closure). production firewall is ID-based in live TF today; this instance declares the tag-based TARGET and the prod convergence deliverable closes the gap — the sourceAddresses PENDING-*-IP values are placeholders to be filled from prod TF at that deliverable. Honest parity: the map encodes the real divergence, not an aspirational uniform state."
