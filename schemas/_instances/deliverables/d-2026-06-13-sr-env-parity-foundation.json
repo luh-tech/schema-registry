@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-13-sr-env-parity-foundation",
+  "version": "1.0.0",
+  "title": "Environment parity foundation — environment-map.schema.json + dev reference instance (supersedes d-2026-06-10-eb-env-parity-foundation)",
+  "description": "Establishes the canonical environment-map.schema.json governing per-environment infrastructure posture (tags, LB/firewall membership, SSH posture, held-key requirement, TLS origin-cert provenance, per-env TF variable contract) and lands the three-environment reference instance with dev as the compliant reference (proven by d-2026-06-13-eb-dev-droplet-rebuild) and staging/production recorded at honest current posture with outstanding convergence flagged. Supersedes the dormant d-2026-06-10-eb-env-parity-foundation, whose original scope predates the 2026-06-11/12/13 hardening arcs that delivered the actual convention. Schema authored PR alpha (schema-only); this deliverable anchors + lands the reference instance PR beta.",
+  "authority": {
+    "author": "Claude (SR-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/anchor-env-parity-foundation-2026-06-13",
+    "scopeFiles": [
+      "schemas/_instances/deliverables/d-2026-06-13-sr-env-parity-foundation.json",
+      "schemas/_instances/environment-map/environment-map.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "environment-map.schema.json v1.0.0 landed as canonical schema (PR alpha, schema-only, separate PR). Registered in schema-refs.json as #49, catalog v1.28.0 -> v1.29.0. Governs per-environment posture composing with infrastructure-catalog /definitions/environment.",
+      "acceptanceCriteria": [
+        "environment-map.schema.json present at schemas/ and valid Draft-7 (ajv compile PASS)",
+        "Registered in schema-refs.json catalog v1.29.0",
+        "refs-check CI green"
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Three-environment reference instance environment-map.json landed: dev complianceStatus=compliant (reference, proven by d-2026-06-13-eb-dev-droplet-rebuild); staging=convergence-target (unheld luhtech-admin-1 flagged); production=exception-declared (standing-restricted SSH blue-green + firewall ID->tag convergence pending). Validates against environment-map.schema.json v1.0.0.",
+      "acceptanceCriteria": [
+        "environment-map.json validates against environment-map.schema.json v1.0.0 (ajv PASS)",
+        "dev entry complianceStatus=compliant with held sshKeys + tag-based LB/firewall + zero-ssh + BW-backed cert",
+        "staging + production entries recorded at honest current posture, NOT painted compliant",
+        "PENDING-RA-ITEMID-* and PENDING-*-IP placeholders documented in notes as convergence-deliverable reconciliation items"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "environment-map.schema.json merged (PR alpha) before this anchor lands",
+      "environment-map.json ajv-valid against environment-map.schema.json v1.0.0 (4-flag canonical)"
+    ],
+    "postMerge": [
+      "EB-chat authors staging convergence child (remove unheld luhtech-admin-1) validating against schema",
+      "EB-chat authors production convergence child (firewall ID->tag + standing-restricted declaration + admin-1) validating against schema, done last/deliberately, never under demo pressure"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-13",
+      "trigger": "L4 named-step authorized env-parity supersede + arc (Erik, 2026-06-13). Deliverable id d-2026-06-13-sr-env-parity-foundation approved; SR-chat authors reference instance. Supersedes dormant d-2026-06-10-eb-env-parity-foundation."
+    }
+  ],
+  "relatedFollowUps": [
+    "FU-DRIFT-DETECTION-PR-A-HALF-2"
+  ],
+  "notes": "Supersedes d-2026-06-10-eb-env-parity-foundation (dormant since 2026-06-10; original scope predated the 2026-06-11/12/13 hardening that delivered the actual env-parity convention). The dormant deliverable was never anchored at SR (no instance ever existed); this supersede is a forward-replacement, not a closure of an existing instance. Convention substrate: EB-chat env-parity dump 2026-06-13, verified @ EB main 7072fe12 (3-env reads) + 257c2b1b (dev rebuild proven). Two-PR structure: PR alpha (environment-map.schema.json + schema-refs, schema-only, landed separately); PR beta (this deliverable anchor + environment-map.json reference instance). Convergence ledger: dev=compliant reference; staging=remove unheld luhtech-admin-1; production=firewall ID->tag migration + declare standing-restricted + address unheld admin-1, done last and deliberately. EB-chat authors the staging + prod convergence children as separate deliverables validating against environment-map.schema.json. Enterprise Excellence. Schema-First. No Shortcuts."
+}

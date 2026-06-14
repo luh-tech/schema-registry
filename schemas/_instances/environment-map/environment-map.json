@@ -1,0 +1,177 @@
+{
+  "$schema": "https://schemas.luh.tech/environment-map.schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2026-06-13",
+  "catalogRef": "infrastructure-catalog.json",
+  "environments": [
+    {
+      "environmentRef": "env-development",
+      "type": "development",
+      "complianceStatus": "compliant",
+      "tags": {
+        "required": [
+          "environment:development",
+          "managed-by:terraform"
+        ],
+        "descriptors": [
+          "product:ectropy",
+          "role:app"
+        ]
+      },
+      "loadBalancer": {
+        "membership": "tag-based",
+        "dropletTag": "environment:development"
+      },
+      "firewall": {
+        "membership": "tag-based",
+        "sshPosture": "zero-ssh",
+        "breakGlassVar": "admin_ssh_cidrs"
+      },
+      "sshKeys": [
+        {
+          "name": "luhtech-admin-dev-2026-06-13",
+          "credentialRef": "c01e11d1-ec4b-4a1a-b02b-b468016223e5",
+          "held": true
+        },
+        {
+          "name": "luhtech-enterprise",
+          "credentialRef": "PENDING-RA-ITEMID-luhtech-enterprise",
+          "held": true
+        },
+        {
+          "name": "terraform-deploy-key",
+          "credentialRef": "PENDING-RA-ITEMID-terraform-deploy-key",
+          "held": true
+        }
+      ],
+      "tls": {
+        "originCert": {
+          "secretRefs": {
+            "leaf": "SSL_CERT_LEAF_DEVELOPMENT",
+            "privateKey": "SSL_CERT_PRIVATE_KEY_DEVELOPMENT"
+          },
+          "bwBacked": true,
+          "notAfter": "2041-05-05"
+        }
+      },
+      "requiredTfVars": [
+        "ssl_cert_leaf",
+        "ssl_cert_private_key",
+        "admin_ssh_cidrs"
+      ]
+    },
+    {
+      "environmentRef": "env-staging",
+      "type": "staging",
+      "complianceStatus": "convergence-target",
+      "tags": {
+        "required": [
+          "environment:staging",
+          "managed-by:terraform"
+        ],
+        "descriptors": [
+          "product:ectropy",
+          "role:app",
+          "vpc-isolated"
+        ]
+      },
+      "loadBalancer": {
+        "membership": "tag-based",
+        "dropletTag": "environment:staging"
+      },
+      "firewall": {
+        "membership": "tag-based",
+        "sshPosture": "zero-ssh",
+        "breakGlassVar": "admin_ssh_cidrs"
+      },
+      "sshKeys": [
+        {
+          "name": "luhtech-enterprise",
+          "credentialRef": "PENDING-RA-ITEMID-luhtech-enterprise",
+          "held": true
+        },
+        {
+          "name": "luhtech-admin-1",
+          "credentialRef": "PENDING-RA-ITEMID-luhtech-admin-1",
+          "held": false,
+          "deprecated": true
+        },
+        {
+          "name": "terraform-deploy-key",
+          "credentialRef": "PENDING-RA-ITEMID-terraform-deploy-key",
+          "held": true
+        }
+      ],
+      "tls": {
+        "originCert": {
+          "secretRefs": {
+            "leaf": "SSL_CERT_LEAF_STAGING",
+            "privateKey": "SSL_CERT_PRIVATE_KEY_STAGING"
+          },
+          "bwBacked": true
+        }
+      }
+    },
+    {
+      "environmentRef": "env-production",
+      "type": "production",
+      "complianceStatus": "exception-declared",
+      "tags": {
+        "required": [
+          "environment:production",
+          "managed-by:terraform"
+        ],
+        "descriptors": [
+          "product:ectropy",
+          "role:app",
+          "blue-green",
+          "vpc-isolated",
+          "dedicated-cpu"
+        ]
+      },
+      "loadBalancer": {
+        "membership": "tag-based",
+        "dropletTag": "environment:production"
+      },
+      "firewall": {
+        "membership": "tag-based",
+        "sshPosture": "standing-restricted",
+        "sourceAddresses": [
+          "PENDING-RUNNER-IP",
+          "PENDING-STAGING-IP"
+        ],
+        "exceptionRationale": "Standing SSH from two fixed IPs (CI runner + staging) is a blue-green cutover artifact. Firewall membership convergence ID->tag and SSH posture normalization are deferred to a deliberate prod convergence deliverable, never under demo pressure. NOTE: production firewall is currently ID-based in TF (not yet tag-based) — this instance declares the TARGET tag-based posture; the convergence deliverable closes the gap. The standing-restricted SSH is the genuine permanent exception."
+      },
+      "sshKeys": [
+        {
+          "name": "luhtech-admin-1",
+          "credentialRef": "PENDING-RA-ITEMID-luhtech-admin-1",
+          "held": false,
+          "deprecated": true
+        },
+        {
+          "name": "terraform-deploy-key",
+          "credentialRef": "PENDING-RA-ITEMID-terraform-deploy-key",
+          "held": true
+        }
+      ],
+      "tls": {
+        "originCert": {
+          "secretRefs": {
+            "leaf": "SSL_CERT_LEAF_PRODUCTION",
+            "privateKey": "SSL_CERT_PRIVATE_KEY_PRODUCTION"
+          },
+          "bwBacked": true
+        }
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "date": "2026-06-13",
+      "actor": "Claude (SR chat), L1",
+      "trigger": "Initial environment-map authored from env-parity convention substrate (EB-chat 2026-06-13) proven by d-2026-06-13-eb-dev-droplet-rebuild. dev=compliant reference; staging=convergence-target (unheld luhtech-admin-1); production=exception-declared (standing-restricted SSH blue-green + firewall ID->tag convergence pending)."
+    }
+  ],
+  "notes": "Reference instance for environment-map.schema.json v1.0.0. dev is the compliant reference proven by the 2026-06-13 rebuild. staging and production are recorded at their CURRENT posture with complianceStatus reflecting outstanding convergence work — they are intentionally NOT painted as compliant. credentialRef values marked PENDING-RA-ITEMID-* require reconciliation against resource-access.json credentialStore itemIds at the staging/prod convergence deliverables (dev's luhtech-admin-dev-2026-06-13 itemId c01e11d1 is confirmed from d-2026-06-13 closure). production firewall is ID-based in live TF today; this instance declares the tag-based TARGET and the prod convergence deliverable closes the gap — the sourceAddresses PENDING-*-IP values are placeholders to be filled from prod TF at that deliverable. Honest parity: the map encodes the real divergence, not an aspirational uniform state."
+}
