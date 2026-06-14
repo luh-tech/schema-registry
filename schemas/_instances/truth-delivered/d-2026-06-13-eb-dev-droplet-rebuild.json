@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-13-eb-dev-droplet-rebuild",
+  "deliveredAt": "2026-06-14T00:27:23Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (SR chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "87bfcb05be0f088682a6259383a96f48b400c283",
+      "prNumber": 411,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/411",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "c62ad26",
+      "prNumber": 412,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/412",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "a608d6701e56afa51e7a3de37f204b2435acdd4c",
+      "prNumber": 413,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/413",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "741ad2f",
+      "prNumber": 414,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/414",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "c6a8b41",
+      "prNumber": 415,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/415",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "257c2b1b989b11777d76bf59d7e62f02ffa334f9",
+      "prNumber": 416,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/416",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-14T00:27:23Z",
+      "actor": "Claude (SR chat), L1",
+      "event": "authored"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Development droplet proven reproducible from IaC (destroy-is-the-test, clean-rebuild-is-the-pass), SSH locked to an Erik-held key, dev converted to the canonical tag-based firewall + Zero-SSH + break-glass posture, and three latent cloud-init/compose defects fixed at source. Staging was the layout reference and acceptance bar. 6/6 Phase 1 acceptance gates PASS on the rebuilt droplet: Gate 1 SSH proof (luhtech-admin-dev-2026-06-13 authenticated root@ectropy-development, no runner); Gate 2 roster match staging (full service set healthy, bootstrap exits 0 not restarting); Gate 3 config-sync (timer active, fires 60s, last sync success); Gate 4 Speckle token (bootstrap volume-mints PAT, authed 403->200 flip, db=speckle server private VPC); Gate 5 endpoints (/api/health healthy, /speckle/graphql serverInfo 2.29.0, HTTPS 200); Gate 6 DNS/LB (dev.ectropy.ai via LB 209.38.117.84, HTTPS 200, tag-based LB membership, firewall 87892c74 tags=[environment:development]). Executed via 6 squash-merged PRs #411-#416 (closing SHA 257c2b1b989b11777d76bf59d7e62f02ffa334f9, all merged by erik-luh, all CI green). Type-(3) retroactive cross-repo closure: EB executed the deliverable before any SR anchor existed; EB-CLI authored the canonical instance (SHA256 e200c0a0c20e464b53c0f821ecd7e4a923f5eaf6c2588a8dc79fd6b5ee3b91d6, 9500 bytes); SR landed it byte-faithful and authored this TRUTH-DELIVERED in one closure PR under L4 named-step 2026-06-13. The deliverable instance was landed as-authored (path a) — EB owns the lifecycle transition narrative; the SR anchor-landing event is recorded in the closure PR git history rather than as an additional lifecycle transition, preserving the byte-exact authoring fingerprint. || BUILD-SHA CAVEAT: buildSha 47fdc055 UNCHANGED BY DESIGN — terraform replace_resource restored the IaC substrate; it did NOT push a new application image. The running image advances on the next CI push. A reader seeing '6/6 gates green' must NOT infer the application image advanced. This is an explicit honesty caveat, not a deferred-debt item; the deliverable's purpose was IaC-reproducibility proof, which is fully satisfied. || ENV-PARITY SCALING: The DEC-028 tag-based firewall + Zero-SSH + break-glass + held-key posture is now proven on dev and is the input spec for environment-map.schema.json. The dormant d-2026-06-10-eb-env-parity-foundation should be SUPERSEDED by an env-map schema scoped from this prod-TF-derived convention — awaits Erik's L4 naming of the supersede + new scope. Flagged, not initiated.",
+    "overrideRecord": "Three latent defects surfaced by the clean rebuild and fixed at source in-arc (none improvised around, none deferred — this is why closureStatus is closed-clean): (1) firewall ID-based -> tag-based (PR #411, DEC-028 self-healing posture); (2) compose speckle-admin-bootstrap command: > fold collapsing if/then/fi into one line, line-67 syntax error (PR #412, >->| literal block scalar); (3) compose jq single-quotes inside the outer sh -c wrapper terminating it early, truncating the 141-line script to 68 lines, root cause of the gate-4 bootstrap crash-loop (PR #413, '->\" on both jq expressions). The line-67 fold defect named in the original EB dispatch was real but had been cleared against the wrong file (cloud-init tftpl) in Phase 0.1b; the rebuild located it in docker-compose.development.yml."
+  },
+  "relatedFollowUps": [
+    "FU-EB-409-DEV-OPS-WORKFLOW-RETIRE-1"
+  ]
+}
