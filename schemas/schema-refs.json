@@ -303,6 +303,12 @@
       "version": "1.0.0",
       "description": "Schema-bound deprecation marker for portfolio schemas."
     },
+    "environment-map": {
+      "id": "https://schemas.luh.tech/environment-map.schema.json",
+      "file": "environment-map.schema.json",
+      "version": "1.0.0",
+      "description": "Canonical per-environment infrastructure-posture map. Composes with infrastructure-catalog /definitions/environment for identity; adds tag convention, LB/firewall membership mode, SSH posture (zero-ssh|break-glass-only|standing-restricted), held-key requirement, TLS origin-cert provenance, and per-env Terraform variable contract. Proven from d-2026-06-13-eb-dev-droplet-rebuild; encodes known parity exceptions rather than hiding them."
+    },
     "evidence-session": {
       "id": "https://schemas.luh.tech/evidence-session.schema.json",
       "file": "evidence-session.schema.json",
@@ -565,5 +571,5 @@
     }
   },
   "title": "LuhTech Schema Registry v1.27.0",
-  "version": "1.28.0"
+  "version": "1.29.0"
 }

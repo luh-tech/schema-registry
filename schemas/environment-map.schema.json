@@ -1,0 +1,338 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.luh.tech/environment-map.schema.json",
+  "title": "Environment Map",
+  "version": "1.0.0",
+  "description": "Canonical per-environment infrastructure-posture map. Composes with infrastructure-catalog.schema.json /definitions/environment for identity (references by id, does not duplicate) and adds the infra-posture layer that the identity definition's additionalProperties:false structurally cannot carry: tag convention, load-balancer membership mode, firewall membership + SSH posture, held-key requirement, TLS origin-cert provenance, and the canonical per-environment Terraform variable contract. Authored from the env-parity convention substrate proven by d-2026-06-13-eb-dev-droplet-rebuild (dev = compliant reference instance) and verified across dev/staging/prod TF. Honest parity: the schema encodes known exceptions (e.g. production standing-restricted SSH for blue-green) rather than pretending uniformity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "version",
+    "environments"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://schemas.luh.tech/environment-map.schema.json"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of this environment-map instance."
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO date (YYYY-MM-DD) of last instance update."
+    },
+    "catalogRef": {
+      "type": "string",
+      "description": "Path or id of the infrastructure-catalog instance whose /definitions/environment entries this map composes with."
+    },
+    "environments": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Per-environment posture entries. Each composes with an infrastructure-catalog environment by environmentRef.",
+      "items": {
+        "$ref": "#/definitions/environmentPosture"
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "description": "Audit trail of changes to this map.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "date",
+          "trigger"
+        ],
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "actor": {
+            "type": "string"
+          },
+          "trigger": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "definitions": {
+    "environmentPosture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "environmentRef",
+        "type",
+        "tags",
+        "loadBalancer",
+        "firewall",
+        "sshKeys",
+        "tls"
+      ],
+      "properties": {
+        "environmentRef": {
+          "type": "string",
+          "pattern": "^env-[a-z][a-z0-9-]*$",
+          "description": "References an infrastructure-catalog /definitions/environment id. Identity (name, url, servers, objectStorage) lives there; this entry adds posture only."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "development",
+            "staging",
+            "production",
+            "preview",
+            "testing"
+          ],
+          "description": "Mirror of the referenced environment type, for self-contained validation. MUST equal the catalog entry's type."
+        },
+        "complianceStatus": {
+          "type": "string",
+          "enum": [
+            "compliant",
+            "convergence-target",
+            "exception-declared"
+          ],
+          "description": "compliant = meets full canonical posture; convergence-target = known parity work outstanding; exception-declared = deviates by documented design (see firewall.sshPosture standing-restricted)."
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "required",
+            "descriptors"
+          ],
+          "properties": {
+            "required": {
+              "type": "array",
+              "description": "Minimum required tag set. MUST include environment:{env} and managed-by:terraform.",
+              "items": {
+                "type": "string"
+              },
+              "allOf": [
+                {
+                  "contains": {
+                    "type": "string",
+                    "pattern": "^environment:[a-z][a-z0-9-]*$"
+                  }
+                },
+                {
+                  "contains": {
+                    "type": "string",
+                    "const": "managed-by:terraform"
+                  }
+                }
+              ]
+            },
+            "descriptors": {
+              "type": "array",
+              "description": "Optional role/topology descriptor tags (product:*, role:*, vpc-isolated, blue-green, dedicated-cpu, blue/green color).",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "loadBalancer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "membership"
+          ],
+          "properties": {
+            "membership": {
+              "type": "string",
+              "const": "tag-based",
+              "description": "LB membership MUST be tag-based (droplet_tag=environment:{env}); droplet_ids membership is a parity violation."
+            },
+            "dropletTag": {
+              "type": "string",
+              "pattern": "^environment:[a-z][a-z0-9-]*$"
+            }
+          }
+        },
+        "firewall": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "membership",
+            "sshPosture"
+          ],
+          "properties": {
+            "membership": {
+              "type": "string",
+              "const": "tag-based",
+              "description": "Firewall membership MUST be tag-based (tags=[environment:{env}]), self-healing on droplet replacement; droplet_ids is a parity violation."
+            },
+            "sshPosture": {
+              "type": "string",
+              "enum": [
+                "zero-ssh",
+                "break-glass-only",
+                "standing-restricted"
+              ],
+              "description": "zero-ssh = no static port-22 inbound, break-glass via admin_ssh_cidrs dynamic open->ssh->close; break-glass-only = same with no zero-ssh steady claim; standing-restricted = standing SSH from fixed sourceAddresses (production blue-green cutover exception)."
+            },
+            "breakGlassVar": {
+              "type": "string",
+              "description": "Terraform variable name carrying the dynamic break-glass inbound CIDR list (e.g. admin_ssh_cidrs), empty default."
+            },
+            "sourceAddresses": {
+              "type": "array",
+              "description": "Required when sshPosture is standing-restricted: the documented fixed source IPs permitted standing SSH.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "exceptionRationale": {
+              "type": "string",
+              "description": "Required when sshPosture is standing-restricted: why the exception exists (honest parity, do not hide)."
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "sshPosture": {
+                    "const": "standing-restricted"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "sourceAddresses",
+                  "exceptionRationale"
+                ]
+              }
+            }
+          ]
+        },
+        "sshKeys": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Each ssh_key on the env droplet. Every entry MUST reference a resource-access.json credentialStore itemId and be held:true (private half vault-backed, round-trip-verifiable). An unheld key is a parity violation the schema makes detectable.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "credentialRef",
+              "held"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "DO SSH key name (e.g. luhtech-admin-dev-2026-06-13)."
+              },
+              "credentialRef": {
+                "type": "string",
+                "description": "resource-access.json credentialStore itemId (BW item UUID identifier, never the value)."
+              },
+              "held": {
+                "type": "boolean",
+                "description": "true iff the private half is vault-backed and retrievable. false marks a known parity violation pending convergence."
+              },
+              "deprecated": {
+                "type": "boolean",
+                "description": "true marks a key scheduled for removal (e.g. unheld luhtech-admin-1 on staging/prod)."
+              }
+            }
+          }
+        },
+        "tls": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "originCert"
+          ],
+          "properties": {
+            "originCert": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "secretRefs",
+                "bwBacked"
+              ],
+              "properties": {
+                "secretRefs": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "leaf",
+                    "privateKey"
+                  ],
+                  "properties": {
+                    "leaf": {
+                      "type": "string",
+                      "description": "GH env secret name for the cert leaf (e.g. SSL_CERT_LEAF_DEVELOPMENT)."
+                    },
+                    "privateKey": {
+                      "type": "string",
+                      "description": "GH env secret name for the cert private key (e.g. SSL_CERT_PRIVATE_KEY_DEVELOPMENT)."
+                    }
+                  }
+                },
+                "bwBacked": {
+                  "type": "boolean",
+                  "description": "MUST be true: cert material is BW-backed so a droplet rebuild never silently drops it (dev nearly lost this in the 2026-06-13 rebuild)."
+                },
+                "notAfter": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Cert expiry date for visibility."
+                }
+              }
+            }
+          }
+        },
+        "requiredTfVars": {
+          "type": "array",
+          "description": "Canonical per-environment Terraform variable contract. Governs the setup-terraform-vars composite action's required-input set (ties to FU-DRIFT-DETECTION-PR-A-HALF-2). Divergence here is a detectable parity gap.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "sshKeys": {
+                "contains": {
+                  "properties": {
+                    "held": {
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "held"
+                  ]
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "complianceStatus": {
+                "not": {
+                  "const": "compliant"
+                }
+              }
+            },
+            "$comment": "An environment carrying any unheld ssh key cannot be complianceStatus:compliant — it is a convergence-target or exception-declared."
+          }
+        }
+      ]
+    }
+  }
+}
