@@ -1,9 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "$id": "https://schemas.luh.tech/workflow-registry.schema.json",
   "title": "GitHub Actions Workflow Registry Schema",
-  "description": "Schema for documenting and categorizing GitHub Actions workflows following luh-tech schema-first patterns. Used across all ventures for consistent CI/CD documentation.",
+  "description": "Schema for documenting and categorizing GitHub Actions workflows following luh-tech schema-first patterns. Used across all ventures for consistent CI/CD documentation. v1.2.0: formalized lane/gate/chain/canonicalDeploy fields and category enum (complete-from-instance) previously carried additively under additionalProperties.",
   "type": "object",
   "required": [
     "$schema",
@@ -152,7 +152,18 @@
         },
         "category": {
           "type": "string",
-          "description": "Category key from categories object"
+          "enum": [
+            "ci-cd",
+            "data-ops",
+            "documentation",
+            "infrastructure",
+            "maintenance",
+            "monitoring",
+            "operations",
+            "security",
+            "testing"
+          ],
+          "description": "Category key from categories object. Enum complete-from-instance @ workflow-registry.json v1.2.0 (sha cac008bb)."
         },
         "purpose": {
           "type": "string",
@@ -266,6 +277,75 @@
               "description": "Destination IDs this workflow reports to"
             }
           }
+        },
+        "lane": {
+          "type": "string",
+          "enum": [
+            "development",
+            "staging",
+            "production",
+            "cis",
+            "all"
+          ],
+          "description": "Deployment/operations lane the workflow targets. Superset of live-used values (development, cis) \u2014 forward room is intentional."
+        },
+        "gate": {
+          "type": "string",
+          "oneOf": [
+            {
+              "pattern": "^pr-label:[a-z0-9][a-z0-9-]*$",
+              "description": "Merge/run gated on a PR label."
+            },
+            {
+              "pattern": "^typed-confirm:[A-Z][A-Z0-9-]*$",
+              "description": "Gated on a typed confirmation string."
+            },
+            {
+              "pattern": "^reviewer-env:[a-z][a-z0-9-]*$",
+              "description": "Gated on a reviewer for a named environment."
+            },
+            {
+              "const": "push"
+            },
+            {
+              "const": "schedule"
+            },
+            {
+              "const": "workflow_run"
+            },
+            {
+              "const": "workflow_dispatch"
+            }
+          ],
+          "description": "Run/merge gate. Pattern forms: pr-label:<name> | typed-confirm:<STRING> | reviewer-env:<env>; or bare push|schedule|workflow_run|workflow_dispatch. Live values: pr-label:deploy-to-dev, typed-confirm:DEPLOY-CIS, workflow_dispatch."
+        },
+        "chain": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "upstream": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+\\.yml$",
+              "description": "Workflow file this one is triggered BY (workflow_run upstream)."
+            },
+            "downstream": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+\\.yml$",
+              "description": "Workflow file this one triggers (workflow_run downstream)."
+            },
+            "trigger": {
+              "type": "string",
+              "enum": [
+                "workflow_run"
+              ],
+              "description": "Linkage mechanism. workflow_run only at present."
+            }
+          },
+          "description": "workflow_run upstream/downstream linkage. At least one of upstream/downstream present in practice; trigger names the mechanism."
+        },
+        "canonicalDeploy": {
+          "type": "boolean",
+          "description": "true = sanctioned per-env deploy pipeline; false = build / operations / data-ops / diagnostic."
         }
       }
     }
