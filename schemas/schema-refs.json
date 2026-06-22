@@ -3,9 +3,18 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {
-    "version": "1.29.0",
-    "lastUpdated": "2026-06-19",
+    "version": "1.30.0",
+    "lastUpdated": "2026-06-22",
     "changelog": [
+      {
+        "changes": [
+          "infrastructure-catalog schema: v1.2.0 -> v1.3.0 (+catalog.loadBalancers[] +loadBalancer def +database.clusterId string|null) - additive",
+          "resource-access schema: v1.1.0 -> v1.2.0 (+credentialItem.field=attachment; +livenessProbe.lastVerifiedResult key-present-in-bw|round-trip-verified; +envRoute.namingFamilyConvention) - additive, clears FU-VENTURE-DATA-SCHEMA-DRIFT-1 (7 errors)",
+          "Source: EB->SR handoff 2026-06-22 (deps: infrastructure-catalog.json v2.1.6; resource-access.json v1.6.0 / EB PR #525 cfae6cd)"
+        ],
+        "date": "2026-06-22",
+        "version": "1.31.0"
+      },
       {
         "changes": [
           "workflow-registry schema: v1.0.0 \u2192 v1.2.0 (formalizes lane/gate/chain/canonicalDeploy fields + category enum, complete-from-instance; converges schema to live instance v1.2.0)",
@@ -344,7 +353,7 @@
     "infrastructure-catalog": {
       "id": "https://schemas.luh.tech/infrastructure-catalog.schema.json",
       "file": "infrastructure-catalog.schema.json",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "description": "Standardized infrastructure documentation for LuhTech ventures."
     },
     "interfaces": {
@@ -452,7 +461,7 @@
     "resource-access": {
       "id": "https://schemas.luh.tech/resource-access.schema.json",
       "file": "resource-access.schema.json",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Canonical credential and resource-access record. Single home for resource -> vault item -> consumer linkage across LuhTech ventures."
     },
     "roadmap": {
@@ -579,5 +588,5 @@
     }
   },
   "title": "LuhTech Schema Registry v1.27.0",
-  "version": "1.30.0"
+  "version": "1.31.0"
 }
