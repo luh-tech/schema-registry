@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/resource-access.schema.json",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "title": "Resource Access Graph",
   "description": "Portfolio access-linkage layer. Maps credentials, secret-store items, access methods, and host posture to the resources they reach. Foreign-keys into infrastructure-catalog (server.id, environment.id, secret.name, objectStorage.bucket) rather than duplicating inventory. The canonical home for 'which key/credential/method reaches which resource, by what route, with what posture' \u2014 answers the recurring key-mismatch by making access posture queryable, not rediscovered live.",
   "type": "object",
@@ -175,7 +175,8 @@
             "username",
             "both",
             "totp",
-            "note"
+            "note",
+            "attachment"
           ],
           "description": "Which secret-store field holds the value(s)"
         },
@@ -235,7 +236,9 @@
                 "success",
                 "auth-failed",
                 "network-failed",
-                "not-tested"
+                "not-tested",
+                "key-present-in-bw",
+                "round-trip-verified"
               ],
               "description": "Result of last reachability probe. 'not-tested' is the legitimate initial state before any probe runs."
             },
@@ -405,6 +408,10 @@
               }
             }
           }
+        },
+        "namingFamilyConvention": {
+          "type": "string",
+          "description": "Naming-family convention this route follows, e.g. SSL_CERT_*_{ENV}. Added v1.2.0."
         }
       }
     },
