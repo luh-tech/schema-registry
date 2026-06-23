@@ -44,7 +44,18 @@ jobs:
         run: |
           mkdir -p _site _site/ectropy
           cp -r schema-registry/schemas/. _site/
-          cp -r ectropy-schemas/. _site/ectropy/
+          # EA schemas → _site/ectropy/, honoring ectropy-ai/schemas/.deployignore
+          rsync -a --exclude-from='ectropy-schemas/.deployignore' ectropy-schemas/ _site/ectropy/
+          # Leak-guard: fail the build if any gated path reached the artifact
+          for p in decision/sdi-snapshot.schema.json \
+                   decision/success-pattern.schema.json \
+                   efas/eigenmode-forecast.schema.json; do
+            if [ -e "_site/ectropy/$p" ]; then echo "::error::LEAK _site/ectropy/$p"; exit 1; fi
+          done
+          # Hygiene-guard: repo internals must not publish
+          for p in .git node_modules package.json tsconfig.json tests; do
+            if [ -e "_site/ectropy/$p" ]; then echo "::error::INTERNAL-LEAK _site/ectropy/$p"; exit 1; fi
+          done
           cp schema-registry/CNAME _site/CNAME
           cp schema-registry/.nojekyll _site/.nojekyll
           echo "--- staged artifact ---"
