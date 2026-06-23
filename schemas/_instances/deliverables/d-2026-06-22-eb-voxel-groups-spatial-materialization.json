@@ -1,0 +1,110 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-22-eb-voxel-groups-spatial-materialization",
+  "version": "1.0.0",
+  "title": "EB voxel_groups write-time spatial materialization",
+  "description": "Restore the BOX-ARCHITECTURE write-time-materialization principle to the voxel_groups semantic layer: persist per-group bbox/centroid when membership is set at Stage 4b, and read precomputed values at /spatial instead of recomputing a ~860K-row JOIN on every 60s poll. Conforms to the canonical voxel-group schema (Child 2).",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "feat/voxel-groups-spatial-materialization-2026-06-22",
+    "scopeFiles": [
+      "apps/api-gateway/prisma/schema.prisma",
+      "apps/api-gateway/prisma/migrations/**",
+      "apps/api-gateway/src/intake/stage-4b-voxel-groups.ts",
+      "apps/api-gateway/src/intake/voxel-groups-materializer.ts",
+      "apps/api-gateway/src/**/voxel-groups.route.ts",
+      "apps/web-dashboard/src/lib/uro/uro-message-parsers.ts",
+      "apps/web-dashboard/src/lib/uro/uro-state.ts",
+      "scripts/backfill-voxel-group-bounds.ts",
+      ".github/workflows/voxel-groups-guard.yml"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Additive Prisma migration adding typed bounds columns to voxel_groups (bbox_min_x/max_x/min_y/max_y/min_z/max_z + centroid_x/y/z, DOUBLE PRECISION, nullable), mirroring the voxel_grids bbox_min/max precedent. Column shape conforms to the canonical voxel-group schema (Child 2).",
+      "acceptanceCriteria": [
+        "Migration applies cleanly and idempotently on a fresh dev DB and on the existing dc1eaa5b dataset.",
+        "voxel_groups gains nine nullable bounds columns; no existing column altered or dropped.",
+        "prisma migrate deploy reproduces the table+columns from scratch (reproducibility holds)."
+      ]
+    },
+    {
+      "id": "OUT-2",
+      "description": "Extend voxel-groups-materializer.ts (Stage 4b) to compute MIN/MAX of member voxel bounds and AVG of member coordinates over the membership SELECT it already runs, and persist into the OUT-1 columns at write time.",
+      "acceptanceCriteria": [
+        "Materializer computes bbox/centroid in the same pass that sets voxel_urns; no extra full-table scan.",
+        "All group types covered, including LEVEL/SYSTEM that require the one-time intake aggregation (not only ROOM/TAKT_ZONE).",
+        "Re-running Stage 4b on the same membership yields identical bounds (deterministic)."
+      ]
+    },
+    {
+      "id": "OUT-3",
+      "description": "Rewrite /spatial (voxel-groups.route.ts) to read the precomputed bounds columns and drop the LEFT JOIN voxels ON urn = ANY(voxel_urns) + GROUP BY. Emit bbox/centroid at the exact location decodeVoxelGroup() reads (uro-message-parsers.ts) so the consumer contract holds. Retain the #516 statement_timeout guard as defense-in-depth.",
+      "acceptanceCriteria": [
+        "/spatial executes O(groups), not O(member voxels); no voxels JOIN in the query plan.",
+        "Response shape unchanged for the frontend; decodeVoxelGroup() reads bbox/centroid without fallback-to-zero.",
+        "#516 statement_timeout guard remains present."
+      ]
+    },
+    {
+      "id": "OUT-4",
+      "description": "One-time backfill (scripts/backfill-voxel-group-bounds.ts) computing bounds for the existing dc1eaa5b groups in a deliberate maintenance pass — the expensive aggregation run exactly once, never again at read.",
+      "acceptanceCriteria": [
+        "All existing dc1eaa5b groups have non-null bounds after backfill.",
+        "Backfilled values equal the values OUT-2 would produce for the same membership (parity check passes).",
+        "Backfill is idempotent and re-runnable."
+      ]
+    },
+    {
+      "id": "OUT-5",
+      "description": "CI guard (.github/workflows/voxel-groups-guard.yml) asserting /spatial cannot reintroduce the unbounded voxels JOIN, plus a frontend AbortController/in-flight guard on the 60s spatial poll.",
+      "acceptanceCriteria": [
+        "CI fails if voxel-groups.route.ts reintroduces = ANY(voxel_urns) or a voxels JOIN in /spatial.",
+        "Frontend spatial poll aborts an in-flight request before issuing the next; no overlap."
+      ]
+    },
+    {
+      "id": "OUT-6",
+      "description": "Validation walk on dev against dc1eaa5b: Coordination renders all groups at building scale with voxel-true bounds/centroid/color, /spatial latency is O(groups), and Stage-4b re-materialization reproduces bounds deterministically.",
+      "acceptanceCriteria": [
+        "Coordination tab renders every group with correct world-space bounds and centroid.",
+        "/spatial p95 latency flat as group count grows (no per-poll JOIN cost).",
+        "A re-provision via the intake pipeline reproduces the groups and their bounds."
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "Prisma migration applies clean + idempotent (OUT-1).",
+      "Unit test: materializer persists bounds matching MIN/MAX/AVG of a known fixture (OUT-2).",
+      "Query-plan test: /spatial contains no voxels JOIN (OUT-3, OUT-5).",
+      "Backfill parity check passes on dc1eaa5b (OUT-4).",
+      "All OUT acceptance criteria met."
+    ],
+    "postMerge": [
+      "Dev Coordination renders dc1eaa5b groups with voxel-true bounds (OUT-6).",
+      "/spatial latency O(groups) confirmed on dev.",
+      "Re-provision reproduces groups + bounds."
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-22",
+      "trigger": "L4 approval of grounded direction (canonical voxel v3 + open-core cut)"
+    }
+  ],
+  "parentDeliverable": "d-2026-06-22-ectropy-core-schema-canon",
+  "relatedFollowUps": [
+    "FU-EB-STAGE5-TAKT-IDEMPOTENCY-PERF-1"
+  ],
+  "notes": "Root cause: voxel_groups (migration 20260605120000) carries voxel_urns + metadata JSONB but no typed bounds; /spatial recomputes per-group bbox/centroid via LEFT JOIN voxels ON urn = ANY(voxel_urns) (planner estimates ~10 rows, actual 21 groups x ~41K URNs ~= 860K probes/poll; GIN supports only @> reverse lookup, not the forward explode). This is the one rolled-up spatial reduction that skipped BOX-ARCHITECTURE-2026-03-26's 'cost paid once at write time, not at every read' discipline that voxel_grids.bbox and status rollup already follow. Execution-gated on Child 2 (voxel-group.schema.json) landing so OUT-1 columns conform to the canonical shape. #516 timeout guard is retained, not removed. Rationale-in-instance per no-md-terminus."
+}
