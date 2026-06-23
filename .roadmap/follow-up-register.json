@@ -4,10 +4,10 @@
   "schemaVersion": "1.0.0",
   "version": "1.0.0",
   "ventureId": "schema-registry",
-  "lastUpdated": "2026-06-19",
+  "lastUpdated": "2026-06-23",
   "meta": {
     "sourceOfTruth": ".roadmap/follow-up-register.json",
-    "totalCount": 28
+    "totalCount": 29
   },
   "followUps": [
     {
@@ -394,10 +394,30 @@
       "id": "FU-SR-ECTROPY-EMIT-SCHEMA-CANONICAL-RELATIONSHIP-1",
       "title": "Decide intended relationship between ectropy-ai/schemas scoped emit and luh-tech canonical (workflow-registry + 5 sibling schemas)",
       "priority": "P2",
-      "status": "open",
+      "status": "closed",
       "opened": "2026-06-19",
       "openedDuring": "d-2026-06-19-sr-ectropy-emit-relationship-fu",
       "scope": "SR-CLI surfaced during d-2026-06-19-sr-workflow-registry-formalization (SR PR #182) that ectropy-ai/schemas carries its own workflow-registry.schema.json under an intentional scoped $id namespace: https://schemas.luh.tech/ectropy/workflow-registry.schema.json (verified 6/6 schemas in that repo scoped, 0 canonical; README confirms Ectropy-scoped intent, consumed by @ectropy/core + Ectropy-Business). The ectropy emit is at v1.0.0 (category free-string, no lane/gate/chain/canonicalDeploy) while the luh-tech canonical is now v1.2.0. This corrects SR-chat earlier framing that treated the emit as a third leg of main-repo-emit version parity \u2014 the emit is a SEPARATE scoped schema, not a mirror, so version parity was the wrong target. Decision required (L4-class, cross-repo with ectropy-ai/schemas): (A) ectropy emit tracks canonical field-set -> bring to 1.2.0 parity, own PR on ectropy-ai/schemas, package 0.4.0->0.4.1; (C) intentional independent scoped namespace, no parity obligation; plus the latent question of whether ectropy schemas should $ref the canonical rather than copy. Reject (B) version-only bump \u2014 would make emit claim 1.2.0 while carrying 1.0.0 fields (a lying version). Overlaps FU-SR-CANONICAL-ENUM-REGISTRY-1 (cross-repo enum/vocab in a vacuum) and FU-SR-INFRA-SCHEMA-GRAPH-CURRENT-TRUTH-1 (FK-edge truth). Capture-only; resolution is separately L4-gated.",
+      "blockedBy": [],
+      "blocks": [],
+      "relatedDecisions": [],
+      "trackingRepo": "luh-tech/schema-registry",
+      "resolution": {
+        "closedDate": "2026-06-23",
+        "closedDuring": "d-2026-06-23-sr-fu-register-true-up",
+        "commitSha": "8cfbc176b125fd8a85715b7f7189f3efffe5507e",
+        "prUrl": "https://github.com/luh-tech/schema-registry/pull/185",
+        "summary": "Superseded by the open-core unlist arc (SR PR #185 + ectropy-ai/schemas PR #9). The open question (do ectropy-scoped emit schemas track the luh-tech canonical or stay independent) is resolved by a path not in the original A/B/C framing: the three intelligence schemas are now unlisted from public hosting (deny-at-source .deployignore + rsync leak-guard, fail-closed), curl-verified 200->404, source retained internal for authoring. Publish-parity is moot - they are not published. Default-private open-core posture per CORE-SPLIT D-8 is the resolution."
+      }
+    },
+    {
+      "id": "FU-SR-CHATSIDE-VALIDATOR-REF-VENDORING-1",
+      "title": "Chat-side / ad-hoc validators must resolve $ref locally \u2014 public endpoint is fail-closed post-#185",
+      "priority": "P3",
+      "status": "open",
+      "opened": "2026-06-23",
+      "openedDuring": "d-2026-06-23-sr-fu-register-true-up",
+      "scope": "As of SR PR #185 (open-core leak-guard, 8cfbc176), the public endpoint schemas.luh.tech/* is fail-closed and returns 403/404 for unlisted paths. Any validator that resolves a schema $ref by FETCHING the public URL now breaks: observed during the #186/#187 D2 close when a chat-side Draft7 sandbox 403d mid-validation on _definitions/forbidden-audit-paint-names.schema.json. CI is unaffected (ajv 3x -r resolves all refs locally). Risk: a future cold start reads a 403 as an instance defect rather than an endpoint limitation (nearly happened this arc). Fix options: (a) vendor _definitions/* and _enums/* refs locally for any chat-side validation; (b) document the ajv 3x -r local-resolution requirement as MANDATORY (not optional) for all instance validation post-#185, in cold-start discipline. Low-priority (P3) - no live breakage, CI clean - but a real cold-start trap worth recording.",
       "blockedBy": [],
       "blocks": [],
       "relatedDecisions": [],
@@ -425,7 +445,7 @@
         "FU-SR-PROCESS-EB-PRE-SR-SHIP-PATTERN-1",
         "FU-SR-INFRA-SCHEMA-GRAPH-CURRENT-TRUTH-1",
         "FU-SR-CANONICAL-ENUM-REGISTRY-1",
-        "FU-SR-ECTROPY-EMIT-SCHEMA-CANONICAL-RELATIONSHIP-1"
+        "FU-SR-CHATSIDE-VALIDATOR-REF-VENDORING-1"
       ],
       "closed": [
         "FU-RESOLVER-PROPAGATION-1",
@@ -436,7 +456,8 @@
         "FU-SR-INFRASTRUCTURE-CATALOG-PURPOSE-ENUM-EXTENDED-1",
         "FU-SR-RESOURCE-ACCESS-CREDENTIAL-LIVENESS-FIELD-1",
         "FU-SR-CATALOG-VPC-PEERING-FIELD-1",
-        "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1"
+        "FU-SR-AJV-COMPILE-INVOCATION-NORMALIZATION-1",
+        "FU-SR-ECTROPY-EMIT-SCHEMA-CANONICAL-RELATIONSHIP-1"
       ],
       "in-progress": [],
       "blocked": []
@@ -469,7 +490,8 @@
         "FU-SR-RESOURCE-ACCESS-AUDIT-PAINT-CONSTRAINT-FUTURE-1",
         "FU-SR-TRUTH-DELIVERED-FOR-CLOSED-DELIVERABLES-1",
         "FU-SR-WORKFLOW-AJV-INSTANCE-VALIDATION-AUDIT-1",
-        "FU-SR-WORKFLOW-DYNAMIC-SCHEMA-LOOP-EXTERNAL-REFS-1"
+        "FU-SR-WORKFLOW-DYNAMIC-SCHEMA-LOOP-EXTERNAL-REFS-1",
+        "FU-SR-CHATSIDE-VALIDATOR-REF-VENDORING-1"
       ],
       "P1": [
         "FU-ECTROPY-SCHEMA-HOSTING-WIRE-1",
