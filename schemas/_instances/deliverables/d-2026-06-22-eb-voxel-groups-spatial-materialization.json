@@ -9,7 +9,7 @@
     "approver": "Erik Luhtala (L4)",
     "revertAuthority": "Erik Luhtala (L4)"
   },
-  "lifecycleState": "S4-authored",
+  "lifecycleState": "S8-closed",
   "scope": {
     "repo": "luh-tech/Ectropy-Business",
     "branch": "feat/voxel-groups-spatial-materialization-2026-06-22",
@@ -100,6 +100,20 @@
       "to": "S4-authored",
       "date": "2026-06-22",
       "trigger": "L4 approval of grounded direction (canonical voxel v3 + open-core cut)"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S7-merged",
+      "date": "2026-06-23",
+      "commitSha": "3d488f75f3cfe59f6595c0081dc6c4a09be7bcb4",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/532",
+      "trigger": "EB PR #532 squash-merged to luh-tech/Ectropy-Business main by erik-luh (2026-06-23T19:01:27Z)"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-23",
+      "trigger": "TRUTH-DELIVERED authored by SR-CLI; closed-with-debt (OUT-4 backfill of dc1eaa5b pending — not a close blocker)"
     }
   ],
   "parentDeliverable": "d-2026-06-22-ectropy-core-schema-canon",
