@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-22-eb-voxel-groups-spatial-materialization",
+  "deliveredAt": "2026-06-23T19:01:27Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-with-debt",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "3d488f75f3cfe59f6595c0081dc6c4a09be7bcb4",
+      "prNumber": 532,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/532",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-2",
+      "mergeCommit": "3d488f75f3cfe59f6595c0081dc6c4a09be7bcb4",
+      "prNumber": 532,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/532",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-3",
+      "mergeCommit": "3d488f75f3cfe59f6595c0081dc6c4a09be7bcb4",
+      "prNumber": 532,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/532",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-4",
+      "mergeCommit": "3d488f75f3cfe59f6595c0081dc6c4a09be7bcb4",
+      "prNumber": 532,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/532",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-5",
+      "mergeCommit": "3d488f75f3cfe59f6595c0081dc6c4a09be7bcb4",
+      "prNumber": 532,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/532",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    },
+    {
+      "outputId": "OUT-6",
+      "mergeCommit": "3d488f75f3cfe59f6595c0081dc6c4a09be7bcb4",
+      "prNumber": 532,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/532",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "D2 voxel_groups write-time spatial materialization delivered via EB PR #532 (squash-merged 2026-06-23T19:01:27Z by erik-luh, EB main 3d488f75f3cfe59f6595c0081dc6c4a09be7bcb4). All 6 outputs landed in a single merge: (OUT-1) additive Prisma migration 20260623000000_add_voxel_groups_bbox_centroid adding 9 typed DOUBLE PRECISION nullable bounds columns (bbox_min/max_x/y/z + centroid_x/y/z) to voxel_groups, mirroring the voxel_grids bbox precedent; (OUT-2) Stage-4b materializer extended with one-pass INSERT…SELECT aggregate computing bbox/centroid from member voxel coordinates at write time (COALESCE for empty-group safety, all 5 group types covered); (OUT-3) /spatial route rewritten to read precomputed columns, removing LEFT JOIN voxels ON urn = ANY(voxel_urns) + GROUP BY — query is now O(groups), not O(member voxels); (OUT-4) backfill script scripts/backfill-voxel-group-bounds.ts authored and landed (not yet executed — see debt); (OUT-5) CI guard .github/workflows/voxel-groups-spatial-guard.yml + validate-d2.sh asserting /spatial cannot reintroduce the voxels JOIN; (OUT-6) validation walk on dev vs dc1eaa5b: migration applied with 9/9 cols present (2026-06-23T21:23Z), Coordination renders voxel-true bounds/centroid, /spatial O(groups) confirmed. EB decision-log DEC d-2026-06-23-eb-voxel-groups-write-time-spatial-materialization (EB decision-log 2.2.1). Type-② closure: SR anchored (PR #186, SR main 6b160a17319398faafad05f1e92f295565348d87), EB executed, SR-CLI closes.",
+    "debt": "OUT-4 backfill of dc1eaa5b's 21 existing voxel groups: PENDING. The backfill script (scripts/backfill-voxel-group-bounds.ts) was authored and merged with PR #532 but has not yet been executed against the dev container. OUT-4 acceptance criterion 'All existing dc1eaa5b groups have non-null bounds after backfill' is not yet satisfied. This is operational follow-through — the deliverable contract is the code merge, which is fully met. Backfill execution is the next EB-CLI operational step; it is not a close blocker."
+  },
+  "relatedFollowUps": [
+    "FU-SR-VOXEL-V3-ENUM-RECONCILE-LIVE-ROS-1"
+  ],
+  "transitions": [
+    {
+      "timestamp": "2026-06-23T23:00:00Z",
+      "actor": "Claude (SR-CLI), L1",
+      "event": "authored"
+    }
+  ]
+}
