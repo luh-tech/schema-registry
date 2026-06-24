@@ -1,0 +1,189 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
+  "$id": "https://schemas.luh.tech/pm/voxel-group.schema.json",
+  "title": "Voxel Group Schema",
+  "description": "Canonical contract for a spatial voxel group (room, level, takt zone, decision zone, worker-activity, flow, system, element, custom) in the Ectropy PM Core. Single source of truth from which the DB voxel_groups row, the ROS luhtech_msgs/VoxelGroup message, the web-dashboard TS type, and the SEPPA tool projections derive. Bounding box and centroid are structured world-space objects; on the ROS wire the metadata_json string is a TRANSPORT ENCODING of this shape, not a parallel truth. Rolled-up state is two-axis - rolledUpStatus (work-progress) and rolledUpHealth (risk) - aligned to the per-voxel status reconcile (+ON_HOLD, -REWORK) plus a separate health axis; the legacy single rolled_up_status wire value AT_RISK maps to rolledUpHealth during migration.",
+  "type": "object",
+  "required": [
+    "$id",
+    "$schema",
+    "schemaVersion",
+    "groupId",
+    "groupType",
+    "rolledUpStatus",
+    "boundingBox"
+  ],
+  "definitions": {
+    "_metadata": {
+      "type": "object",
+      "description": "Schema metadata - not for validation",
+      "properties": {
+        "version": { "const": "3.0.0" },
+        "lastUpdated": { "const": "2026-06-24" },
+        "maintainer": { "const": "LuhTech Enterprise Infrastructure" },
+        "relatedSchemas": {
+          "const": ["voxel.schema.json", "decision.schema.json", "consequence.schema.json"]
+        }
+      }
+    },
+    "urn": {
+      "type": "string",
+      "description": "LuhTech URN identifier",
+      "pattern": "^urn:luhtech:[a-z][a-z0-9-]*:[a-z][a-z0-9-]*:[a-zA-Z0-9][a-zA-Z0-9-]*$"
+    },
+    "graphMetadata": {
+      "type": "object",
+      "description": "Bidirectional graph traversal metadata",
+      "properties": {
+        "inEdges": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/urn" },
+          "uniqueItems": true
+        },
+        "outEdges": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/urn" },
+          "uniqueItems": true
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to", "type"],
+            "properties": {
+              "from": { "$ref": "#/definitions/urn" },
+              "to": { "$ref": "#/definitions/urn" },
+              "type": { "type": "string" },
+              "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+              "label": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "point3": {
+      "type": "object",
+      "description": "World-space coordinate triple (maps to ROS geometry_msgs/Point). Distinct from per-voxel coordinates, which carry voxel resolution.",
+      "required": ["x", "y", "z"],
+      "additionalProperties": false,
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      }
+    },
+    "boundingBox": {
+      "type": "object",
+      "description": "Axis-aligned world-space bounds. Structured; on the ROS wire this is encoded inside metadata_json.",
+      "required": ["min", "max"],
+      "additionalProperties": false,
+      "properties": {
+        "min": { "$ref": "#/definitions/point3" },
+        "max": { "$ref": "#/definitions/point3" }
+      }
+    },
+    "groupType": {
+      "type": "string",
+      "description": "Group taxonomy. MUST match the live voxel_groups.group_type CHECK constraint and the ROS VoxelGroup group_type enum (verified at apply time).",
+      "enum": [
+        "DECISION_ZONE",
+        "WORKER_ACTIVITY",
+        "FLOW",
+        "TAKT_ZONE",
+        "ROOM",
+        "SYSTEM",
+        "LEVEL",
+        "ELEMENT",
+        "CUSTOM"
+      ]
+    },
+    "rolledUpStatus": {
+      "type": "string",
+      "description": "Work-progress axis, rolled up from member voxels. Aligned to the per-voxel reconciled status axis (+ON_HOLD, -REWORK).",
+      "enum": [
+        "PLANNED",
+        "IN_PROGRESS",
+        "COMPLETE",
+        "BLOCKED",
+        "ON_HOLD",
+        "INSPECTION_REQUIRED"
+      ]
+    },
+    "rolledUpHealth": {
+      "type": "string",
+      "description": "Risk axis, separate from work-progress. The legacy single rolled_up_status wire value AT_RISK maps here.",
+      "enum": ["HEALTHY", "AT_RISK", "CRITICAL"]
+    },
+    "display": {
+      "type": "object",
+      "description": "Denormalized presentation hints. Source of truth is rolledUpStatus + rolledUpHealth; display is a convenience projection (legacy display_color_hex).",
+      "additionalProperties": false,
+      "properties": {
+        "colorHex": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "icon": { "type": "string" }
+      }
+    }
+  },
+  "properties": {
+    "$id": {
+      "$ref": "#/definitions/urn",
+      "description": "URN identifier. Pattern: urn:luhtech:{project}:voxel-group:{groupId}"
+    },
+    "$schema": {
+      "const": "https://schemas.luh.tech/pm/voxel-group.schema.json"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "projectId": { "type": "string" },
+        "sourceOfTruth": { "type": "string" },
+        "lastUpdated": { "type": "string", "format": "date-time" },
+        "syncStatus": {
+          "type": "object",
+          "properties": {
+            "syncDirection": {
+              "type": "string",
+              "enum": ["v3-is-source-of-truth", "bidirectional"]
+            }
+          }
+        }
+      }
+    },
+    "groupId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+      "description": "Human-readable group identifier (maps to DB/ROS group identity; the URN $id embeds this)."
+    },
+    "groupType": { "$ref": "#/definitions/groupType" },
+    "label": { "type": "string", "description": "Human-readable group label." },
+    "voxelUrns": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/urn" },
+      "description": "Member voxel URNs (group membership). The expensive join projection; omitted from the spatial render projection."
+    },
+    "basePriority": {
+      "type": "integer",
+      "description": "Display/priority weight for the group type."
+    },
+    "rolledUpStatus": { "$ref": "#/definitions/rolledUpStatus" },
+    "rolledUpHealth": { "$ref": "#/definitions/rolledUpHealth" },
+    "boundingBox": { "$ref": "#/definitions/boundingBox" },
+    "centroid": { "$ref": "#/definitions/point3" },
+    "display": { "$ref": "#/definitions/display" },
+    "timestamps": {
+      "type": "object",
+      "properties": {
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update; maps to the ROS builtin_interfaces/Time stamp." }
+      }
+    },
+    "graphMetadata": { "$ref": "#/definitions/graphMetadata" }
+  },
+  "additionalProperties": false
+}
