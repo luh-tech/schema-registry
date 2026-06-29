@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schemas.luh.tech/truth-delivered.schema.json",
+  "deliverableId": "d-2026-06-26-eb-stage5-takt-keyset-batch",
+  "deliveredAt": "2026-06-26T16:34:41Z",
+  "lifecycleState": "S8-closed",
+  "closureStatus": "closed-clean",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "outputs": [
+    {
+      "outputId": "OUT-1",
+      "mergeCommit": "b492888d758ad63794a781fb3bddc75f0eba8b73",
+      "prNumber": 552,
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/552",
+      "mergeActor": "erik-luh",
+      "ciResult": "green"
+    }
+  ],
+  "closureNotes": {
+    "outcome": "Stage-5 takt UPDATE keyset-batched (<=5000 rows/statement); bounds the canonical status write; demo provision GREEN, no 57014."
+  },
+  "transitions": [
+    {
+      "timestamp": "2026-06-29T15:00:00Z",
+      "actor": "Claude (SR-CLI), L1",
+      "event": "authored"
+    }
+  ]
+}
