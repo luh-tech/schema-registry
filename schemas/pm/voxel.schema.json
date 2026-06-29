@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "$id": "https://schemas.luh.tech/pm/voxel.schema.json",
   "title": "Voxel Schema",
   "description": "3D spatial container for PM decisions, labor tracking, materials, and carbon footprint. The fundamental unit of construction project management in Ectropy PM Core.",
@@ -98,8 +98,8 @@
         "IN_PROGRESS",
         "COMPLETE",
         "BLOCKED",
-        "INSPECTION_REQUIRED",
-        "REWORK"
+        "ON_HOLD",
+        "INSPECTION_REQUIRED"
       ]
     },
     "coordinates": {
@@ -128,6 +128,15 @@
           "description": "Voxel size in meters"
         }
       }
+    },
+    "healthStatus": {
+      "type": "string",
+      "enum": [
+        "HEALTHY",
+        "AT_RISK",
+        "CRITICAL"
+      ],
+      "description": "Voxel health axis (separate from lifecycle status). Mirrors live DB VoxelHealthStatus (ROS-MRO Sprint 5). Default HEALTHY."
     }
   },
   "properties": {
@@ -240,6 +249,10 @@
     },
     "status": {
       "$ref": "#/definitions/voxelStatus"
+    },
+    "healthStatus": {
+      "$ref": "#/definitions/healthStatus",
+      "default": "HEALTHY"
     },
     "percentComplete": {
       "type": "number",
