@@ -1,0 +1,66 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-06-26-eb-coord-viewer-render-scaling",
+  "version": "1.0.0",
+  "title": "Coordination viewer render-scaling (materializer half)",
+  "description": "Stage-4b render-projection materialization: drops the per-group voxel_urns ARRAY_AGG (replaced by constant empty array + COUNT(*) member_count), persisting typed bbox/centroid only. Eliminates the 57014 array-build timeout. This DEC ratifies render-scaling intent; b492888d delivers the materializer half (R3F viewer R-0..R-4 are later merges, out of scope).",
+  "authority": {
+    "author": "Claude (EB-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S8-closed",
+  "scope": {
+    "repo": "luh-tech/Ectropy-Business",
+    "branch": "fix/intake-provision-scaling-2026-06-26",
+    "scopeFiles": [
+      "apps/api-gateway/src/intake/voxel-groups-materializer.ts",
+      "apps/api-gateway/src/intake/__tests__/voxel-groups-materializer.spec.ts"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Stage-4b render-projection materialization (drop ARRAY_AGG, typed bbox/centroid + member_count)",
+      "acceptanceCriteria": [
+        "per-group voxel_urns ARRAY_AGG removed",
+        "typed bbox/centroid persisted",
+        "57014 timeout eliminated",
+        "demo provision GREEN"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "TypeScript build passes",
+      "unit specs green",
+      "demo provision completes without 57014"
+    ],
+    "postMerge": [
+      "Maple Ridge demo provision GREEN (voxel_groups=21, voxels=859838)"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-06-26",
+      "trigger": "L4 approval (intake-scaling arc)"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S7-merged",
+      "date": "2026-06-26",
+      "commitSha": "b492888d758ad63794a781fb3bddc75f0eba8b73",
+      "prUrl": "https://github.com/luh-tech/Ectropy-Business/pull/552",
+      "trigger": "EB PR #552 squash-merged to luh-tech/Ectropy-Business main (2026-06-26T16:34:41Z)"
+    },
+    {
+      "from": "S7-merged",
+      "to": "S8-closed",
+      "date": "2026-06-29",
+      "trigger": "TRUTH-DELIVERED authored by SR-CLI; closed-clean"
+    }
+  ],
+  "notes": "Render-scaling architecture DEC; lineage d-2026-06-24-eb-coordination-data-architecture (EB-side relatedDecisions; not SR-anchored, omitted as parentDeliverable per disposition-a). R3F viewer R-0..R-4 are #554+, out of scope."
+}
