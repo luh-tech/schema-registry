@@ -3,9 +3,16 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {
-    "version": "1.32.0",
-    "lastUpdated": "2026-06-29",
+    "version": "1.33.0",
+    "lastUpdated": "2026-06-30",
     "changelog": [
+      {
+        "changes": [
+          "workflow-registry.schema.json v1.2.0 -> v1.3.0 (additive): +resourceDeps[] +healthGate{} optional props on $defs.workflow. EB handoff; enables resourceDeps drift-detection (2026-06-24 config-sync 403 root cause). No required changes, no removals."
+        ],
+        "date": "2026-06-30",
+        "version": "1.33.0"
+      },
       {
         "changes": [
           "pm/voxel schema v1.0.0 -> v1.1.0 (+ON_HOLD -REWORK on voxelStatus; +healthStatus axis HEALTHY/AT_RISK/CRITICAL; aligns to live DB VoxelStatus + VoxelHealthStatus). Pairs with ectropy-ai/schemas voxel-v3 reconcile. Closes FU-SR-VOXEL-V3-ENUM-RECONCILE-LIVE-ROS-1."
@@ -553,7 +560,7 @@
     "workflow-registry": {
       "id": "https://schemas.luh.tech/workflow-registry.schema.json",
       "file": "workflow-registry.schema.json",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "description": "Schema for documenting and categorizing GitHub Actions workflows following luh-tech schema-first patterns."
     },
     "patent": {
@@ -608,5 +615,5 @@
     }
   },
   "title": "LuhTech Schema Registry v1.27.0",
-  "version": "1.32.0"
+  "version": "1.33.0"
 }
