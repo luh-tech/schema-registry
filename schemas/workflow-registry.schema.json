@@ -1,9 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "$id": "https://schemas.luh.tech/workflow-registry.schema.json",
   "title": "GitHub Actions Workflow Registry Schema",
-  "description": "Schema for documenting and categorizing GitHub Actions workflows following luh-tech schema-first patterns. Used across all ventures for consistent CI/CD documentation. v1.2.0: formalized lane/gate/chain/canonicalDeploy fields and category enum (complete-from-instance) previously carried additively under additionalProperties.",
+  "description": "Schema for documenting and categorizing GitHub Actions workflows following luh-tech schema-first patterns. Used across all ventures for consistent CI/CD documentation. v1.2.0: formalized lane/gate/chain/canonicalDeploy. v1.3.0: added resourceDeps (links workflow -> resource-access.json credentialStore roles/itemIds, enabling coverage-credentials + drift-deploy dependency tracing) and healthGate (post-run assertion contract). Both additive; v1.2.0 instances validate unchanged.",
   "type": "object",
   "required": [
     "$schema",
@@ -346,6 +346,44 @@
         "canonicalDeploy": {
           "type": "boolean",
           "description": "true = sanctioned per-env deploy pipeline; false = build / operations / data-ops / diagnostic."
+        },
+        "resourceDeps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "A resource-access.json credentialStore item role (e.g. 'spaces-development') or itemId (UUID)."
+          },
+          "description": "Credentials/resources from resource-access.json this workflow REQUIRES at runtime. Roles preferred (stable; align with coverage-credentials set-diff); itemIds accepted. Makes 'the credential this deploy needs is dead' a queryable, drift-detectable fact (root cause of the 2026-06-24 config-sync 403: deploy-dev's dev-Spaces dependency was unmodeled)."
+        },
+        "healthGate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "buildSha-convergence",
+                "headobject-probe",
+                "capability-assert",
+                "smoke",
+                "none"
+              ],
+              "description": "Post-run assertion mechanism the workflow performs before it is considered converged."
+            },
+            "target": {
+              "type": "string",
+              "description": "What is asserted: bucket name, health endpoint, capability token, or expected-SHA source."
+            },
+            "blocking": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether gate failure fails the workflow (true) or is advisory (false)."
+            }
+          },
+          "description": "Post-run health/convergence gate contract. Makes implicit deploy assertions (buildSha convergence, HeadObject probe, capability presence) explicit and auditable."
         }
       }
     }
