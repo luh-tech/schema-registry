@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "$id": "https://schemas.luh.tech/infrastructure-catalog.schema.json",
   "title": "Infrastructure Catalog",
   "description": "Standardized infrastructure documentation for LuhTech ventures. Provides service registry, environment configuration, secrets management, workflow documentation, and deployment specifications. Derived from Ectropy production infrastructure (202KB, v2.12.0). Updated v1.1.0: Added portfolioWorkflowsRef for cross-repo workflow discovery.",
@@ -309,7 +309,11 @@
                 "enum": [
                   "config-sync",
                   "ifc-extraction",
-                  "terraform-state"
+                  "terraform-state",
+                  "bim-artifacts",
+                  "voxel-data",
+                  "decision-archives",
+                  "seppa-outputs"
                 ],
                 "description": "Service or workload this bucket serves. Extensible \u2014 new purposes added as new services with storage needs arrive (BIM artifacts, voxel data, decision archives, SEPPA tool outputs, etc.). Schema enum gates valid values; CI lint MAY enforce uniqueness-per-purpose-per-env."
               },
