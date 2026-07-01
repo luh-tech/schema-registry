@@ -3,9 +3,16 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {
-    "version": "1.34.0",
+    "version": "1.35.0",
     "lastUpdated": "2026-07-01",
     "changelog": [
+      {
+        "changes": [
+          "Added: element-manifest v1.0.0 — canonical registration for ElementManifest/IFCElement (structured output of the IFC Extraction Service, F-04). Transcribed from the live TypeScript source (@ectropy/schemas/types/ifc-extraction.types.ts + bundle.types.ts, both read directly, not invented) rather than from the missing INTAKE-ARCHITECTURE-2026-03-27.md doc (referenced in code comments but not present in this checkout). Closes the structural gap behind the 2026-07-01 Five Whys bbox-corruption defect: nothing previously enforced the TS interface and extract-speckle-elements.py agreeing on shape. Deliberately excludes any bbox-plausibility constraint — shape conformance only, not a sanity gate. Follow-on (separate PR, not this one): point ifc-extraction.interface.ts's re-export at this schema."
+        ],
+        "date": "2026-07-01",
+        "version": "1.35.0"
+      },
       {
         "changes": [
           "resource-access schema: v1.2.0 -> v1.3.0 (+accessGrants[].resourceType enum value internal-service, for first-party services running as containers on an already-modeled host — distinct from external-service) - additive",
@@ -349,6 +356,12 @@
       "file": "deprecation-header.schema.json",
       "version": "1.0.0",
       "description": "Schema-bound deprecation marker for portfolio schemas."
+    },
+    "element-manifest": {
+      "id": "https://schemas.luh.tech/element-manifest.schema.json",
+      "file": "element-manifest.schema.json",
+      "version": "1.0.0",
+      "description": "Structured output of the IFC Extraction Service (F-04): one manifest per (IFC file, discipline), cached by SHA256. Canonical registration for the ElementManifest/IFCElement shape that previously existed only as a TypeScript interface (@ectropy/schemas/types/ifc-extraction) and a prose doc, with nothing enforcing agreement between the TS type and the Python extraction service — the structural gap behind the 2026-07-01 Five Whys bbox-corruption defect."
     },
     "environment-map": {
       "id": "https://schemas.luh.tech/environment-map.schema.json",

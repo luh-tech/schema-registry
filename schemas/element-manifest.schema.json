@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "version": "1.0.0",
+  "$id": "https://schemas.luh.tech/element-manifest.schema.json",
+  "title": "Element Manifest",
+  "description": "Structured output of the IFC Extraction Service (F-04): one manifest per (IFC file, discipline), cached by SHA256. Consumed by the BOX voxelization engine (stage-4-ifc.ts -> manifestElementToBoxElement -> voxel-rasterizer.service.ts). Canonical shape transcribed from the live TypeScript source (@ectropy/schemas/types/ifc-extraction.types.ts + bundle.types.ts, both read directly this session) — this schema did not exist in the registry before, so nothing enforced the TS interface and the Python extraction service (extract-speckle-elements.py) agreed on shape. That gap is structurally how the 2026-07-01 Five Whys bbox-corruption defect went uncaught: compute_bbox() could silently emit a wrong shape and nothing would fail. This schema is a conformance contract, not a plausibility check — see the 'Explicitly out of scope' note on bbox below.",
+  "type": "object",
+  "required": [
+    "ifc_filename",
+    "discipline",
+    "parsed_at",
+    "elements"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "ifcDiscipline": {
+      "type": "string",
+      "enum": ["ARC", "MEP", "STR"],
+      "description": "Which discipline's IFC file this manifest was extracted from. One manifest per (project, discipline) pair — see bundle.manifest_cache[discipline] in stage-4-ifc.ts."
+    },
+    "systemType": {
+      "type": "string",
+      "enum": ["ARCH", "STRUCT", "HVAC", "PLUMB", "ELEC", "CIVIL", "UNKNOWN"],
+      "description": "Building system classification, assigned by extract-speckle-elements.py's classify_system(). Real IFC-entity mapping as of this schema's authoring (classification logic itself stays in code — this is documentation, not an enforced constraint on ifc_type): ARCH <- IfcWall(StandardCase), IfcSlab, IfcRoof, IfcDoor, IfcWindow, IfcStair(Flight), IfcRailing, IfcCovering, IfcCurtainWall, IfcPlate, IfcMember, IfcFurniture, IfcBuildingElementProxy (+ prefix fallback IfcWall*/IfcSlab*/IfcRoof*); STRUCT <- IfcBeam, IfcColumn, IfcFoundation, IfcPile, IfcFooting, IfcReinforcingBar, IfcReinforcingMesh (+ prefix fallback IfcBeam*/IfcColumn*/IfcReinforc*); HVAC <- IfcDuctSegment/Fitting, IfcAirTerminal(Box), IfcUnitaryEquipment, IfcCoil, IfcFan, IfcFilter, IfcDamper, IfcFlowController (+ prefix fallback IfcDuct*/IfcAir*); PLUMB <- IfcPipeSegment/Fitting, IfcValve, IfcSanitaryTerminal, IfcFireSuppression, IfcFlowTerminal (+ prefix fallback IfcPipe*/IfcSanitary*); ELEC <- IfcCableCarrierSegment, IfcCableSegment, IfcElectricAppliance, IfcLightFixture, IfcElectricDistributionBoard, IfcProtectiveDevice, IfcJunctionBox (+ prefix fallback IfcCable*/IfcLight*); UNKNOWN <- no ifc_type, or no match anywhere above. CIVIL is part of the type contract (bundle.types.ts SystemType union) but classify_system() has no path that currently produces it — included here because the schema documents the contract, not just the classifier's present reach."
+    },
+    "bbox3D": {
+      "type": "object",
+      "description": "World-space bounding box in metres (Speckle coordinate system). Explicitly out of scope for this schema: any plausibility constraint on the values (e.g. max_z - min_z under some threshold). A shape-validation schema cannot distinguish a genuinely tall element from a corrupted one — that class of check belongs in a runtime sanity gate, not here. This schema validates that the six fields exist and are numbers; it does not and should not judge whether the numbers are believable.",
+      "required": ["min_x", "max_x", "min_y", "max_y", "min_z", "max_z"],
+      "additionalProperties": false,
+      "properties": {
+        "min_x": { "type": "number" },
+        "max_x": { "type": "number" },
+        "min_y": { "type": "number" },
+        "max_y": { "type": "number" },
+        "min_z": { "type": "number" },
+        "max_z": { "type": "number" }
+      }
+    },
+    "storeyRecord": {
+      "type": "object",
+      "description": "One building storey, as extracted from IfcBuildingStorey. storeys[] is ordered ascending by elevation (contract guarantee, not enforced by this schema — array ordering is not expressible in Draft-07 as a constraint on relative element values).",
+      "required": ["name", "elevation", "z_min", "z_max"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "elevation": { "type": "number" },
+        "z_min": { "type": "number" },
+        "z_max": { "type": "number" }
+      }
+    },
+    "IFCElement": {
+      "type": "object",
+      "description": "One extracted IFC element. Contract guarantees (per ifc-extraction.interface.ts, enforced by the extraction service, not re-enforced here beyond basic shape): guid non-empty and unique within a manifest; system never null; level never null or empty; bbox min strictly less than max on all axes.",
+      "required": [
+        "guid",
+        "ifc_type",
+        "system",
+        "level",
+        "level_elevation",
+        "bbox",
+        "attributes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "guid": {
+          "type": "string",
+          "minLength": 1,
+          "description": "IFC GlobalId — permanent identifier, unique within the building model (and within this manifest's elements[])."
+        },
+        "ifc_type": {
+          "type": "string",
+          "minLength": 1,
+          "description": "IFC entity type string, e.g. 'IfcWall', 'IfcDuctSegment'. Free string, not an enum — the IFC entity vocabulary is large and versioned by the IFC schema itself, not by this registry."
+        },
+        "system": {
+          "$ref": "#/definitions/systemType"
+        },
+        "level": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Storey name from IfcBuildingStorey, e.g. 'Level 1', 'Roof'. Never empty per the extraction service's contract."
+        },
+        "level_elevation": {
+          "type": "number",
+          "description": "Storey elevation in metres above datum."
+        },
+        "bbox": {
+          "$ref": "#/definitions/bbox3D"
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Additional IFC attributes (material, fire rating, grid reference, etc.). Free-form per the existing contract — this manifest layer does not constrain attribute shape."
+        }
+      }
+    }
+  },
+  "properties": {
+    "ifc_filename": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Source IFC file name this manifest was extracted from."
+    },
+    "discipline": {
+      "$ref": "#/definitions/ifcDiscipline"
+    },
+    "parsed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of extraction."
+    },
+    "storey_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "storeys": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/storeyRecord" },
+      "description": "Building storeys, ordered ascending by elevation (contract guarantee — see storeyRecord description)."
+    },
+    "element_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "elements": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/IFCElement" },
+      "description": "The extracted elements themselves. element_count, when present, is expected to equal elements.length (contract guarantee, not enforced here — Draft-07 cannot express 'this integer equals that array's length' as a constraint)."
+    }
+  }
+}
