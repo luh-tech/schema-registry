@@ -3,9 +3,18 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Canonical schema URI registry for all LuhTech Holdings schemas. Maps schema roles to versioned files. v1.10.0: patent schema family (SBPA) promoted to registry.",
   "meta": {
-    "version": "1.33.0",
-    "lastUpdated": "2026-06-30",
+    "version": "1.34.0",
+    "lastUpdated": "2026-07-01",
     "changelog": [
+      {
+        "changes": [
+          "resource-access schema: v1.2.0 -> v1.3.0 (+accessGrants[].resourceType enum value internal-service, for first-party services running as containers on an already-modeled host — distinct from external-service) - additive",
+          "infrastructure-catalog schema: v1.3.0 -> v1.4.0 (+objectStorage[].purpose enum values bim-artifacts, voxel-data, decision-archives, seppa-outputs — slugs taken verbatim from the property's own pre-existing description text, which named these as needed but the enum was never extended to match) - additive",
+          "Source: EB canonical-infra-capture pass 2026-07-01 (deps: Ectropy-Business .roadmap/resource-access.json v1.6.4, .roadmap/infrastructure-catalog.json; unblocks 10 of the remaining 10 coverage-infrastructure gaps at closing time — 7 via internal-service, 3 stay uncovered pending deployment, no schema change closes those). Tracked under FU-EB-RA-ARCHITECTURAL-SCOPE-DECISION-1."
+        ],
+        "date": "2026-07-01",
+        "version": "1.34.0"
+      },
       {
         "changes": [
           "workflow-registry.schema.json v1.2.0 -> v1.3.0 (additive): +resourceDeps[] +healthGate{} optional props on $defs.workflow. EB handoff; enables resourceDeps drift-detection (2026-06-24 config-sync 403 root cause). No required changes, no removals."
@@ -374,7 +383,7 @@
     "infrastructure-catalog": {
       "id": "https://schemas.luh.tech/infrastructure-catalog.schema.json",
       "file": "infrastructure-catalog.schema.json",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "description": "Standardized infrastructure documentation for LuhTech ventures."
     },
     "interfaces": {
@@ -488,7 +497,7 @@
     "resource-access": {
       "id": "https://schemas.luh.tech/resource-access.schema.json",
       "file": "resource-access.schema.json",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "description": "Canonical credential and resource-access record. Single home for resource -> vault item -> consumer linkage across LuhTech ventures."
     },
     "roadmap": {

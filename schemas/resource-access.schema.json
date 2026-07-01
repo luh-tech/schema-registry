@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://schemas.luh.tech/resource-access.schema.json",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "title": "Resource Access Graph",
   "description": "Portfolio access-linkage layer. Maps credentials, secret-store items, access methods, and host posture to the resources they reach. Foreign-keys into infrastructure-catalog (server.id, environment.id, secret.name, objectStorage.bucket) rather than duplicating inventory. The canonical home for 'which key/credential/method reaches which resource, by what route, with what posture' \u2014 answers the recurring key-mismatch by making access posture queryable, not rediscovered live.",
   "type": "object",
@@ -441,9 +441,10 @@
             "database",
             "object-store",
             "external-service",
+            "internal-service",
             "cloud-account"
           ],
-          "description": "Which catalog table resourceRef points into (disambiguates the FK)"
+          "description": "Which catalog table resourceRef points into (disambiguates the FK). internal-service is for first-party services running as containers on a server already modeled elsewhere in this graph (access is via that host's accessMethod, not an independent credential) — distinct from external-service (third-party)."
         },
         "accessMethodRef": {
           "type": "string",
