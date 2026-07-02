@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schemas.luh.tech/deliverable.schema.json",
+  "id": "d-2026-07-02-eb-claude-md-distribution-surface",
+  "version": "1.0.1",
+  "title": "CLAUDE.md as Fourth Memory-Distribution Surface — Arc Parent",
+  "description": "Extends the proven skill-deploy 3-surface pattern (SR canonical -> BT sync tool -> delivery surfaces) with a 4th surface: a generated repo-root CLAUDE.md projecting the CLI-actionable subset of canonical rule instances + skill triggers into Claude Code's only readable substrate, since Code has no path to account-level Memory.",
+  "authority": {
+    "author": "Claude (SR-chat), L1",
+    "approver": "Erik Luhtala (L4)",
+    "revertAuthority": "Erik Luhtala (L4)"
+  },
+  "lifecycleState": "S4-authored",
+  "scope": {
+    "repo": "luh-tech/schema-registry",
+    "branch": "chore/claude-md-distribution-surface-2026-07-02",
+    "scopeFiles": [
+      "schemas/_instances/deliverables/d-2026-07-02-eb-claude-md-distribution-surface.json"
+    ]
+  },
+  "outputs": [
+    {
+      "id": "OUT-1",
+      "description": "Arc parent instance lands on SR main, establishing the BT-before-EB dependency order for its two children",
+      "acceptanceCriteria": [
+        "Instance validates via ajv canonical 3-flag against deliverable.schema.json v1.2.0",
+        "childDeliverables[] contains exactly d-2026-07-02-bt-skill-sync-claude-md-mode and d-2026-07-02-eb-claude-md-landing",
+        "notes field states BT-before-EB sequencing rationale"
+      ]
+    }
+  ],
+  "validation": {
+    "preMerge": [
+      "ajv canonical 3-flag PASS against deliverable.schema.json v1.2.0",
+      "id and version pattern PASS",
+      "childDeliverables ids match child spec ids exactly once both are authored"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "",
+      "to": "S4-authored",
+      "date": "2026-07-02",
+      "trigger": "L4 correction: false-choice menu rejected, full-stack scope confirmed"
+    },
+    {
+      "from": "S4-authored",
+      "to": "S4-authored",
+      "date": "2026-07-02",
+      "trigger": "CLI substrate catch: SPEC.md-as-deliverable-record anti-pattern + redundant OUT-1 removed; scope.repo corrected from EB to SR (parent has no EB execution, only self-landing)"
+    }
+  ],
+  "childDeliverables": [
+    "d-2026-07-02-bt-skill-sync-claude-md-mode",
+    "d-2026-07-02-eb-claude-md-landing"
+  ],
+  "notes": "Sequencing is load-bearing, not arbitrary: BT child must land first because it builds the generate-claude-md mode; EB child consumes that mode's output. Reversing the order produces nothing to land."
+}
